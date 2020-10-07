@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_search"
+        android:title="Search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.SearchView">
+    </item>
+
+    <item android:id="@+id/action_sign_up"
+        android:title="Sign Up"
+        android:visible="false"
+        app:showAsAction="never">
+    </item>
+
+    <item android:id="@+id/action_sign_out"
+    android:title="Sign Out"
+        android:visible="false"
+    app:showAsAction="never">
+</item>
+
+    <item android:id="@+id/action_settings"
+        android:title="Settings"
+        app:showAsAction="never">
+    </item>
+
+
+</menu>

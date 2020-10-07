@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_black"
+    tools:context=".ActivityReminderInput">
+
+    <!-- Header aligned to top -->
+    <RelativeLayout
+        android:id="@+id/rv_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/appbar_padding" >
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NEW"
+            android:textColor="@color/text_dark"
+            android:textSize="19sp" />
+    </RelativeLayout>
+
+    <!-- Footer aligned to bottom -->
+    <RelativeLayout
+        android:id="@+id/rv_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/btn_reminder_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/appbar_padding"
+            android:background="@color/bg_black"
+            android:drawableLeft="@drawable/ic_reminder_check"
+            android:drawablePadding="@dimen/appbar_padding"
+            android:drawableTint="@color/text_success"
+            android:text="Save"
+            android:textColor="@color/text_dark" />
+
+    </RelativeLayout>
+
+    <!-- Scrollable Content below header and above footer -->
+    <ScrollView
+        android:id="@+id/sv_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/rv_footer"
+        android:layout_below="@id/rv_header" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/tv_reminder_name"
+                android:backgroundTint="@color/text_warning"
+                android:textColor="@color/text_white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:singleLine="true"
+                android:hint="Name"
+                android:textColorHint="@color/bg_dark"/>
+
+            <EditText
+                android:id="@+id/tv_reminder_note"
+                android:textColor="@color/text_dark"
+                android:backgroundTint="@color/text_dark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textLongMessage|textMultiLine"
+                android:hint="Note"
+                android:textColorHint="@color/bg_dark"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_reminder_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/appbar_padding"
+                    android:background="@color/bg_black"
+                    android:drawableLeft="@drawable/ic_reminder_time"
+                    android:drawablePadding="@dimen/appbar_padding"
+                    android:drawableTint="@color/text_warning"
+                    android:text="Set Time"
+                    android:textColor="@color/text_dark" />
+
+                <Button
+                    android:id="@+id/btn_reminder_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/appbar_padding"
+                    android:background="@color/bg_black"
+                    android:drawableLeft="@drawable/ic_reminder_date"
+                    android:drawablePadding="@dimen/appbar_padding"
+                    android:drawableTint="@color/text_dark"
+                    android:text="Set Date"
+                    android:textColor="@color/text_dark" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

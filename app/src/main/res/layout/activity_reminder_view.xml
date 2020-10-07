@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_black"
+    android:paddingHorizontal="13dp"
+    tools:context=".ActivityReminderView">
+
+    <!-- Header aligned to top -->
+    <RelativeLayout
+        android:id="@+id/rv_reminder_container_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/appbar_padding">
+
+        <TextView
+            android:id="@+id/txt_reminder_display_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VIEW"
+            android:textColor="@color/text_dark"
+            android:textSize="19sp" />
+
+    </RelativeLayout>
+
+    <!-- Footer aligned to bottom -->
+    <RelativeLayout
+        android:id="@+id/rv_reminder_container_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn_reminder_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/appbar_padding"
+                android:background="@color/bg_black"
+                android:drawableLeft="@drawable/ic_reminder_del"
+                android:drawablePadding="@dimen/appbar_padding"
+                android:drawableTint="@color/text_danger"
+                android:text="Delete"
+                android:textColor="@color/text_dark" />
+
+            <Button
+                android:id="@+id/btn_reminder_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_black"
+                android:drawableLeft="@drawable/ic_reminder_change"
+                android:drawablePadding="@dimen/appbar_padding"
+                android:drawableTint="@color/text_warning"
+                android:text="EDIT"
+                android:textColor="@color/text_dark"
+                android:layout_marginRight="@dimen/appbar_padding" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!-- Scrollable Content below header and above footer -->
+    <ScrollView
+        android:id="@+id/sv_reminder_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/rv_reminder_container_footer"
+        android:layout_below="@id/rv_reminder_container_header" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tv_reminder_time"
+                android:textColor="@color/text_success"
+                android:textSize="23sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <LinearLayout android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <ImageView
+                    android:id="@+id/img_snooze"
+                    android:contentDescription="S"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_reminder_snooze"
+                    android:tint="@color/bg_warning">
+                </ImageView>
+                <TextView
+                    android:id="@+id/tv_reminder_next_snooze"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_warning"
+                    />
+
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/sw_reminder_enabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </Switch>
+
+            <TextView
+                android:id="@+id/tv_reminder_name"
+                android:textColor="@color/text_white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/tv_reminder_note"
+                android:textColor="@color/text_secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/appbar_padding"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

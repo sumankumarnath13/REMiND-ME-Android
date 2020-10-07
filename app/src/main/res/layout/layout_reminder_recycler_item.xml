@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="37dp">
+            <TextView
+                android:id="@+id/tv_reminder_time"
+                android:textColor="@color/text_success"
+                android:textSize="23sp"
+                android:layout_height="match_parent"
+                android:layout_width="231dp"
+                android:gravity="center_vertical"/>
+            <ImageView
+                android:id="@+id/img_snooze"
+                android:src="@drawable/ic_reminder_snooze"
+                android:contentDescription="S"
+                android:tint="@color/bg_warning"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_toLeftOf="@+id/tv_reminder_next_snooze"
+                android:gravity="center_vertical">
+            </ImageView>
+            <TextView
+                android:id="@+id/tv_reminder_next_snooze"
+                android:layout_marginHorizontal="5dp"
+                android:textColor="@color/text_warning"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_toLeftOf="@+id/sw_reminder_enabled"
+                android:gravity="center_vertical"
+                />
+            <Switch
+                android:id="@+id/sw_reminder_enabled"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical">
+            </Switch>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_reminder_name"
+        android:textColor="@color/text_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tv_reminder_truncated_note"
+        android:textColor="@color/text_secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+

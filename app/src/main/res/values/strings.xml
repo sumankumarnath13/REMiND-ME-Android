@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RemindMe</string>
+    <string name="app_label">R E M i N D \u0020 M E</string>
+    <string name="tab_text_1">Active</string>
+    <string name="tab_text_2">Missed</string>
+    <string name="tab_text_3">Dismissed</string>
+</resources>
