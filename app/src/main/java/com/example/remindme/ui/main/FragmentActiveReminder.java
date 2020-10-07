@@ -4,14 +4,11 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.example.remindme.R;
 import com.example.remindme.dataModels.ReminderActive;
-
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -21,7 +18,6 @@ import io.realm.RealmResults;
  * create an instance of this fragment.
  */
 public class FragmentActiveReminder extends Fragment {
-
 
     public FragmentActiveReminder() {
         // Required empty public constructor
@@ -43,37 +39,34 @@ public class FragmentActiveReminder extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    private RecyclerView recyclerView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_active_reminder, container, false);
 
         // Inflate the layout for this fragment
-        recyclerView = view.findViewById(R.id.recycler_active_reminders);
+        recyclerView = view.findViewById(R.id.recycler_reminders);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(view.getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
 
         return  view;
     }
-
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private RealmResults<ReminderActive> data;
 
     @Override
     public void onResume() {
         super.onResume();
         // specify an adapter (see also next example)
         Realm realm = Realm.getDefaultInstance();
-        data = realm.where(ReminderActive.class).findAll();
-        mAdapter = new AdapterReminderRecycler(data);
+        RealmResults<ReminderActive> data = realm.where(ReminderActive.class).findAll();
+        RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(data, EnumReminderTypes.Active);
         recyclerView.setAdapter(mAdapter);
     }
 }

@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-<RecyclerView
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.main.ActiveReminderFragmentActivity"
-    android:id="@+id/recycler_active_reminders">
-
-</RecyclerView>
--->
-
 <androidx.recyclerview.widget.RecyclerView
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.main.FragmentActiveReminder"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recycler_active_reminders"
+    android:id="@+id/recycler_reminders"
     android:layout_width="409dp"
     android:layout_height="460dp"
     android:layout_marginStart="1dp"

@@ -111,31 +111,22 @@ public class ActivityReminderRinging extends AppCompatActivity {
             final Integer id = i.getIntExtra("ID", 0);
 
             Realm r = Realm.getDefaultInstance();
-            r.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    activeReminder = realm
-                            .where(ReminderActive.class)
-                            .equalTo("id", id)
-                            .findFirst();
-                }
-            });
+            activeReminder = r.where(ReminderActive.class).equalTo("id", id).findFirst();
 
             final Date d;
             String date_str = null;
             try {
-                d = UtilsDateTime.toDate(this.activeReminder.id);
+                d = UtilsDateTime.toDate(activeReminder.id);
                 date_str = UtilsDateTime.toTimeDateString(d);
-            } catch (ParseException e) {
+                TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
+                Spannable spannable = new SpannableString(date_str);
+                spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                t_date.setText(spannable);
+            }
+            catch (ParseException e) {
                 Toast.makeText(this, "PARSE ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
-
-            TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
-
-            Spannable spannable = new SpannableString(date_str);
-            spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            t_date.setText(spannable);
 
             ((TextView) findViewById(R.id.txt_reminder_ringing_name)).setText(this.activeReminder.name);
             ((TextView) findViewById(R.id.txt_reminder_ringing_note)).setText(this.activeReminder.note);

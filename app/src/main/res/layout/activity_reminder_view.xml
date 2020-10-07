@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -102,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_reminder_snooze"
-                    android:tint="@color/bg_warning">
+                    app:tint="@color/bg_warning">
                 </ImageView>
                 <TextView
                     android:id="@+id/tv_reminder_next_snooze"
@@ -114,11 +115,11 @@
 
             </LinearLayout>
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/sw_reminder_enabled"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-            </Switch>
+            </androidx.appcompat.widget.SwitchCompat>
 
             <TextView
                 android:id="@+id/tv_reminder_name"

@@ -2,6 +2,7 @@ package com.example.remindme.ui.main;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -29,21 +30,22 @@ public class AdapterSectionsPager extends FragmentPagerAdapter {
     }
 
     @Override
+    @NonNull
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
 
-        Fragment tabFragment = null;
+        Fragment tabFragment;
 
         switch (position){
             case 0:
                 tabFragment = FragmentActiveReminder.newInstance();
                 break;
             case 1:
-                tabFragment = FragmentMissedReminder.newInstance("","");
+                tabFragment = FragmentMissedReminder.newInstance();
                 break;
             default:
-                tabFragment = FragmentDismissedReminder.newInstance("", "");
+                tabFragment = FragmentDismissedReminder.newInstance();
                 break;
         }
 

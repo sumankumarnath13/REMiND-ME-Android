@@ -1,24 +1,17 @@
 package com.example.remindme.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.remindme.R;
-import com.example.remindme.ActivityReminderView;
+import com.example.remindme.dataModels.ReminderActive;
 import com.example.remindme.dataModels.ReminderMissed;
-import com.example.remindme.util.UtilsDateTime;
-import java.text.ParseException;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -29,15 +22,6 @@ import io.realm.RealmResults;
  */
 public class FragmentMissedReminder extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public FragmentMissedReminder() {
         // Required empty public constructor
     }
@@ -46,37 +30,41 @@ public class FragmentMissedReminder extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment MissedReminderFragmentActivity.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentMissedReminder newInstance(String param1, String param2) {
+    public static FragmentMissedReminder newInstance() {
         FragmentMissedReminder fragment = new FragmentMissedReminder();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
+
+    private RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_missed_reminder, container, false);
+        View view = inflater.inflate(R.layout.fragment_missed_reminder, container, false);
+        // Inflate the layout for this fragment
+        recyclerView = view.findViewById(R.id.recycler_reminders);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        recyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        return  view;
     }
 
-    private void refresh() throws ParseException {
+/*    private void refresh() throws ParseException {
         Realm realm = Realm.getDefaultInstance();
 
         final RealmResults<ReminderMissed> reminders = realm.where(ReminderMissed.class).findAll();
@@ -133,15 +121,15 @@ public class FragmentMissedReminder extends Fragment {
             // save a reference to the textview for later
             myTextViews[i] = t;
         }
-    }
+    }*/
 
     @Override
     public void onResume() {
         super.onResume();
-        try {
-            this.refresh();
-        } catch (ParseException e) {
-            Toast.makeText(getContext(), "PARSE ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        // specify an adapter (see also next example)
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<ReminderMissed> data = realm.where(ReminderMissed.class).findAll();
+        RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(data, EnumReminderTypes.Missed);
+        recyclerView.setAdapter(mAdapter);
     }
 }

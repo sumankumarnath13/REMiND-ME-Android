@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_black"
-    tools:context=".ui.main.FragmentMissedReminder">
-
-    <ScrollView
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/linear_view_missed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </LinearLayout>
-    </ScrollView>
-
-</FrameLayout>
+<androidx.recyclerview.widget.RecyclerView
+xmlns:tools="http://schemas.android.com/tools"
+tools:context=".ui.main.FragmentMissedReminder"
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/recycler_reminders"
+android:layout_width="409dp"
+android:layout_height="460dp"
+android:layout_marginStart="1dp"
+android:layout_marginTop="1dp"
+android:layout_marginEnd="1dp"
+android:layout_marginBottom="1dp"
+android:visibility="visible"
+android:paddingHorizontal="13dp" />
