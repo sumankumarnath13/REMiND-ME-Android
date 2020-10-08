@@ -19,6 +19,9 @@ import com.example.remindme.util.UtilsDateTime;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import io.realm.Realm;
 
 public class ActivityReminderInput extends AppCompatActivity {
@@ -32,7 +35,6 @@ public class ActivityReminderInput extends AppCompatActivity {
 
         UtilsActivity.setTitle(this);
 
-
         final TextView tv_title = findViewById(R.id.tv_title);
         final TextView tv_name = findViewById(R.id.tv_reminder_name);
         final TextView tv_note = findViewById(R.id.tv_reminder_note);
@@ -45,13 +47,15 @@ public class ActivityReminderInput extends AppCompatActivity {
         if(reminder_id > 0) {
             Realm realm = Realm.getDefaultInstance();
             final String from = i.getStringExtra("FROM");
-            if(from.equals("ACTIVE")){
+            if(from != null && from.equals("ACTIVE")){
                 tv_title.setText("UPDATE");
                 reminder = realm.where(ReminderActive.class).equalTo("id", reminder_id).findFirst();
-                try {
-                    date = UtilsDateTime.toDate(reminder.id);
-                } catch (ParseException e) {
-                    Toast.makeText(this, "PARSE ERROR" + e.getMessage(), Toast.LENGTH_LONG).show();
+                if(reminder != null) {
+                    try {
+                        date = UtilsDateTime.toDate(reminder.id);
+                    } catch (ParseException e) {
+                        Toast.makeText(this, "PARSE ERROR : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
             else{
@@ -123,11 +127,12 @@ public class ActivityReminderInput extends AppCompatActivity {
           @Override
           public void onClick(View view) {
           if(Calendar.getInstance().getTime().after(date)){
-              Toast.makeText(getApplicationContext(), "Time cannot be set in past!", Toast.LENGTH_SHORT).show();
+              Toast.makeText(ActivityReminderInput.this, "Time cannot be set in past!", Toast.LENGTH_SHORT).show();
           }
           else {
               Realm realm = Realm.getDefaultInstance();
               realm.executeTransaction(new Realm.Transaction() {
+                  @ParametersAreNonnullByDefault
                   @Override
                   public void execute(Realm realm) {
                   final int new_reminder_id = UtilsDateTime.toInt(date);
@@ -139,16 +144,12 @@ public class ActivityReminderInput extends AppCompatActivity {
                           reminder.enabled = true;
                       }
                       else{ // Reminder on same time exists! Red.
-                          Toast.makeText(getApplicationContext(), "Reminder already exists!", Toast.LENGTH_LONG).show();
-                          return;
+                          Toast.makeText(ActivityReminderInput.this, "Reminder already exists!", Toast.LENGTH_LONG).show();
+                          //End of function: return
                       }
                   }
                   else{ //EDIT MODE
-                      if(reminder.id == new_reminder_id ){ // Time remains same : Green
-
-                      }
-                      else{ // Time has been changed. Find if a reminder already exists in target time.
-
+                      if(reminder.id != new_reminder_id ){ // Time has been changed. Find if a reminder already exists in target time.
                           ReminderActive new_reminder = realm.where(ReminderActive.class).equalTo("id", new_reminder_id) .findFirst();
 
                           if(new_reminder == null){
@@ -171,8 +172,8 @@ public class ActivityReminderInput extends AppCompatActivity {
                               reminder = new_reminder;
                           }
                           else{
-                              Toast.makeText(getApplicationContext(), "Reminder already exists!", Toast.LENGTH_LONG).show();
-                              return;
+                              Toast.makeText(ActivityReminderInput.this, "Reminder already exists!", Toast.LENGTH_LONG).show();
+                              //End of function: return
                           }
                       }
                   }
@@ -181,6 +182,7 @@ public class ActivityReminderInput extends AppCompatActivity {
 
               if(reminder != null){
                   realm.executeTransaction(new Realm.Transaction() {
+                      @ParametersAreNonnullByDefault
                       @Override
                       public void execute(Realm realm) {
                       reminder.name = tv_name.getText().toString();
@@ -189,7 +191,7 @@ public class ActivityReminderInput extends AppCompatActivity {
                       try {
                           UtilsAlarm.set(getApplicationContext(), reminder);
                       } catch (ParseException e) {
-                          Toast.makeText(ActivityReminderInput.this, "PARSE ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
+                          Toast.makeText(ActivityReminderInput.this, "PARSE ERROR : " + e.getMessage(), Toast.LENGTH_LONG).show();
                       }
                       }
                   });

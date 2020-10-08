@@ -23,10 +23,8 @@ public class ServiceAlarm extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //Toast.makeText(this, "Oye hoye service started", Toast.LENGTH_SHORT).show();
-
-        Integer alarmId = intent.getIntExtra("ID", 0);
-        Integer time = intent.getIntExtra("TIME", 0);
+        int alarmId = intent.getIntExtra("ID", 0);
+        int time = intent.getIntExtra("TIME", 0);
         String name = intent.getStringExtra("NAME");
         String note = intent.getStringExtra("NOTE");
 
@@ -36,8 +34,6 @@ public class ServiceAlarm extends Service {
         notificationIntent.putExtra("TIME", time);
         notificationIntent.putExtra("NAME", name);
         notificationIntent.putExtra("NOTE", note);
-
-        //Toast.makeText(this, "Firing notification " + alarmId, Toast.LENGTH_SHORT).show();
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, alarmId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -51,12 +47,6 @@ public class ServiceAlarm extends Service {
         //mediaPlayer.start();
         //long[] pattern = { 0, 100, 1000 };
         //vibrator.vibrate(pattern, 0);
-
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(alarmId, notification);
-        } else {
-            notification.notify();
-        }*/
 
         startForeground(alarmId, notification);
 

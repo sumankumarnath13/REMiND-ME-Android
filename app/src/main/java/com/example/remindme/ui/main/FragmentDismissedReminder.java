@@ -33,10 +33,8 @@ public class FragmentDismissedReminder extends Fragment {
      *
      * @return A new instance of fragment ExpiredReminderFragmentActivity.
      */
-    // TODO: Rename and change types and number of parameters
     public static FragmentDismissedReminder newInstance() {
-        FragmentDismissedReminder fragment = new FragmentDismissedReminder();
-        return fragment;
+        return new FragmentDismissedReminder();
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {

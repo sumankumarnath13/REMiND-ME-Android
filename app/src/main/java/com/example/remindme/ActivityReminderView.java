@@ -17,6 +17,9 @@ import com.example.remindme.util.UtilsActivity;
 import com.example.remindme.util.UtilsAlarm;
 import com.example.remindme.util.UtilsDateTime;
 import java.text.ParseException;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -38,6 +41,7 @@ public class ActivityReminderView extends AppCompatActivity {
                 Realm r = Realm.getDefaultInstance();
                 r.executeTransaction(new Realm.Transaction() {
                     @Override
+                    @ParametersAreNonnullByDefault
                     public void execute(Realm realm) {
                         if(from.equals("ACTIVE")) {
                             RealmResults<ReminderActive> results = realm.where(ReminderActive.class)
@@ -83,6 +87,7 @@ public class ActivityReminderView extends AppCompatActivity {
                 if(reminderActive != null){
                     Realm r = Realm.getDefaultInstance();
                     r.executeTransaction(new Realm.Transaction() {
+                        @ParametersAreNonnullByDefault
                         @Override
                         public void execute(Realm realm) {
                             reminderActive.enabled = enabled;
@@ -95,7 +100,7 @@ public class ActivityReminderView extends AppCompatActivity {
                                 }
                             }
                             else{
-                                UtilsAlarm.unSet(getApplicationContext(), reminderActive.id);
+                                UtilsAlarm.unSet(ActivityReminderView.this, reminderActive.id);
                             }
                         }
                     });
@@ -132,18 +137,20 @@ public class ActivityReminderView extends AppCompatActivity {
                         .where(ReminderActive.class)
                         .equalTo("id", alarm_id)
                         .findFirst();
-                alarm_time = UtilsDateTime.toTimeDateString(UtilsDateTime.toDate(reminderActive.id));
-                if(reminderActive.next_snooze_id  > 0){
-                    ImageView snooze_img = findViewById(R.id.img_snooze);
-                    TextView next_snooze = findViewById(R.id.tv_reminder_next_snooze);
-                    next_snooze.setText(UtilsDateTime.toTimeString(UtilsDateTime.toDate(reminderActive.next_snooze_id)));
-                    img.setVisibility(View.VISIBLE);
-                    snooze_img.setVisibility(View.VISIBLE);
+                if(reminderActive != null) {
+                    alarm_time = UtilsDateTime.toTimeDateString(UtilsDateTime.toDate(reminderActive.id));
+                    if (reminderActive.next_snooze_id > 0) {
+                        ImageView snooze_img = findViewById(R.id.img_snooze);
+                        TextView next_snooze = findViewById(R.id.tv_reminder_next_snooze);
+                        next_snooze.setText(UtilsDateTime.toTimeString(UtilsDateTime.toDate(reminderActive.next_snooze_id)));
+                        img.setVisibility(View.VISIBLE);
+                        snooze_img.setVisibility(View.VISIBLE);
+                    }
+                    sw_enabled.setVisibility(View.VISIBLE);
+                    sw_enabled.setChecked(reminderActive.enabled);
+                    name = reminderActive.name;
+                    note = reminderActive.note;
                 }
-                sw_enabled.setVisibility(View.VISIBLE);
-                sw_enabled.setChecked(reminderActive.enabled);
-                name = reminderActive.name;
-                note = reminderActive.note;
             }
             else if(from.equals("MISSED")){
                 Realm r = Realm.getDefaultInstance();
@@ -151,9 +158,11 @@ public class ActivityReminderView extends AppCompatActivity {
                         .where(ReminderMissed.class)
                         .equalTo("id", alarm_id)
                         .findFirst();
-                alarm_time = UtilsDateTime.toTimeDateString(UtilsDateTime.toDate(reminder.id));
-                name = reminder.name;
-                note = reminder.note;
+                if(reminder != null) {
+                    alarm_time = UtilsDateTime.toTimeDateString(UtilsDateTime.toDate(reminder.id));
+                    name = reminder.name;
+                    note = reminder.note;
+                }
             }
             else{
                 Realm r = Realm.getDefaultInstance();
@@ -161,9 +170,11 @@ public class ActivityReminderView extends AppCompatActivity {
                         .where(ReminderDismissed.class)
                         .equalTo("id", alarm_id)
                         .findFirst();
-                alarm_time = UtilsDateTime.toTimeDateString(UtilsDateTime.toDate(reminder.id));
-                name = reminder.name;
-                note = reminder.note;
+                if(reminder != null) {
+                    alarm_time = UtilsDateTime.toTimeDateString(UtilsDateTime.toDate(reminder.id));
+                    name = reminder.name;
+                    note = reminder.note;
+                }
             }
         } catch (ParseException e) {
             Toast.makeText(this, "PARSE ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();

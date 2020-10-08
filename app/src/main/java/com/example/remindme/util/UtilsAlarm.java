@@ -11,13 +11,15 @@ import com.example.remindme.dataModels.ReminderMissed;
 
 import java.text.ParseException;
 import java.util.Calendar;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class UtilsAlarm {
 
     public static void set(Context context, ReminderActive reminder) throws ParseException {
-
         Intent intent = new Intent(context, BroadcastReceiverAlarm.class);
         intent.putExtra("ID", reminder.id);
 
@@ -49,53 +51,38 @@ public class UtilsAlarm {
         alarmManager.cancel(alarmPendingIntent);
     }
 
-    public static void boot(Context context) {
+    public static void boot(Context context) throws ParseException {
         Calendar calendar = Calendar.getInstance();
         Realm realm = Realm.getDefaultInstance();
         RealmResults<ReminderActive> reminders = realm.where(ReminderActive.class).findAll();
         for(int i=0;i<reminders.size();i++){
             final ReminderActive r = reminders.get(i);
-            final int reminder_id = r.id;
-            final int reminder_snooze_id = r.next_snooze_id;
+            if(r != null) {
+                final int reminder_id = r.id;
+                final int reminder_snooze_id = r.next_snooze_id;
 
-            if(r.enabled){
-                try {
-                    if(reminder_snooze_id > 0 && calendar.getTime().after(UtilsDateTime.toDate(reminder_snooze_id))){
+                if (r.enabled) {
+                    if ((reminder_snooze_id > 0 && calendar.getTime().after(UtilsDateTime.toDate(reminder_snooze_id)))
+                            || calendar.getTime().after(UtilsDateTime.toDate(reminder_id))) {
                         realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                            ReminderActive from = realm.where(ReminderActive.class).equalTo("id", reminder_id).findFirst();
-                            ReminderMissed to = new ReminderMissed();
-                            to.id = from.id;
-                            to.name = from.name;
-                            to.note = from.note;
-                            realm.insertOrUpdate(to);
-                            from.deleteFromRealm();
-                            }
-                        });
-                        unSet(context, reminder_id);
-                    }
-                    else if(calendar.getTime().after(UtilsDateTime.toDate(reminder_id))){
-                        realm.executeTransaction(new Realm.Transaction() {
+                            @ParametersAreNonnullByDefault
                             @Override
                             public void execute(Realm realm) {
                                 ReminderActive from = realm.where(ReminderActive.class).equalTo("id", reminder_id).findFirst();
-                                ReminderMissed to = new ReminderMissed();
-                                to.id = from.id;
-                                to.name = from.name;
-                                to.note = from.note;
-                                realm.insertOrUpdate(to);
-                                from.deleteFromRealm();
+                                if(from != null) {
+                                    ReminderMissed to = new ReminderMissed();
+                                    to.id = from.id;
+                                    to.name = from.name;
+                                    to.note = from.note;
+                                    realm.insertOrUpdate(to);
+                                    from.deleteFromRealm();
+                                }
                             }
                         });
                         unSet(context, reminder_id);
-                    }
-                    else{
+                    } else {
                         set(context, r);
                     }
-                }
-                catch (ParseException e){
-                    Toast.makeText(context, "BOOT ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }

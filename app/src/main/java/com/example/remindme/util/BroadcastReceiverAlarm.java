@@ -34,8 +34,6 @@ public class BroadcastReceiverAlarm extends BroadcastReceiver {
             intentService.putExtra("NAME", intent.getStringExtra("NAME"));
             intentService.putExtra("NOTE", intent.getStringExtra("NOTE"));
 
-            //Toast.makeText(context, "Firing alarm " + intent.getIntExtra("ID", 0), Toast.LENGTH_SHORT).show();
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(intentService);
             } else {

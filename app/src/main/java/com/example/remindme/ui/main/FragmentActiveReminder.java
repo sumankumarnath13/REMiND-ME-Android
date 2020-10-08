@@ -28,10 +28,8 @@ public class FragmentActiveReminder extends Fragment {
      * this fragment using the provided parameters.
      * @return A new instance of fragment UpcomingReminderFragmentActivity.
      */
-    // TODO: Rename and change types and number of parameters
     public static FragmentActiveReminder newInstance() {
-        FragmentActiveReminder fragment = new FragmentActiveReminder();
-        return fragment;
+        return new FragmentActiveReminder();
     }
 
     @Override

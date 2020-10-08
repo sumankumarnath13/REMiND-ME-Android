@@ -3,7 +3,6 @@ package com.example.remindme;
 import android.content.Intent;
 import android.os.Bundle;
 import com.example.remindme.util.UtilsActivity;
-import com.example.remindme.util.UtilsAlarm;
 import com.google.android.material.tabs.TabLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -32,12 +31,12 @@ public class ActivityMain extends AppCompatActivity {
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                try {
-                    UtilsAlarm.boot(ActivityMain.this);
+/*                try {
+                    //UtilsAlarm.boot(ActivityMain.this);
                 }
                 catch (Exception e){
                     Toast.makeText(ActivityMain.this, "SWIPE ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
+                }*/
             }
 
             @Override

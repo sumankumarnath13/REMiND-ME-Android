@@ -32,10 +32,8 @@ public class FragmentMissedReminder extends Fragment {
      *
      * @return A new instance of fragment MissedReminderFragmentActivity.
      */
-    // TODO: Rename and change types and number of parameters
     public static FragmentMissedReminder newInstance() {
-        FragmentMissedReminder fragment = new FragmentMissedReminder();
-        return fragment;
+        return new FragmentMissedReminder();
     }
 
     @Override

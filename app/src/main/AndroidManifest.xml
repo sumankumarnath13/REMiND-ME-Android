@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityReminderRinging"></activity>
+        <activity android:name=".ActivityReminderRinging"/>
         <activity android:name=".ActivityReminderView" />
         <activity android:name=".ActivityReminderInput" />
         <activity
@@ -27,8 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".util.ServiceAlarm"></service>
-        <receiver android:name=".util.BroadcastReceiverAlarm"></receiver>
+        <service android:name=".util.ServiceAlarm"/>
+        <service android:name=".util.ServiceRescheduleAlarms"/>
+        <receiver android:name=".util.BroadcastReceiverAlarm"/>
         <receiver android:name=".util.BroadcastReceiverBootCompleted">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
