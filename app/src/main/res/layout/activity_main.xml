@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/bg_black"
     tools:context=".ActivityMain">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -21,7 +20,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:titleTextColor="@color/text_dark"
             app:menu="@menu/context_menu">
 
         </androidx.appcompat.widget.Toolbar>
@@ -47,7 +45,6 @@
 
     </androidx.viewpager.widget.ViewPager>
 
-
     <RelativeLayout
         android:id="@+id/footer"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -63,12 +60,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/appbar_padding"
-            android:background="@color/bg_black"
             android:drawableLeft="@drawable/ic_reminder_time"
             android:drawablePadding="@dimen/appbar_padding"
             android:drawableTint="@color/text_success"
-            android:text="Add New Reminder"
-            android:textColor="@color/text_dark" />
+            android:text="Add New Reminder" />
 
     </RelativeLayout>
 

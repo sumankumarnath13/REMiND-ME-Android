@@ -17,9 +17,7 @@ import com.example.remindme.util.UtilsActivity;
 import com.example.remindme.util.UtilsAlarm;
 import com.example.remindme.util.UtilsDateTime;
 import java.text.ParseException;
-
 import javax.annotation.ParametersAreNonnullByDefault;
-
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -36,7 +34,8 @@ public class ActivityReminderView extends AppCompatActivity {
         final Button btnDelete = findViewById(R.id.btn_reminder_delete);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 UtilsAlarm.unSet(getApplicationContext(), alarm_id);
                 Realm r = Realm.getDefaultInstance();
                 r.executeTransaction(new Realm.Transaction() {
@@ -79,6 +78,14 @@ public class ActivityReminderView extends AppCompatActivity {
             }
         });
 
+        final Button btnBack = findViewById(R.id.btn_reminder_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         final SwitchCompat enabled = findViewById(R.id.sw_reminder_enabled);
         enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -92,14 +99,14 @@ public class ActivityReminderView extends AppCompatActivity {
                         public void execute(Realm realm) {
                             reminderActive.enabled = enabled;
                             realm.insertOrUpdate(reminderActive);
-                            if(enabled){
+                            if(enabled) {
                                 try {
                                     UtilsAlarm.set(getApplicationContext(), reminderActive);
                                 } catch (ParseException e) {
                                     Toast.makeText(ActivityReminderView.this, "PARSE ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }
-                            else{
+                            else {
                                 UtilsAlarm.unSet(ActivityReminderView.this, reminderActive.id);
                             }
                         }

@@ -8,6 +8,10 @@ import android.widget.Toast;
 
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.remindme.util.UtilsAlarm;
+
+import java.text.ParseException;
+
 import io.realm.Realm;
 
 
@@ -35,5 +39,11 @@ public class App extends Application {
             //notificationChannel.enableVibration(true);
             notificationManager.createNotificationChannel(notificationChannel);
         }
+
+/*        try {
+            UtilsAlarm.boot(this);
+        } catch (ParseException e) {
+            Toast.makeText(this, "Parsing error - App start rescheduling : " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }*/
     }
 }

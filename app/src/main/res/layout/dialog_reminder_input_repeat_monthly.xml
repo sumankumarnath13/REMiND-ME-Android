@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/appbar_padding"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/chk_monthly_jan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_white"
+        android:checked="true"
+        android:text="@string/repeat_monthly_jan">
+    </androidx.appcompat.widget.AppCompatCheckBox>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/chk_monthly_feb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_white"
+        android:checked="true"
+        android:text="@string/repeat_monthly_feb">
+    </androidx.appcompat.widget.AppCompatCheckBox>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/chk_monthly_mar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_white"
+        android:checked="true"
+        android:text="@string/repeat_monthly_mar">
+    </androidx.appcompat.widget.AppCompatCheckBox>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/chk_monthly_apr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_white"
+        android:checked="true"
+        android:text="@string/repeat_monthly_apr">
+    </androidx.appcompat.widget.AppCompatCheckBox>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/chk_monthly_may"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_white"
+        android:checked="true"
+        android:text="@string/repeat_monthly_may">
+    </androidx.appcompat.widget.AppCompatCheckBox>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/chk_monthly_jun"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_white"
+        android:checked="true"
+        android:text="@string/repeat_monthly_jun">
+    </androidx.appcompat.widget.AppCompatCheckBox>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/chk_monthly_jul"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_white"
+        android:checked="true"
+        android:text="@string/repeat_monthly_jul">
+    </androidx.appcompat.widget.AppCompatCheckBox>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/chk_monthly_aug"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_white"
+        android:checked="true"
+        android:text="@string/repeat_monthly_aug">
+    </androidx.appcompat.widget.AppCompatCheckBox>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/chk_monthly_sep"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_white"
+        android:checked="true"
+        android:text="@string/repeat_monthly_sep">
+    </androidx.appcompat.widget.AppCompatCheckBox>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/chk_monthly_oct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_white"
+        android:checked="true"
+        android:text="@string/repeat_monthly_oct">
+    </androidx.appcompat.widget.AppCompatCheckBox>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/chk_monthly_nov"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_white"
+        android:checked="true"
+        android:text="@string/repeat_monthly_nov">
+    </androidx.appcompat.widget.AppCompatCheckBox>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/chk_monthly_dec"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_white"
+        android:checked="true"
+        android:text="@string/repeat_monthly_dec">
+    </androidx.appcompat.widget.AppCompatCheckBox>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -2,18 +2,36 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/bg_black</item>
+        <item name="colorPrimaryDark">@color/bg_black</item>
+        <item name="colorAccent">@color/text_info</item>
+        <item name="colorOnSecondary">@color/text_success</item>
+        <item name="colorOnSurface">@color/text_success</item>
+        <item name="android:background">@color/bg_black</item>
+        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textColorHint">@color/text_secondary</item>
+        <!--<item name="android:drawableTint">@color/text_dark</item>-->
+        <item name="android:buttonStyle">@style/commonButtonStyle</item>
+        <item name="android:editTextPreferenceStyle">@style/commonEditTextStyle</item>
+        <item name="android:spinnerDropDownItemStyle">@style/spinnerItemStyle</item>
+    </style>
+    <style name="commonButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:background">@color/bg_black</item>
+    </style>
+    <style name="commonEditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:background">@color/bg_success</item>
+    </style>
+
+    <style name="spinnerItemStyle" parent="Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:textColor">@color/text_info</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 </resources>

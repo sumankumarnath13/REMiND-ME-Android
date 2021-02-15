@@ -11,26 +11,33 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.appcompat.widget.SwitchCompat;
 import com.example.remindme.dataModels.ReminderActive;
+import com.example.remindme.util.IReminderRepeatListener;
+import com.example.remindme.util.ReminderRepeatDailyModel;
+import com.example.remindme.util.ReminderRepeatModel;
+import com.example.remindme.util.ReminderRepeatMonthlyModel;
 import com.example.remindme.util.UtilsActivity;
 import com.example.remindme.util.UtilsAlarm;
 import com.example.remindme.util.UtilsDateTime;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-
 import javax.annotation.ParametersAreNonnullByDefault;
-
 import io.realm.Realm;
 
-public class ActivityReminderInput extends AppCompatActivity {
+public class ActivityReminderInput extends AppCompatActivity implements IReminderRepeatListener {
     private ReminderActive reminder = null;
+    private ReminderRepeatModel repeatModel = null;
     private Date date = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        repeatModel = new ReminderRepeatModel();
+        repeatModel.dailyModel = new ReminderRepeatDailyModel();
+        repeatModel.monthlyModel = new ReminderRepeatMonthlyModel();
+
         setContentView(R.layout.activity_reminder_input);
 
         UtilsActivity.setTitle(this);
@@ -42,13 +49,19 @@ public class ActivityReminderInput extends AppCompatActivity {
         final Button btn_time = findViewById(R.id.btn_reminder_time);
         final Button btn_save = findViewById(R.id.btn_reminder_save);
 
+        final Button btn_repeat = findViewById(R.id.btn_reminder_repeat);
+        final Button btn_sound = findViewById(R.id.btn_reminder_sound);
+        final Button btn_snooze = findViewById(R.id.btn_reminder_snooze);
+        final SwitchCompat sw_vibrate = findViewById(R.id.sw_reminder_vibrate);
+        final SwitchCompat sw_disable = findViewById(R.id.sw_reminder_disable);
+
         Intent i = getIntent();
         final int reminder_id = i.getIntExtra("ID", 0);
         if(reminder_id > 0) {
             Realm realm = Realm.getDefaultInstance();
             final String from = i.getStringExtra("FROM");
             if(from != null && from.equals("ACTIVE")){
-                tv_title.setText("UPDATE");
+                tv_title.setText(getResources().getString(R.string.title_edit_reminder));
                 reminder = realm.where(ReminderActive.class).equalTo("id", reminder_id).findFirst();
                 if(reminder != null) {
                     try {
@@ -70,8 +83,8 @@ public class ActivityReminderInput extends AppCompatActivity {
             date = _c.getTime();
         }
 
-        tv_name.setText(i.getStringExtra("NAME"));
-        tv_note.setText(i.getStringExtra("NOTE"));
+        //tv_name.setText(i.getStringExtra("NAME"));
+        //tv_note.setText(i.getStringExtra("NOTE"));
 
         btn_date.setText(UtilsDateTime.toDateString(date));
         btn_time.setText(UtilsDateTime.toTimeString(date));
@@ -200,5 +213,87 @@ public class ActivityReminderInput extends AppCompatActivity {
           }
           }
       });
+
+        btn_repeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DialogReminderRepeatInput repeatInput = new DialogReminderRepeatInput();
+                repeatInput.show(getSupportFragmentManager(), "Reminder_Repeat");
+
+            }
+        });
+
+        btn_sound.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        btn_snooze.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        sw_vibrate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        sw_disable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    @Override
+    public void set(ReminderRepeatModel repeatModel) {
+        if(repeatModel.isContinue){
+            repeatModel.isContinue = false;
+        }
+        else {
+            switch (repeatModel.repeatOption){
+                case None:
+                default:
+                    //reminder.repeatTypes = 0;
+                    Toast.makeText(ActivityReminderInput.this, "None", Toast.LENGTH_LONG).show();
+                    break;
+                case Hourly:
+                    //reminder.repeatTypes = 1;
+                    Toast.makeText(ActivityReminderInput.this, "Hourly", Toast.LENGTH_LONG).show();
+                    break;
+                case Daily:
+                    //reminder.repeatTypes = 1;
+                    repeatModel.isContinue = true;
+                    DialogReminderRepeatInputDaily inputDaily = new DialogReminderRepeatInputDaily();
+                    inputDaily.show(getSupportFragmentManager(), "Reminder_Repeat_Daily");
+                    //Toast.makeText(ActivityReminderInput.this, "Daily", Toast.LENGTH_LONG).show();
+                    break;
+                case Monthly:
+                    repeatModel.isContinue = true;
+                    //reminder.repeatTypes = 1;
+                    DialogReminderRepeatInputMonthly inputMonthly = new DialogReminderRepeatInputMonthly();
+                    inputMonthly.show(getSupportFragmentManager(), "Reminder_Repeat_Monthly");
+                    //Toast.makeText(ActivityReminderInput.this, "Monthly", Toast.LENGTH_LONG).show();
+                    break;
+                case Yearly:
+                    //reminder.repeatTypes = 1;
+                    Toast.makeText(ActivityReminderInput.this, "Yearly", Toast.LENGTH_LONG).show();
+                    break;
+
+            }
+        }
+    }
+
+    @Override
+    public ReminderRepeatModel get() {
+        return repeatModel;
     }
 }

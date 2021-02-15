@@ -89,8 +89,8 @@ public class ActivityReminderRinging extends AppCompatActivity {
                 });
 
                 UtilsAlarm.set(getApplicationContext(), activeReminder);
-
-            } catch (ParseException e) {
+            }
+            catch (ParseException e) {
                 Toast.makeText(ActivityReminderRinging.this, "PARSE ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
 
@@ -112,28 +112,32 @@ public class ActivityReminderRinging extends AppCompatActivity {
 
             Realm r = Realm.getDefaultInstance();
             activeReminder = r.where(ReminderActive.class).equalTo("id", id).findFirst();
-
-            final Date d;
-            String date_str = null;
-            try {
-                d = UtilsDateTime.toDate(activeReminder.id);
-                date_str = UtilsDateTime.toTimeDateString(d);
-                TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
-                Spannable spannable = new SpannableString(date_str);
-                spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                t_date.setText(spannable);
+            if(activeReminder == null){
+                Toast.makeText(this, "Reminder expired!", Toast.LENGTH_SHORT).show();
+                finish();
             }
-            catch (ParseException e) {
-                Toast.makeText(this, "PARSE ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+            else{
+                final Date d;
+                String date_str = null;
+                try {
+                    d = UtilsDateTime.toDate(activeReminder.id);
+                    date_str = UtilsDateTime.toTimeDateString(d);
+                    TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
+                    Spannable spannable = new SpannableString(date_str);
+                    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    t_date.setText(spannable);
+                }
+                catch (ParseException e) {
+                    Toast.makeText(this, "PARSE ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
 
-            ((TextView) findViewById(R.id.txt_reminder_ringing_name)).setText(this.activeReminder.name);
-            ((TextView) findViewById(R.id.txt_reminder_ringing_note)).setText(this.activeReminder.note);
+                ((TextView) findViewById(R.id.tv_reminder_name)).setText(this.activeReminder.name);
+                ((TextView) findViewById(R.id.tv_reminder_note)).setText(this.activeReminder.note);
+            }
         }
         catch (Exception e){
             Toast.makeText(this, "Well after resume " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-
     }
 }

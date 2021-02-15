@@ -31,7 +31,7 @@ public class ActivityMain extends AppCompatActivity {
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-/*                try {
+/*              try {
                     //UtilsAlarm.boot(ActivityMain.this);
                 }
                 catch (Exception e){

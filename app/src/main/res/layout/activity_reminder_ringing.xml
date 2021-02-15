@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_black"
     tools:context=".ActivityReminderRinging">
 
     <!-- Header aligned to top -->
@@ -21,7 +20,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ALERT"
-            android:textColor="@color/text_dark"
             android:textSize="19sp" />
 
     </RelativeLayout>
@@ -45,23 +43,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/appbar_padding"
-                android:background="@color/bg_black"
                 android:drawableLeft="@drawable/ic_reminder_dismiss"
                 android:drawablePadding="@dimen/appbar_padding"
                 android:drawableTint="@color/text_danger"
-                android:text="Dismiss"
-                android:textColor="@color/text_dark" />
+                android:text="Dismiss" />
 
             <Button
                 android:id="@+id/btn_reminder_ringing_snooze"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/bg_black"
                 android:drawableLeft="@drawable/ic_reminder_snooze"
                 android:drawablePadding="@dimen/appbar_padding"
                 android:drawableTint="@color/text_warning"
                 android:text="Snooze"
-                android:textColor="@color/text_dark"
                 android:layout_marginRight="@dimen/appbar_padding" />
 
         </LinearLayout>
@@ -91,7 +85,7 @@
                 android:gravity="center_horizontal" />
 
             <TextView
-                android:id="@+id/txt_reminder_ringing_name"
+                android:id="@+id/tv_reminder_name"
                 android:textColor="@color/text_white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -99,8 +93,7 @@
                 android:gravity="center_horizontal" />
 
             <TextView
-                android:id="@+id/txt_reminder_ringing_note"
-                android:textColor="@color/text_dark"
+                android:id="@+id/tv_reminder_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/appbar_padding"

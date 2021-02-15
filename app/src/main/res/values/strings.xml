@@ -4,4 +4,44 @@
     <string name="tab_text_1">Active</string>
     <string name="tab_text_2">Missed</string>
     <string name="tab_text_3">Dismissed</string>
+    <string name="title_new_reminder">NEW</string>
+    <string name="title_edit_reminder">UPDATE</string>
+    <string name="hint_reminder_name">Name</string>
+    <string name="hint_reminder_note">Note</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_time">Set Time</string>
+    <string name="btn_date">Set Date</string>
+    <string name="btn_repeat">Repeat</string>
+
+    <string name="repeat_none">No Repeat</string>
+    <string name="repeat_hourly">Hourly</string>
+    <string name="repeat_daily">Daily</string>
+    <string name="repeat_monthly">Monthly</string>
+    <string name="repeat_yearly">Yearly</string>
+
+    <string name="repeat_daily_mon">Monday</string>
+    <string name="repeat_daily_tue">Tuesday</string>
+    <string name="repeat_daily_wed">Wednesday</string>
+    <string name="repeat_daily_thu">Thursday</string>
+    <string name="repeat_daily_fri">Friday</string>
+    <string name="repeat_daily_sat">Saturday</string>
+    <string name="repeat_daily_sun">Sunday</string>
+
+    <string name="repeat_monthly_jan">January</string>
+    <string name="repeat_monthly_feb">February</string>
+    <string name="repeat_monthly_mar">March</string>
+    <string name="repeat_monthly_apr">April</string>
+    <string name="repeat_monthly_may">May</string>
+    <string name="repeat_monthly_jun">June</string>
+    <string name="repeat_monthly_jul">July</string>
+    <string name="repeat_monthly_aug">August</string>
+    <string name="repeat_monthly_sep">September</string>
+    <string name="repeat_monthly_oct">October</string>
+    <string name="repeat_monthly_nov">November</string>
+    <string name="repeat_monthly_dec">December</string>
+
+    <string name="btn_vibration">Vibration</string>
+    <string name="btn_disable">Disable</string>
+    <string name="btn_alarm_sound">Alarm Sound</string>
+    <string name="btn_snooze">Snooze</string>
 </resources>
