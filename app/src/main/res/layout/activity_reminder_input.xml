@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="@dimen/dp_16"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ActivityReminderInput">
 
     <!-- Header aligned to top -->
@@ -13,14 +14,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:gravity="center"
-        android:layout_marginBottom="@dimen/appbar_padding" >
+        android:layout_marginBottom="@dimen/dp_16" >
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_new_reminder"
-            android:textSize="19sp" />
+            android:text="@string/new_reminder_heading"
+            android:textSize="@dimen/font_size_h1" />
     </RelativeLayout>
 
     <!-- Footer aligned to bottom -->
@@ -35,11 +36,11 @@
             android:id="@+id/btn_reminder_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/appbar_padding"
-            android:layout_marginRight="@dimen/appbar_padding"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_16"
             android:drawableStart="@drawable/ic_reminder_check"
             android:drawableLeft="@drawable/ic_reminder_check"
-            android:drawablePadding="@dimen/appbar_padding"
+            android:drawablePadding="@dimen/dp_3"
             android:drawableTint="@color/text_success"
             android:text="@string/btn_save" />
 
@@ -63,6 +64,7 @@
             <EditText
                 android:id="@+id/tv_reminder_name"
                 android:backgroundTint="@color/text_success"
+                android:textColor="@color/text_white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -73,6 +75,7 @@
             <EditText
                 android:id="@+id/tv_reminder_note"
                 android:backgroundTint="@color/text_dark"
+                android:textColor="@color/text_dark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textLongMessage|textMultiLine"
@@ -82,7 +85,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/list_height"
+                android:layout_marginBottom="@dimen/dp_51"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
@@ -90,11 +93,11 @@
                     android:id="@+id/btn_reminder_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/appbar_padding"
-                    android:layout_marginRight="@dimen/appbar_padding"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:layout_marginRight="@dimen/dp_16"
                     android:drawableStart="@drawable/ic_reminder_time"
                     android:drawableLeft="@drawable/ic_reminder_time"
-                    android:drawablePadding="@dimen/appbar_padding"
+                    android:drawablePadding="@dimen/dp_16"
                     android:drawableTint="@color/text_warning"
                     android:text="@string/btn_time" />
 
@@ -102,36 +105,70 @@
                     android:id="@+id/btn_reminder_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/appbar_padding"
-                    android:layout_marginRight="@dimen/appbar_padding"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:layout_marginRight="@dimen/dp_16"
                     android:drawableStart="@drawable/ic_reminder_date"
                     android:drawableLeft="@drawable/ic_reminder_date"
-                    android:drawablePadding="@dimen/appbar_padding"
+                    android:drawablePadding="@dimen/dp_16"
                     android:text="@string/btn_date" />
 
             </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:orientation="horizontal">
+
             <Button
                 android:id="@+id/btn_reminder_repeat"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_reminder_repeat"
                 android:drawableLeft="@drawable/ic_reminder_repeat"
-                android:drawablePadding="@dimen/appbar_padding"
+                android:drawableTint="@color/text_success"
+                android:drawablePadding="@dimen/dp_16"
                 android:layout_gravity="start"
                 android:textAlignment="viewStart"
+                android:width="113dp"
                 android:text="@string/btn_repeat" />
+
+            <TextView
+                android:id="@+id/txt_reminder_repeat_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/font_size_s1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_reminder_snooze"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_reminder_snooze"
                 android:drawableLeft="@drawable/ic_reminder_snooze"
-                android:drawablePadding="@dimen/appbar_padding"
+                android:drawableTint="@color/text_warning"
+                android:drawablePadding="@dimen/dp_16"
                 android:layout_gravity="start"
                 android:textAlignment="viewStart"
+                android:width="113dp"
                 android:text="@string/btn_snooze" />
+
+            <TextView
+                android:id="@+id/txt_reminder_snooze_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/font_size_s1" />
+
+        </LinearLayout>
 
             <Button
                 android:id="@+id/btn_reminder_sound"
@@ -139,28 +176,30 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_reminder_sound"
                 android:drawableLeft="@drawable/ic_reminder_sound"
-                android:drawablePadding="@dimen/appbar_padding"
+                android:drawableTint="@color/text_info"
+                android:drawablePadding="@dimen/dp_16"
                 android:layout_gravity="start"
                 android:textAlignment="viewStart"
                 android:text="@string/btn_alarm_sound" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/list_height"
+                android:layout_height="@dimen/dp_51"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:tint="@color/text_dark"
                     android:src="@drawable/ic_reminder_vibrate">
                 </androidx.appcompat.widget.AppCompatImageView>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/appbar_padding"
-                    android:layout_marginStart="@dimen/appbar_padding"
+                    android:layout_marginLeft="@dimen/dp_16"
+                    android:layout_marginStart="@dimen/dp_16"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="@string/btn_vibration" />
@@ -175,13 +214,14 @@
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/list_height"
+                android:layout_height="@dimen/dp_51"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    app:tint="@color/text_danger"
                     android:src="@drawable/ic_reminder_dismiss">
                 </androidx.appcompat.widget.AppCompatImageView>
 
@@ -189,8 +229,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/appbar_padding"
-                    android:layout_marginStart="@dimen/appbar_padding"
+                    android:layout_marginLeft="@dimen/dp_16"
+                    android:layout_marginStart="@dimen/dp_16"
                     android:layout_weight="1"
                     android:text="@string/btn_disable">
                 </androidx.appcompat.widget.AppCompatTextView>

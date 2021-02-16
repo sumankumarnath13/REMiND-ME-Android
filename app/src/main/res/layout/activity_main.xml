@@ -59,11 +59,10 @@
             android:id="@+id/btn_main_new_reminder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/appbar_padding"
             android:drawableLeft="@drawable/ic_reminder_time"
-            android:drawablePadding="@dimen/appbar_padding"
+            android:drawablePadding="@dimen/dp_8"
             android:drawableTint="@color/text_success"
-            android:text="Add New Reminder" />
+            android:text="@string/add_new_reminder" />
 
     </RelativeLayout>
 

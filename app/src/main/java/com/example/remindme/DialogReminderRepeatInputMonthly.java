@@ -24,7 +24,7 @@ public class DialogReminderRepeatInputMonthly extends DialogFragment {
         super.onAttach(context);
         try {
             listener = (IReminderRepeatListener) context;
-            model = listener.get();
+            model = listener.getRepeatModel();
         }
         catch (ClassCastException e){
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
@@ -64,7 +64,7 @@ public class DialogReminderRepeatInputMonthly extends DialogFragment {
         chk_monthly_nov.setChecked(model.monthlyModel.isNov);
         chk_monthly_dec.setChecked(model.monthlyModel.isDec);
 
-        builder.setView(view).setTitle("Select months to Repeat").setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        builder.setView(view).setTitle("Select months to Repeat").setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 model.monthlyModel.isJan = chk_monthly_jan.isChecked();
@@ -79,13 +79,13 @@ public class DialogReminderRepeatInputMonthly extends DialogFragment {
                 model.monthlyModel.isOct = chk_monthly_oct.isChecked();
                 model.monthlyModel.isNov = chk_monthly_nov.isChecked();
                 model.monthlyModel.isDec = chk_monthly_dec.isChecked();
-
-                listener.set(model);
+                listener.set(model, true);
             }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                //model.isEnd = true;
+                //listener.set(model);
             }
         });
 

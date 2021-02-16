@@ -12,6 +12,7 @@
     <color name="bg_warning">#f89406</color>
     <color name="bg_dark">#6c757d</color>
     <color name="bg_success">#28a745</color>
+    <color name="bg_secondary">#555</color>
     <color name="bg_danger">#dc3545</color>
     <color name="bg_info">#93c</color>
 </resources>

@@ -13,64 +13,63 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/appbar_padding"
+        android:layout_marginBottom="@dimen/dp_16"
         android:gravity="center">
 
         <TextView
             android:id="@+id/txt_reminder_display_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="VIEW"
-            android:textSize="19sp" />
+            android:text="@string/view_reminder_heading"
+            android:textSize="@dimen/font_size_h1" />
 
     </RelativeLayout>
 
     <!-- Footer aligned to bottom -->
-    <RelativeLayout
+
+    <LinearLayout
         android:id="@+id/rv_reminder_container_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="center">
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btn_reminder_delete"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_marginHorizontal="@dimen/dp_8"
+            android:drawablePadding="@dimen/dp_8"
+            android:drawableStart="@drawable/ic_close"
+            android:drawableLeft="@drawable/ic_close"
+            android:drawableTint="@color/text_danger"
+            android:text="@string/btn_delete"
+            tools:ignore="ButtonStyle" />
 
-            <Button
-                android:id="@+id/btn_reminder_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/appbar_padding"
-                android:drawableLeft="@drawable/ic_reminder_del"
-                android:drawablePadding="@dimen/appbar_padding"
-                android:drawableTint="@color/text_danger"
-                android:text="Delete" />
+        <Button
+            android:id="@+id/btn_reminder_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_8"
+            android:drawableStart="@drawable/ic_reminder_check"
+            android:drawableLeft="@drawable/ic_reminder_check"
+            android:drawableTint="@color/text_warning"
+            android:text="@string/btn_edit"
+            tools:ignore="ButtonStyle" />
 
-            <Button
-                android:id="@+id/btn_reminder_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/appbar_padding"
-                android:drawableLeft="@drawable/ic_reminder_change"
-                android:drawablePadding="@dimen/appbar_padding"
-                android:drawableTint="@color/text_warning"
-                android:text="EDIT" />
+<!--        <Button-->
+<!--            android:id="@+id/btn_reminder_back"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="@dimen/dp_8"-->
+<!--            android:drawablePadding="@dimen/dp_1"-->
+<!--            android:drawableStart="@drawable/ic_back"-->
+<!--            android:drawableLeft="@drawable/ic_back"-->
+<!--            android:drawableTint="@color/text_secondary"-->
+<!--            android:text="@string/btn_back" />-->
 
-            <Button
-                android:id="@+id/btn_reminder_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/appbar_padding"
-                android:layout_weight="1"
-                android:drawableTint="@color/text_warning"
-                android:text="BACK" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <!-- Scrollable Content below header and above footer -->
     <ScrollView
@@ -89,7 +88,7 @@
             <TextView
                 android:id="@+id/tv_reminder_time"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:textColor="@color/text_success"
                 android:textSize="23sp" />
@@ -104,9 +103,8 @@
                     android:id="@+id/img_snooze"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="S"
                     android:src="@drawable/ic_reminder_snooze"
-                    app:tint="@color/bg_warning"></ImageView>
+                    app:tint="@color/bg_warning" />
 
                 <TextView
                     android:id="@+id/tv_reminder_next_snooze"
@@ -120,7 +118,7 @@
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/sw_reminder_enabled"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></androidx.appcompat.widget.SwitchCompat>
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/tv_reminder_name"
@@ -134,7 +132,7 @@
                 android:id="@+id/tv_reminder_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/appbar_padding"
+                android:layout_marginBottom="@dimen/dp_16"
                 android:textColor="@color/text_secondary" />
 
         </LinearLayout>

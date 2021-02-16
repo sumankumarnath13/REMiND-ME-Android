@@ -78,13 +78,13 @@ public class ActivityReminderView extends AppCompatActivity {
             }
         });
 
-        final Button btnBack = findViewById(R.id.btn_reminder_back);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+//        final Button btnBack = findViewById(R.id.btn_reminder_back);
+//        btnBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                finish();
+//            }
+//        });
 
         final SwitchCompat enabled = findViewById(R.id.sw_reminder_enabled);
         enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

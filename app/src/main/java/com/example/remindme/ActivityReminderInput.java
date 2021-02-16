@@ -14,9 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import com.example.remindme.dataModels.ReminderActive;
 import com.example.remindme.util.IReminderRepeatListener;
+import com.example.remindme.util.IReminderSnoozeListener;
 import com.example.remindme.util.ReminderRepeatDailyModel;
 import com.example.remindme.util.ReminderRepeatModel;
 import com.example.remindme.util.ReminderRepeatMonthlyModel;
+import com.example.remindme.util.ReminderSnoozeModel;
 import com.example.remindme.util.UtilsActivity;
 import com.example.remindme.util.UtilsAlarm;
 import com.example.remindme.util.UtilsDateTime;
@@ -26,21 +28,31 @@ import java.util.Date;
 import javax.annotation.ParametersAreNonnullByDefault;
 import io.realm.Realm;
 
-public class ActivityReminderInput extends AppCompatActivity implements IReminderRepeatListener {
+public class ActivityReminderInput extends AppCompatActivity implements IReminderRepeatListener, IReminderSnoozeListener {
     private ReminderActive reminder = null;
     private ReminderRepeatModel repeatModel = null;
+    private ReminderRepeatModel repeatModelBuffer = null;
+    private ReminderSnoozeModel snoozeModel = null;
+    private ReminderSnoozeModel snoozeModelBuffer = null;
     private Date date = null;
+
+    private TextView txt_reminder_repeat_summary = null;
+    private TextView txt_reminder_snooze_summary = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         repeatModel = new ReminderRepeatModel();
-        repeatModel.dailyModel = new ReminderRepeatDailyModel();
-        repeatModel.monthlyModel = new ReminderRepeatMonthlyModel();
+
+        snoozeModel = new ReminderSnoozeModel();
 
         setContentView(R.layout.activity_reminder_input);
 
         UtilsActivity.setTitle(this);
+
+        txt_reminder_repeat_summary = findViewById(R.id.txt_reminder_repeat_summary);
+        txt_reminder_snooze_summary = findViewById(R.id.txt_reminder_snooze_summary);
 
         final TextView tv_title = findViewById(R.id.tv_title);
         final TextView tv_name = findViewById(R.id.tv_reminder_name);
@@ -48,7 +60,6 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         final Button btn_date = findViewById(R.id.btn_reminder_date);
         final Button btn_time = findViewById(R.id.btn_reminder_time);
         final Button btn_save = findViewById(R.id.btn_reminder_save);
-
         final Button btn_repeat = findViewById(R.id.btn_reminder_repeat);
         final Button btn_sound = findViewById(R.id.btn_reminder_sound);
         final Button btn_snooze = findViewById(R.id.btn_reminder_snooze);
@@ -61,7 +72,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             Realm realm = Realm.getDefaultInstance();
             final String from = i.getStringExtra("FROM");
             if(from != null && from.equals("ACTIVE")){
-                tv_title.setText(getResources().getString(R.string.title_edit_reminder));
+                tv_title.setText(getResources().getString(R.string.edit_reminder_heading));
                 reminder = realm.where(ReminderActive.class).equalTo("id", reminder_id).findFirst();
                 if(reminder != null) {
                     try {
@@ -83,11 +94,11 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             date = _c.getTime();
         }
 
-        //tv_name.setText(i.getStringExtra("NAME"));
-        //tv_note.setText(i.getStringExtra("NOTE"));
-
         btn_date.setText(UtilsDateTime.toDateString(date));
         btn_time.setText(UtilsDateTime.toTimeString(date));
+
+        txt_reminder_repeat_summary.setText(repeatModel.toString());
+        txt_reminder_snooze_summary.setText(snoozeModel.toString());
 
         btn_time.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,6 +228,18 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         btn_repeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Create a buffer and send it to dialog:
+                repeatModelBuffer = new ReminderRepeatModel();
+
+                if(repeatModel != null){ // Copy from real object if valid:
+                    repeatModelBuffer.repeatOption = repeatModel.repeatOption;
+                    repeatModelBuffer.dailyModel = repeatModel.dailyModel;
+                    repeatModelBuffer.monthlyModel = repeatModel.monthlyModel;
+                }
+                else{ //Set defaults
+                    repeatModelBuffer.dailyModel = new ReminderRepeatDailyModel();
+                    repeatModelBuffer.monthlyModel = new ReminderRepeatMonthlyModel();
+                }
 
                 DialogReminderRepeatInput repeatInput = new DialogReminderRepeatInput();
                 repeatInput.show(getSupportFragmentManager(), "Reminder_Repeat");
@@ -234,7 +257,19 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         btn_snooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Create a buffer and send it to dialog:
+                snoozeModelBuffer = new ReminderSnoozeModel();
 
+                if(snoozeModel != null){ // Copy from real object if valid:
+                    snoozeModelBuffer = snoozeModel;
+                }
+                else { //Set defaults
+                    snoozeModelBuffer.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M5;
+                    snoozeModelBuffer.repeatOption = ReminderSnoozeModel.SnoozeRepeatOptions.R3;
+                }
+
+                DialogReminderSnoozeInput repeatInput = new DialogReminderSnoozeInput();
+                repeatInput.show(getSupportFragmentManager(), "Reminder_Snooze");
             }
         });
 
@@ -254,46 +289,77 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     }
 
     @Override
-    public void set(ReminderRepeatModel repeatModel) {
-        if(repeatModel.isContinue){
-            repeatModel.isContinue = false;
-        }
-        else {
-            switch (repeatModel.repeatOption){
-                case None:
-                default:
-                    //reminder.repeatTypes = 0;
-                    Toast.makeText(ActivityReminderInput.this, "None", Toast.LENGTH_LONG).show();
-                    break;
-                case Hourly:
-                    //reminder.repeatTypes = 1;
-                    Toast.makeText(ActivityReminderInput.this, "Hourly", Toast.LENGTH_LONG).show();
-                    break;
-                case Daily:
-                    //reminder.repeatTypes = 1;
-                    repeatModel.isContinue = true;
+    public void set(ReminderRepeatModel model, boolean isEOF) {
+        switch (model.repeatOption){
+            case None:
+            case Hourly:
+            case Weekly:
+            case Yearly:
+            default:
+                if(isEOF){
+                    repeatModel = model;
+                    txt_reminder_repeat_summary.setText(repeatModel.toString());
+                }
+                break;
+            case Daily:
+                if(isEOF){
+                    if(model.dailyModel.isSun ||
+                            model.dailyModel.isMon ||
+                            model.dailyModel.isTue ||
+                            model.dailyModel.isWed ||
+                            model.dailyModel.isThu ||
+                            model.dailyModel.isFri ||
+                            model.dailyModel.isSat ){
+                        repeatModel = model;
+                        txt_reminder_repeat_summary.setText(repeatModel.toString());
+                    }
+                }
+                else{
                     DialogReminderRepeatInputDaily inputDaily = new DialogReminderRepeatInputDaily();
                     inputDaily.show(getSupportFragmentManager(), "Reminder_Repeat_Daily");
-                    //Toast.makeText(ActivityReminderInput.this, "Daily", Toast.LENGTH_LONG).show();
-                    break;
-                case Monthly:
-                    repeatModel.isContinue = true;
-                    //reminder.repeatTypes = 1;
+                }
+                break;
+            case Monthly:
+                if(isEOF){
+                    if(model.monthlyModel.isJan ||
+                            model.monthlyModel.isFeb ||
+                            model.monthlyModel.isMar ||
+                            model.monthlyModel.isApr ||
+                            model.monthlyModel.isMay ||
+                            model.monthlyModel.isJun ||
+                            model.monthlyModel.isJul ||
+                            model.monthlyModel.isAug ||
+                            model.monthlyModel.isSep ||
+                            model.monthlyModel.isOct ||
+                            model.monthlyModel.isNov ||
+                            model.monthlyModel.isDec ){
+                        repeatModel = model;
+                        txt_reminder_repeat_summary.setText(repeatModel.toString());
+                    }
+                }
+                else{
                     DialogReminderRepeatInputMonthly inputMonthly = new DialogReminderRepeatInputMonthly();
                     inputMonthly.show(getSupportFragmentManager(), "Reminder_Repeat_Monthly");
-                    //Toast.makeText(ActivityReminderInput.this, "Monthly", Toast.LENGTH_LONG).show();
-                    break;
-                case Yearly:
-                    //reminder.repeatTypes = 1;
-                    Toast.makeText(ActivityReminderInput.this, "Yearly", Toast.LENGTH_LONG).show();
-                    break;
-
-            }
+                }
+                break;
         }
     }
 
     @Override
-    public ReminderRepeatModel get() {
-        return repeatModel;
+    public void set(ReminderSnoozeModel model, boolean isEOF) {
+        if(isEOF){
+            txt_reminder_snooze_summary.setText(snoozeModel.toString());
+            snoozeModel = model;
+        }
+    }
+
+    @Override
+    public ReminderSnoozeModel getSnoozeModel() {
+        return snoozeModelBuffer;
+    }
+
+    @Override
+    public ReminderRepeatModel getRepeatModel() {
+        return repeatModelBuffer;
     }
 }

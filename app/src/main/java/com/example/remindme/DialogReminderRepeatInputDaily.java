@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -25,7 +24,7 @@ public class DialogReminderRepeatInputDaily extends DialogFragment {
         super.onAttach(context);
         try {
             listener = (IReminderRepeatListener) context;
-            model = listener.get();
+            model = listener.getRepeatModel();
         }
         catch (ClassCastException e){
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
@@ -55,7 +54,9 @@ public class DialogReminderRepeatInputDaily extends DialogFragment {
         chk_daily_fri.setChecked(model.dailyModel.isFri);
         chk_daily_sat.setChecked(model.dailyModel.isSat);
 
-        builder.setView(view).setTitle("Select days to Repeat").setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        builder.setView(view)
+                .setTitle("Select days to Repeat")
+                .setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 model.dailyModel.isSun = chk_daily_sun.isChecked();
@@ -65,12 +66,13 @@ public class DialogReminderRepeatInputDaily extends DialogFragment {
                 model.dailyModel.isThu = chk_daily_thu.isChecked();
                 model.dailyModel.isFri = chk_daily_fri.isChecked();
                 model.dailyModel.isSat = chk_daily_sat.isChecked();
-                listener.set(model);
+                listener.set(model, true);
             }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                //model.isEnd = true;
+                //listener.set(model);
             }
         });
 

@@ -3,14 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/appbar_padding"
+    android:padding="@dimen/dp_16"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/chk_daily_sun"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_white"
+        android:textColor="@color/text_dark"
+        android:buttonTint="@color/bg_info"
         android:text="@string/repeat_daily_sun">
     </androidx.appcompat.widget.AppCompatCheckBox>
 
@@ -18,7 +19,8 @@
         android:id="@+id/chk_daily_mon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_white"
+        android:textColor="@color/text_dark"
+        android:buttonTint="@color/bg_info"
         android:text="@string/repeat_daily_mon">
     </androidx.appcompat.widget.AppCompatCheckBox>
 
@@ -26,7 +28,8 @@
         android:id="@+id/chk_daily_tue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_white"
+        android:textColor="@color/text_dark"
+        android:buttonTint="@color/bg_info"
         android:text="@string/repeat_daily_tue">
     </androidx.appcompat.widget.AppCompatCheckBox>
 
@@ -34,7 +37,8 @@
         android:id="@+id/chk_daily_wed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_white"
+        android:textColor="@color/text_dark"
+        android:buttonTint="@color/bg_info"
         android:text="@string/repeat_daily_wed">
     </androidx.appcompat.widget.AppCompatCheckBox>
 
@@ -42,7 +46,8 @@
         android:id="@+id/chk_daily_thu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_white"
+        android:textColor="@color/text_dark"
+        android:buttonTint="@color/bg_info"
         android:text="@string/repeat_daily_thu">
     </androidx.appcompat.widget.AppCompatCheckBox>
 
@@ -50,7 +55,8 @@
         android:id="@+id/chk_daily_fri"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_white"
+        android:textColor="@color/text_dark"
+        android:buttonTint="@color/bg_info"
         android:text="@string/repeat_daily_fri">
     </androidx.appcompat.widget.AppCompatCheckBox>
 
@@ -58,7 +64,8 @@
         android:id="@+id/chk_daily_sat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_white"
+        android:textColor="@color/text_dark"
+        android:buttonTint="@color/bg_info"
         android:text="@string/repeat_daily_sat">
     </androidx.appcompat.widget.AppCompatCheckBox>
 
