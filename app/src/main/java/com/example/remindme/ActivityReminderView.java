@@ -97,7 +97,7 @@ public class ActivityReminderView extends AppCompatActivity {
                         @ParametersAreNonnullByDefault
                         @Override
                         public void execute(Realm realm) {
-                            reminderActive.enabled = enabled;
+                            reminderActive.isEnable = enabled;
                             realm.insertOrUpdate(reminderActive);
                             if(enabled) {
                                 try {
@@ -154,7 +154,7 @@ public class ActivityReminderView extends AppCompatActivity {
                         snooze_img.setVisibility(View.VISIBLE);
                     }
                     sw_enabled.setVisibility(View.VISIBLE);
-                    sw_enabled.setChecked(reminderActive.enabled);
+                    sw_enabled.setChecked(reminderActive.isEnable);
                     name = reminderActive.name;
                     note = reminderActive.note;
                 }

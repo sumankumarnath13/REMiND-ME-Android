@@ -4,16 +4,20 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
-import com.example.remindme.util.IReminderSnoozeListener;
-import com.example.remindme.util.ReminderSnoozeModel;
+
+import com.example.remindme.viewModels.IReminderSnoozeListener;
+import com.example.remindme.viewModels.ReminderSnoozeModel;
 
 public class DialogReminderSnoozeInput extends DialogFragment {
     private IReminderSnoozeListener listener;
@@ -26,12 +30,12 @@ public class DialogReminderSnoozeInput extends DialogFragment {
         try {
             listener = (IReminderSnoozeListener) context;
             model = listener.getSnoozeModel();
-        }
-        catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderSnoozeListener");
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -39,7 +43,6 @@ public class DialogReminderSnoozeInput extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_reminder_input_snooze, null);
 
-        final SwitchCompat sw_reminder_snooze_enabled = view.findViewById(R.id.sw_reminder_snooze_enabled);
         final RadioButton rdo_reminder_snooze_m5 = view.findViewById(R.id.rdo_reminder_snooze_m5);
         final RadioButton rdo_reminder_snooze_m10 = view.findViewById(R.id.rdo_reminder_snooze_m10);
         final RadioButton rdo_reminder_snooze_m15 = view.findViewById(R.id.rdo_reminder_snooze_m15);
@@ -48,9 +51,61 @@ public class DialogReminderSnoozeInput extends DialogFragment {
         final RadioButton rdo_reminder_snooze_r5 = view.findViewById(R.id.rdo_reminder_snooze_r5);
         final RadioButton rdo_reminder_snooze_rc = view.findViewById(R.id.rdo_reminder_snooze_rc);
 
-        sw_reminder_snooze_enabled.setChecked(model.enabled);
+        final SwitchCompat sw_reminder_snooze_enabled = view.findViewById(R.id.sw_reminder_snooze_enabled);
+        sw_reminder_snooze_enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                rdo_reminder_snooze_m5.setEnabled(isChecked);
+                rdo_reminder_snooze_m10.setEnabled(isChecked);
+                rdo_reminder_snooze_m15.setEnabled(isChecked);
+                rdo_reminder_snooze_m30.setEnabled(isChecked);
+                rdo_reminder_snooze_r3.setEnabled(isChecked);
+                rdo_reminder_snooze_r5.setEnabled(isChecked);
+                rdo_reminder_snooze_rc.setEnabled(isChecked);
 
-        switch (model.intervalOption){
+                if(isChecked){
+                    rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
+                    rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
+                    rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
+                    rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_dark));
+                    rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
+                    rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
+                    rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
+                }
+                else {
+                    rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+                    rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+                    rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+                    rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+                    rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+                    rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+                    rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+                }
+            }
+        });
+
+        sw_reminder_snooze_enabled.setChecked(model.isEnable);
+
+        if(model.isEnable){
+            rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
+            rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
+            rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
+            rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_dark));
+            rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
+            rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
+            rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
+        }
+        else {
+            rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+            rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+            rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+            rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+            rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+            rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+            rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.bg_secondary));
+        }
+
+        switch (model.intervalOption) {
             default:
             case M5:
                 rdo_reminder_snooze_m5.setChecked(true);
@@ -66,7 +121,7 @@ public class DialogReminderSnoozeInput extends DialogFragment {
                 break;
         }
 
-        switch (model.repeatOption){
+        switch (model.countOptions) {
             default:
             case R3:
                 rdo_reminder_snooze_r3.setChecked(true);
@@ -84,29 +139,24 @@ public class DialogReminderSnoozeInput extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        model.enabled = sw_reminder_snooze_enabled.isChecked();
+                        model.isEnable = sw_reminder_snooze_enabled.isChecked();
 
-                        if(rdo_reminder_snooze_m5.isChecked()){
+                        if (rdo_reminder_snooze_m5.isChecked()) {
                             model.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M5;
-                        }
-                        else if(rdo_reminder_snooze_m10.isChecked()){
+                        } else if (rdo_reminder_snooze_m10.isChecked()) {
                             model.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M10;
-                        }
-                        else if(rdo_reminder_snooze_m15.isChecked()){
+                        } else if (rdo_reminder_snooze_m15.isChecked()) {
                             model.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M15;
-                        }
-                        else{
+                        } else {
                             model.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M30;
                         }
 
-                        if(rdo_reminder_snooze_r3.isChecked()){
-                            model.repeatOption = ReminderSnoozeModel.SnoozeRepeatOptions.R3;
-                        }
-                        else if(rdo_reminder_snooze_r5.isChecked()){
-                            model.repeatOption = ReminderSnoozeModel.SnoozeRepeatOptions.R5;
-                        }
-                        else{
-                            model.repeatOption = ReminderSnoozeModel.SnoozeRepeatOptions.RC;
+                        if (rdo_reminder_snooze_r3.isChecked()) {
+                            model.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R3;
+                        } else if (rdo_reminder_snooze_r5.isChecked()) {
+                            model.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R5;
+                        } else {
+                            model.countOptions = ReminderSnoozeModel.SnoozeCountOptions.RC;
                         }
 
                         listener.set(model, true);

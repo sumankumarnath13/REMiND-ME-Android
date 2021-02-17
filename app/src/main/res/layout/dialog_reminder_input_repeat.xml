@@ -1,45 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/rg_repeat_options"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:padding="@dimen/dp_16"
-android:textAlignment="center"
-android:gravity="center"
-android:orientation="vertical">
-<RadioButton android:id="@+id/rdo_reminder_repeat_none"
-    android:layout_width="137dp"
-    android:layout_height="wrap_content"
-    android:textColor="@color/text_dark"
-    android:buttonTint="@color/bg_success"
-    android:text="@string/repeat_none" />
-<RadioButton android:id="@+id/rdo_reminder_repeat_hourly"
-    android:layout_width="137dp"
-    android:layout_height="wrap_content"
-    android:textColor="@color/text_dark"
-    android:buttonTint="@color/bg_warning"
-    android:text="@string/repeat_hourly" />
-<RadioButton android:id="@+id/rdo_reminder_repeat_daily"
-    android:layout_width="137dp"
-    android:layout_height="wrap_content"
-    android:textColor="@color/text_dark"
-    android:buttonTint="@color/bg_info"
-    android:text="@string/repeat_daily" />
-<RadioButton android:id="@+id/rdo_reminder_repeat_weekly"
-    android:layout_width="137dp"
-    android:layout_height="wrap_content"
-    android:textColor="@color/text_dark"
-    android:buttonTint="@color/bg_dark"
-    android:text="@string/repeat_weekly" />
-<RadioButton android:id="@+id/rdo_reminder_repeat_monthly"
-    android:layout_width="137dp"
-    android:layout_height="wrap_content"
-    android:textColor="@color/text_dark"
-    android:buttonTint="@color/bg_warning"
-    android:text="@string/repeat_monthly" />
-<RadioButton android:id="@+id/rdo_reminder_repeat_yearly"
-    android:layout_width="137dp"
-    android:layout_height="wrap_content"
-    android:textColor="@color/text_dark"
-    android:buttonTint="@color/bg_danger"
-    android:text="@string/repeat_yearly" />
-</RadioGroup>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RadioGroup android:id="@+id/rg_repeat_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_16"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:orientation="vertical">
+        <RadioButton android:id="@+id/rdo_reminder_repeat_none"
+            android:layout_width="137dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_success"
+            android:text="@string/repeat_none" />
+        <RadioButton android:id="@+id/rdo_reminder_repeat_hourly"
+            android:layout_width="137dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:text="@string/repeat_hourly" />
+        <RadioButton android:id="@+id/rdo_reminder_repeat_daily"
+            android:layout_width="137dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_info"
+            android:text="@string/repeat_daily" />
+        <RadioButton android:id="@+id/rdo_reminder_repeat_weekly"
+            android:layout_width="137dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_dark"
+            android:text="@string/repeat_weekly" />
+        <RadioButton android:id="@+id/rdo_reminder_repeat_monthly"
+            android:layout_width="137dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:text="@string/repeat_monthly" />
+        <RadioButton android:id="@+id/rdo_reminder_repeat_yearly"
+            android:layout_width="137dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_danger"
+            android:text="@string/repeat_yearly" />
+    </RadioGroup>
+
+</ScrollView>
+
+
+
+
+
+

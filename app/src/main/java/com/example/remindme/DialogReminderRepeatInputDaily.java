@@ -11,8 +11,8 @@ import android.widget.CheckBox;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import com.example.remindme.util.IReminderRepeatListener;
-import com.example.remindme.util.ReminderRepeatModel;
+import com.example.remindme.viewModels.IReminderRepeatListener;
+import com.example.remindme.viewModels.ReminderRepeatModel;
 
 public class DialogReminderRepeatInputDaily extends DialogFragment {
 

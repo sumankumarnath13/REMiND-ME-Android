@@ -51,7 +51,7 @@
 
     <string name="btn_vibration">Vibration</string>
     <string name="btn_disable">Disable</string>
-    <string name="btn_alarm_sound">Alarm Sound</string>
+    <string name="btn_alarm_sound">ALERT TONE</string>
     <string name="btn_snooze">Snooze</string>
 
     <string name="snooze_heading">Snooze</string>

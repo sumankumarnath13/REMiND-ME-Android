@@ -1,4 +1,4 @@
-package com.example.remindme.util;
+package com.example.remindme.viewModels;
 
 import androidx.annotation.NonNull;
 

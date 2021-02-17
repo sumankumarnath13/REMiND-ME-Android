@@ -6,5 +6,6 @@
     <dimen name="dp_3">3dp</dimen>
     <dimen name="dp_51">51dp</dimen>
     <dimen name="font_size_h1">19sp</dimen>
+    <dimen name="font_size_h2">17sp</dimen>
     <dimen name="font_size_s1">11sp</dimen>
 </resources>

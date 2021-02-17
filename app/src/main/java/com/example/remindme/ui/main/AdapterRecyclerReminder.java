@@ -102,7 +102,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 @Override
                 public void execute(Realm realm) {
                     final ReminderActive reminderActive = (ReminderActive) reminder;
-                    reminderActive.enabled = enabled;
+                    reminderActive.isEnable = enabled;
                     realm.insertOrUpdate(reminderActive);
                     if(enabled){
                         try {
@@ -131,7 +131,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 } else {
                     img.setVisibility(View.GONE);
                 }
-                enabled.setChecked(reminderActive.enabled);
+                enabled.setChecked(reminderActive.isEnable);
                 name.setText(reminderActive.name);
                 note.setText(reminderActive.note);
             }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="@dimen/dp_16"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ActivityReminderInput">
 
     <!-- Header aligned to top -->
@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:layout_marginBottom="@dimen/dp_16" >
+        android:layout_marginBottom="@dimen/dp_16"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/tv_title"
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="center" >
+        android:gravity="center">
 
         <Button
             android:id="@+id/btn_reminder_save"
@@ -49,38 +49,38 @@
     <!-- Scrollable Content below header and above footer -->
     <ScrollView
         android:id="@+id/sv_container"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_above="@id/rv_footer"
-        android:layout_below="@id/rv_header" >
+        android:layout_below="@id/rv_header">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_51"
             android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:layout_marginBottom="87dp" >
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/tv_reminder_name"
-                android:backgroundTint="@color/text_success"
-                android:textColor="@color/text_white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autofillHints="@string/hint_reminder_name"
+                android:backgroundTint="@color/text_success"
+                android:hint="@string/hint_reminder_name"
                 android:inputType="text"
                 android:singleLine="true"
-                android:hint="@string/hint_reminder_name"
-                android:autofillHints="@string/hint_reminder_name"/>
+                android:textColor="@color/text_white" />
 
             <EditText
                 android:id="@+id/tv_reminder_note"
-                android:backgroundTint="@color/text_dark"
-                android:textColor="@color/text_dark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textLongMessage|textMultiLine"
+                android:autofillHints="@string/hint_reminder_note"
+                android:backgroundTint="@color/text_dark"
                 android:hint="@string/hint_reminder_note"
-                android:autofillHints="@string/hint_reminder_note"/>
+                android:inputType="textLongMessage|textMultiLine"
+                android:textColor="@color/text_dark" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -114,93 +114,111 @@
 
             </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btn_reminder_repeat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_reminder_repeat"
-                android:drawableLeft="@drawable/ic_reminder_repeat"
-                android:drawableTint="@color/text_success"
-                android:drawablePadding="@dimen/dp_16"
-                android:layout_gravity="start"
-                android:textAlignment="viewStart"
-                android:width="113dp"
-                android:text="@string/btn_repeat" />
-
-            <TextView
-                android:id="@+id/txt_reminder_repeat_summary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textSize="@dimen/font_size_s1" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btn_reminder_snooze"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_reminder_snooze"
-                android:drawableLeft="@drawable/ic_reminder_snooze"
-                android:drawableTint="@color/text_warning"
-                android:drawablePadding="@dimen/dp_16"
-                android:layout_gravity="start"
-                android:textAlignment="viewStart"
-                android:width="113dp"
-                android:text="@string/btn_snooze" />
-
-            <TextView
-                android:id="@+id/txt_reminder_snooze_summary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textSize="@dimen/font_size_s1" />
-
-        </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_reminder_sound"
+            <LinearLayout
+                android:id="@+id/mnu_reminder_repeat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_reminder_sound"
-                android:drawableLeft="@drawable/ic_reminder_sound"
-                android:drawableTint="@color/text_info"
-                android:drawablePadding="@dimen/dp_16"
-                android:layout_gravity="start"
-                android:textAlignment="viewStart"
-                android:text="@string/btn_alarm_sound" />
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_51"
+                android:layout_marginBottom="@dimen/dp_16"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatImageView
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:width="113dp"
+                    android:src="@drawable/ic_reminder_repeat"
+                    app:tint="@color/bg_success" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginLeft="@dimen/dp_16"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/btn_repeat"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/font_size_h2"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_reminder_repeat_summary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/font_size_s1" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/mnu_reminder_snooze"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_16"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:width="113dp"
+                    android:src="@drawable/ic_reminder_snooze"
+                    app:tint="@color/bg_warning" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginLeft="@dimen/dp_16"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/btn_snooze"
+                        android:textSize="@dimen/font_size_h2"
+                        android:gravity="center_vertical"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_reminder_snooze_summary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/font_size_s1" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_16"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:tint="@color/text_dark"
-                    android:src="@drawable/ic_reminder_vibrate">
-                </androidx.appcompat.widget.AppCompatImageView>
+                    android:src="@drawable/ic_reminder_vibrate"
+                    app:tint="@color/text_dark"/>
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="fill_parent"
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/dp_16"
                     android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginLeft="@dimen/dp_16"
                     android:layout_weight="1"
+                    android:textSize="@dimen/font_size_h2"
+                    android:textStyle="bold"
                     android:gravity="center_vertical"
                     android:text="@string/btn_vibration" />
 
@@ -210,39 +228,39 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end" />
 
-            </androidx.appcompat.widget.LinearLayoutCompat>
+            </LinearLayout>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_51"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_16"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatImageView
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    app:tint="@color/text_danger"
-                    android:src="@drawable/ic_reminder_dismiss">
-                </androidx.appcompat.widget.AppCompatImageView>
+                    android:src="@drawable/ic_reminder_dismiss"
+                    app:tint="@color/text_danger"/>
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="fill_parent"
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dp_16"
                     android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginLeft="@dimen/dp_16"
                     android:layout_weight="1"
-                    android:text="@string/btn_disable">
-                </androidx.appcompat.widget.AppCompatTextView>
+                    android:textSize="@dimen/font_size_h2"
+                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/btn_disable"/>
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sw_reminder_disable"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="end">
-                </androidx.appcompat.widget.SwitchCompat>
+                    android:layout_gravity="end"/>
 
-            </androidx.appcompat.widget.LinearLayoutCompat>
+            </LinearLayout>
 
         </LinearLayout>
 

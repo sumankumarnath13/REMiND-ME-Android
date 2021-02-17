@@ -13,6 +13,8 @@ import com.example.remindme.util.UtilsAlarm;
 import java.text.ParseException;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.exceptions.RealmMigrationNeededException;
 
 
 public class App extends Application {
@@ -25,6 +27,15 @@ public class App extends Application {
 
         Toast.makeText(this, "App created", Toast.LENGTH_SHORT).show();
         Realm.init(this);
+
+        try {
+            Realm.getDefaultInstance();
+        }
+        catch (RealmMigrationNeededException r) {
+            RealmConfiguration config = Realm.getDefaultConfiguration();
+            Realm.deleteRealm(config);
+            //realm = Realm.getDefaultInstance();
+        }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

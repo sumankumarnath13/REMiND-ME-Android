@@ -1,4 +1,4 @@
-package com.example.remindme.util;
+package com.example.remindme.viewModels;
 
 import androidx.annotation.NonNull;
 
@@ -11,7 +11,7 @@ public class ReminderSnoozeModel {
         M30
     }
 
-    public enum SnoozeRepeatOptions {
+    public enum SnoozeCountOptions {
         R3,
         R5,
         RC,
@@ -19,16 +19,16 @@ public class ReminderSnoozeModel {
 
     public SnoozeIntervalOptions intervalOption = SnoozeIntervalOptions.M5;
 
-    public SnoozeRepeatOptions repeatOption = SnoozeRepeatOptions.R3;
+    public SnoozeCountOptions countOptions = SnoozeCountOptions.R3;
 
-    public boolean enabled = true;
+    public boolean isEnable = true;
 
     @NonNull
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        if(enabled){
+        if(isEnable){
             builder.append("Interval ");
 
             switch (intervalOption){
@@ -49,7 +49,7 @@ public class ReminderSnoozeModel {
 
             builder.append(", Repeat ");
 
-            switch (repeatOption){
+            switch (countOptions){
                 default:
                 case R3:
                     builder.append("3 times");

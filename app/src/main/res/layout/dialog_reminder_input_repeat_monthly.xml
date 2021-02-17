@@ -1,129 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/dp_16"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/chk_monthly_jan"
-        android:layout_width="match_parent"
-        android:textColor="@color/text_dark"
-        android:buttonTint="@color/bg_warning"
-        android:layout_height="wrap_content"
-        android:checked="true"
-        android:text="@string/repeat_monthly_jan">
-    </androidx.appcompat.widget.AppCompatCheckBox>
-
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/chk_monthly_feb"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_dark"
-        android:buttonTint="@color/bg_warning"
-        android:checked="true"
-        android:text="@string/repeat_monthly_feb">
-    </androidx.appcompat.widget.AppCompatCheckBox>
+        android:padding="@dimen/dp_16"
+        android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/chk_monthly_mar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_dark"
-        android:buttonTint="@color/bg_warning"
-        android:checked="true"
-        android:text="@string/repeat_monthly_mar">
-    </androidx.appcompat.widget.AppCompatCheckBox>
+        <CheckBox
+            android:id="@+id/chk_monthly_jan"
+            android:layout_width="match_parent"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/repeat_monthly_jan">
+        </CheckBox>
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/chk_monthly_apr"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_dark"
-        android:buttonTint="@color/bg_warning"
-        android:checked="true"
-        android:text="@string/repeat_monthly_apr">
-    </androidx.appcompat.widget.AppCompatCheckBox>
+        <CheckBox
+            android:id="@+id/chk_monthly_feb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:checked="true"
+            android:text="@string/repeat_monthly_feb">
+        </CheckBox>
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/chk_monthly_may"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_dark"
-        android:buttonTint="@color/bg_warning"
-        android:checked="true"
-        android:text="@string/repeat_monthly_may">
-    </androidx.appcompat.widget.AppCompatCheckBox>
+        <CheckBox
+            android:id="@+id/chk_monthly_mar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:checked="true"
+            android:text="@string/repeat_monthly_mar">
+        </CheckBox>
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/chk_monthly_jun"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_dark"
-        android:buttonTint="@color/bg_warning"
-        android:checked="true"
-        android:text="@string/repeat_monthly_jun">
-    </androidx.appcompat.widget.AppCompatCheckBox>
+        <CheckBox
+            android:id="@+id/chk_monthly_apr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:checked="true"
+            android:text="@string/repeat_monthly_apr">
+        </CheckBox>
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/chk_monthly_jul"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_dark"
-        android:buttonTint="@color/bg_warning"
-        android:checked="true"
-        android:text="@string/repeat_monthly_jul">
-    </androidx.appcompat.widget.AppCompatCheckBox>
+        <CheckBox
+            android:id="@+id/chk_monthly_may"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:checked="true"
+            android:text="@string/repeat_monthly_may">
+        </CheckBox>
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/chk_monthly_aug"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_dark"
-        android:buttonTint="@color/bg_warning"
-        android:checked="true"
-        android:text="@string/repeat_monthly_aug">
-    </androidx.appcompat.widget.AppCompatCheckBox>
+        <CheckBox
+            android:id="@+id/chk_monthly_jun"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:checked="true"
+            android:text="@string/repeat_monthly_jun">
+        </CheckBox>
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/chk_monthly_sep"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_dark"
-        android:buttonTint="@color/bg_warning"
-        android:checked="true"
-        android:text="@string/repeat_monthly_sep">
-    </androidx.appcompat.widget.AppCompatCheckBox>
+        <CheckBox
+            android:id="@+id/chk_monthly_jul"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:checked="true"
+            android:text="@string/repeat_monthly_jul">
+        </CheckBox>
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/chk_monthly_oct"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_dark"
-        android:buttonTint="@color/bg_warning"
-        android:checked="true"
-        android:text="@string/repeat_monthly_oct">
-    </androidx.appcompat.widget.AppCompatCheckBox>
+        <CheckBox
+            android:id="@+id/chk_monthly_aug"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:checked="true"
+            android:text="@string/repeat_monthly_aug">
+        </CheckBox>
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/chk_monthly_nov"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_dark"
-        android:buttonTint="@color/bg_warning"
-        android:checked="true"
-        android:text="@string/repeat_monthly_nov">
-    </androidx.appcompat.widget.AppCompatCheckBox>
+        <CheckBox
+            android:id="@+id/chk_monthly_sep"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:checked="true"
+            android:text="@string/repeat_monthly_sep">
+        </CheckBox>
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/chk_monthly_dec"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_dark"
-        android:buttonTint="@color/bg_warning"
-        android:checked="true"
-        android:text="@string/repeat_monthly_dec">
-    </androidx.appcompat.widget.AppCompatCheckBox>
+        <CheckBox
+            android:id="@+id/chk_monthly_oct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:checked="true"
+            android:text="@string/repeat_monthly_oct">
+        </CheckBox>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <CheckBox
+            android:id="@+id/chk_monthly_nov"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:checked="true"
+            android:text="@string/repeat_monthly_nov">
+        </CheckBox>
+
+        <CheckBox
+            android:id="@+id/chk_monthly_dec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:buttonTint="@color/bg_warning"
+            android:checked="true"
+            android:text="@string/repeat_monthly_dec">
+        </CheckBox>
+
+    </LinearLayout>
+
+</ScrollView>
+
