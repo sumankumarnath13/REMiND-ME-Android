@@ -12,16 +12,60 @@
         android:id="@+id/rv_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/dp_16"
-        android:gravity="center">
+        android:layout_marginBottom="@dimen/dp_32"
+        android:layout_alignParentTop="true">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/new_reminder_heading"
-            android:textSize="@dimen/font_size_h1" />
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_16"
+                android:text="@string/new_reminder_heading"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/font_size_h1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_reminder_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/dp_32"
+                    android:layout_marginRight="@dimen/dp_32"
+                    android:drawableStart="@drawable/ic_reminder_time"
+                    android:drawableLeft="@drawable/ic_reminder_time"
+                    android:drawablePadding="@dimen/dp_16"
+                    android:drawableTint="@color/bg_warning"
+                    android:text="@string/btn_time"
+                    android:textSize="@dimen/font_size_xh5" />
+                <!--                android:drawableLeft="@drawable/ic_reminder_time"-->
+
+                <Button
+                    android:id="@+id/btn_reminder_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/btn_date"
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/font_size_h1" />
+
+                <!--                android:drawableTint="@color/text_dark"-->
+                <!--                android:drawableStart="@drawable/ic_reminder_date"-->
+                <!--                android:drawableLeft="@drawable/ic_reminder_date"-->
+                <!--                android:drawablePadding="@dimen/dp_8"-->
+
+            </LinearLayout>
+
+        </LinearLayout>
+
     </RelativeLayout>
 
     <!-- Footer aligned to bottom -->
@@ -61,56 +105,87 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/tv_reminder_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints="@string/hint_reminder_name"
-                android:backgroundTint="@color/text_success"
-                android:hint="@string/hint_reminder_name"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/text_white" />
-
-            <EditText
-                android:id="@+id/tv_reminder_note"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints="@string/hint_reminder_note"
-                android:backgroundTint="@color/text_dark"
-                android:hint="@string/hint_reminder_note"
-                android:inputType="textLongMessage|textMultiLine"
-                android:textColor="@color/text_dark" />
-
             <LinearLayout
+                android:id="@+id/mnu_reminder_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_51"
-                android:gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/dp_16"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btn_reminder_time"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dp_16"
-                    android:layout_marginRight="@dimen/dp_16"
-                    android:drawableStart="@drawable/ic_reminder_time"
-                    android:drawableLeft="@drawable/ic_reminder_time"
-                    android:drawablePadding="@dimen/dp_16"
-                    android:drawableTint="@color/text_warning"
-                    android:text="@string/btn_time" />
+                    android:width="113dp"
+                    android:src="@drawable/ic_sentiment_happy"
+                    app:tint="@color/bg_success" />
 
-                <Button
-                    android:id="@+id/btn_reminder_date"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginLeft="@dimen/dp_16"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/btn_name"
+                        android:textSize="@dimen/font_size_h2"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_reminder_name_summary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/font_size_s1" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/mnu_reminder_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_16"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dp_16"
-                    android:layout_marginRight="@dimen/dp_16"
-                    android:drawableStart="@drawable/ic_reminder_date"
-                    android:drawableLeft="@drawable/ic_reminder_date"
-                    android:drawablePadding="@dimen/dp_16"
-                    android:text="@string/btn_date" />
+                    android:width="113dp"
+                    android:src="@drawable/ic_note"
+                    app:tint="@color/bg_warning" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginLeft="@dimen/dp_16"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/btn_note"
+                        android:textSize="@dimen/font_size_h2"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_reminder_note_summary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/font_size_s1" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -127,7 +202,7 @@
                     android:layout_height="wrap_content"
                     android:width="113dp"
                     android:src="@drawable/ic_reminder_repeat"
-                    app:tint="@color/bg_success" />
+                    app:tint="@color/bg_info" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -139,13 +214,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/btn_repeat"
                         android:gravity="center_vertical"
+                        android:text="@string/btn_repeat"
                         android:textSize="@dimen/font_size_h2"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/txt_reminder_repeat_summary"
+                        android:id="@+id/tv_reminder_repeat_summary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -169,7 +244,7 @@
                     android:layout_height="wrap_content"
                     android:width="113dp"
                     android:src="@drawable/ic_reminder_snooze"
-                    app:tint="@color/bg_warning" />
+                    app:tint="@color/bg_secondary" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -181,13 +256,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
                         android:text="@string/btn_snooze"
                         android:textSize="@dimen/font_size_h2"
-                        android:gravity="center_vertical"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/txt_reminder_snooze_summary"
+                        android:id="@+id/tv_reminder_snooze_summary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -209,7 +284,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_reminder_vibrate"
-                    app:tint="@color/text_dark"/>
+                    app:tint="@color/bg_warning" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -217,10 +292,10 @@
                     android:layout_marginStart="@dimen/dp_16"
                     android:layout_marginLeft="@dimen/dp_16"
                     android:layout_weight="1"
-                    android:textSize="@dimen/font_size_h2"
-                    android:textStyle="bold"
                     android:gravity="center_vertical"
-                    android:text="@string/btn_vibration" />
+                    android:text="@string/btn_vibration"
+                    android:textSize="@dimen/font_size_h2"
+                    android:textStyle="bold" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sw_reminder_vibrate"
@@ -241,7 +316,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_reminder_dismiss"
-                    app:tint="@color/text_danger"/>
+                    app:tint="@color/bg_danger" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -249,16 +324,16 @@
                     android:layout_marginStart="@dimen/dp_16"
                     android:layout_marginLeft="@dimen/dp_16"
                     android:layout_weight="1"
-                    android:textSize="@dimen/font_size_h2"
-                    android:textStyle="bold"
                     android:gravity="center_vertical"
-                    android:text="@string/btn_disable"/>
+                    android:text="@string/btn_disable"
+                    android:textSize="@dimen/font_size_h2"
+                    android:textStyle="bold" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sw_reminder_disable"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="end"/>
+                    android:layout_gravity="end" />
 
             </LinearLayout>
 

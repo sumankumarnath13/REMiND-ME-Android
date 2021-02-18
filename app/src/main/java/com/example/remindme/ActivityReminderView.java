@@ -189,6 +189,6 @@ public class ActivityReminderView extends AppCompatActivity {
 
         ((TextView)findViewById(R.id.tv_reminder_time)).setText(alarm_time);
         ((TextView)findViewById(R.id.tv_reminder_name)).setText(name);
-        ((TextView)findViewById(R.id.tv_reminder_note)).setText(note);
+        ((TextView)findViewById(R.id.txt_reminder_note)).setText(note);
     }
 }

@@ -133,7 +133,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
                 }
 
                 ((TextView) findViewById(R.id.tv_reminder_name)).setText(this.activeReminder.name);
-                ((TextView) findViewById(R.id.tv_reminder_note)).setText(this.activeReminder.note);
+                ((TextView) findViewById(R.id.txt_reminder_note)).setText(this.activeReminder.note);
             }
         }
         catch (Exception e){

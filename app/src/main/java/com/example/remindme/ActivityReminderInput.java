@@ -11,11 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
-
 import com.example.remindme.dataModels.ReminderActive;
+import com.example.remindme.viewModels.IReminderNameListener;
+import com.example.remindme.viewModels.IReminderNoteListener;
 import com.example.remindme.viewModels.IReminderRepeatListener;
 import com.example.remindme.viewModels.IReminderSnoozeListener;
 import com.example.remindme.viewModels.ReminderModel;
@@ -23,15 +23,12 @@ import com.example.remindme.viewModels.ReminderRepeatModel;
 import com.example.remindme.viewModels.ReminderSnoozeModel;
 import com.example.remindme.util.UtilsActivity;
 import com.example.remindme.util.UtilsDateTime;
-
 import java.text.ParseException;
 import java.util.Calendar;
-
 import javax.annotation.ParametersAreNonnullByDefault;
-
 import io.realm.Realm;
 
-public class ActivityReminderInput extends AppCompatActivity implements IReminderRepeatListener, IReminderSnoozeListener {
+public class ActivityReminderInput extends AppCompatActivity implements IReminderNameListener, IReminderNoteListener, IReminderRepeatListener, IReminderSnoozeListener {
     private ReminderActive reminder = null;
     private ReminderModel reminderModel = null;
     //private ReminderRepeatModel repeatModel = null;
@@ -40,35 +37,38 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     private ReminderSnoozeModel snoozeModelBuffer = null;
     //private Date date = null;
 
-    private TextView txt_reminder_repeat_summary = null;
-    private TextView txt_reminder_snooze_summary = null;
+    private TextView tv_reminder_name_summary = null;
+    private TextView tv_reminder_note_summary = null;
+    private TextView tv_reminder_repeat_summary = null;
+    private TextView tv_reminder_snooze_summary = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         reminderModel = new ReminderModel();
-        //repeatModel = new ReminderRepeatModel();
-        //snoozeModel = new ReminderSnoozeModel();
 
         setContentView(R.layout.activity_reminder_input);
 
         UtilsActivity.setTitle(this);
 
-        txt_reminder_repeat_summary = findViewById(R.id.txt_reminder_repeat_summary);
-        txt_reminder_snooze_summary = findViewById(R.id.txt_reminder_snooze_summary);
+        tv_reminder_name_summary = findViewById(R.id.tv_reminder_name_summary);
+        tv_reminder_note_summary = findViewById(R.id.tv_reminder_note_summary);
+        tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
+        tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
 
         final TextView tv_title = findViewById(R.id.tv_title);
-        final TextView tv_name = findViewById(R.id.tv_reminder_name);
-        final TextView tv_note = findViewById(R.id.tv_reminder_note);
-        final Button btn_date = findViewById(R.id.btn_reminder_date);
-        final Button btn_time = findViewById(R.id.btn_reminder_time);
-        final Button btn_save = findViewById(R.id.btn_reminder_save);
+        final Button btn_reminder_date = findViewById(R.id.btn_reminder_date);
+        final Button btn_reminder_time = findViewById(R.id.btn_reminder_time);
+        final Button btn_reminder_save = findViewById(R.id.btn_reminder_save);
+        final LinearLayout mnu_reminder_name = findViewById(R.id.mnu_reminder_name);
+        final LinearLayout mnu_reminder_note = findViewById(R.id.mnu_reminder_note);
         final LinearLayout mnu_reminder_repeat = findViewById(R.id.mnu_reminder_repeat);
-        //final Button btn_sound = findViewById(R.id.btn_reminder_sound);
-        final SwitchCompat sw_vibrate = findViewById(R.id.sw_reminder_vibrate);
-        final SwitchCompat sw_disable = findViewById(R.id.sw_reminder_disable);
+        final SwitchCompat sw_reminder_vibrate = findViewById(R.id.sw_reminder_vibrate);
+        final SwitchCompat sw_reminder_disable = findViewById(R.id.sw_reminder_disable);
         final LinearLayout mnu_reminder_snooze = findViewById(R.id.mnu_reminder_snooze);
+
+        //final Button btn_sound = findViewById(R.id.btn_reminder_sound);
 
         Intent i = getIntent();
         final int reminder_id = i.getIntExtra("ID", 0);
@@ -98,16 +98,16 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             reminderModel.time = _c.getTime();
         }
 
-        tv_name.setText(reminderModel.name);
-        tv_note.setText(reminderModel.note);
-        btn_date.setText(UtilsDateTime.toDateString(reminderModel.time));
-        btn_time.setText(UtilsDateTime.toTimeString(reminderModel.time));
-        txt_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
-        txt_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
-        sw_vibrate.setChecked(reminderModel.isVibrate);
-        sw_disable.setChecked(!reminderModel.isEnable);
+        btn_reminder_date.setText(UtilsDateTime.toDateString(reminderModel.time));
+        btn_reminder_time.setText(UtilsDateTime.toTimeString(reminderModel.time));
+        tv_reminder_name_summary.setText(reminderModel.name);
+        tv_reminder_note_summary.setText(reminderModel.note);
+        tv_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
+        tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
+        sw_reminder_vibrate.setChecked(reminderModel.isVibrate);
+        sw_reminder_disable.setChecked(!reminderModel.isEnable);
 
-        btn_time.setOnClickListener(new View.OnClickListener() {
+        btn_reminder_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Calendar c = Calendar.getInstance();
@@ -122,14 +122,14 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                                 c.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                 c.set(Calendar.MINUTE, minute);
                                 reminderModel.time = c.getTime();
-                                btn_time.setText(UtilsDateTime.toTimeString(ActivityReminderInput.this.reminderModel.time));
+                                btn_reminder_time.setText(UtilsDateTime.toTimeString(ActivityReminderInput.this.reminderModel.time));
                             }
                         }, mHour, mMinute, false);
                 timePickerDialog.show();
             }
         });
 
-        btn_date.setOnClickListener(new View.OnClickListener() {
+        btn_reminder_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Calendar c = Calendar.getInstance();
@@ -147,14 +147,14 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                         c.set(Calendar.MONTH, monthOfYear);
                         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                         reminderModel.time = c.getTime();
-                        btn_date.setText(UtilsDateTime.toDateString(ActivityReminderInput.this.reminderModel.time));
+                        btn_reminder_date.setText(UtilsDateTime.toDateString(ActivityReminderInput.this.reminderModel.time));
                     }
                 }, mYear, mMonth, mDay);
                 datePickerDialog.show();
             }
         });
 
-        btn_save.setOnClickListener(new View.OnClickListener() {
+        btn_reminder_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (Calendar.getInstance().getTime().after(reminderModel.time)) {
@@ -217,10 +217,8 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                     });
 
                     if (reminderModel.isValid) {
-                        reminderModel.name = tv_name.getText().toString();
-                        reminderModel.note = tv_note.getText().toString();
-                        reminderModel.isVibrate = sw_vibrate.isChecked();
-                        reminderModel.isEnable = !sw_disable.isChecked();
+                        reminderModel.isVibrate = sw_reminder_vibrate.isChecked();
+                        reminderModel.isEnable = !sw_reminder_disable.isChecked();
 
                         reminder = ReminderModel.transform(reminderModel);
 
@@ -242,6 +240,22 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
+        mnu_reminder_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogReminderNameInput input = new DialogReminderNameInput();
+                input.show(getSupportFragmentManager(), "Reminder_Input_Name");
+            }
+        });
+
+        mnu_reminder_note.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogReminderNoteInput input = new DialogReminderNoteInput();
+                input.show(getSupportFragmentManager(), "Reminder_Input_Note");
+            }
+        });
+
         mnu_reminder_repeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -252,63 +266,28 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 repeatModelBuffer.dailyModel = reminderModel.repeatModel.dailyModel;
                 repeatModelBuffer.monthlyModel = reminderModel.repeatModel.monthlyModel;
 
-//                if(repeatModel != null){
-//                }
-//                else{ //Set defaults
-//                    repeatModelBuffer.dailyModel = new ReminderRepeatDailyModel();
-//                    repeatModelBuffer.monthlyModel = new ReminderRepeatMonthlyModel();
-//                }
-
-                DialogReminderRepeatInput repeatInput = new DialogReminderRepeatInput();
-                repeatInput.show(getSupportFragmentManager(), "Reminder_Repeat");
+                DialogReminderRepeatInput input = new DialogReminderRepeatInput();
+                input.show(getSupportFragmentManager(), "Reminder_Repeat");
 
             }
         });
-
-//        btn_sound.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
 
         mnu_reminder_snooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogReminderSnoozeInput repeatInput = new DialogReminderSnoozeInput();
-                repeatInput.show(getSupportFragmentManager(), "Reminder_Snooze");
+                DialogReminderSnoozeInput input = new DialogReminderSnoozeInput();
+                input.show(getSupportFragmentManager(), "Reminder_Snooze");
             }
         });
 
-//        btn_snooze.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                // Create a buffer and send it to dialog:
-////                snoozeModelBuffer = new ReminderSnoozeModel();
-////
-////                if(snoozeModel != null){ // Copy from real object if valid:
-////                    snoozeModelBuffer = snoozeModel;
-////                }
-////                else { //Set defaults
-////                    snoozeModelBuffer.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M5;
-////                    snoozeModelBuffer.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R3;
-////                }
-//
-////                DialogReminderSnoozeInput repeatInput = new DialogReminderSnoozeInput();
-////                repeatInput.show(getSupportFragmentManager(), "Reminder_Snooze");
-//
-//                Toast.makeText(ActivityReminderInput.this, "Bhuuulaaa", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-        sw_vibrate.setOnClickListener(new View.OnClickListener() {
+        sw_reminder_vibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
 
-        sw_disable.setOnClickListener(new View.OnClickListener() {
+        sw_reminder_disable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -326,7 +305,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             default:
                 if (isEOF) {
                     reminderModel.repeatModel = model;
-                    txt_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
+                    tv_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
                 }
                 break;
             case Daily:
@@ -339,7 +318,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                             model.dailyModel.isFri ||
                             model.dailyModel.isSat) {
                         reminderModel.repeatModel = model;
-                        txt_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
+                        tv_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
                     }
                 } else {
                     DialogReminderRepeatInputDaily inputDaily = new DialogReminderRepeatInputDaily();
@@ -361,7 +340,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                             model.monthlyModel.isNov ||
                             model.monthlyModel.isDec) {
                         reminderModel.repeatModel = model;
-                        txt_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
+                        tv_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
                     }
                 } else {
                     DialogReminderRepeatInputMonthly inputMonthly = new DialogReminderRepeatInputMonthly();
@@ -374,8 +353,23 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     @Override
     public void set(ReminderSnoozeModel model, boolean isEOF) {
         if (isEOF) {
-            //snoozeModel = model;
-            txt_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
+            tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
+        }
+    }
+
+    @Override
+    public void setName(String name, boolean isEOF) {
+        if(isEOF){
+            reminderModel.name = name;
+            tv_reminder_name_summary.setText(reminderModel.name);
+        }
+    }
+
+    @Override
+    public void setNote(String note, boolean isEOF) {
+        if(isEOF){
+            reminderModel.note = note;
+            tv_reminder_note_summary.setText(reminderModel.note);
         }
     }
 
@@ -387,5 +381,15 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     @Override
     public ReminderRepeatModel getRepeatModel() {
         return repeatModelBuffer;
+    }
+
+    @Override
+    public String getReminderName() {
+        return reminderModel.name;
+    }
+
+    @Override
+    public String getReminderNote() {
+        return reminderModel.note;
     }
 }

@@ -11,14 +11,16 @@
     <string name="tab_text_1">Active</string>
     <string name="tab_text_2">Missed</string>
     <string name="tab_text_3">Dismissed</string>
-    <string name="new_reminder_heading">NEW</string>
-    <string name="view_reminder_heading">VIEW</string>
-    <string name="edit_reminder_heading">UPDATE</string>
-    <string name="hint_reminder_name">Name</string>
-    <string name="hint_reminder_note">Note</string>
+    <string name="new_reminder_heading">NEW REMINDER</string>
+    <string name="view_reminder_heading">VIEW REMINDER</string>
+    <string name="edit_reminder_heading">UPDATE REMINDER</string>
+    <string name="hint_reminder_name">Write something here ...</string>
+    <string name="hint_reminder_note">Write something here ...</string>
     <string name="btn_save">Save</string>
     <string name="btn_time">Set Time</string>
     <string name="btn_date">Set Date</string>
+    <string name="btn_name">Name</string>
+    <string name="btn_note">Note</string>
     <string name="btn_repeat">Repeat</string>
 
     <string name="repeat_none">No Repeat</string>

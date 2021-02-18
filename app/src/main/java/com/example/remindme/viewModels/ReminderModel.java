@@ -21,7 +21,7 @@ public class ReminderModel {
         ReminderActive to = new ReminderActive();
         to.id = from.id;
         to.name = from.name;
-        to.note = from.name;
+        to.note = from.note;
         to.time = from.time;
         to.isEnable = from.isEnable;
         to.isVibrate = from.isVibrate;
@@ -118,7 +118,7 @@ public class ReminderModel {
         ReminderModel to = new ReminderModel();
         to.id = from.id;
         to.name = from.name;
-        to.note = from.name;
+        to.note = from.note;
         to.time = from.time;
         to.isEnable = from.isEnable;
         to.isVibrate = from.isVibrate;

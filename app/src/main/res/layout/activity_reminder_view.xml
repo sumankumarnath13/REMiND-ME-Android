@@ -129,7 +129,7 @@
                 android:textColor="@color/text_white" />
 
             <TextView
-                android:id="@+id/tv_reminder_note"
+                android:id="@+id/txt_reminder_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_16"
