@@ -12,7 +12,6 @@
         android:autofillHints="@string/hint_reminder_name"
         android:hint="@string/hint_reminder_name"
         android:singleLine="true"
-        android:backgroundTint="@color/text_success"
-        android:textColor="@color/text_white"/>
+        android:backgroundTint="@color/text_success" />
 
 </LinearLayout>

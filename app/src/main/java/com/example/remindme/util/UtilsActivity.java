@@ -1,6 +1,5 @@
 package com.example.remindme.util;
 
-import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -19,7 +18,7 @@ public class UtilsActivity {
         char_pos++;char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_info)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;char_pos++;
-        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_dark)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_light_black1)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_warning)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;char_pos++;

@@ -13,7 +13,7 @@
         <CheckBox
             android:id="@+id/chk_monthly_jan"
             android:layout_width="match_parent"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:buttonTint="@color/bg_warning"
             android:layout_height="wrap_content"
             android:checked="true"
@@ -24,7 +24,7 @@
             android:id="@+id/chk_monthly_feb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:buttonTint="@color/bg_warning"
             android:checked="true"
             android:text="@string/repeat_monthly_feb">
@@ -34,7 +34,7 @@
             android:id="@+id/chk_monthly_mar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:buttonTint="@color/bg_warning"
             android:checked="true"
             android:text="@string/repeat_monthly_mar">
@@ -44,7 +44,7 @@
             android:id="@+id/chk_monthly_apr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:buttonTint="@color/bg_warning"
             android:checked="true"
             android:text="@string/repeat_monthly_apr">
@@ -54,7 +54,7 @@
             android:id="@+id/chk_monthly_may"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:buttonTint="@color/bg_warning"
             android:checked="true"
             android:text="@string/repeat_monthly_may">
@@ -64,7 +64,7 @@
             android:id="@+id/chk_monthly_jun"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:buttonTint="@color/bg_warning"
             android:checked="true"
             android:text="@string/repeat_monthly_jun">
@@ -74,7 +74,7 @@
             android:id="@+id/chk_monthly_jul"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:buttonTint="@color/bg_warning"
             android:checked="true"
             android:text="@string/repeat_monthly_jul">
@@ -84,7 +84,7 @@
             android:id="@+id/chk_monthly_aug"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:buttonTint="@color/bg_warning"
             android:checked="true"
             android:text="@string/repeat_monthly_aug">
@@ -94,7 +94,7 @@
             android:id="@+id/chk_monthly_sep"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:buttonTint="@color/bg_warning"
             android:checked="true"
             android:text="@string/repeat_monthly_sep">
@@ -104,7 +104,7 @@
             android:id="@+id/chk_monthly_oct"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:buttonTint="@color/bg_warning"
             android:checked="true"
             android:text="@string/repeat_monthly_oct">
@@ -114,7 +114,7 @@
             android:id="@+id/chk_monthly_nov"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:buttonTint="@color/bg_warning"
             android:checked="true"
             android:text="@string/repeat_monthly_nov">
@@ -124,7 +124,7 @@
             android:id="@+id/chk_monthly_dec"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:buttonTint="@color/bg_warning"
             android:checked="true"
             android:text="@string/repeat_monthly_dec">

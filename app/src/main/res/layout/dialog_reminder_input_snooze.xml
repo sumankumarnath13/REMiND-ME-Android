@@ -13,7 +13,7 @@
         android:id="@+id/sw_reminder_snooze_enabled"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:textColor="@color/text_dark"
+        android:textColor="@color/text_light_black1"
         android:textSize="@dimen/font_size_h1"
         android:layout_marginBottom="@dimen/dp_16"
         android:text="@string/snooze_heading">
@@ -28,29 +28,29 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/text_light_black2"
             android:textSize="@dimen/font_size_h1"
             android:text="@string/snooze_interval_heading">
         </TextView>
         <RadioButton android:id="@+id/rdo_reminder_snooze_m5"
             android:layout_width="137dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:text="@string/snooze_interval_m5" />
         <RadioButton android:id="@+id/rdo_reminder_snooze_m10"
             android:layout_width="137dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:text="@string/snooze_interval_m10" />
         <RadioButton android:id="@+id/rdo_reminder_snooze_m15"
             android:layout_width="137dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:text="@string/snooze_interval_m15" />
         <RadioButton android:id="@+id/rdo_reminder_snooze_m30"
             android:layout_width="137dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:text="@string/snooze_interval_m30" />
     </RadioGroup>
 
@@ -63,24 +63,24 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/text_light_black2"
             android:textSize="@dimen/font_size_h1"
             android:text="@string/snooze_repeat_heading">
         </TextView>
         <RadioButton android:id="@+id/rdo_reminder_snooze_r3"
             android:layout_width="137dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:text="@string/snooze_repeat_r3" />
         <RadioButton android:id="@+id/rdo_reminder_snooze_r5"
             android:layout_width="137dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:text="@string/snooze_repeat_r5" />
         <RadioButton android:id="@+id/rdo_reminder_snooze_rc"
             android:layout_width="137dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_light_black1"
             android:text="@string/snooze_repeat_rc" />
     </RadioGroup>
 

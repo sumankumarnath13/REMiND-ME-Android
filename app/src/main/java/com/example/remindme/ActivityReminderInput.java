@@ -31,11 +31,8 @@ import io.realm.Realm;
 public class ActivityReminderInput extends AppCompatActivity implements IReminderNameListener, IReminderNoteListener, IReminderRepeatListener, IReminderSnoozeListener {
     private ReminderActive reminder = null;
     private ReminderModel reminderModel = null;
-    //private ReminderRepeatModel repeatModel = null;
     private ReminderRepeatModel repeatModelBuffer = null;
-    //private ReminderSnoozeModel snoozeModel = null;
     private ReminderSnoozeModel snoozeModelBuffer = null;
-    //private Date date = null;
 
     private TextView tv_reminder_name_summary = null;
     private TextView tv_reminder_note_summary = null;
@@ -115,7 +112,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 int mHour, mMinute;
                 mHour = c.get(Calendar.HOUR_OF_DAY);
                 mMinute = c.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(ActivityReminderInput.this,
+                TimePickerDialog timePickerDialog = new TimePickerDialog(ActivityReminderInput.this, R.style.DateTimePickerDialog,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -138,7 +135,8 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(ActivityReminderInput.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(ActivityReminderInput.this,  R.style.DateTimePickerDialog,
+                        new DatePickerDialog.OnDateSetListener() {
 
                     @Override
                     public void onDateSet(DatePicker view, int year,

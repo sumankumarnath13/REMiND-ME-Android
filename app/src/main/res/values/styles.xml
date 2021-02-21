@@ -1,38 +1,47 @@
 <resources>
     <!-- Base application theme. -->
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/bg_black</item>
-        <item name="colorPrimaryDark">@color/bg_black</item>
-        <item name="colorAccent">@color/text_info</item>
-        <item name="colorOnSecondary">@color/text_success</item>
-        <item name="colorOnSurface">@color/text_success</item>
+
+<item name="tint">@color/bg_black</item>
         <item name="android:background">@color/bg_black</item>
-        <item name="android:textColor">@color/text_dark</item>
-        <item name="android:textColorHint">@color/text_secondary</item>
-        <!--<item name="android:drawableTint">@color/text_dark</item>-->
+        <item name="android:tint">@color/bg_black</item>
+        <item name="colorAccent">@color/bg_success</item>
+        <item name="colorSecondary">@color/text_warning</item>
+
         <item name="android:buttonStyle">@style/commonButtonStyle</item>
         <item name="android:editTextPreferenceStyle">@style/commonEditTextStyle</item>
-        <item name="android:spinnerDropDownItemStyle">@style/spinnerItemStyle</item>
     </style>
-    <style name="commonButtonStyle" parent="Widget.AppCompat.Button">
-        <item name="android:textColor">@color/text_dark</item>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+
+    <style name="commonButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/text_light_black1</item>
         <item name="android:background">@color/bg_black</item>
     </style>
     <style name="commonEditTextStyle" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/text_white</item>
         <item name="android:background">@color/bg_success</item>
+        <item name="android:textColorHint">@color/text_light_black2</item>
     </style>
-
-    <style name="spinnerItemStyle" parent="Widget.AppCompat.TextView.SpinnerItem">
-        <item name="android:textColor">@color/text_info</item>
-    </style>
-
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="DateTimePickerDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:background">@color/bg_light_black2</item>
+        <item name="android:textColorPrimary">@color/text_white</item>
+        <item name="android:textColorSecondary">@color/text_light_black1</item>
+        <item name="colorControlActivated">@color/text_success</item> <!-- Change selection/cursor color -->
+        <item name="colorControlNormal">@color/bg_light_black2</item> <!-- Change clock mode change button tint-->
+        <item name="colorAccent">@color/text_light_black1</item>
+        <item name="tint">@color/text_warning</item> <!-- Change mode switch color for time picker-->
+        <item name="buttonTint">@color/bg_warning</item>
+
+    </style>
+
 </resources>

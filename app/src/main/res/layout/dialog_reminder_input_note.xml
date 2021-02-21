@@ -12,7 +12,6 @@
         android:autofillHints="@string/hint_reminder_note"
         android:hint="@string/hint_reminder_note"
         android:inputType="textLongMessage|textMultiLine"
-        android:backgroundTint="@color/bg_warning"
-        android:textColor="@color/text_white"/>
+        android:backgroundTint="@color/bg_warning" />
 
 </LinearLayout>
