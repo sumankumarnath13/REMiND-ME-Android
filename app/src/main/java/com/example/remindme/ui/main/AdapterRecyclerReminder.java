@@ -148,7 +148,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 final ReminderDismissed reminderDismissed = (ReminderDismissed) reminder;
                 String str_time = UtilsDateTime.toTimeDateString(UtilsDateTime.toDate(reminderDismissed.id));
                 time.setText(str_time);
-                time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_light_black2));
+                time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_gray2));
                 enabled.setVisibility(View.GONE);
                 name.setText(reminderDismissed.name);
                 note.setText(reminderDismissed.note);

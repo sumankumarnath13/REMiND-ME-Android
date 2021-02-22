@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="text_white">#fff</color>
-
-    <color name="text_light_black2">#555</color>
-    <color name="text_light_black1">#adafae</color>
+    <color name="text_gray1">#bdbdbd</color>
+    <color name="text_gray2">#696969</color>
 
     <color name="text_success">#77b300</color>
     <color name="text_info">#93c</color>
@@ -12,14 +11,15 @@
 
 
 
-    <color name="bg_black">#060606</color>
-    <color name="bg_light_black1">#6c757d</color>
-    <color name="bg_light_black2">#555</color>
-    <color name="text_light_black3">#2b2b2b</color>
+    <color name="bg_black">#000000</color>
+    <color name="bg_gray1">#969696</color>
+    <color name="bg_gray2">#555</color>
+    <color name="bg_gray3">#2b2b2b</color>
 
     <color name="bg_success">#28a745</color>
     <color name="bg_info">#93c</color>
     <color name="bg_warning">#f89406</color>
     <color name="bg_danger">#dc3545</color>
+
 
 </resources>

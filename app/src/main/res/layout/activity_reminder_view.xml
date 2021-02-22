@@ -133,7 +133,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_16"
-                android:textColor="@color/text_light_black2" />
+                android:textColor="@color/text_gray2" />
 
         </LinearLayout>
 

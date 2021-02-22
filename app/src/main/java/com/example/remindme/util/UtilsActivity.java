@@ -18,7 +18,7 @@ public class UtilsActivity {
         char_pos++;char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_info)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;char_pos++;
-        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_light_black1)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_gray1)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_warning)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;char_pos++;
@@ -29,6 +29,7 @@ public class UtilsActivity {
         char_pos++;char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_danger)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         activity.getSupportActionBar().setTitle(spannable);
-        activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
+        //Let the line below controlled by the theme and not to force the title to be shown by the code:
+        //activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
     }
 }

@@ -2,19 +2,19 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/dp_16">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dp_16"
         android:orientation="vertical">
 
         <CheckBox
             android:id="@+id/chk_daily_sun"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_light_black1"
+            android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_sun">
         </CheckBox>
@@ -23,7 +23,7 @@
             android:id="@+id/chk_daily_mon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_light_black1"
+            android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_mon">
         </CheckBox>
@@ -32,7 +32,7 @@
             android:id="@+id/chk_daily_tue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_light_black1"
+            android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_tue">
         </CheckBox>
@@ -41,7 +41,7 @@
             android:id="@+id/chk_daily_wed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_light_black1"
+            android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_wed">
         </CheckBox>
@@ -50,7 +50,7 @@
             android:id="@+id/chk_daily_thu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_light_black1"
+            android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_thu">
         </CheckBox>
@@ -59,7 +59,7 @@
             android:id="@+id/chk_daily_fri"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_light_black1"
+            android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_fri">
         </CheckBox>
@@ -68,7 +68,7 @@
             android:id="@+id/chk_daily_sat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_light_black1"
+            android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_sat">
         </CheckBox>

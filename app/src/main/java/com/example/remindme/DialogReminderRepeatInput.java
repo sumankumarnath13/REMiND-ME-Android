@@ -2,6 +2,7 @@ package com.example.remindme;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.View;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -36,7 +37,12 @@ public class DialogReminderRepeatInput extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat, null);
-        builder.setView(view);
+        builder.setView(view).setTitle("Select Repeat Option").setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
 
         final RadioButton rdo_reminder_repeat_none = view.findViewById(R.id.rdo_reminder_repeat_none);
         rdo_reminder_repeat_none.setOnClickListener(new RadioButton.OnClickListener(){

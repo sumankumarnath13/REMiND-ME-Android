@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.os.Build;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.remindme.util.UtilsAlarm;
@@ -24,8 +25,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Toast.makeText(this, "App created", Toast.LENGTH_SHORT).show();
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//        Toast.makeText(this, "App created", Toast.LENGTH_SHORT).show();
         Realm.init(this);
 
         try {

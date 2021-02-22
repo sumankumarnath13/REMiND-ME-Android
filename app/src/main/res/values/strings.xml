@@ -56,7 +56,7 @@
     <string name="btn_alarm_sound">ALERT TONE</string>
     <string name="btn_snooze">Snooze</string>
 
-    <string name="snooze_heading">Snooze</string>
+    <string name="snooze_heading">Reminder Snooze</string>
     <string name="snooze_interval_heading">Interval</string>
     <string name="snooze_interval_m5">5 Minutes</string>
     <string name="snooze_interval_m10">10 Minutes</string>

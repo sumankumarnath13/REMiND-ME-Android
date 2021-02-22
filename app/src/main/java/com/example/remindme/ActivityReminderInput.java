@@ -112,7 +112,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 int mHour, mMinute;
                 mHour = c.get(Calendar.HOUR_OF_DAY);
                 mMinute = c.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(ActivityReminderInput.this, R.style.DateTimePickerDialog,
+                TimePickerDialog timePickerDialog = new TimePickerDialog(ActivityReminderInput.this, R.style.TimePickerDialog,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -135,7 +135,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(ActivityReminderInput.this,  R.style.DateTimePickerDialog,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(ActivityReminderInput.this,  R.style.DatePickerDialog,
                         new DatePickerDialog.OnDateSetListener() {
 
                     @Override

@@ -41,7 +41,7 @@ public class DialogReminderNameInput extends DialogFragment {
 
         final TextView txt_reminder_name = view.findViewById(R.id.txt_reminder_name);
         txt_reminder_name.setText(name);
-        builder.setView(view).setTitle("Name:").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setView(view).setTitle("Reminder Name").setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 listener.setName(txt_reminder_name.getText().toString(), true);

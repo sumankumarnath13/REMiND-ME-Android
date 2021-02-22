@@ -41,7 +41,7 @@ public class DialogReminderNoteInput extends DialogFragment {
 
         final TextView txt_reminder_note = view.findViewById(R.id.txt_reminder_note);
         txt_reminder_note.setText(note);
-        builder.setView(view).setTitle("Note:").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setView(view).setTitle("Reminder Note").setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 listener.setNote(txt_reminder_note.getText().toString(), true);
