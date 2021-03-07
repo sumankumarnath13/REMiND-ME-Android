@@ -1,32 +1,32 @@
 package com.example.remindme;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.remindme.dataModels.ReminderDismissed;
-import com.example.remindme.dataModels.ReminderActive;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.remindme.util.UtilsActivity;
-import com.example.remindme.util.UtilsAlarm;
-import com.example.remindme.util.ServiceAlarm;
 import com.example.remindme.util.UtilsDateTime;
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
-import io.realm.Realm;
-import io.realm.RealmResults;
+import com.example.remindme.viewModels.ReminderModel;
 
 public class ActivityReminderRinging extends AppCompatActivity {
 
-    ReminderActive activeReminder = null;
+    ReminderModel reminderModel = null;
+    Ringtone alarmTone = null;
+    private PowerManager.WakeLock wakeLock = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,34 +34,33 @@ public class ActivityReminderRinging extends AppCompatActivity {
         setContentView(R.layout.activity_reminder_ringing);
         UtilsActivity.setTitle(this);
 
+        // Important: have to do the following in order to show without unlocking
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
+
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        alarmTone = RingtoneManager.getRingtone(getApplicationContext(), notification);
+
+        PowerManager pm = (PowerManager) getSystemService(getApplicationContext().POWER_SERVICE);
+        wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My:Tag");
+        wakeLock.acquire(5 * 60 * 1000L /*5 minutes*/);
+
         final Button btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
         btnDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-            final ReminderDismissed reminderDismissed = new ReminderDismissed();
-            reminderDismissed.id = activeReminder.id;
-            reminderDismissed.name = activeReminder.name;
-            reminderDismissed.note = activeReminder.note;
-
-            Realm r = Realm.getDefaultInstance();
-
-            r.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                realm.insertOrUpdate(reminderDismissed);
-                RealmResults<ReminderActive> result = realm
-                        .where(ReminderActive.class)
-                        .equalTo("id", activeReminder.id)
-                        .findAll();
-                result.deleteAllFromRealm();
+                if (reminderModel != null) {
+                    reminderModel.dismiss(getApplicationContext());
                 }
-            });
 
-            Intent intentService = new Intent(ActivityReminderRinging.this, ServiceAlarm.class);
-            getApplicationContext().stopService(intentService);
-
-            finish();
+                finish();
             }
         });
 
@@ -69,75 +68,58 @@ public class ActivityReminderRinging extends AppCompatActivity {
         btnSnooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            final Calendar calendar = Calendar.getInstance();
-            try {
-
-                if(activeReminder.next_snooze_id > 0) {
-                    calendar.setTime(UtilsDateTime.toDate(activeReminder.next_snooze_id));
-                }else{
-                    calendar.setTime(UtilsDateTime.toDate(activeReminder.id));
+                if (reminderModel != null) {
+                    reminderModel.snooze(getApplicationContext());
                 }
-                calendar.add(Calendar.MINUTE, 5);
 
-                Realm r = Realm.getDefaultInstance();
-                r.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                    activeReminder.next_snooze_id = UtilsDateTime.toInt(calendar.getTime());
-                    realm.insertOrUpdate(activeReminder);
-                    }
-                });
-
-                UtilsAlarm.set(getApplicationContext(), activeReminder);
-            }
-            catch (ParseException e) {
-                Toast.makeText(ActivityReminderRinging.this, "PARSE ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-            Intent intentService = new Intent(ActivityReminderRinging.this, ServiceAlarm.class);
-            getApplicationContext().stopService(intentService);
-
-            finish();
+                finish();
             }
         });
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
 
         try {
             Intent i = getIntent();
-            final Integer id = i.getIntExtra("ID", 0);
+            final String id = i.getStringExtra(ReminderModel.INTENT_ATTR_ID);
+            reminderModel = ReminderModel.read(id);
 
-            Realm r = Realm.getDefaultInstance();
-            activeReminder = r.where(ReminderActive.class).equalTo("id", id).findFirst();
-            if(activeReminder == null){
-                Toast.makeText(this, "Reminder expired!", Toast.LENGTH_SHORT).show();
+            if (reminderModel == null) {
+                Toast.makeText(this, "Reminder not found!", Toast.LENGTH_SHORT).show();
                 finish();
-            }
-            else{
-                final Date d;
-                String date_str = null;
-                try {
-                    d = UtilsDateTime.toDate(activeReminder.id);
-                    date_str = UtilsDateTime.toTimeDateString(d);
-                    TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
-                    Spannable spannable = new SpannableString(date_str);
-                    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    t_date.setText(spannable);
-                }
-                catch (ParseException e) {
-                    Toast.makeText(this, "PARSE ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
+            } else {
+                String date_str = UtilsDateTime.toTimeDateString(reminderModel.time);
+                TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
+                Spannable spannable = new SpannableString(date_str);
+                spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                t_date.setText(spannable);
 
-                ((TextView) findViewById(R.id.tv_reminder_name)).setText(this.activeReminder.name);
-                ((TextView) findViewById(R.id.txt_reminder_note)).setText(this.activeReminder.note);
+                ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
+                ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
+
+                if (alarmTone != null) {
+                    alarmTone.play();
+                }
             }
-        }
-        catch (Exception e){
-            Toast.makeText(this, "Well after resume " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Well after start " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (alarmTone != null) {
+            alarmTone.stop();
+        }
+
+        if (wakeLock != null) {
+            wakeLock.release();
+        }
+    }
+
 }

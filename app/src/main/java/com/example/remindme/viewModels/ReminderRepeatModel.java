@@ -11,7 +11,7 @@ public class ReminderRepeatModel {
         Monthly,
         Yearly
     }
-    public ReminderRepeatOptions repeatOption = ReminderRepeatOptions.Daily;
+    public ReminderRepeatOptions repeatOption = ReminderRepeatOptions.None;
     public ReminderRepeatDailyModel dailyModel = new ReminderRepeatDailyModel();
     public ReminderRepeatMonthlyModel monthlyModel = new ReminderRepeatMonthlyModel();
 

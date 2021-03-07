@@ -28,7 +28,6 @@
             </intent-filter>
         </activity>
         <service android:name=".util.ServiceAlarm"/>
-        <service android:name=".util.ServiceRescheduleAlarms"/>
         <receiver android:name=".util.BroadcastReceiverAlarm"/>
         <receiver android:name=".util.BroadcastReceiverBootCompleted">
             <intent-filter>

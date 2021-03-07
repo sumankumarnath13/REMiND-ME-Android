@@ -1,6 +1,5 @@
 package com.example.remindme.util;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -22,13 +21,4 @@ public class UtilsDateTime {
         return timeDateFormat.format(value);
     }
 
-    public static int toInt(Date value){
-        int id = Integer.parseInt(uniqueDateTimeFormat.format(value));
-        return  id;
-    }
-
-    public static Date toDate(Integer value) throws ParseException {
-        Date d = uniqueDateTimeFormat.parse(value.toString());
-        return  d;
-    }
 }

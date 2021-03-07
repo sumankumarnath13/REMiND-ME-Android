@@ -21,6 +21,8 @@ public class ReminderSnoozeModel {
 
     public SnoozeCountOptions countOptions = SnoozeCountOptions.R3;
 
+    public int count;
+
     public boolean isEnable = true;
 
     @NonNull
@@ -28,7 +30,7 @@ public class ReminderSnoozeModel {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        if(isEnable){
+        if (isEnable) {
             builder.append("Interval ");
 
             switch (intervalOption){

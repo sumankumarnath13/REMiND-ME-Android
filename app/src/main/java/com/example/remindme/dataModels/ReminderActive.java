@@ -8,10 +8,12 @@ import io.realm.annotations.PrimaryKey;
 
 public class ReminderActive extends RealmObject implements RealmModel {
     @PrimaryKey
-    public int id;
+    public String id;
+    public int alarmIntentId;
     public String name;
     public String note;
     public Date time;
+    public Date nextSnoozeTime = null;
     public boolean isEnable = true;
     public boolean isVibrate;
 
@@ -39,8 +41,7 @@ public class ReminderActive extends RealmObject implements RealmModel {
 
     public boolean isSnoozeEnable;
     public int snoozeInterval;
+    public int snoozeLength;
     public int snoozeCount;
 
-    //public int repeatTypes = 0;
-    public int next_snooze_id;
 }

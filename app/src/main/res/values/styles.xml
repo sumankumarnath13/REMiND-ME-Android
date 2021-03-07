@@ -1,13 +1,17 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="android:windowBackground">@color/bg_black</item> <!-- Changes background color -->
+        <item name="android:windowBackground">@color/bg_black
+        </item> <!-- Changes background color -->
         <item name="android:buttonStyle">@style/commonButtonStyle</item>
         <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="colorAccent">@color/bg_success</item> <!-- Set button colors etc -->
-        <item name="colorPrimaryDark">@color/bg_black</item> <!-- Changes background color or app bar and title -->
-        <item name="colorPrimary">@color/bg_black</item> <!-- Changes background color or app bar and title -->
-        <item name="android:textCursorDrawable">@null</item> <!-- Make edit text cursor color neutral to accent color -->
+        <item name="colorAccent">@color/bg_info</item> <!-- Set button colors etc -->
+        <item name="colorPrimaryDark">@color/bg_black
+        </item> <!-- Changes background color or app bar and title -->
+        <item name="colorPrimary">@color/bg_black
+        </item> <!-- Changes background color or app bar and title -->
+        <item name="android:textCursorDrawable">@null
+        </item> <!-- Make edit text cursor color neutral to accent color -->
 
         <!--<item name="android:editTextPreferenceStyle">@style/commonEditTextStyle</item>-->
     </style>

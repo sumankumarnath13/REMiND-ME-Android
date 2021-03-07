@@ -4,14 +4,9 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationManagerCompat;
-
-import com.example.remindme.util.UtilsAlarm;
-
-import java.text.ParseException;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -20,14 +15,15 @@ import io.realm.exceptions.RealmMigrationNeededException;
 
 public class App extends Application {
 
-    public static final String NOTIFICATION_CHANNEL_ID = "DHINKACHIKA";
+    public static final String NOTIFICATION_CHANNEL_1_ID = "_DING_DONG";
+    public static final String NOTIFICATION_CHANNEL_1_NAME = "Primary channel";
+    public static final String NOTIFICATION_CHANNEL_2_NAME = "Secondary channel";
 
     @Override
     public void onCreate() {
         super.onCreate();
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-//        Toast.makeText(this, "App created", Toast.LENGTH_SHORT).show();
-        Realm.init(this);
+        Realm.init(getApplicationContext());
 
         try {
             Realm.getDefaultInstance();
@@ -35,27 +31,21 @@ public class App extends Application {
         catch (RealmMigrationNeededException r) {
             RealmConfiguration config = Realm.getDefaultConfiguration();
             Realm.deleteRealm(config);
-            //realm = Realm.getDefaultInstance();
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
-                    "My Notifications",
-                    NotificationManager.IMPORTANCE_HIGH);
-            // Configure the notification channel.
-            notificationChannel.setDescription("My Desc");
-            //notificationChannel.enableLights(true);
-            //notificationChannel.setLightColor(Color.RED);
-            //notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
-            //notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
+            NotificationChannel channel1 = new NotificationChannel(
+                    NOTIFICATION_CHANNEL_1_ID,
+                    NOTIFICATION_CHANNEL_1_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            // Configure the notification channel1.
+            //channel1.setDescription("Remind_me");
+            //channel1.enableLights(true);
+            //channel1.setLightColor(Color.RED);
+            //channel1.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            //channel1.enableVibration(true);
+            notificationManager.createNotificationChannel(channel1);
         }
-
-/*        try {
-            UtilsAlarm.boot(this);
-        } catch (ParseException e) {
-            Toast.makeText(this, "Parsing error - App start rescheduling : " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }*/
     }
 }

@@ -1,16 +1,19 @@
 package com.example.remindme.ui.main;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.remindme.R;
 import com.example.remindme.dataModels.ReminderActive;
-import io.realm.Realm;
-import io.realm.RealmResults;
+import com.example.remindme.viewModels.ReminderModel;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,8 +65,7 @@ public class FragmentActiveReminder extends Fragment {
     public void onResume() {
         super.onResume();
         // specify an adapter (see also next example)
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<ReminderActive> data = realm.where(ReminderActive.class).findAll();
+        List<ReminderActive> data = ReminderModel.getAll();
         RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(data, EnumReminderTypes.Active);
         recyclerView.setAdapter(mAdapter);
     }

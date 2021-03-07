@@ -2,13 +2,6 @@ package com.example.remindme;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.example.remindme.util.UtilsActivity;
-import com.google.android.material.tabs.TabLayout;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,7 +9,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
 import com.example.remindme.ui.main.AdapterSectionsPager;
+import com.example.remindme.util.UtilsActivity;
+import com.google.android.material.tabs.TabLayout;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -51,6 +52,7 @@ public class ActivityMain extends AppCompatActivity {
 
             }
         });
+
         Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
@@ -73,7 +75,7 @@ public class ActivityMain extends AppCompatActivity {
 
         final MenuItem menuItem = menu.findItem(R.id.action_search);
         final SearchView sv = (SearchView) menuItem.getActionView();
-        sv.setQueryHint("Enter subject to find");
+        sv.setQueryHint("Enter name to find");
 
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -95,6 +97,7 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
+            default:
             case R.id.action_settings:
                 Toast.makeText(ActivityMain.this, "Halua", Toast.LENGTH_SHORT).show();
                 break;
