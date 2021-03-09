@@ -20,13 +20,13 @@ public class ReminderRepeatDailyModel {
         if(isSun){
             builder.append("SUN ");
         }
-        if(isMon){
+        if (isMon) {
             builder.append("MON ");
         }
-        if(isThu){
+        if (isTue) {
             builder.append("TUE ");
         }
-        if(isWed){
+        if (isWed) {
             builder.append("WED ");
         }
         if(isThu){

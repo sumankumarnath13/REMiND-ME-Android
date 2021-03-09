@@ -94,7 +94,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         tv_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
         tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
         sw_reminder_vibrate.setChecked(reminderModel.isVibrate);
-        sw_reminder_disable.setChecked(!reminderModel.isEnable);
+        sw_reminder_disable.setChecked(!reminderModel.getIsEnabled());
 
         btn_reminder_time.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,9 +149,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             public void onClick(View view) {
                 if (reminderModel.canUpdate()) {
                     reminderModel.isVibrate = sw_reminder_vibrate.isChecked();
-                    reminderModel.isEnable = !sw_reminder_disable.isChecked();
-                    reminderModel.insertOrUpdate();
-                    reminderModel.setAlarm(getApplicationContext());
+                    reminderModel.setIsEnabled(!sw_reminder_disable.isChecked(), getApplicationContext());
                     finish();
                 } else {
                     Toast.makeText(ActivityReminderInput.this, "Time cannot be set in past!", Toast.LENGTH_SHORT).show();
@@ -209,7 +207,18 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         sw_reminder_disable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (sw_reminder_disable.isChecked()) {
+                    if (reminderModel.canEnable()) {
+                        reminderModel.setIsEnabled(sw_reminder_disable.isChecked(), ActivityReminderInput.this.getApplicationContext());
+                        btn_reminder_time.setText(UtilsDateTime.toTimeString(ActivityReminderInput.this.reminderModel.time));
+                        btn_reminder_date.setText(UtilsDateTime.toDateString(ActivityReminderInput.this.reminderModel.time));
+                    } else {
+                        Toast.makeText(ActivityReminderInput.this, "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
+                        sw_reminder_disable.setChecked(false);
+                    }
+                } else {
+                    reminderModel.setIsEnabled(false, ActivityReminderInput.this.getApplicationContext());
+                }
             }
         });
     }

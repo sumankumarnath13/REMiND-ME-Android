@@ -5,7 +5,6 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -26,7 +25,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
 
     ReminderModel reminderModel = null;
     Ringtone alarmTone = null;
-    private PowerManager.WakeLock wakeLock = null;
+//    private PowerManager.WakeLock wakeLock = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,22 +34,18 @@ public class ActivityReminderRinging extends AppCompatActivity {
         UtilsActivity.setTitle(this);
 
         // Important: have to do the following in order to show without unlocking
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
-                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN |
-                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         alarmTone = RingtoneManager.getRingtone(getApplicationContext(), notification);
 
-        PowerManager pm = (PowerManager) getSystemService(getApplicationContext().POWER_SERVICE);
-        wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My:Tag");
-        wakeLock.acquire(5 * 60 * 1000L /*5 minutes*/);
+//        PowerManager pm = (PowerManager) getSystemService(getApplicationContext().POWER_SERVICE);
+//        wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My:Tag");
+//        wakeLock.acquire(5 * 60 * 1000L /*5 minutes*/);
 
         final Button btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
         btnDismiss.setOnClickListener(new View.OnClickListener() {
@@ -117,9 +112,9 @@ public class ActivityReminderRinging extends AppCompatActivity {
             alarmTone.stop();
         }
 
-        if (wakeLock != null) {
-            wakeLock.release();
-        }
+//        if (wakeLock != null) {
+//            wakeLock.release();
+//        }
     }
 
 }

@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
@@ -88,18 +88,22 @@ public class ActivityReminderView extends AppCompatActivity {
         });
 
         final SwitchCompat enabled = findViewById(R.id.sw_reminder_enabled);
-        enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        enabled.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            public void onClick(View v) {
                 ReminderModel reminderModel = ReminderModel.read(id);
-                reminderModel.isEnable = b;
-                //realm.insertOrUpdate(reminder);
-                if (b) {
-                    reminderModel.setAlarm(getApplicationContext());
+                if (enabled.isChecked()) {
+                    if (reminderModel.canEnable()) {
+                        reminderModel.setIsEnabled(enabled.isChecked(), ActivityReminderView.this.getApplicationContext());
+                        ((TextView) findViewById(R.id.tv_reminder_time)).setText(UtilsDateTime.toTimeDateString(reminderModel.time));
+                    } else {
+                        Toast.makeText(ActivityReminderView.this, "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
+                        enabled.setChecked(false);
+                    }
                 } else {
-                    reminderModel.cancelAlarm(getApplicationContext());
+                    reminderModel.setIsEnabled(false, ActivityReminderView.this.getApplicationContext());
                 }
-                reminderModel.insertOrUpdate();
             }
         });
     }
@@ -128,7 +132,7 @@ public class ActivityReminderView extends AppCompatActivity {
                 snooze_img.setVisibility(View.VISIBLE);
             }
             sw_enabled.setVisibility(View.VISIBLE);
-            sw_enabled.setChecked(reminderModel.isEnable);
+            sw_enabled.setChecked(reminderModel.getIsEnabled());
             name = reminderModel.name;
             note = reminderModel.note;
 

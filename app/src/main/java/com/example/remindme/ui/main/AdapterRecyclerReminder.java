@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
@@ -47,13 +47,12 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
     @Override
     public void onBindViewHolder(@NonNull final ReminderHolder holder, int position) {
         // create a new view
-        TextView time = holder.linearLayout.findViewById(R.id.tv_reminder_time);
-        TextView name = holder.linearLayout.findViewById(R.id.tv_reminder_name);
-        TextView note = holder.linearLayout.findViewById(R.id.tv_reminder_truncated_note);
-        SwitchCompat enabled = holder.linearLayout.findViewById(R.id.sw_reminder_enabled);
-        ImageView img = holder.linearLayout.findViewById(R.id.img_snooze);
-        TextView next_snooze = holder.linearLayout.findViewById(R.id.tv_reminder_next_snooze);
-
+        final TextView time = holder.linearLayout.findViewById(R.id.tv_reminder_time);
+        final TextView name = holder.linearLayout.findViewById(R.id.tv_reminder_name);
+        final TextView note = holder.linearLayout.findViewById(R.id.tv_reminder_truncated_note);
+        final SwitchCompat enabled = holder.linearLayout.findViewById(R.id.sw_reminder_enabled);
+        final ImageView img = holder.linearLayout.findViewById(R.id.img_snooze);
+        final TextView next_snooze = holder.linearLayout.findViewById(R.id.tv_reminder_next_snooze);
         final RealmObject reminder = _data.get(position);
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -79,17 +78,21 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             }
         });
 
-        enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        enabled.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean enabled) {
+            public void onClick(View v) {
                 ReminderModel reminderModel = ReminderModel.transform((ReminderActive) reminder);
-                reminderModel.isEnable = enabled;
-                if (enabled) {
-                    reminderModel.setAlarm(holder.linearLayout.getContext().getApplicationContext());
+                if (enabled.isChecked()) {
+                    if (reminderModel.canEnable()) {
+                        reminderModel.setIsEnabled(enabled.isChecked(), holder.linearLayout.getContext().getApplicationContext());
+                        time.setText(UtilsDateTime.toTimeDateString(reminderModel.time));
+                    } else {
+                        Toast.makeText(holder.linearLayout.getContext(), "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
+                        enabled.setChecked(false);
+                    }
                 } else {
-                    reminderModel.cancelAlarm(holder.linearLayout.getContext().getApplicationContext());
+                    reminderModel.setIsEnabled(false, holder.linearLayout.getContext().getApplicationContext());
                 }
-                reminderModel.insertOrUpdate();
             }
         });
 
@@ -104,7 +107,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             } else {
                 img.setVisibility(View.GONE);
             }
-            enabled.setChecked(reminderModel.isEnable);
+            enabled.setChecked(reminderModel.getIsEnabled());
             name.setText(reminderModel.name);
             note.setText(reminderModel.note);
         } else if (holder.reminderType == EnumReminderTypes.Missed) {
