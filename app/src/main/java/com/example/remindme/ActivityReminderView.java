@@ -46,8 +46,9 @@ public class ActivityReminderView extends AppCompatActivity {
             public void onClick(View view) {
                 if (from.equals("ACTIVE")) {
                     ReminderModel reminderModel = ReminderModel.read(id);
-                    reminderModel.cancelAlarm(getApplicationContext());
-                    reminderModel.delete();
+                    if (reminderModel != null) {
+                        reminderModel.delete(getApplicationContext());
+                    }
                 } else if (from.equals("MISSED")) {
                     Realm r = Realm.getDefaultInstance();
                     r.executeTransaction(new Realm.Transaction() {
@@ -93,16 +94,18 @@ public class ActivityReminderView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ReminderModel reminderModel = ReminderModel.read(id);
-                if (enabled.isChecked()) {
-                    if (reminderModel.canEnable()) {
-                        reminderModel.setIsEnabled(enabled.isChecked(), ActivityReminderView.this.getApplicationContext());
-                        ((TextView) findViewById(R.id.tv_reminder_time)).setText(UtilsDateTime.toTimeDateString(reminderModel.time));
+                if (reminderModel != null) {
+                    if (enabled.isChecked()) {
+                        if (reminderModel.canEnable()) {
+                            reminderModel.setIsEnabled(enabled.isChecked(), ActivityReminderView.this.getApplicationContext());
+                            ((TextView) findViewById(R.id.tv_reminder_time)).setText(UtilsDateTime.toTimeDateString(reminderModel.time));
+                        } else {
+                            Toast.makeText(ActivityReminderView.this, "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
+                            enabled.setChecked(false);
+                        }
                     } else {
-                        Toast.makeText(ActivityReminderView.this, "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
-                        enabled.setChecked(false);
+                        reminderModel.setIsEnabled(false, ActivityReminderView.this.getApplicationContext());
                     }
-                } else {
-                    reminderModel.setIsEnabled(false, ActivityReminderView.this.getApplicationContext());
                 }
             }
         });
@@ -123,19 +126,23 @@ public class ActivityReminderView extends AppCompatActivity {
 
         if (from.equals("ACTIVE")) {
             ReminderModel reminderModel = ReminderModel.read(id);
-            alarm_time = UtilsDateTime.toTimeDateString(reminderModel.time);
-            if (reminderModel.nextSnoozeOffTime != null) {
-                ImageView snooze_img = findViewById(R.id.img_snooze);
-                TextView next_snooze = findViewById(R.id.tv_reminder_next_snooze);
-                next_snooze.setText(UtilsDateTime.toTimeString(reminderModel.nextSnoozeOffTime));
-                img.setVisibility(View.VISIBLE);
-                snooze_img.setVisibility(View.VISIBLE);
+            if (reminderModel != null) {
+                alarm_time = UtilsDateTime.toTimeDateString(reminderModel.time);
+                if (reminderModel.nextSnoozeOffTime != null) {
+                    ImageView snooze_img = findViewById(R.id.img_snooze);
+                    TextView next_snooze = findViewById(R.id.tv_reminder_next_snooze);
+                    next_snooze.setText(UtilsDateTime.toTimeString(reminderModel.nextSnoozeOffTime));
+                    img.setVisibility(View.VISIBLE);
+                    snooze_img.setVisibility(View.VISIBLE);
+                }
+                sw_enabled.setVisibility(View.VISIBLE);
+                sw_enabled.setChecked(reminderModel.getIsEnabled());
+                name = reminderModel.name;
+                note = reminderModel.note;
+            } else {
+                Toast.makeText(ActivityReminderView.this, "Reminder not found!", Toast.LENGTH_LONG).show();
+                finish();
             }
-            sw_enabled.setVisibility(View.VISIBLE);
-            sw_enabled.setChecked(reminderModel.getIsEnabled());
-            name = reminderModel.name;
-            note = reminderModel.note;
-
         } else if (from.equals("MISSED")) {
             Realm r = Realm.getDefaultInstance();
             ReminderMissed reminder = r
@@ -146,6 +153,9 @@ public class ActivityReminderView extends AppCompatActivity {
                 alarm_time = UtilsDateTime.toTimeDateString(reminder.time);
                 name = reminder.name;
                 note = reminder.note;
+            } else {
+                Toast.makeText(ActivityReminderView.this, "Reminder not found!", Toast.LENGTH_LONG).show();
+                finish();
             }
         } else {
             Realm r = Realm.getDefaultInstance();
@@ -157,6 +167,9 @@ public class ActivityReminderView extends AppCompatActivity {
                 alarm_time = UtilsDateTime.toTimeDateString(reminder.time);
                 name = reminder.name;
                 note = reminder.note;
+            } else {
+                Toast.makeText(ActivityReminderView.this, "Reminder not found!", Toast.LENGTH_LONG).show();
+                finish();
             }
         }
 

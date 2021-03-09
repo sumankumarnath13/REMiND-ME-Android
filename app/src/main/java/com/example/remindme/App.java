@@ -8,6 +8,8 @@ import android.os.Build;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.remindme.viewModels.ReminderModel;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.exceptions.RealmMigrationNeededException;
@@ -23,16 +25,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        Realm.init(getApplicationContext());
-
-        try {
-            Realm.getDefaultInstance();
-        }
-        catch (RealmMigrationNeededException r) {
-            RealmConfiguration config = Realm.getDefaultConfiguration();
-            Realm.deleteRealm(config);
-        }
-
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel1 = new NotificationChannel(
@@ -47,5 +39,14 @@ public class App extends Application {
             //channel1.enableVibration(true);
             notificationManager.createNotificationChannel(channel1);
         }
+
+        Realm.init(getApplicationContext());
+        try {
+            Realm.getDefaultInstance();
+        } catch (RealmMigrationNeededException r) {
+            RealmConfiguration config = Realm.getDefaultConfiguration();
+            Realm.deleteRealm(config);
+        }
+        ReminderModel.reScheduleAllActive(getApplicationContext());
     }
 }

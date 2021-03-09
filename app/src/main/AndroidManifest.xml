@@ -15,7 +15,9 @@
         android:roundIcon="@drawable/ic_reminder_time"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityReminderRinging"/>
+        <activity
+            android:name=".ActivityReminderRinging"
+            android:noHistory="true" />
         <activity android:name=".ActivityReminderView" />
         <activity android:name=".ActivityReminderInput" />
         <activity

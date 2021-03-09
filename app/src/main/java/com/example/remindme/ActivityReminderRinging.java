@@ -5,6 +5,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -22,10 +23,11 @@ import com.example.remindme.util.UtilsDateTime;
 import com.example.remindme.viewModels.ReminderModel;
 
 public class ActivityReminderRinging extends AppCompatActivity {
-
+    int counter = 0;
+    boolean isTouched = false;
     ReminderModel reminderModel = null;
     Ringtone alarmTone = null;
-//    private PowerManager.WakeLock wakeLock = null;
+    CountDownTimer timer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +41,15 @@ public class ActivityReminderRinging extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
-
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         alarmTone = RingtoneManager.getRingtone(getApplicationContext(), notification);
-
-//        PowerManager pm = (PowerManager) getSystemService(getApplicationContext().POWER_SERVICE);
-//        wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My:Tag");
-//        wakeLock.acquire(5 * 60 * 1000L /*5 minutes*/);
 
         final Button btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
         btnDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isTouched = true;
+
                 if (reminderModel != null) {
                     reminderModel.dismiss(getApplicationContext());
                 }
@@ -63,6 +62,8 @@ public class ActivityReminderRinging extends AppCompatActivity {
         btnSnooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isTouched = true;
+
                 if (reminderModel != null) {
                     reminderModel.snooze(getApplicationContext());
                 }
@@ -70,6 +71,29 @@ public class ActivityReminderRinging extends AppCompatActivity {
                 finish();
             }
         });
+
+        timer = new CountDownTimer(3 * 60 * 1000L, 60 * 1000L) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                counter++;
+                if (reminderModel != null) {
+                    if (reminderModel.name == null) {
+                        ((TextView) findViewById(R.id.tv_reminder_name)).setText(" (" + counter + ")");
+                    } else {
+                        ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name + " (" + counter + ")");
+                    }
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                if (reminderModel != null) {
+                    isTouched = true;
+                    reminderModel.snooze(getApplicationContext());
+                }
+                finish();
+            }
+        }.start();
     }
 
     @Override
@@ -79,25 +103,32 @@ public class ActivityReminderRinging extends AppCompatActivity {
         try {
             Intent i = getIntent();
             final String id = i.getStringExtra(ReminderModel.INTENT_ATTR_ID);
-            reminderModel = ReminderModel.read(id);
+            if (reminderModel == null) // First null check to ensure that its first onStart hit after creating the activity
+            {
+                reminderModel = ReminderModel.read(id);
+                if (reminderModel == null) { // Second null check if it present in the database.
+                    Toast.makeText(this, "Reminder not found!", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    String date_str = UtilsDateTime.toTimeDateString(reminderModel.time);
+                    TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
+                    Spannable spannable = new SpannableString(date_str);
+                    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    t_date.setText(spannable);
 
-            if (reminderModel == null) {
-                Toast.makeText(this, "Reminder not found!", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                String date_str = UtilsDateTime.toTimeDateString(reminderModel.time);
-                TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
-                Spannable spannable = new SpannableString(date_str);
-                spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                t_date.setText(spannable);
+                    ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
+                    ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
 
-                ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
-                ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
-
-                if (alarmTone != null) {
-                    alarmTone.play();
+                    if (alarmTone != null && !alarmTone.isPlaying()) {
+                        alarmTone.play();
+                    }
                 }
+            } else {
+                // Flow for activities that are allowed to show while in locked is
+                // onCreate - onStart - onResume - onPause - onStop - onStart - onPause
+                // https://stackoverflow.com/questions/25369909/onpause-and-onstop-called-immediately-after-starting-activity
+                // And thus this else block will be hit on 2nd on start where no action is needed.
             }
         } catch (Exception e) {
             Toast.makeText(this, "Well after start " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -105,16 +136,20 @@ public class ActivityReminderRinging extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (!isTouched && reminderModel != null) {
+            reminderModel.snooze(getApplicationContext());
+        }
 
         if (alarmTone != null) {
             alarmTone.stop();
         }
 
-//        if (wakeLock != null) {
-//            wakeLock.release();
-//        }
-    }
+        if (timer != null) {
+            timer.cancel();
+        }
 
+    }
 }

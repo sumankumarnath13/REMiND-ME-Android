@@ -64,8 +64,7 @@ public class ReminderModel {
                 if (calendar.getTime().after(_time)) {
                     reminderModel.dismiss(context, calendar, true);
                 } else {
-                    reminderModel.setAlarm(context);
-                    reminderModel.insertOrUpdate();
+                    reminderModel.insertOrUpdate(true, context);
                 }
             }
         }
@@ -85,34 +84,13 @@ public class ReminderModel {
         }
     }
 
-    public void setIsEnabled(boolean value, Context context) {
-        isEnable = value;
-        // RESET SNOOZE
-        nextSnoozeOffTime = null;
-        snoozeModel.count = 0;
-
-        if (isEnable) {
-            Calendar currentTime = Calendar.getInstance();
-            if (currentTime.getTime().after(time)) {
-                //SET NEW TRIGGER TIME
-                Date nextTime = getNextScheduleTime(currentTime);
-                if (nextTime == null) { // EOF situation
-                    archiveToMissed();
-                } else { // Found next trigger point.
-                    // RESET SNOOZE
-                    nextSnoozeOffTime = null;
-                    snoozeModel.count = 0;
-                    time = nextTime; // Set next trigger time.
-                    setAlarm(context);
-                    insertOrUpdate();
-                }
-            } else {
-                setAlarm(context);
-                insertOrUpdate();
-            }
+    public static ReminderModel read(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        ReminderActive reminder = realm.where(ReminderActive.class).equalTo("id", id).findFirst();
+        if (reminder == null) {
+            return null;
         } else {
-            cancelAlarm(context);
-            insertOrUpdate();
+            return transform(reminder);
         }
     }
 
@@ -400,6 +378,288 @@ public class ReminderModel {
         return nextTime;
     }
 
+    private static RealmResults<ReminderActive> privateGetAllActive() {
+        Realm realm = Realm.getDefaultInstance();
+        return realm.where(ReminderActive.class).findAll();
+    }
+
+    private static RealmResults<ReminderActive> privateGetAllActive(String name) {
+        Realm realm = Realm.getDefaultInstance();
+        return realm.where(ReminderActive.class).beginsWith("name", name).findAll();
+    }
+
+    public static List<ReminderActive> getAll() {
+//        Calendar calendar = Calendar.getInstance();
+        RealmResults<ReminderActive> result = privateGetAllActive();
+//        for (int i = 0; i < result.size(); i++) {
+//            final ReminderActive r = result.get(i);
+//            final ReminderModel reminderModel = ReminderModel.transform(r);
+//
+//            Date _time;
+//            if (reminderModel.nextSnoozeTime == null) {
+//                _time = reminderModel.time;
+//            } else {
+//                _time = reminderModel.nextSnoozeTime;
+//            }
+//
+//            if (calendar.getTime().after(_time)) {
+//                reminderModel.setAlarm(context);
+//                reminderModel.createOrUpdate();
+//            } else {
+//                reminderModel.cancelAlarm(context);
+//                reminderModel.moveToMissed();
+//            }
+//        }
+        return result;
+    }
+
+    public static List<ReminderActive> getAll(String name) {
+        RealmResults<ReminderActive> result = privateGetAllActive(name);
+        return result;
+    }
+
+    public void setIsEnabled(boolean value, Context context) {
+        isEnable = value;
+        if (isEnable) {
+            Calendar currentTime = Calendar.getInstance();
+            if (currentTime.getTime().after(time)) {
+                // SET NEW TRIGGER TIME
+                Date nextTime = getNextScheduleTime(currentTime);
+                if (nextTime == null) { // EOF situation
+                    archiveToMissed(context);
+                } else { // Found next trigger point.
+                    time = nextTime; // Set next trigger time.
+                    insertOrUpdate(true, context);
+                }
+            } else {
+                insertOrUpdate(true, context);
+            }
+        } else {
+            insertOrUpdate(false, false, context);
+        }
+    }
+
+    public boolean canUpdate() {
+
+//        Date _time;
+//
+//        if (nextSnoozeOffTime == null) {
+//            _time = time;
+//        } else {
+//            _time = nextSnoozeOffTime;
+//        }
+
+        Calendar calendar = Calendar.getInstance();
+
+        return time.after(calendar.getTime());
+
+    }
+
+    public void snooze(Context context) {
+
+        Date _time;
+        if (nextSnoozeOffTime == null) {
+            _time = time;
+        } else {
+            _time = nextSnoozeOffTime;
+        }
+
+        nextSnoozeOffTime = null; // RESET
+
+        if (snoozeModel.isEnable) {
+
+            Calendar calendar = Calendar.getInstance();
+
+            calendar.setTime(_time);
+
+            switch (snoozeModel.intervalOption) {
+                default:
+                case M5:
+                    calendar.add(Calendar.MINUTE, 5);
+                    break;
+                case M10:
+                    calendar.add(Calendar.MINUTE, 10);
+                    break;
+                case M15:
+                    calendar.add(Calendar.MINUTE, 15);
+                    break;
+                case M30:
+                    calendar.add(Calendar.MINUTE, 30);
+                    break;
+            }
+
+            switch (snoozeModel.countOptions) {
+                default:
+                case R3:
+                    if (snoozeModel.count < 3) {
+                        snoozeModel.count++;
+                        nextSnoozeOffTime = calendar.getTime();
+                    }
+                    break;
+                case R5:
+                    if (snoozeModel.count < 5) {
+                        snoozeModel.count++;
+                        nextSnoozeOffTime = calendar.getTime();
+                    }
+                    break;
+                case RC:
+                    snoozeModel.count++;
+                    nextSnoozeOffTime = calendar.getTime();
+                    break;
+            }
+        }
+
+        if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
+            dismiss(context, Calendar.getInstance(), true);
+        } else {
+            insertOrUpdate(true, false, context);
+        }
+    }
+
+    public void dismiss(Context context) {
+        final Calendar currentTime = Calendar.getInstance();
+        dismiss(context, currentTime, false);
+    }
+
+    public void dismiss(Context context, final Calendar currentTime, boolean isMissed) {
+        Date nextTime = getNextScheduleTime(currentTime);
+        if (nextTime == null) { // EOF situation
+            if (isMissed) {
+                archiveToMissed(context);
+            } else {
+                archiveToDismissed(context);
+            }
+        } else { // Found next trigger point.
+            time = nextTime; // Set next trigger time.
+            insertOrUpdate(true, context); // Save changes. // Set alarm for next trigger time.
+        }
+    }
+
+    private void setAlarm(Context context) {
+        cancelAlarm(context); // Cancel previous alarm for same ID
+
+        if (!isEnable) {
+            return;
+        }
+
+        Date _time;
+        if (nextSnoozeOffTime == null) {
+            _time = time;
+        } else {
+            _time = nextSnoozeOffTime;
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(_time);
+
+        if (alarmIntentId == 0) { // If was never set before. Else keep using the same value.
+            alarmIntentId = (int) UUID.fromString(id).getMostSignificantBits();
+        }
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(context.getApplicationContext(), BroadcastReceiverAlarm.class);
+        intent.putExtra(ReminderModel.INTENT_ATTR_ID, id);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), alarmIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 0, pendingIntent);
+    }
+
+    private void cancelAlarm(Context context) {
+        if (alarmIntentId != 0) {
+            AlarmManager alarmManager = (AlarmManager) context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+            if (alarmManager == null) {
+                Toast.makeText(context.getApplicationContext(), "Warning! No alarm manager found for the device.", Toast.LENGTH_LONG).show();
+            } else {
+                Intent intent = new Intent(context.getApplicationContext(), BroadcastReceiverAlarm.class);
+                intent.putExtra(ReminderModel.INTENT_ATTR_ID, id);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), alarmIntentId, intent, PendingIntent.FLAG_NO_CREATE);
+                if (pendingIntent != null) {
+                    alarmManager.cancel(pendingIntent);
+                    alarmIntentId = 0;
+                }
+            }
+        }
+    }
+
+    public void insertOrUpdate(boolean setOrCancelAlarm, Context context) {
+        insertOrUpdate(setOrCancelAlarm, true, context);
+    }
+
+    private void insertOrUpdate(boolean setOrCancelAlarm, boolean isResetSnooze, Context context) {
+        if (isResetSnooze) {
+            // RESET SNOOZE
+            nextSnoozeOffTime = null;
+            snoozeModel.count = 0;
+        }
+
+        if (setOrCancelAlarm) {
+            setAlarm(context);
+        } else {
+            cancelAlarm(context);
+        }
+        final ReminderActive reminder = transform(this);
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @ParametersAreNonnullByDefault
+            @Override
+            public void execute(Realm realm) {
+                realm.insertOrUpdate(reminder);
+            }
+        });
+    }
+
+    public void delete(Context context) {
+        cancelAlarm(context);
+        Realm realm = Realm.getDefaultInstance();
+        final ReminderActive reminder = realm.where(ReminderActive.class).equalTo("id", id).findFirst();
+        if (reminder != null) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @ParametersAreNonnullByDefault
+                @Override
+                public void execute(Realm realm) {
+                    reminder.deleteFromRealm();
+                }
+            });
+        }
+    }
+
+    private void archiveToMissed(Context context) {
+        Realm realm = Realm.getDefaultInstance();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @ParametersAreNonnullByDefault
+            @Override
+            public void execute(Realm realm) {
+                ReminderMissed to = new ReminderMissed();
+                to.id = id;
+                to.time = time;
+                to.name = name;
+                to.note = note;
+                realm.insertOrUpdate(to);
+            }
+        });
+
+        delete(context);
+    }
+
+    private void archiveToDismissed(Context context) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @ParametersAreNonnullByDefault
+            @Override
+            public void execute(Realm realm) {
+                ReminderDismissed to = new ReminderDismissed();
+                to.id = id;
+                to.time = time;
+                to.name = name;
+                to.note = note;
+                realm.insertOrUpdate(to);
+            }
+        });
+
+        delete(context);
+    }
+
     public static ReminderActive transform(ReminderModel from) {
         ReminderActive to = new ReminderActive();
         to.id = from.id;
@@ -589,270 +849,6 @@ public class ReminderModel {
         }
 
         return to;
-    }
-
-    public static ReminderModel read(String id) {
-        Realm realm = Realm.getDefaultInstance();
-        ReminderActive reminder = realm.where(ReminderActive.class).equalTo("id", id).findFirst();
-        if (reminder == null) {
-            return null;
-        } else {
-            return transform(reminder);
-        }
-    }
-
-    private static RealmResults<ReminderActive> privateGetAllActive() {
-        Realm realm = Realm.getDefaultInstance();
-        return realm.where(ReminderActive.class).findAll();
-    }
-
-    private static RealmResults<ReminderActive> privateGetAllActive(String name) {
-        Realm realm = Realm.getDefaultInstance();
-        return realm.where(ReminderActive.class).beginsWith("name", name).findAll();
-    }
-
-    public static List<ReminderActive> getAll() {
-//        Calendar calendar = Calendar.getInstance();
-        RealmResults<ReminderActive> result = privateGetAllActive();
-//        for (int i = 0; i < result.size(); i++) {
-//            final ReminderActive r = result.get(i);
-//            final ReminderModel reminderModel = ReminderModel.transform(r);
-//
-//            Date _time;
-//            if (reminderModel.nextSnoozeTime == null) {
-//                _time = reminderModel.time;
-//            } else {
-//                _time = reminderModel.nextSnoozeTime;
-//            }
-//
-//            if (calendar.getTime().after(_time)) {
-//                reminderModel.setAlarm(context);
-//                reminderModel.createOrUpdate();
-//            } else {
-//                reminderModel.cancelAlarm(context);
-//                reminderModel.moveToMissed();
-//            }
-//        }
-        return result;
-    }
-
-    public static List<ReminderActive> getAll(String name) {
-        RealmResults<ReminderActive> result = privateGetAllActive(name);
-        return result;
-    }
-
-    public boolean canUpdate() {
-
-        Date _time;
-
-        if (nextSnoozeOffTime == null) {
-            _time = time;
-        } else {
-            _time = nextSnoozeOffTime;
-        }
-
-        Calendar calendar = Calendar.getInstance();
-
-        return _time.after(calendar.getTime());
-
-    }
-
-    public void snooze(Context context) {
-
-        Date _time;
-        if (nextSnoozeOffTime == null) {
-            _time = time;
-        } else {
-            _time = nextSnoozeOffTime;
-        }
-
-        nextSnoozeOffTime = null; // RESET
-
-        if (snoozeModel.isEnable) {
-
-            Calendar calendar = Calendar.getInstance();
-
-            calendar.setTime(_time);
-
-            switch (snoozeModel.intervalOption) {
-                default:
-                case M5:
-                    calendar.add(Calendar.MINUTE, 5);
-                    break;
-
-                case M10:
-                    calendar.add(Calendar.MINUTE, 10);
-                    break;
-
-                case M15:
-                    calendar.add(Calendar.MINUTE, 15);
-                    break;
-                case M30:
-                    calendar.add(Calendar.MINUTE, 30);
-                    break;
-            }
-
-            switch (snoozeModel.countOptions) {
-                default:
-                case R3:
-                    if (snoozeModel.count < 3) {
-                        snoozeModel.count++;
-                        nextSnoozeOffTime = calendar.getTime();
-                    }
-                    break;
-                case R5:
-                    if (snoozeModel.count < 5) {
-                        snoozeModel.count++;
-                        nextSnoozeOffTime = calendar.getTime();
-                    }
-                    break;
-                case RC:
-                    snoozeModel.count++;
-                    nextSnoozeOffTime = calendar.getTime();
-                    break;
-            }
-        }
-
-        if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
-            dismiss(context);
-        } else {
-            insertOrUpdate();
-            setAlarm(context);
-        }
-    }
-
-    public void dismiss(Context context) {
-        final Calendar currentTime = Calendar.getInstance();
-        dismiss(context, currentTime, false);
-    }
-
-    public void dismiss(Context context, final Calendar currentTime, boolean isMissed) {
-
-        Date nextTime = getNextScheduleTime(currentTime);
-
-        if (nextTime == null) { // EOF situation
-            if (isMissed) {
-                archiveToMissed();
-            } else {
-                archiveToDismissed();
-            }
-        } else { // Found next trigger point.
-            // RESET SNOOZE
-            nextSnoozeOffTime = null;
-            snoozeModel.count = 0;
-            time = nextTime; // Set next trigger time.
-            insertOrUpdate(); // Save changes.
-            setAlarm(context); // Set alarm for next trigger time.
-        }
-    }
-
-    public void setAlarm(Context context) {
-        cancelAlarm(context); // Cancel previous alarm for same ID
-
-        if (!isEnable) {
-            return;
-        }
-
-        Date _time;
-        if (nextSnoozeOffTime == null) {
-            _time = time;
-        } else {
-            _time = nextSnoozeOffTime;
-        }
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(_time);
-
-        if (alarmIntentId == 0) { // If was never set before. Else keep using the same value.
-            alarmIntentId = (int) UUID.fromString(id).getMostSignificantBits();
-        }
-
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        Intent intent = new Intent(context.getApplicationContext(), BroadcastReceiverAlarm.class);
-        intent.putExtra(ReminderModel.INTENT_ATTR_ID, id);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), alarmIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 0, pendingIntent);
-    }
-
-    public void cancelAlarm(Context context) {
-        if (alarmIntentId != 0) {
-            AlarmManager alarmManager = (AlarmManager) context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-            if (alarmManager == null) {
-                Toast.makeText(context.getApplicationContext(), "Warning! No alarm manager found for the device.", Toast.LENGTH_LONG).show();
-            } else {
-                Intent intent = new Intent(context.getApplicationContext(), BroadcastReceiverAlarm.class);
-                intent.putExtra(ReminderModel.INTENT_ATTR_ID, id);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), alarmIntentId, intent, PendingIntent.FLAG_NO_CREATE);
-                if (pendingIntent != null) {
-                    alarmManager.cancel(pendingIntent);
-                    alarmIntentId = 0;
-                }
-            }
-        }
-    }
-
-    public void insertOrUpdate() {
-        final ReminderActive reminder = transform(this);
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-            @ParametersAreNonnullByDefault
-            @Override
-            public void execute(Realm realm) {
-                realm.insertOrUpdate(reminder);
-            }
-        });
-    }
-
-    public void delete() {
-        Realm realm = Realm.getDefaultInstance();
-        final ReminderActive reminder = realm.where(ReminderActive.class).equalTo("id", id).findFirst();
-        if (reminder != null) {
-            realm.executeTransaction(new Realm.Transaction() {
-                @ParametersAreNonnullByDefault
-                @Override
-                public void execute(Realm realm) {
-                    reminder.deleteFromRealm();
-                }
-            });
-        }
-    }
-
-    private void archiveToMissed() {
-        Realm realm = Realm.getDefaultInstance();
-
-        realm.executeTransaction(new Realm.Transaction() {
-            @ParametersAreNonnullByDefault
-            @Override
-            public void execute(Realm realm) {
-                ReminderMissed to = new ReminderMissed();
-                to.id = id;
-                to.time = time;
-                to.name = name;
-                to.note = note;
-                realm.insertOrUpdate(to);
-            }
-        });
-
-        delete();
-    }
-
-    private void archiveToDismissed() {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-            @ParametersAreNonnullByDefault
-            @Override
-            public void execute(Realm realm) {
-                ReminderDismissed to = new ReminderDismissed();
-                to.id = id;
-                to.time = time;
-                to.name = name;
-                to.note = note;
-                realm.insertOrUpdate(to);
-            }
-        });
-
-        delete();
     }
 
 }
