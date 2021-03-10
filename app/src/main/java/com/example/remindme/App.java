@@ -19,7 +19,7 @@ public class App extends Application {
 
     public static final String NOTIFICATION_CHANNEL_1_ID = "_DING_DONG";
     public static final String NOTIFICATION_CHANNEL_1_NAME = "Primary channel";
-    public static final String NOTIFICATION_CHANNEL_2_NAME = "Secondary channel";
+    //public static final String NOTIFICATION_CHANNEL_2_NAME = "Secondary channel";
 
     @Override
     public void onCreate() {
@@ -41,12 +41,14 @@ public class App extends Application {
         }
 
         Realm.init(getApplicationContext());
+
         try {
             Realm.getDefaultInstance();
         } catch (RealmMigrationNeededException r) {
             RealmConfiguration config = Realm.getDefaultConfiguration();
             Realm.deleteRealm(config);
         }
+
         ReminderModel.reScheduleAllActive(getApplicationContext());
     }
 }

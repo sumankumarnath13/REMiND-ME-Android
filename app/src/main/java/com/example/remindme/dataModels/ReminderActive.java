@@ -13,6 +13,7 @@ public class ReminderActive extends RealmObject implements RealmModel {
     public String name;
     public String note;
     public Date time;
+    public String selectedAlarmTone = null;
     public Date nextSnoozeTime = null;
     public boolean isEnable = true;
     public boolean isVibrate;

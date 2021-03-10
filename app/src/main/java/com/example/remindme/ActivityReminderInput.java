@@ -3,6 +3,9 @@ package com.example.remindme;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
@@ -36,6 +40,21 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     private TextView tv_reminder_note_summary = null;
     private TextView tv_reminder_repeat_summary = null;
     private TextView tv_reminder_snooze_summary = null;
+    private static final int RINGTONE_DIALOG_REQ_CODE = 117;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RINGTONE_DIALOG_REQ_CODE) {
+            Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            if (uri != null) {
+                reminderModel.selectedAlarmToneUri = uri;
+                TextView tv = findViewById(R.id.tv_reminder_tone_summary);
+                Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.selectedAlarmToneUri);
+                tv.setText(ringtone.getTitle(this));
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +78,11 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         final LinearLayout mnu_reminder_name = findViewById(R.id.mnu_reminder_name);
         final LinearLayout mnu_reminder_note = findViewById(R.id.mnu_reminder_note);
         final LinearLayout mnu_reminder_repeat = findViewById(R.id.mnu_reminder_repeat);
+        final TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
         final SwitchCompat sw_reminder_vibrate = findViewById(R.id.sw_reminder_vibrate);
         final SwitchCompat sw_reminder_disable = findViewById(R.id.sw_reminder_disable);
         final LinearLayout mnu_reminder_snooze = findViewById(R.id.mnu_reminder_snooze);
+        final LinearLayout mnu_reminder_tone = findViewById(R.id.mnu_reminder_tone);
 
         //final Button btn_sound = findViewById(R.id.btn_reminder_sound);
 
@@ -93,6 +114,10 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         tv_reminder_note_summary.setText(reminderModel.note);
         tv_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
         tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
+        if (reminderModel.selectedAlarmToneUri != null) {
+            Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.selectedAlarmToneUri);
+            tv_reminder_tone_summary.setText(ringtone.getTitle(this));
+        }
         sw_reminder_vibrate.setChecked(reminderModel.isVibrate);
         sw_reminder_disable.setChecked(!reminderModel.getIsEnabled());
 
@@ -194,6 +219,19 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             public void onClick(View v) {
                 DialogReminderSnoozeInput input = new DialogReminderSnoozeInput();
                 input.show(getSupportFragmentManager(), "Reminder_Snooze");
+            }
+        });
+
+        mnu_reminder_tone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select alarm tone:");
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, reminderModel.selectedAlarmToneUri);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+                startActivityForResult(intent, RINGTONE_DIALOG_REQ_CODE);
             }
         });
 

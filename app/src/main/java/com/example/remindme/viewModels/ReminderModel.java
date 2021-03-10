@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.widget.Toast;
 
 import com.example.remindme.dataModels.ReminderActive;
@@ -29,8 +30,11 @@ public class ReminderModel {
     public String name;
     public String note;
     public Date time;
+    public Uri selectedAlarmToneUri = null;
     private boolean isEnable = true;
+    private boolean isAppCreated = true;
     public boolean isVibrate = false;
+
 
     public ReminderRepeatModel repeatModel;
     public ReminderSnoozeModel snoozeModel;
@@ -440,80 +444,205 @@ public class ReminderModel {
     }
 
     public boolean canUpdate() {
-
-//        Date _time;
-//
-//        if (nextSnoozeOffTime == null) {
-//            _time = time;
-//        } else {
-//            _time = nextSnoozeOffTime;
-//        }
-
         Calendar calendar = Calendar.getInstance();
-
         return time.after(calendar.getTime());
-
     }
 
-    public void snooze(Context context) {
+    public static ReminderActive transform(ReminderModel from) {
+        ReminderActive to = new ReminderActive();
+        to.id = from.id;
+        to.alarmIntentId = from.alarmIntentId;
+        to.name = from.name;
+        to.note = from.note;
+        to.time = from.time;
+        if (from.selectedAlarmToneUri != null) {
+            to.selectedAlarmTone = from.selectedAlarmToneUri.toString();
+        }
+        to.isEnable = from.isEnable;
+        to.isVibrate = from.isVibrate;
 
-        Date _time;
-        if (nextSnoozeOffTime == null) {
-            _time = time;
-        } else {
-            _time = nextSnoozeOffTime;
+        switch (from.repeatModel.repeatOption) {
+            default:
+            case None:
+                to.repeatOption = 0;
+                break;
+            case Hourly:
+                to.repeatOption = 1;
+                break;
+            case Daily:
+                to.repeatOption = 2;
+
+                to.isRepeatOn_Sun = from.repeatModel.dailyModel.isSun;
+                to.isRepeatOn_Mon = from.repeatModel.dailyModel.isMon;
+                to.isRepeatOn_Tue = from.repeatModel.dailyModel.isTue;
+                to.isRepeatOn_Wed = from.repeatModel.dailyModel.isWed;
+                to.isRepeatOn_Thu = from.repeatModel.dailyModel.isThu;
+                to.isRepeatOn_Fri = from.repeatModel.dailyModel.isFri;
+                to.isRepeatOn_Sat = from.repeatModel.dailyModel.isSat;
+
+                break;
+            case Weekly:
+                to.repeatOption = 3;
+                break;
+            case Monthly:
+                to.repeatOption = 4;
+
+                to.isRepeatOn_Jan = from.repeatModel.monthlyModel.isJan;
+                to.isRepeatOn_Feb = from.repeatModel.monthlyModel.isFeb;
+                to.isRepeatOn_Mar = from.repeatModel.monthlyModel.isMar;
+                to.isRepeatOn_Apr = from.repeatModel.monthlyModel.isApr;
+                to.isRepeatOn_May = from.repeatModel.monthlyModel.isMay;
+                to.isRepeatOn_Jun = from.repeatModel.monthlyModel.isJun;
+                to.isRepeatOn_Jul = from.repeatModel.monthlyModel.isJul;
+                to.isRepeatOn_Aug = from.repeatModel.monthlyModel.isAug;
+                to.isRepeatOn_Sep = from.repeatModel.monthlyModel.isSep;
+                to.isRepeatOn_Oct = from.repeatModel.monthlyModel.isOct;
+                to.isRepeatOn_Nov = from.repeatModel.monthlyModel.isNov;
+                to.isRepeatOn_Dec = from.repeatModel.monthlyModel.isDec;
+
+                break;
+            case Yearly:
+                to.repeatOption = 5;
+                break;
         }
 
-        nextSnoozeOffTime = null; // RESET
+        to.isSnoozeEnable = from.snoozeModel.isEnable;
+        to.nextSnoozeTime = from.nextSnoozeOffTime;
+        to.snoozeCount = from.snoozeModel.count;
 
-        if (snoozeModel.isEnable) {
+        if (from.snoozeModel.isEnable) {
 
-            Calendar calendar = Calendar.getInstance();
-
-            calendar.setTime(_time);
-
-            switch (snoozeModel.intervalOption) {
-                default:
-                case M5:
-                    calendar.add(Calendar.MINUTE, 5);
-                    break;
-                case M10:
-                    calendar.add(Calendar.MINUTE, 10);
-                    break;
-                case M15:
-                    calendar.add(Calendar.MINUTE, 15);
-                    break;
-                case M30:
-                    calendar.add(Calendar.MINUTE, 30);
-                    break;
-            }
-
-            switch (snoozeModel.countOptions) {
+            switch (from.snoozeModel.countOptions) {
                 default:
                 case R3:
-                    if (snoozeModel.count < 3) {
-                        snoozeModel.count++;
-                        nextSnoozeOffTime = calendar.getTime();
-                    }
+                    to.snoozeLength = 3;
                     break;
                 case R5:
-                    if (snoozeModel.count < 5) {
-                        snoozeModel.count++;
-                        nextSnoozeOffTime = calendar.getTime();
-                    }
+                    to.snoozeLength = 5;
                     break;
                 case RC:
-                    snoozeModel.count++;
-                    nextSnoozeOffTime = calendar.getTime();
+                    to.snoozeLength = -1;
+                    break;
+            }
+
+            switch (from.snoozeModel.intervalOption) {
+                default:
+                case M5:
+                    to.snoozeInterval = 5;
+                    break;
+                case M10:
+                    to.snoozeInterval = 10;
+                    break;
+                case M15:
+                    to.snoozeInterval = 15;
+                    break;
+                case M30:
+                    to.snoozeInterval = 30;
+                    break;
+            }
+        } else {
+            to.snoozeLength = 0;
+            to.snoozeInterval = 0;
+        }
+
+        return to;
+    }
+
+    public static ReminderModel transform(ReminderActive from) {
+        ReminderModel to = new ReminderModel();
+        to.id = from.id;
+        to.alarmIntentId = from.alarmIntentId;
+        to.name = from.name;
+        to.note = from.note;
+        to.time = from.time;
+        if (from.selectedAlarmTone != null) {
+            to.selectedAlarmToneUri = Uri.parse(from.selectedAlarmTone);
+        }
+        to.isEnable = from.isEnable;
+        to.isVibrate = from.isVibrate;
+
+        switch (from.repeatOption) {
+            default:
+            case 0:
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.None;
+                break;
+            case 1:
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Hourly;
+                break;
+            case 2:
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Daily;
+
+                to.repeatModel.dailyModel.isSun = from.isRepeatOn_Sun;
+                to.repeatModel.dailyModel.isMon = from.isRepeatOn_Mon;
+                to.repeatModel.dailyModel.isTue = from.isRepeatOn_Tue;
+                to.repeatModel.dailyModel.isWed = from.isRepeatOn_Wed;
+                to.repeatModel.dailyModel.isThu = from.isRepeatOn_Thu;
+                to.repeatModel.dailyModel.isFri = from.isRepeatOn_Fri;
+                to.repeatModel.dailyModel.isSat = from.isRepeatOn_Sat;
+
+                break;
+            case 3:
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Weekly;
+                break;
+            case 4:
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Monthly;
+
+                to.repeatModel.monthlyModel.isJan = from.isRepeatOn_Jan;
+                to.repeatModel.monthlyModel.isFeb = from.isRepeatOn_Feb;
+                to.repeatModel.monthlyModel.isMar = from.isRepeatOn_Mar;
+                to.repeatModel.monthlyModel.isApr = from.isRepeatOn_Apr;
+                to.repeatModel.monthlyModel.isMay = from.isRepeatOn_May;
+                to.repeatModel.monthlyModel.isJun = from.isRepeatOn_Jun;
+                to.repeatModel.monthlyModel.isJul = from.isRepeatOn_Jul;
+                to.repeatModel.monthlyModel.isAug = from.isRepeatOn_Aug;
+                to.repeatModel.monthlyModel.isSep = from.isRepeatOn_Sep;
+                to.repeatModel.monthlyModel.isOct = from.isRepeatOn_Oct;
+                to.repeatModel.monthlyModel.isNov = from.isRepeatOn_Nov;
+                to.repeatModel.monthlyModel.isDec = from.isRepeatOn_Dec;
+
+                break;
+            case 5:
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Yearly;
+                break;
+        }
+
+        to.snoozeModel.isEnable = from.isSnoozeEnable;
+        to.nextSnoozeOffTime = from.nextSnoozeTime;
+        to.snoozeModel.count = from.snoozeCount;
+
+        if (from.isSnoozeEnable) {
+
+            switch (from.snoozeLength) {
+                default:
+                case 3:
+                    to.snoozeModel.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R3;
+                    break;
+                case 5:
+                    to.snoozeModel.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R5;
+                    break;
+                case -1:
+                    to.snoozeModel.countOptions = ReminderSnoozeModel.SnoozeCountOptions.RC;
+                    break;
+            }
+
+            switch (from.snoozeInterval) {
+                default:
+                case 5:
+                    to.snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M5;
+                    break;
+                case 10:
+                    to.snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M10;
+                    break;
+                case 15:
+                    to.snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M15;
+                    break;
+                case 30:
+                    to.snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M30;
                     break;
             }
         }
 
-        if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
-            dismiss(context, Calendar.getInstance(), true);
-        } else {
-            insertOrUpdate(true, false, context);
-        }
+        return to;
     }
 
     public void dismiss(Context context) {
@@ -533,35 +662,6 @@ public class ReminderModel {
             time = nextTime; // Set next trigger time.
             insertOrUpdate(true, context); // Save changes. // Set alarm for next trigger time.
         }
-    }
-
-    private void setAlarm(Context context) {
-        cancelAlarm(context); // Cancel previous alarm for same ID
-
-        if (!isEnable) {
-            return;
-        }
-
-        Date _time;
-        if (nextSnoozeOffTime == null) {
-            _time = time;
-        } else {
-            _time = nextSnoozeOffTime;
-        }
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(_time);
-
-        if (alarmIntentId == 0) { // If was never set before. Else keep using the same value.
-            alarmIntentId = (int) UUID.fromString(id).getMostSignificantBits();
-        }
-
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        Intent intent = new Intent(context.getApplicationContext(), BroadcastReceiverAlarm.class);
-        intent.putExtra(ReminderModel.INTENT_ATTR_ID, id);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), alarmIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 0, pendingIntent);
     }
 
     private void cancelAlarm(Context context) {
@@ -660,195 +760,91 @@ public class ReminderModel {
         delete(context);
     }
 
-    public static ReminderActive transform(ReminderModel from) {
-        ReminderActive to = new ReminderActive();
-        to.id = from.id;
-        to.alarmIntentId = from.alarmIntentId;
-        to.name = from.name;
-        to.note = from.note;
-        to.time = from.time;
-        to.isEnable = from.isEnable;
-        to.isVibrate = from.isVibrate;
+    public void snooze(Context context) {
 
-        switch (from.repeatModel.repeatOption) {
-            default:
-            case None:
-                to.repeatOption = 0;
-                break;
-            case Hourly:
-                to.repeatOption = 1;
-                break;
-            case Daily:
-                to.repeatOption = 2;
-
-                to.isRepeatOn_Sun = from.repeatModel.dailyModel.isSun;
-                to.isRepeatOn_Mon = from.repeatModel.dailyModel.isMon;
-                to.isRepeatOn_Tue = from.repeatModel.dailyModel.isTue;
-                to.isRepeatOn_Wed = from.repeatModel.dailyModel.isWed;
-                to.isRepeatOn_Thu = from.repeatModel.dailyModel.isThu;
-                to.isRepeatOn_Fri = from.repeatModel.dailyModel.isFri;
-                to.isRepeatOn_Sat = from.repeatModel.dailyModel.isSat;
-
-                break;
-            case Weekly:
-                to.repeatOption = 3;
-                break;
-            case Monthly:
-                to.repeatOption = 4;
-
-                to.isRepeatOn_Jan = from.repeatModel.monthlyModel.isJan;
-                to.isRepeatOn_Feb = from.repeatModel.monthlyModel.isFeb;
-                to.isRepeatOn_Mar = from.repeatModel.monthlyModel.isMar;
-                to.isRepeatOn_Apr = from.repeatModel.monthlyModel.isApr;
-                to.isRepeatOn_May = from.repeatModel.monthlyModel.isMay;
-                to.isRepeatOn_Jun = from.repeatModel.monthlyModel.isJun;
-                to.isRepeatOn_Jul = from.repeatModel.monthlyModel.isJul;
-                to.isRepeatOn_Aug = from.repeatModel.monthlyModel.isAug;
-                to.isRepeatOn_Sep = from.repeatModel.monthlyModel.isSep;
-                to.isRepeatOn_Oct = from.repeatModel.monthlyModel.isOct;
-                to.isRepeatOn_Nov = from.repeatModel.monthlyModel.isNov;
-                to.isRepeatOn_Dec = from.repeatModel.monthlyModel.isDec;
-
-                break;
-            case Yearly:
-                to.repeatOption = 5;
-                break;
-        }
-
-        to.isSnoozeEnable = from.snoozeModel.isEnable;
-        to.nextSnoozeTime = from.nextSnoozeOffTime;
-        to.snoozeCount = from.snoozeModel.count;
-
-        if (from.snoozeModel.isEnable) {
-
-            switch (from.snoozeModel.countOptions) {
-                default:
-                case R3:
-                    to.snoozeLength = 3;
-                    break;
-                case R5:
-                    to.snoozeLength = 5;
-                    break;
-                case RC:
-                    to.snoozeLength = -1;
-                    break;
-            }
-
-            switch (from.snoozeModel.intervalOption) {
-                default:
-                case M5:
-                    to.snoozeInterval = 5;
-                    break;
-                case M10:
-                    to.snoozeInterval = 10;
-                    break;
-                case M15:
-                    to.snoozeInterval = 15;
-                    break;
-                case M30:
-                    to.snoozeInterval = 30;
-                    break;
-            }
+        Date _time;
+        if (nextSnoozeOffTime == null) {
+            _time = time;
         } else {
-            to.snoozeLength = 0;
-            to.snoozeInterval = 0;
+            _time = nextSnoozeOffTime;
         }
 
-        return to;
+        if (snoozeModel.isEnable) {
+            Calendar calendar = Calendar.getInstance();
+            if (calendar.getTime().after(_time)) { // Set snooze only if current time is past alarm time or previous snooze time.
+                nextSnoozeOffTime = null; // RESET
+                calendar.setTime(_time);
+                switch (snoozeModel.intervalOption) {
+                    default:
+                    case M5:
+                        calendar.add(Calendar.MINUTE, 5);
+                        break;
+                    case M10:
+                        calendar.add(Calendar.MINUTE, 10);
+                        break;
+                    case M15:
+                        calendar.add(Calendar.MINUTE, 15);
+                        break;
+                    case M30:
+                        calendar.add(Calendar.MINUTE, 30);
+                        break;
+                }
+                switch (snoozeModel.countOptions) {
+                    default:
+                    case R3:
+                        if (snoozeModel.count < 3) {
+                            snoozeModel.count++;
+                            nextSnoozeOffTime = calendar.getTime();
+                        }
+                        break;
+                    case R5:
+                        if (snoozeModel.count < 5) {
+                            snoozeModel.count++;
+                            nextSnoozeOffTime = calendar.getTime();
+                        }
+                        break;
+                    case RC:
+                        snoozeModel.count++;
+                        nextSnoozeOffTime = calendar.getTime();
+                        break;
+                }
+
+                if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
+                    dismiss(context, Calendar.getInstance(), true);
+                } else {
+                    insertOrUpdate(true, false, context);
+                }
+            }
+        }
     }
 
-    public static ReminderModel transform(ReminderActive from) {
-        ReminderModel to = new ReminderModel();
-        to.id = from.id;
-        to.alarmIntentId = from.alarmIntentId;
-        to.name = from.name;
-        to.note = from.note;
-        to.time = from.time;
-        to.isEnable = from.isEnable;
-        to.isVibrate = from.isVibrate;
+    private void setAlarm(Context context) {
+        //cancelAlarm(context); // explicit cancellation isn' required as the flag : FLAG_CANCEL_CURRENT will do the same.
 
-        switch (from.repeatOption) {
-            default:
-            case 0:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.None;
-                break;
-            case 1:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Hourly;
-                break;
-            case 2:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Daily;
-
-                to.repeatModel.dailyModel.isSun = from.isRepeatOn_Sun;
-                to.repeatModel.dailyModel.isMon = from.isRepeatOn_Mon;
-                to.repeatModel.dailyModel.isTue = from.isRepeatOn_Tue;
-                to.repeatModel.dailyModel.isWed = from.isRepeatOn_Wed;
-                to.repeatModel.dailyModel.isThu = from.isRepeatOn_Thu;
-                to.repeatModel.dailyModel.isFri = from.isRepeatOn_Fri;
-                to.repeatModel.dailyModel.isSat = from.isRepeatOn_Sat;
-
-                break;
-            case 3:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Weekly;
-                break;
-            case 4:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Monthly;
-
-                to.repeatModel.monthlyModel.isJan = from.isRepeatOn_Jan;
-                to.repeatModel.monthlyModel.isFeb = from.isRepeatOn_Feb;
-                to.repeatModel.monthlyModel.isMar = from.isRepeatOn_Mar;
-                to.repeatModel.monthlyModel.isApr = from.isRepeatOn_Apr;
-                to.repeatModel.monthlyModel.isMay = from.isRepeatOn_May;
-                to.repeatModel.monthlyModel.isJun = from.isRepeatOn_Jun;
-                to.repeatModel.monthlyModel.isJul = from.isRepeatOn_Jul;
-                to.repeatModel.monthlyModel.isAug = from.isRepeatOn_Aug;
-                to.repeatModel.monthlyModel.isSep = from.isRepeatOn_Sep;
-                to.repeatModel.monthlyModel.isOct = from.isRepeatOn_Oct;
-                to.repeatModel.monthlyModel.isNov = from.isRepeatOn_Nov;
-                to.repeatModel.monthlyModel.isDec = from.isRepeatOn_Dec;
-
-                break;
-            case 5:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Yearly;
-                break;
+        if (!isEnable) {
+            return;
         }
 
-        to.snoozeModel.isEnable = from.isSnoozeEnable;
-        to.nextSnoozeOffTime = from.nextSnoozeTime;
-        to.snoozeModel.count = from.snoozeCount;
-
-        if (from.isSnoozeEnable) {
-
-            switch (from.snoozeLength) {
-                default:
-                case 3:
-                    to.snoozeModel.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R3;
-                    break;
-                case 5:
-                    to.snoozeModel.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R5;
-                    break;
-                case -1:
-                    to.snoozeModel.countOptions = ReminderSnoozeModel.SnoozeCountOptions.RC;
-                    break;
-            }
-
-            switch (from.snoozeInterval) {
-                default:
-                case 5:
-                    to.snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M5;
-                    break;
-                case 10:
-                    to.snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M10;
-                    break;
-                case 15:
-                    to.snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M15;
-                    break;
-                case 30:
-                    to.snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M30;
-                    break;
-            }
+        Date _time;
+        if (nextSnoozeOffTime == null) {
+            _time = time;
+        } else {
+            _time = nextSnoozeOffTime;
         }
 
-        return to;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(_time);
+
+        if (alarmIntentId == 0) { // If was never set before. Else keep using the same value.
+            alarmIntentId = (int) UUID.fromString(id).getMostSignificantBits();
+        }
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(context.getApplicationContext(), BroadcastReceiverAlarm.class);
+        intent.putExtra(ReminderModel.INTENT_ATTR_ID, id);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), alarmIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 0, pendingIntent);
     }
 
 }

@@ -41,9 +41,6 @@ public class ActivityReminderRinging extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        alarmTone = RingtoneManager.getRingtone(getApplicationContext(), notification);
-
         final Button btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
         btnDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +116,13 @@ public class ActivityReminderRinging extends AppCompatActivity {
 
                     ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
                     ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
+
+                    if (reminderModel.selectedAlarmToneUri == null) {
+                        Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                        alarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarmToneUri);
+                    } else {
+                        alarmTone = RingtoneManager.getRingtone(getApplicationContext(), reminderModel.selectedAlarmToneUri);
+                    }
 
                     if (alarmTone != null && !alarmTone.isPlaying()) {
                         alarmTone.play();
