@@ -47,11 +47,15 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RINGTONE_DIALOG_REQ_CODE) {
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
             if (uri != null) {
                 reminderModel.selectedAlarmToneUri = uri;
-                TextView tv = findViewById(R.id.tv_reminder_tone_summary);
                 Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.selectedAlarmToneUri);
-                tv.setText(ringtone.getTitle(this));
+                tv_reminder_tone_summary.setText(ringtone.getTitle(this));
+            } else {
+                Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                Ringtone alarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarmToneUri);
+                tv_reminder_tone_summary.setText(alarmTone.getTitle(this));
             }
         }
     }
@@ -114,10 +118,16 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         tv_reminder_note_summary.setText(reminderModel.note);
         tv_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
         tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
-        if (reminderModel.selectedAlarmToneUri != null) {
+
+        if (reminderModel.selectedAlarmToneUri == null) {
+            Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), alarmToneUri);
+            tv_reminder_tone_summary.setText(ringtone.getTitle(this));
+        } else {
             Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.selectedAlarmToneUri);
             tv_reminder_tone_summary.setText(ringtone.getTitle(this));
         }
+
         sw_reminder_vibrate.setChecked(reminderModel.isVibrate);
         sw_reminder_disable.setChecked(!reminderModel.getIsEnabled());
 
