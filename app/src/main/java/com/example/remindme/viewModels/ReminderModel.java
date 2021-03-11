@@ -113,6 +113,7 @@ public class ReminderModel {
             alarmTime.setTime(currentTime.getTime());
             // Set alarm values to current time onwards
             alarmTime.set(Calendar.MINUTE, alarmMin);
+            alarmTime.set(Calendar.SECOND, 0);
             // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
             if (currentTime.after(alarmTime)) {
                 alarmTime.add(Calendar.HOUR_OF_DAY, 1);
@@ -131,6 +132,7 @@ public class ReminderModel {
             // Set alarm values to current time onwards
             alarmTime.set(Calendar.HOUR_OF_DAY, alarmHour);
             alarmTime.set(Calendar.MINUTE, alarmMin);
+            alarmTime.set(Calendar.SECOND, 0);
             // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
             if (currentTime.after(alarmTime)) {
                 alarmTime.add(Calendar.DAY_OF_YEAR, 1);
@@ -215,7 +217,15 @@ public class ReminderModel {
             Calendar alarmTime = Calendar.getInstance();
             alarmTime.setTime(time);
 
-            alarmTime.add(Calendar.DAY_OF_MONTH, 7);
+            // Merge current time to alarm time
+            alarmTime.set(Calendar.WEEK_OF_YEAR, currentTime.get(Calendar.WEEK_OF_YEAR));
+            alarmTime.set(Calendar.SECOND, 0);
+            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
+            if (currentTime.after(alarmTime)) {
+                alarmTime.add(Calendar.WEEK_OF_YEAR, 1);
+            }
+
+            alarmTime.add(Calendar.WEEK_OF_YEAR, 1);
             nextTime = alarmTime.getTime();
         } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.Monthly) {
             boolean firstMatch = false;
@@ -234,6 +244,7 @@ public class ReminderModel {
             alarmTime.set(Calendar.DAY_OF_MONTH, alarmDay);
             alarmTime.set(Calendar.HOUR_OF_DAY, alarmHour);
             alarmTime.set(Calendar.MINUTE, alarmMin);
+            alarmTime.set(Calendar.SECOND, 0);
             // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
             if (currentTime.after(alarmTime)) {
                 alarmTime.add(Calendar.MONTH, 1);
@@ -371,6 +382,7 @@ public class ReminderModel {
 
             // Merge current time to alarm time
             alarmTime.set(Calendar.YEAR, currentTime.get(Calendar.YEAR));
+            alarmTime.set(Calendar.SECOND, 0);
             // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
             if (currentTime.after(alarmTime)) {
                 alarmTime.add(Calendar.YEAR, 1);

@@ -99,12 +99,10 @@ public class ActivityReminderRinging extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         try {
             Intent i = getIntent();
             final String id = i.getStringExtra(ReminderModel.INTENT_ATTR_ID);
-            if (reminderModel == null) // First null check to ensure that its first onStart hit after creating the activity
-            {
+            if (reminderModel == null) { // First null check to ensure that its first onStart hit after creating the activity. OnStart will be called multiple time if launched from locked screen.
                 reminderModel = ReminderModel.read(id);
                 if (reminderModel == null) { // Second null check if it present in the database.
                     Toast.makeText(this, "Reminder not found!", Toast.LENGTH_SHORT).show();
@@ -151,6 +149,18 @@ public class ActivityReminderRinging extends AppCompatActivity {
             Toast.makeText(this, "Well after start " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed(); // Disables back button
+    }
+
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        finish(); // Finish it when going in background.
+//    }
+
 
     @Override
     protected void onDestroy() {
