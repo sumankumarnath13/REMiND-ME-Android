@@ -7,11 +7,11 @@ import android.os.Build;
 
 import com.example.remindme.viewModels.ReminderModel;
 
-public class BroadcastReceiverAlarm extends BroadcastReceiver {
+public class AlarmBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String id = intent.getStringExtra(ReminderModel.INTENT_ATTR_ID);
-        Intent alarmServiceIntent = new Intent(context, ServiceAlarm.class);
+        Intent alarmServiceIntent = new Intent(context, AlarmService.class);
         alarmServiceIntent.putExtra(ReminderModel.INTENT_ATTR_ID, id);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

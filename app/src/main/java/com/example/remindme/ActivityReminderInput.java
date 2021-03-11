@@ -38,6 +38,8 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
 
     private TextView tv_reminder_name_summary = null;
     private TextView tv_reminder_note_summary = null;
+    private SwitchCompat sw_reminder_repeat = null;
+    private SwitchCompat sw_reminder_snooze = null;
     private TextView tv_reminder_repeat_summary = null;
     private TextView tv_reminder_snooze_summary = null;
     private static final int RINGTONE_DIALOG_REQ_CODE = 117;
@@ -63,32 +65,13 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         reminderModel = new ReminderModel(UUID.randomUUID().toString());
-
         setContentView(R.layout.activity_reminder_input);
 
         UtilsActivity.setTitle(this);
 
-        tv_reminder_name_summary = findViewById(R.id.tv_reminder_name_summary);
-        tv_reminder_note_summary = findViewById(R.id.tv_reminder_note_summary);
-        tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
-        tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
-
         final TextView tv_title = findViewById(R.id.tv_title);
-        final Button btn_reminder_date = findViewById(R.id.btn_reminder_date);
-        final Button btn_reminder_time = findViewById(R.id.btn_reminder_time);
-        final Button btn_reminder_save = findViewById(R.id.btn_reminder_save);
-        final LinearLayout mnu_reminder_name = findViewById(R.id.mnu_reminder_name);
-        final LinearLayout mnu_reminder_note = findViewById(R.id.mnu_reminder_note);
-        final LinearLayout mnu_reminder_repeat = findViewById(R.id.mnu_reminder_repeat);
         final TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
-        final SwitchCompat sw_reminder_vibrate = findViewById(R.id.sw_reminder_vibrate);
-        final SwitchCompat sw_reminder_disable = findViewById(R.id.sw_reminder_disable);
-        final LinearLayout mnu_reminder_snooze = findViewById(R.id.mnu_reminder_snooze);
-        final LinearLayout mnu_reminder_tone = findViewById(R.id.mnu_reminder_tone);
-
-        //final Button btn_sound = findViewById(R.id.btn_reminder_sound);
 
         Intent i = getIntent();
         final String reminder_id = i.getStringExtra(ReminderModel.INTENT_ATTR_ID);
@@ -112,12 +95,41 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             reminderModel.time = _c.getTime();
         }
 
-        btn_reminder_date.setText(UtilsDateTime.toDateString(reminderModel.time));
-        btn_reminder_time.setText(UtilsDateTime.toTimeString(reminderModel.time));
+        tv_reminder_name_summary = findViewById(R.id.tv_reminder_name_summary);
         tv_reminder_name_summary.setText(reminderModel.name);
+
+        tv_reminder_note_summary = findViewById(R.id.tv_reminder_note_summary);
         tv_reminder_note_summary.setText(reminderModel.note);
+
+        tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
         tv_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
+        sw_reminder_repeat = findViewById(R.id.sw_reminder_repeat);
+        if (reminderModel.repeatModel.repeatOption != ReminderRepeatModel.ReminderRepeatOptions.None) {
+            sw_reminder_repeat.setChecked(true);
+        }
+        sw_reminder_repeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sw_reminder_repeat.isChecked()) {
+                    reminderModel.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Daily; // Default
+                } else {
+                    reminderModel.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.None;
+                }
+                tv_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
+            }
+        });
+
+        tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
         tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
+        sw_reminder_snooze = findViewById(R.id.sw_reminder_snooze);
+        sw_reminder_snooze.setChecked(reminderModel.snoozeModel.isEnable);
+        sw_reminder_snooze.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reminderModel.snoozeModel.isEnable = sw_reminder_snooze.isChecked();
+                tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
+            }
+        });
 
         if (reminderModel.selectedAlarmToneUri == null) {
             Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -128,9 +140,8 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             tv_reminder_tone_summary.setText(ringtone.getTitle(this));
         }
 
-        sw_reminder_vibrate.setChecked(reminderModel.isVibrate);
-        sw_reminder_disable.setChecked(!reminderModel.getIsEnabled());
-
+        final Button btn_reminder_time = findViewById(R.id.btn_reminder_time);
+        btn_reminder_time.setText(UtilsDateTime.toTimeString(reminderModel.time));
         btn_reminder_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -153,6 +164,8 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
+        final Button btn_reminder_date = findViewById(R.id.btn_reminder_date);
+        btn_reminder_date.setText(UtilsDateTime.toDateString(reminderModel.time));
         btn_reminder_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,19 +192,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
-        btn_reminder_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (reminderModel.canUpdate()) {
-                    reminderModel.isVibrate = sw_reminder_vibrate.isChecked();
-                    reminderModel.setIsEnabled(!sw_reminder_disable.isChecked(), getApplicationContext());
-                    finish();
-                } else {
-                    Toast.makeText(ActivityReminderInput.this, "Time cannot be set in past!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
+        final LinearLayout mnu_reminder_name = findViewById(R.id.mnu_reminder_name);
         mnu_reminder_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,6 +201,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
+        final LinearLayout mnu_reminder_note = findViewById(R.id.mnu_reminder_note);
         mnu_reminder_note.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,6 +210,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
+        final LinearLayout mnu_reminder_repeat = findViewById(R.id.mnu_reminder_repeat);
         mnu_reminder_repeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,6 +227,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
+        final LinearLayout mnu_reminder_snooze = findViewById(R.id.mnu_reminder_snooze);
         mnu_reminder_snooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,9 +236,15 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
+        final LinearLayout mnu_reminder_tone = findViewById(R.id.mnu_reminder_tone);
         mnu_reminder_tone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (reminderModel.selectedAlarmToneUri == null) {
+                    reminderModel.selectedAlarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                }
+
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select alarm tone:");
@@ -245,13 +255,27 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
-        sw_reminder_vibrate.setOnClickListener(new View.OnClickListener() {
+
+        final SwitchCompat sw_reminder_tone = findViewById(R.id.sw_reminder_tone);
+        sw_reminder_tone.setChecked(reminderModel.isEnableTone);
+        sw_reminder_tone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                reminderModel.isEnableTone = sw_reminder_tone.isChecked();
             }
         });
 
+        final SwitchCompat sw_reminder_vibrate = findViewById(R.id.sw_reminder_vibrate);
+        sw_reminder_vibrate.setChecked(reminderModel.isVibrate);
+        sw_reminder_vibrate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reminderModel.isVibrate = sw_reminder_vibrate.isChecked();
+            }
+        });
+
+        final SwitchCompat sw_reminder_disable = findViewById(R.id.sw_reminder_disable);
+        sw_reminder_disable.setChecked(!reminderModel.getIsEnabled());
         sw_reminder_disable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -269,10 +293,25 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 }
             }
         });
+
+        final Button btn_reminder_save = findViewById(R.id.btn_reminder_save);
+        btn_reminder_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (reminderModel.canUpdate()) {
+                    reminderModel.isVibrate = sw_reminder_vibrate.isChecked();
+                    reminderModel.setIsEnabled(!sw_reminder_disable.isChecked(), getApplicationContext());
+                    finish();
+                } else {
+                    Toast.makeText(ActivityReminderInput.this, "Time cannot be set in past!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
     public void set(ReminderRepeatModel model, boolean isEOF) {
+
         switch (model.repeatOption) {
             case None:
             case Hourly:
@@ -281,6 +320,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             default:
                 if (isEOF) {
                     reminderModel.repeatModel = model;
+                    sw_reminder_repeat.setChecked(reminderModel.repeatModel.repeatOption != ReminderRepeatModel.ReminderRepeatOptions.None);
                     tv_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
                 }
                 break;
@@ -294,6 +334,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                             model.dailyModel.isFri ||
                             model.dailyModel.isSat) {
                         reminderModel.repeatModel = model;
+                        sw_reminder_repeat.setChecked(reminderModel.repeatModel.repeatOption != ReminderRepeatModel.ReminderRepeatOptions.None);
                         tv_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
                     }
                 } else {
@@ -316,6 +357,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                             model.monthlyModel.isNov ||
                             model.monthlyModel.isDec) {
                         reminderModel.repeatModel = model;
+                        sw_reminder_repeat.setChecked(reminderModel.repeatModel.repeatOption != ReminderRepeatModel.ReminderRepeatOptions.None);
                         tv_reminder_repeat_summary.setText(reminderModel.repeatModel.toString());
                     }
                 } else {
@@ -329,6 +371,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     @Override
     public void set(ReminderSnoozeModel model, boolean isEOF) {
         if (isEOF) {
+            sw_reminder_snooze.setChecked(reminderModel.snoozeModel.isEnable);
             tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
         }
     }

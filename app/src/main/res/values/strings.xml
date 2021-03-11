@@ -2,8 +2,6 @@
     <string name="app_name">RemindMe</string>
     <string name="app_label">R E M i N D \u0020 M E</string>
 
-    <string name="boot_broadcast_intent_name">DUM DUM</string>
-
     <string name="dialog_positive">Done</string>
     <string name="dialog_negative">Cancel</string>
     <string name="btn_back">Back</string>

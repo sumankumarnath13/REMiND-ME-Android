@@ -1,11 +1,13 @@
 package com.example.remindme;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -27,6 +29,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
     boolean isTouched = false;
     ReminderModel reminderModel = null;
     Ringtone alarmTone = null;
+    Vibrator vibrator = null;
     CountDownTimer timer = null;
 
     @Override
@@ -117,15 +120,25 @@ public class ActivityReminderRinging extends AppCompatActivity {
                     ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
                     ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
 
-                    if (reminderModel.selectedAlarmToneUri == null) {
-                        Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-                        alarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarmToneUri);
-                    } else {
-                        alarmTone = RingtoneManager.getRingtone(getApplicationContext(), reminderModel.selectedAlarmToneUri);
+                    if (reminderModel.isEnableTone) {
+                        if (reminderModel.selectedAlarmToneUri == null) {
+                            Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                            alarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarmToneUri);
+                        } else {
+                            alarmTone = RingtoneManager.getRingtone(getApplicationContext(), reminderModel.selectedAlarmToneUri);
+                        }
+
+                        if (alarmTone != null && !alarmTone.isPlaying()) {
+                            alarmTone.play();
+                        }
                     }
 
-                    if (alarmTone != null && !alarmTone.isPlaying()) {
-                        alarmTone.play();
+                    if (reminderModel.isVibrate) {
+                        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                        if (vibrator != null) {
+                            long[] pattern = {0, 100, 1000};
+                            vibrator.vibrate(pattern, 0);
+                        }
                     }
                 }
             } else {
@@ -149,6 +162,10 @@ public class ActivityReminderRinging extends AppCompatActivity {
 
         if (alarmTone != null) {
             alarmTone.stop();
+        }
+
+        if (vibrator != null) {
+            vibrator.cancel();
         }
 
         if (timer != null) {

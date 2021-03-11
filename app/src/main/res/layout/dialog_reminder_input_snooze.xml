@@ -10,7 +10,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/sw_reminder_snooze_enabled"
+        android:id="@+id/sw_reminder_snooze"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:textColor="@color/text_gray1"

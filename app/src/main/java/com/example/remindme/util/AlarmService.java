@@ -14,13 +14,13 @@ import com.example.remindme.App;
 import com.example.remindme.R;
 import com.example.remindme.viewModels.ReminderModel;
 
-public class ServiceAlarm extends IntentService {
+public class AlarmService extends IntentService {
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
-    public ServiceAlarm() {
-        super("TEST_TEST");
+    public AlarmService() {
+        super("AlarmService");
     }
 
     @Override

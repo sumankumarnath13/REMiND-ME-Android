@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.example.remindme.dataModels.ReminderActive;
 import com.example.remindme.dataModels.ReminderDismissed;
 import com.example.remindme.dataModels.ReminderMissed;
-import com.example.remindme.util.BroadcastReceiverAlarm;
+import com.example.remindme.util.AlarmBroadcastReceiver;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -30,9 +30,9 @@ public class ReminderModel {
     public String name;
     public String note;
     public Date time;
+    public boolean isEnableTone = true;
     public Uri selectedAlarmToneUri = null;
     private boolean isEnable = true;
-    private boolean isAppCreated = true;
     public boolean isVibrate = false;
 
 
@@ -458,6 +458,7 @@ public class ReminderModel {
         if (from.selectedAlarmToneUri != null) {
             to.selectedAlarmTone = from.selectedAlarmToneUri.toString();
         }
+        to.isEnableTone = from.isEnableTone;
         to.isEnable = from.isEnable;
         to.isVibrate = from.isVibrate;
 
@@ -558,6 +559,7 @@ public class ReminderModel {
         if (from.selectedAlarmTone != null) {
             to.selectedAlarmToneUri = Uri.parse(from.selectedAlarmTone);
         }
+        to.isEnableTone = from.isEnableTone;
         to.isEnable = from.isEnable;
         to.isVibrate = from.isVibrate;
 
@@ -670,7 +672,7 @@ public class ReminderModel {
             if (alarmManager == null) {
                 Toast.makeText(context.getApplicationContext(), "Warning! No alarm manager found for the device.", Toast.LENGTH_LONG).show();
             } else {
-                Intent intent = new Intent(context.getApplicationContext(), BroadcastReceiverAlarm.class);
+                Intent intent = new Intent(context.getApplicationContext(), AlarmBroadcastReceiver.class);
                 intent.putExtra(ReminderModel.INTENT_ATTR_ID, id);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), alarmIntentId, intent, PendingIntent.FLAG_NO_CREATE);
                 if (pendingIntent != null) {
@@ -841,7 +843,7 @@ public class ReminderModel {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        Intent intent = new Intent(context.getApplicationContext(), BroadcastReceiverAlarm.class);
+        Intent intent = new Intent(context.getApplicationContext(), AlarmBroadcastReceiver.class);
         intent.putExtra(ReminderModel.INTENT_ATTR_ID, id);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), alarmIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 0, pendingIntent);

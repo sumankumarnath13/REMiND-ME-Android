@@ -12,8 +12,8 @@
         android:id="@+id/rv_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_32"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/dp_32">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -209,6 +209,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_16"
                     android:layout_marginLeft="@dimen/dp_16"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
@@ -228,6 +229,12 @@
                         android:textSize="@dimen/font_size_s1" />
 
                 </LinearLayout>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sw_reminder_repeat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end" />
 
             </LinearLayout>
 
@@ -251,6 +258,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_16"
                     android:layout_marginLeft="@dimen/dp_16"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
@@ -271,6 +279,12 @@
 
                 </LinearLayout>
 
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sw_reminder_snooze"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -283,8 +297,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:width="113dp"
+                    android:layout_height="match_parent"
                     android:src="@drawable/ic_reminder_sound"
                     app:tint="@color/bg_success" />
 
@@ -293,6 +306,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_16"
                     android:layout_marginLeft="@dimen/dp_16"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
@@ -312,6 +326,12 @@
                         android:textSize="@dimen/font_size_s1" />
 
                 </LinearLayout>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sw_reminder_tone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end" />
 
             </LinearLayout>
 

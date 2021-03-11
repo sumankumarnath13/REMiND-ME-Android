@@ -29,9 +29,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".util.ServiceAlarm"/>
-        <receiver android:name=".util.BroadcastReceiverAlarm"/>
-        <receiver android:name=".util.BroadcastReceiverBootCompleted">
+
+        <service android:name=".util.AlarmService" />
+
+        <receiver android:name=".util.AlarmBroadcastReceiver" />
+        <receiver android:name=".util.BootCompletedBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

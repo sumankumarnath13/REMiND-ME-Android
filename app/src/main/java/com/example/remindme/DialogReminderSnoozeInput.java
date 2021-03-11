@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -51,7 +52,7 @@ public class DialogReminderSnoozeInput extends DialogFragment {
         final RadioButton rdo_reminder_snooze_r5 = view.findViewById(R.id.rdo_reminder_snooze_r5);
         final RadioButton rdo_reminder_snooze_rc = view.findViewById(R.id.rdo_reminder_snooze_rc);
 
-        final SwitchCompat sw_reminder_snooze_enabled = view.findViewById(R.id.sw_reminder_snooze_enabled);
+        final SwitchCompat sw_reminder_snooze_enabled = view.findViewById(R.id.sw_reminder_snooze);
         sw_reminder_snooze_enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
