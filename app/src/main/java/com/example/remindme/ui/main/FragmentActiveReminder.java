@@ -2,9 +2,14 @@ package com.example.remindme.ui.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,15 +34,18 @@ public class FragmentActiveReminder extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
+     *
      * @return A new instance of fragment UpcomingReminderFragmentActivity.
      */
     public static FragmentActiveReminder newInstance() {
+
         return new FragmentActiveReminder();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     private RecyclerView recyclerView;
@@ -58,14 +66,49 @@ public class FragmentActiveReminder extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        return  view;
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
         // specify an adapter (see also next example)
-        List<ReminderActive> data = ReminderModel.getAll();
+        search(null);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.context_menu, menu);
+        final MenuItem menuItem = menu.findItem(R.id.action_search);
+        final SearchView sv = (SearchView) menuItem.getActionView();
+        sv.setQueryHint("Enter name to find");
+
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //search(query);
+                //return true;
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Toast.makeText(MainActivity.this, newText, Toast.LENGTH_SHORT).show();
+                search(newText);
+                //return false;
+                return true;
+            }
+
+        });
+    }
+
+    public void search(String input) {
+        List<ReminderActive> data;
+        if (input == null || input.length() == 0) {
+            data = ReminderModel.getAll();
+        } else {
+            data = ReminderModel.getAll(input);
+        }
         RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(data, EnumReminderTypes.Active);
         recyclerView.setAdapter(mAdapter);
     }

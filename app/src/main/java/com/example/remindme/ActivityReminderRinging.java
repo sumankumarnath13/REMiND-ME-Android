@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -27,6 +29,7 @@ import com.example.remindme.viewModels.ReminderModel;
 public class ActivityReminderRinging extends AppCompatActivity {
     int counter = 0;
     boolean isTouched = false;
+    boolean isScreenOn = false;
     ReminderModel reminderModel = null;
     Ringtone alarmTone = null;
     Vibrator vibrator = null;
@@ -36,13 +39,14 @@ public class ActivityReminderRinging extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_ringing);
-        UtilsActivity.setTitle(this);
+        UtilsActivity.setTitle(this, "ALERT!");
 
         // Important: have to do the following in order to show without unlocking
-        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        this.getWindow().addFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         final Button btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
         btnDismiss.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +69,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
                 isTouched = true;
 
                 if (reminderModel != null) {
-                    reminderModel.snooze(getApplicationContext());
+                    reminderModel.snooze(true, getApplicationContext());
                 }
 
                 finish();
@@ -89,7 +93,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
             public void onFinish() {
                 if (reminderModel != null) {
                     isTouched = true;
-                    reminderModel.snooze(getApplicationContext());
+                    reminderModel.snooze(false, getApplicationContext());
                 }
                 finish();
             }
@@ -155,19 +159,27 @@ public class ActivityReminderRinging extends AppCompatActivity {
         //super.onBackPressed(); // Disables back button
     }
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        finish(); // Finish it when going in background.
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+        isScreenOn = (Build.VERSION.SDK_INT < 20 ? powerManager.isScreenOn() : powerManager.isInteractive());
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isScreenOn) {
+            finish(); // Finish it when going in background.
+        }
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
         if (!isTouched && reminderModel != null) {
-            reminderModel.snooze(getApplicationContext());
+            reminderModel.snooze(false, getApplicationContext());
         }
 
         if (alarmTone != null) {

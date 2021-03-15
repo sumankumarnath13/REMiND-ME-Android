@@ -23,7 +23,14 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class ReminderModel {
+    public static final String INTENT_ATTR_ACTION = "_ACTION";
+    public static final String INTENT_VALUE_ACTION_RAISE_ALARM = "1";
+    public static final String INTENT_VALUE_ACTION_SNOOZE_ALARM = "2";
+    public static final String INTENT_VALUE_ACTION_DISMISS_ALARM = "3x";
+
     public static final String INTENT_ATTR_ID = "_ID";
+    public static final String INTENT_ATTR_ALARM_ID = "_ALAR_ID";
+    public static final String INTENT_ATTR_NOTIFICATION_ID = "_ALARM_ID";
 
     public String id;
     public int alarmIntentId;
@@ -33,7 +40,7 @@ public class ReminderModel {
     public boolean isEnableTone = true;
     public Uri selectedAlarmToneUri = null;
     private boolean isEnable = true;
-    public boolean isVibrate = false;
+    public boolean isVibrate = true;
 
 
     public ReminderRepeatModel repeatModel;
@@ -442,7 +449,8 @@ public class ReminderModel {
                 // SET NEW TRIGGER TIME
                 Date nextTime = getNextScheduleTime(currentTime);
                 if (nextTime == null) { // EOF situation
-                    archiveToMissed(context);
+                    archiveToFinished(context);
+                    delete(context);
                 } else { // Found next trigger point.
                     time = nextTime; // Set next trigger time.
                     insertOrUpdate(true, context);
@@ -666,15 +674,22 @@ public class ReminderModel {
 
     public void dismiss(Context context, final Calendar currentTime, boolean isMissed) {
         Date nextTime = getNextScheduleTime(currentTime);
-        if (nextTime == null) { // EOF situation
-            if (isMissed) {
-                archiveToMissed(context);
+        if (isMissed) {
+            archiveToMissed(context);
+            if (nextTime == null) { // EOF situation
+                delete(context);
             } else {
-                archiveToDismissed(context);
+                time = nextTime; // Set next trigger time.
+                insertOrUpdate(true, context); // Save changes. // Set alarm for next trigger time.
             }
-        } else { // Found next trigger point.
-            time = nextTime; // Set next trigger time.
-            insertOrUpdate(true, context); // Save changes. // Set alarm for next trigger time.
+        } else {
+            if (nextTime == null) { // EOF situation
+                archiveToFinished(context);
+                delete(context);
+            } else {
+                time = nextTime; // Set next trigger time.
+                insertOrUpdate(true, context); // Save changes. // Set alarm for next trigger time.
+            }
         }
     }
 
@@ -739,7 +754,6 @@ public class ReminderModel {
 
     private void archiveToMissed(Context context) {
         Realm realm = Realm.getDefaultInstance();
-
         realm.executeTransaction(new Realm.Transaction() {
             @ParametersAreNonnullByDefault
             @Override
@@ -753,10 +767,10 @@ public class ReminderModel {
             }
         });
 
-        delete(context);
+        //delete(context);
     }
 
-    private void archiveToDismissed(Context context) {
+    private void archiveToFinished(Context context) {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
             @ParametersAreNonnullByDefault
@@ -771,10 +785,10 @@ public class ReminderModel {
             }
         });
 
-        delete(context);
+        //delete(context);
     }
 
-    public void snooze(Context context) {
+    public void snooze(boolean isUserInput, Context context) {
 
         Date _time;
         if (nextSnoozeOffTime == null) {
@@ -824,7 +838,11 @@ public class ReminderModel {
                 }
 
                 if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
-                    dismiss(context, Calendar.getInstance(), true);
+                    if (isUserInput) {
+                        dismiss(context);
+                    } else {
+                        dismiss(context, Calendar.getInstance(), true);
+                    }
                 } else {
                     insertOrUpdate(true, false, context);
                 }
@@ -856,9 +874,10 @@ public class ReminderModel {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(context.getApplicationContext(), AlarmBroadcastReceiver.class);
+        intent.putExtra(ReminderModel.INTENT_ATTR_ACTION, ReminderModel.INTENT_VALUE_ACTION_RAISE_ALARM);
         intent.putExtra(ReminderModel.INTENT_ATTR_ID, id);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), alarmIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 0, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
 }

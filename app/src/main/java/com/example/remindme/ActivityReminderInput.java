@@ -68,15 +68,14 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         reminderModel = new ReminderModel(UUID.randomUUID().toString());
         setContentView(R.layout.activity_reminder_input);
 
-        UtilsActivity.setTitle(this);
-
-        final TextView tv_title = findViewById(R.id.tv_title);
+        //final TextView tv_title = findViewById(R.id.tv_title);
         final TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
 
         Intent i = getIntent();
         final String reminder_id = i.getStringExtra(ReminderModel.INTENT_ATTR_ID);
         if (reminder_id != null) {
-            tv_title.setText(getResources().getString(R.string.edit_reminder_heading));
+            UtilsActivity.setTitle(this, "UPDATE");
+            //tv_title.setText(getResources().getString(R.string.edit_reminder_heading));
 
             final String from = i.getStringExtra("FROM");
 
@@ -90,6 +89,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 reminderModel.time = _c.getTime();
             }
         } else {
+            UtilsActivity.setTitle(this, "NEW");
             Calendar _c = Calendar.getInstance();
             _c.add(Calendar.HOUR, 1);
             reminderModel.time = _c.getTime();
@@ -196,6 +196,8 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         mnu_reminder_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Intent i = new Intent(ActivityReminderInput.this, DialogReminderRingingActivity.class);
+                //startActivity(i);
                 DialogReminderNameInput input = new DialogReminderNameInput();
                 input.show(getSupportFragmentManager(), "Reminder_Input_Name");
             }
@@ -246,6 +248,9 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 }
 
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+
+                //intent.putExtra(VibrationEffect .EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select alarm tone:");
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, reminderModel.selectedAlarmToneUri);

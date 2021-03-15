@@ -16,12 +16,12 @@
         android:layout_marginBottom="@dimen/dp_16"
         android:gravity="center">
 
-        <TextView
-            android:id="@+id/txt_reminder_display_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/view_reminder_heading"
-            android:textSize="@dimen/font_size_h1" />
+        <!--        <TextView-->
+        <!--            android:id="@+id/txt_reminder_display_title"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="@string/view_reminder_heading"-->
+        <!--            android:textSize="@dimen/font_size_h1" />-->
 
     </RelativeLayout>
 

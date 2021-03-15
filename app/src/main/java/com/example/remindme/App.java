@@ -17,9 +17,10 @@ import io.realm.exceptions.RealmMigrationNeededException;
 
 public class App extends Application {
 
-    public static final String NOTIFICATION_CHANNEL_1_ID = "_DING_DONG";
-    public static final String NOTIFICATION_CHANNEL_1_NAME = "Primary channel";
-    //public static final String NOTIFICATION_CHANNEL_2_NAME = "Secondary channel";
+    public static final String ALARM_NOTIFICATION_CHANNEL_ID = "_DING_DONG";
+    public static final String ALARM_NOTIFICATION_CHANNEL_NAME = "Alarm notifications";
+    public static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "_TING TONG";
+    public static final String DEFAULT_NOTIFICATION_CHANNEL_NAME = "Other notifications";
 
     @Override
     public void onCreate() {
@@ -27,9 +28,14 @@ public class App extends Application {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel1 = new NotificationChannel(
-                    NOTIFICATION_CHANNEL_1_ID,
-                    NOTIFICATION_CHANNEL_1_NAME,
+            NotificationChannel alarmChannel = new NotificationChannel(
+                    ALARM_NOTIFICATION_CHANNEL_ID,
+                    ALARM_NOTIFICATION_CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_HIGH);
+
+            NotificationChannel defaultChannel = new NotificationChannel(
+                    DEFAULT_NOTIFICATION_CHANNEL_ID,
+                    DEFAULT_NOTIFICATION_CHANNEL_NAME,
                     NotificationManager.IMPORTANCE_DEFAULT);
             // Configure the notification channel1.
             //channel1.setDescription("Remind_me");
@@ -37,7 +43,10 @@ public class App extends Application {
             //channel1.setLightColor(Color.RED);
             //channel1.setVibrationPattern(new long[]{0, 1000, 500, 1000});
             //channel1.enableVibration(true);
-            notificationManager.createNotificationChannel(channel1);
+
+            //alarmChannel.setSound(null, null);
+            notificationManager.createNotificationChannel(alarmChannel);
+            notificationManager.createNotificationChannel(defaultChannel);
         }
 
         Realm.init(getApplicationContext());

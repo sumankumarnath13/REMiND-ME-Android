@@ -21,14 +21,14 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_16"
-                android:text="@string/new_reminder_heading"
-                android:textColor="@color/text_gray2"
-                android:textSize="@dimen/font_size_h1" />
+            <!--            <TextView-->
+            <!--                android:id="@+id/tv_title"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginBottom="@dimen/dp_16"-->
+            <!--                android:text="@string/new_reminder_heading"-->
+            <!--                android:textColor="@color/text_gray2"-->
+            <!--                android:textSize="@dimen/font_size_h1" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -186,6 +186,38 @@
                         android:textSize="@dimen/font_size_s1" />
 
                 </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_16"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_reminder_dismiss"
+                    app:tint="@color/bg_danger" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginLeft="@dimen/dp_16"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/btn_disable"
+                    android:textSize="@dimen/font_size_h2"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sw_reminder_disable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end" />
 
             </LinearLayout>
 
@@ -361,38 +393,6 @@
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sw_reminder_vibrate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_16"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_reminder_dismiss"
-                    app:tint="@color/bg_danger" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/dp_16"
-                    android:layout_marginLeft="@dimen/dp_16"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="@string/btn_disable"
-                    android:textSize="@dimen/font_size_h2"
-                    android:textStyle="bold" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/sw_reminder_disable"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="end" />

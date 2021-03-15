@@ -1,15 +1,21 @@
 package com.example.remindme.ui.main;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SearchView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.remindme.R;
-import com.example.remindme.dataModels.ReminderActive;
 import com.example.remindme.dataModels.ReminderMissed;
 
 import io.realm.Realm;
@@ -39,6 +45,7 @@ public class FragmentMissedReminder extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     private RecyclerView recyclerView;
@@ -59,67 +66,8 @@ public class FragmentMissedReminder extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        return  view;
+        return view;
     }
-
-/*    private void refresh() throws ParseException {
-        Realm realm = Realm.getDefaultInstance();
-
-        final RealmResults<ReminderMissed> reminders = realm.where(ReminderMissed.class).findAll();
-
-        final LinearLayout layout = getView().findViewById(R.id.linear_view_missed);
-
-        layout.removeAllViewsInLayout();
-
-        final int N = reminders.size(); // total number of textviews to add
-
-        final TextView[] myTextViews = new TextView[N]; // create an empty array;
-
-        for(int i=0; i<N; i++){
-
-            final ReminderMissed r = reminders.get(i);
-
-            final TextView t = new TextView(this.getContext());
-
-            final String date = UtilsDateTime.toTimeDateString(UtilsDateTime.toDate(r.id));
-            final String name = r.name == null ? "" : "\n" + r.name;
-            final String note = r.note == null ? "" : "\n" + r.note;
-
-            t.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Intent i = new Intent(getContext(), ActivityReminderView.class);
-                    i.putExtra("ID", r.id);
-                    i.putExtra("NAME", r.name);
-                    i.putExtra("NOTE", r.note);
-                    i.putExtra("FROM", "MISSED");
-                    startActivity(i);
-                }
-            });
-
-            Spannable spannable = new SpannableString(date + name + note);
-
-            spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_danger)), 0, date.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_white)), date.length(),
-                    date.length() + name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_dark)), date.length() + name.length(),
-                    date.length() + name.length() + note.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            t.setText(spannable);
-
-            //t.setTextColor(getResources().getColor(R.color.text_dark));
-            // set some properties of rowTextView or something
-            //t.setText("This is row #" + i);
-            layout.addView(t);
-
-            // save a reference to the textview for later
-            myTextViews[i] = t;
-        }
-    }*/
 
     @Override
     public void onResume() {
@@ -129,5 +77,27 @@ public class FragmentMissedReminder extends Fragment {
         RealmResults<ReminderMissed> data = realm.where(ReminderMissed.class).findAll();
         RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(data, EnumReminderTypes.Missed);
         recyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.context_menu, menu);
+        final MenuItem menuItem = menu.findItem(R.id.action_search);
+        final SearchView sv = (SearchView) menuItem.getActionView();
+        sv.setQueryHint("Enter name to find");
+
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(FragmentMissedReminder.this.getContext(), query, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Toast.makeText(MainActivity.this, newText, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
     }
 }
