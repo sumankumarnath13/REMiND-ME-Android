@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.remindme.ActivityReminderView;
 import com.example.remindme.R;
-import com.example.remindme.dataModels.ReminderActive;
-import com.example.remindme.dataModels.ReminderDismissed;
-import com.example.remindme.dataModels.ReminderMissed;
+import com.example.remindme.dataModels.ActiveReminder;
+import com.example.remindme.dataModels.DismissedReminder;
+import com.example.remindme.dataModels.MissedReminder;
 import com.example.remindme.util.UtilsDateTime;
 import com.example.remindme.viewModels.ReminderModel;
 
@@ -61,16 +61,16 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 Intent i = new Intent(holder.linearLayout.getContext(), ActivityReminderView.class);
 
                 if (reminderType == EnumReminderTypes.Active) {
-                    final ReminderActive reminderActive = (ReminderActive) reminder;
-                    i.putExtra(ReminderModel.INTENT_ATTR_ID, reminderActive.id);
+                    final ActiveReminder activeReminder = (ActiveReminder) reminder;
+                    ReminderModel.setReminderId(i, activeReminder.id);
                     i.putExtra("FROM", "ACTIVE");
                 } else if (reminderType == EnumReminderTypes.Missed) {
-                    final ReminderMissed reminderMissed = (ReminderMissed) reminder;
-                    i.putExtra(ReminderModel.INTENT_ATTR_ID, reminderMissed.id);
+                    final MissedReminder missedReminder = (MissedReminder) reminder;
+                    ReminderModel.setReminderId(i, missedReminder.id);
                     i.putExtra("FROM", "MISSED");
                 } else {
-                    final ReminderDismissed reminderDismissed = (ReminderDismissed) reminder;
-                    i.putExtra(ReminderModel.INTENT_ATTR_ID, reminderDismissed.id);
+                    final DismissedReminder dismissedReminder = (DismissedReminder) reminder;
+                    ReminderModel.setReminderId(i, dismissedReminder.id);
                     i.putExtra("FROM", "DISMISSED");
                 }
 
@@ -81,26 +81,24 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
         enabled.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReminderModel reminderModel = ReminderModel.transform((ReminderActive) reminder);
+                ReminderModel reminderModel = ReminderModel.transform(holder.linearLayout.getContext(), (ActiveReminder) reminder);
                 if (enabled.isChecked()) {
                     if (reminderModel.canEnable()) {
-                        reminderModel.setIsEnabled(enabled.isChecked(), holder.linearLayout.getContext().getApplicationContext());
+                        reminderModel.setIsEnabled(enabled.isChecked());
                         time.setText(UtilsDateTime.toTimeDateString(reminderModel.time));
                     } else {
                         Toast.makeText(holder.linearLayout.getContext(), "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
                         enabled.setChecked(false);
                     }
                 } else {
-                    reminderModel.setIsEnabled(false, holder.linearLayout.getContext().getApplicationContext());
+                    reminderModel.setIsEnabled(false);
                 }
             }
         });
 
-//        try {
         if (reminderType == EnumReminderTypes.Active) {
-            ReminderModel reminderModel = ReminderModel.transform((ReminderActive) reminder);
-            String str_time = UtilsDateTime.toTimeDateString(reminderModel.time);
-            time.setText(str_time);
+            ReminderModel reminderModel = ReminderModel.transform(holder.linearLayout.getContext(), (ActiveReminder) reminder);
+            time.setText(UtilsDateTime.toTimeDateString(reminderModel.time));
             if (reminderModel.nextSnoozeOffTime != null) {
                 next_snooze.setText(UtilsDateTime.toTimeString(reminderModel.nextSnoozeOffTime));
                 img.setVisibility(View.VISIBLE);
@@ -111,27 +109,20 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             name.setText(reminderModel.name);
             note.setText(reminderModel.note);
         } else if (holder.reminderType == EnumReminderTypes.Missed) {
-            final ReminderMissed reminderMissed = (ReminderMissed) reminder;
-            String str_time = ""; //UtilsDateTime.toTimeDateString(UtilsDateTime.toDate(reminderMissed.id));
-            time.setText(str_time);
+            final MissedReminder missedReminder = (MissedReminder) reminder;
+            time.setText(UtilsDateTime.toTimeDateString(missedReminder.time));
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_danger));
             enabled.setVisibility(View.GONE);
-            name.setText(reminderMissed.name);
-            note.setText(reminderMissed.note);
+            name.setText(missedReminder.name);
+            note.setText(missedReminder.note);
         } else {
-            final ReminderDismissed reminderDismissed = (ReminderDismissed) reminder;
-            String str_time = ""; //UtilsDateTime.toTimeDateString(UtilsDateTime.toDate(reminderDismissed.id));
-            //UtilsDateTime.toTimeDateString(reminder);
-            time.setText(str_time);
+            final DismissedReminder dismissedReminder = (DismissedReminder) reminder;
+            time.setText(UtilsDateTime.toTimeDateString(dismissedReminder.time));
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_gray2));
             enabled.setVisibility(View.GONE);
-            name.setText(reminderDismissed.name);
-            note.setText(reminderDismissed.note);
+            name.setText(dismissedReminder.name);
+            note.setText(dismissedReminder.note);
         }
-//        } catch (ParseException e) {
-//            time.setText("E!");
-//            Toast.makeText(holder.linearLayout.getContext(), "PARSE ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
-//        }
     }
 
     @Override

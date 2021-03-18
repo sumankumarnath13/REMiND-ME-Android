@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.remindme.R;
-import com.example.remindme.dataModels.ReminderActive;
+import com.example.remindme.dataModels.ActiveReminder;
 import com.example.remindme.viewModels.ReminderModel;
 
 import java.util.List;
@@ -103,7 +103,7 @@ public class FragmentActiveReminder extends Fragment {
     }
 
     public void search(String input) {
-        List<ReminderActive> data;
+        List<ActiveReminder> data;
         if (input == null || input.length() == 0) {
             data = ReminderModel.getAll();
         } else {

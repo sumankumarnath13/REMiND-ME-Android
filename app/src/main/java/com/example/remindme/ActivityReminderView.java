@@ -11,8 +11,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
-import com.example.remindme.dataModels.ReminderDismissed;
-import com.example.remindme.dataModels.ReminderMissed;
+import com.example.remindme.dataModels.DismissedReminder;
+import com.example.remindme.dataModels.MissedReminder;
 import com.example.remindme.util.UtilsActivity;
 import com.example.remindme.util.UtilsDateTime;
 import com.example.remindme.viewModels.ReminderModel;
@@ -37,7 +37,7 @@ public class ActivityReminderView extends AppCompatActivity {
         UtilsActivity.setTitle(this, "VIEW");
 
         Intent i = getIntent();
-        id = i.getStringExtra(ReminderModel.INTENT_ATTR_ID);
+        id = ReminderModel.getReminderId(i);
         from = i.getStringExtra("FROM");
 
         final Button btnDelete = findViewById(R.id.btn_reminder_delete);
@@ -45,9 +45,9 @@ public class ActivityReminderView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (from.equals("ACTIVE")) {
-                    ReminderModel reminderModel = ReminderModel.read(id);
+                    ReminderModel reminderModel = ReminderModel.read(ActivityReminderView.this, id);
                     if (reminderModel != null) {
-                        reminderModel.delete(getApplicationContext());
+                        reminderModel.deleteAndCancelAlert();
                     }
                 } else if (from.equals("MISSED")) {
                     Realm r = Realm.getDefaultInstance();
@@ -55,7 +55,7 @@ public class ActivityReminderView extends AppCompatActivity {
                         @Override
                         @ParametersAreNonnullByDefault
                         public void execute(Realm realm) {
-                            RealmResults<ReminderMissed> results = realm.where(ReminderMissed.class)
+                            RealmResults<MissedReminder> results = realm.where(MissedReminder.class)
                                     .equalTo("id", id).findAll();
                             results.deleteAllFromRealm();
                         }
@@ -66,7 +66,7 @@ public class ActivityReminderView extends AppCompatActivity {
                         @Override
                         @ParametersAreNonnullByDefault
                         public void execute(Realm realm) {
-                            RealmResults<ReminderDismissed> results = realm.where(ReminderDismissed.class)
+                            RealmResults<DismissedReminder> results = realm.where(DismissedReminder.class)
                                     .equalTo("id", id).findAll();
                             results.deleteAllFromRealm();
                         }
@@ -81,7 +81,7 @@ public class ActivityReminderView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent input_i = new Intent(getApplicationContext(), ActivityReminderInput.class);
-                input_i.putExtra(ReminderModel.INTENT_ATTR_ID, id);
+                ReminderModel.setReminderId(input_i, id);
                 input_i.putExtra("FROM", from);
                 startActivity(input_i);
                 finish();
@@ -93,18 +93,18 @@ public class ActivityReminderView extends AppCompatActivity {
         enabled.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReminderModel reminderModel = ReminderModel.read(id);
+                ReminderModel reminderModel = ReminderModel.read(ActivityReminderView.this, id);
                 if (reminderModel != null) {
                     if (enabled.isChecked()) {
                         if (reminderModel.canEnable()) {
-                            reminderModel.setIsEnabled(enabled.isChecked(), ActivityReminderView.this.getApplicationContext());
+                            reminderModel.setIsEnabled(enabled.isChecked());
                             ((TextView) findViewById(R.id.tv_reminder_time)).setText(UtilsDateTime.toTimeDateString(reminderModel.time));
                         } else {
                             Toast.makeText(ActivityReminderView.this, "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
                             enabled.setChecked(false);
                         }
                     } else {
-                        reminderModel.setIsEnabled(false, ActivityReminderView.this.getApplicationContext());
+                        reminderModel.setIsEnabled(false);
                     }
                 }
             }
@@ -116,7 +116,7 @@ public class ActivityReminderView extends AppCompatActivity {
         super.onResume();
 
         Intent i = getIntent();
-        id = i.getStringExtra(ReminderModel.INTENT_ATTR_ID);
+        id = ReminderModel.getReminderId(i);
         from = i.getStringExtra("FROM");
 
         final ImageView img = findViewById((R.id.img_snooze));
@@ -125,7 +125,8 @@ public class ActivityReminderView extends AppCompatActivity {
         sw_enabled.setVisibility(View.GONE);
 
         if (from.equals("ACTIVE")) {
-            ReminderModel reminderModel = ReminderModel.read(id);
+            ReminderModel reminderModel = ReminderModel.read(ActivityReminderView.this, id);
+
             if (reminderModel != null) {
                 alarm_time = UtilsDateTime.toTimeDateString(reminderModel.time);
                 if (reminderModel.nextSnoozeOffTime != null) {
@@ -145,8 +146,8 @@ public class ActivityReminderView extends AppCompatActivity {
             }
         } else if (from.equals("MISSED")) {
             Realm r = Realm.getDefaultInstance();
-            ReminderMissed reminder = r
-                    .where(ReminderMissed.class)
+            MissedReminder reminder = r
+                    .where(MissedReminder.class)
                     .equalTo("id", id)
                     .findFirst();
             if (reminder != null) {
@@ -159,8 +160,8 @@ public class ActivityReminderView extends AppCompatActivity {
             }
         } else {
             Realm r = Realm.getDefaultInstance();
-            ReminderDismissed reminder = r
-                    .where(ReminderDismissed.class)
+            DismissedReminder reminder = r
+                    .where(DismissedReminder.class)
                     .equalTo("id", id)
                     .findFirst();
             if (reminder != null) {

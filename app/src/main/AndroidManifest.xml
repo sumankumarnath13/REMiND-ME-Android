@@ -16,9 +16,15 @@
         android:roundIcon="@drawable/ic_reminder_time"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".util.AlertService"
+            android:enabled="true"
+            android:exported="false" />
 
         <activity
             android:name=".ActivityReminderRinging"
+            android:autoRemoveFromRecents="true"
+            android:excludeFromRecents="true"
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity android:name=".ActivityReminderView" />
@@ -29,11 +35,12 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <receiver android:name=".util.AlarmBroadcastReceiver" />
+        <receiver android:name=".util.AlertBroadcastReceiver" />
         <receiver android:name=".util.BootCompletedBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

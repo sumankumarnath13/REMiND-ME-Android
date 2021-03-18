@@ -1,15 +1,7 @@
 package com.example.remindme;
 
-import android.content.Context;
-import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.PowerManager;
-import android.os.Vibrator;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -27,12 +19,10 @@ import com.example.remindme.util.UtilsDateTime;
 import com.example.remindme.viewModels.ReminderModel;
 
 public class ActivityReminderRinging extends AppCompatActivity {
-    int counter = 0;
+    int ringing_elapse_counter = 0;
     boolean isTouched = false;
-    boolean isScreenOn = false;
+    boolean isReady = false;
     ReminderModel reminderModel = null;
-    Ringtone alarmTone = null;
-    Vibrator vibrator = null;
     CountDownTimer timer = null;
 
     @Override
@@ -55,7 +45,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
                 isTouched = true;
 
                 if (reminderModel != null) {
-                    reminderModel.dismiss(getApplicationContext());
+                    reminderModel.broadcastDismiss(true);
                 }
 
                 finish();
@@ -69,88 +59,57 @@ public class ActivityReminderRinging extends AppCompatActivity {
                 isTouched = true;
 
                 if (reminderModel != null) {
-                    reminderModel.snooze(true, getApplicationContext());
+                    reminderModel.broadcastSnooze(true);
                 }
 
                 finish();
             }
         });
-
-        timer = new CountDownTimer(3 * 60 * 1000L, 60 * 1000L) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                counter++;
-                if (reminderModel != null) {
-                    if (reminderModel.name == null) {
-                        ((TextView) findViewById(R.id.tv_reminder_name)).setText(" (" + counter + ")");
-                    } else {
-                        ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name + " (" + counter + ")");
-                    }
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                if (reminderModel != null) {
-                    isTouched = true;
-                    reminderModel.snooze(false, getApplicationContext());
-                }
-                finish();
-            }
-        }.start();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        try {
-            Intent i = getIntent();
-            final String id = i.getStringExtra(ReminderModel.INTENT_ATTR_ID);
-            if (reminderModel == null) { // First null check to ensure that its first onStart hit after creating the activity. OnStart will be called multiple time if launched from locked screen.
-                reminderModel = ReminderModel.read(id);
-                if (reminderModel == null) { // Second null check if it present in the database.
-                    Toast.makeText(this, "Reminder not found!", Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
-                    String date_str = UtilsDateTime.toTimeDateString(reminderModel.time);
-                    TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
-                    Spannable spannable = new SpannableString(date_str);
-                    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    t_date.setText(spannable);
-
-                    ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
-                    ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
-
-                    if (reminderModel.isEnableTone) {
-                        if (reminderModel.selectedAlarmToneUri == null) {
-                            Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-                            alarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarmToneUri);
-                        } else {
-                            alarmTone = RingtoneManager.getRingtone(getApplicationContext(), reminderModel.selectedAlarmToneUri);
-                        }
-
-                        if (alarmTone != null && !alarmTone.isPlaying()) {
-                            alarmTone.play();
-                        }
-                    }
-
-                    if (reminderModel.isVibrate) {
-                        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        if (vibrator != null) {
-                            long[] pattern = {0, 100, 1000};
-                            vibrator.vibrate(pattern, 0);
-                        }
-                    }
-                }
+    protected void onResume() {
+        super.onResume();
+        if (isReady) {
+            final String id = ReminderModel.getReminderId(getIntent());
+            reminderModel = ReminderModel.read(ActivityReminderRinging.this, id);
+            if (reminderModel == null) { // Second null check if it present in the database.
+                Toast.makeText(this, "Reminder not found!", Toast.LENGTH_SHORT).show();
+                finish();
             } else {
-                // Flow for activities that are allowed to show while in locked is
-                // onCreate - onStart - onResume - onPause - onStop - onStart - onPause
-                // https://stackoverflow.com/questions/25369909/onpause-and-onstop-called-immediately-after-starting-activity
-                // And thus this else block will be hit on 2nd on start where no action is needed.
+                String date_str = UtilsDateTime.toTimeDateString(reminderModel.time);
+                TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
+                Spannable spannable = new SpannableString(date_str);
+                spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                t_date.setText(spannable);
+
+                ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
+                ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
+
+                timer = new CountDownTimer(3 * 60 * 1000L, 60 * 1000L) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        ringing_elapse_counter++;
+                        if (reminderModel != null) {
+                            if (reminderModel.name == null) {
+                                ((TextView) findViewById(R.id.tv_reminder_name)).setText(" (" + ringing_elapse_counter + ")");
+                            } else {
+                                ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name + " (" + ringing_elapse_counter + ")");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        if (reminderModel != null) {
+                            isTouched = true;
+                            reminderModel.broadcastSnooze(false);
+                        }
+                        finish();
+                    }
+                }.start();
             }
-        } catch (Exception e) {
-            Toast.makeText(this, "Well after start " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -160,39 +119,23 @@ public class ActivityReminderRinging extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-        isScreenOn = (Build.VERSION.SDK_INT < 20 ? powerManager.isScreenOn() : powerManager.isInteractive());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (isScreenOn) {
-            finish(); // Finish it when going in background.
+    protected void onStop() {
+        super.onStop();
+        if (!isReady) {
+            isReady = !isChangingConfigurations();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if (!isTouched && reminderModel != null) {
-            reminderModel.snooze(false, getApplicationContext());
+        if (isReady) {
+            if (!isTouched && reminderModel != null) {
+                reminderModel.broadcastSnooze(false);
+            }
+            if (timer != null) {
+                timer.cancel();
+            }
         }
-
-        if (alarmTone != null) {
-            alarmTone.stop();
-        }
-
-        if (vibrator != null) {
-            vibrator.cancel();
-        }
-
-        if (timer != null) {
-            timer.cancel();
-        }
-
     }
 }

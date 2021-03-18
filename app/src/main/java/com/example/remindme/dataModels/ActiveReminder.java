@@ -6,7 +6,7 @@ import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class ReminderActive extends RealmObject implements RealmModel {
+public class ActiveReminder extends RealmObject implements RealmModel {
     @PrimaryKey
     public String id;
     public int alarmIntentId;

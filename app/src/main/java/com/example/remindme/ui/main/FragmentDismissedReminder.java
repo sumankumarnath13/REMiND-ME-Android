@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.remindme.R;
-import com.example.remindme.dataModels.ReminderDismissed;
+import com.example.remindme.dataModels.DismissedReminder;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -75,7 +75,7 @@ public class FragmentDismissedReminder extends Fragment {
         super.onResume();
         // specify an adapter (see also next example)
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<ReminderDismissed> data = realm.where(ReminderDismissed.class).findAll();
+        RealmResults<DismissedReminder> data = realm.where(DismissedReminder.class).findAll();
         RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(data, EnumReminderTypes.Dismissed);
         recyclerView.setAdapter(mAdapter);
     }
