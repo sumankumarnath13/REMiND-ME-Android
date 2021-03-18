@@ -280,11 +280,11 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         });
 
         final SwitchCompat sw_reminder_vibrate = findViewById(R.id.sw_reminder_vibrate);
-        sw_reminder_vibrate.setChecked(reminderModel.isVibrate);
+        sw_reminder_vibrate.setChecked(reminderModel.isEnableVibration);
         sw_reminder_vibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reminderModel.isVibrate = sw_reminder_vibrate.isChecked();
+                reminderModel.isEnableVibration = sw_reminder_vibrate.isChecked();
             }
         });
 
@@ -313,7 +313,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             @Override
             public void onClick(View view) {
                 if (reminderModel.canUpdate()) {
-                    reminderModel.isVibrate = sw_reminder_vibrate.isChecked();
+                    reminderModel.isEnableVibration = sw_reminder_vibrate.isChecked();
                     reminderModel.setIsEnabled(!sw_reminder_disable.isChecked());
                     finish();
                 } else {

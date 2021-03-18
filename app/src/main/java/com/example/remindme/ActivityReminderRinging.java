@@ -130,9 +130,15 @@ public class ActivityReminderRinging extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (isReady) {
-            if (!isTouched && reminderModel != null) {
-                reminderModel.broadcastSnooze(false);
+
+            if (!isTouched) {
+                if (reminderModel == null) {
+                    ReminderModel.error(this, "Reminder not found!");
+                } else {
+                    reminderModel.broadcastSnooze(false);
+                }
             }
+
             if (timer != null) {
                 timer.cancel();
             }

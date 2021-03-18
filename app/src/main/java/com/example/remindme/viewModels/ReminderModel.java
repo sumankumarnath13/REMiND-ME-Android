@@ -39,10 +39,11 @@ import io.realm.RealmResults;
 import io.realm.exceptions.RealmMigrationNeededException;
 
 public class ReminderModel {
-    private static final String ALARM_NOTIFICATION_CHANNEL_ID = "_DING_DONG";
+    private static final String ALARM_NOTIFICATION_CHANNEL_ID = "z_0EdcKpGP";
     private static final String ALARM_NOTIFICATION_CHANNEL_NAME = "Alarm notifications";
-    private static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "_TING TONG";
+    private static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "RxLwKNdHEL";
     private static final String DEFAULT_NOTIFICATION_CHANNEL_NAME = "Other notifications";
+    private static final int DEFAULT_NOTIFICATION_REQUEST_ID = 117;
 
     private static final String ALERT_INTENT_ACTION = "È)wß³ç{TÃ£";
     private static final String ALERT_INTENT_RAISE_ALERT = "Å'*»àLÇ)»í";
@@ -52,25 +53,26 @@ public class ReminderModel {
     private static final String REMINDER_ID_INTENT = "uNX¯3Á×MòP";
     private static final String ALERT_NOTIFICATION_CONTENT_INTENT_ACTION = "£fcEB]¬B9æ";
     private static final String ALERT_NOTIFICATION_FULLSCREEN_INTENT_ACTION = ")F#¦¬ÔVI*N";
-    private static final int DEFAULT_NOTIFICATION_REQUEST_ID = 117;
+
     private static Class<? extends BroadcastReceiver> alertBroadcastReceiverClass;
     private static Class<? extends Activity> lockScreenAlertActivityClass;
     private static Class<? extends Service> alertServiceClass;
     private static Ringtone playingRingtone = null;
     private static boolean isRinging = false;
-    public Uri ringToneUri = null;
+    private static Vibrator vibrator;
+    private static AlarmManager alarmManager;
+
     private Context context;
-    private boolean isEnable = true;
-    private AlarmManager alarmManager;
 
     public String id;
     public int alarmIntentId;
     public String name;
     public String note;
     public Date time;
+    public Uri ringToneUri = null;
     public boolean isEnableTone = true;
-    private Vibrator vibrator;
-    public boolean isVibrate = true;
+    public boolean isEnableVibration = true;
+    private boolean isEnable = true;
     public ReminderRepeatModel repeatModel;
     public ReminderSnoozeModel snoozeModel;
     public Date nextSnoozeOffTime = null;
@@ -79,8 +81,6 @@ public class ReminderModel {
         repeatModel = new ReminderRepeatModel();
         snoozeModel = new ReminderSnoozeModel();
         this.context = context;
-        vibrator = (Vibrator) context.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        alarmManager = (AlarmManager) context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
     }
 
     public ReminderModel(Context context, String id) {
@@ -112,6 +112,9 @@ public class ReminderModel {
             notificationManager.createNotificationChannel(defaultChannel);
         }
 
+        vibrator = (Vibrator) context.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        alarmManager = (AlarmManager) context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+
         // Initialize Realm database
         Realm.init(context.getApplicationContext());
         // Force drop the database and create new in case of schema mismatch
@@ -132,8 +135,8 @@ public class ReminderModel {
         return intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT);
     }
 
-    public static Intent setReminderId(Intent intent, String reminderId) {
-        return intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminderId);
+    public static void setReminderId(Intent intent, String reminderId) {
+        intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminderId);
     }
 
     private static void reScheduleAllActive(Context context, boolean isDeviceRebooted) {
@@ -161,6 +164,15 @@ public class ReminderModel {
                 }
             }
         }
+    }
+
+    public static void error(Context context, String message) {
+        stopAlarm();
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
+
+    public static void showToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
     public boolean getIsEnabled() {
@@ -535,7 +547,7 @@ public class ReminderModel {
         }
         to.isEnableTone = from.isEnableTone;
         to.isEnable = from.isEnable;
-        to.isVibrate = from.isVibrate;
+        to.isVibrate = from.isEnableVibration;
 
         switch (from.repeatModel.repeatOption) {
             default:
@@ -641,7 +653,7 @@ public class ReminderModel {
         }
         to.isEnableTone = from.isEnableTone;
         to.isEnable = from.isEnable;
-        to.isVibrate = from.isVibrate;
+        to.isEnableVibration = from.isVibrate;
 
         switch (from.repeatOption) {
             default:
@@ -744,32 +756,36 @@ public class ReminderModel {
                             .setAutoCancel(true);
                     notificationManager.notify(DEFAULT_NOTIFICATION_REQUEST_ID, builder.build());
                 } else {
-                    if (receivedAction != null) {
-                        if (receivedAction.equals(ReminderModel.ALERT_INTENT_RAISE_ALERT)) {
+                    boolean isUser;
+                    switch (receivedAction) {
+                        case ReminderModel.ALERT_INTENT_RAISE_ALERT:
                             // START RINGING
                             reminderModel.raiseAlert(notificationManager);
-                        } else if (receivedAction.equals(ReminderModel.ALERT_INTENT_SNOOZE_ALERT)) {
-                            boolean isUser = intent.getBooleanExtra(ALERT_INTENT_IS_USER, false);
+                            break;
+
+                        default:
+                        case ReminderModel.ALERT_INTENT_SNOOZE_ALERT:
+                            isUser = intent.getBooleanExtra(ALERT_INTENT_IS_USER, false);
                             // STOP RINGING and SNOOZE
                             reminderModel.snooze(isUser);
 
-                            reminderModel.stopAlarm();
-                            //int notificationId = intent.getIntExtra(ReminderModel.REMINDER_INT_ID_INTENT, 0);
+                            stopAlarm();
                             Toast.makeText(context, "Hula cancelling snooze notification for id " + reminderModel.alarmIntentId, Toast.LENGTH_LONG).show();
                             if (reminderModel.alarmIntentId != 0) {
                                 notificationManager.cancel(reminderModel.alarmIntentId);
                             }
-                        } else if (receivedAction.equals(ReminderModel.ALERT_INTENT_DISMISS_ALERT)) {
-                            boolean isUser = intent.getBooleanExtra(ALERT_INTENT_IS_USER, false);
+                            break;
+
+                        case ReminderModel.ALERT_INTENT_DISMISS_ALERT:
+                            isUser = intent.getBooleanExtra(ALERT_INTENT_IS_USER, false);
                             // STOP RINGING and DISMISS
                             reminderModel.dismiss(Calendar.getInstance(), isUser);
 
-                            reminderModel.stopAlarm();
-                            //int notificationId = intent.getIntExtra(ReminderModel.REMINDER_INT_ID_INTENT, 0);
+                            stopAlarm();
                             if (reminderModel.alarmIntentId != 0) {
                                 notificationManager.cancel(reminderModel.alarmIntentId);
                             }
-                        }
+                            break;
                     }
                 }
             }
@@ -850,11 +866,16 @@ public class ReminderModel {
         }
     }
 
-    private Intent buildAlertIntent() {
-        Intent intent = new Intent(context.getApplicationContext(), alertBroadcastReceiverClass)
-                .putExtra(ReminderModel.REMINDER_ID_INTENT, id)
-                .putExtra(ReminderModel.ALERT_INTENT_ACTION, ReminderModel.ALERT_INTENT_RAISE_ALERT);
-        return intent;
+    private static void stopAlarm() {
+        if (playingRingtone != null) {
+            playingRingtone.stop();
+        }
+
+        if (vibrator != null) {
+            vibrator.cancel();
+        }
+
+        isRinging = false;
     }
 
     private PendingIntent getAlertPendingIntent(boolean isCreateNew) {
@@ -1121,18 +1142,22 @@ public class ReminderModel {
         context.startActivity(activityIntent);
     }
 
+    private Intent buildAlertIntent() {
+        return new Intent(context.getApplicationContext(), alertBroadcastReceiverClass)
+                .putExtra(ReminderModel.REMINDER_ID_INTENT, id)
+                .putExtra(ReminderModel.ALERT_INTENT_ACTION, ReminderModel.ALERT_INTENT_RAISE_ALERT);
+    }
+
     private void raiseAlarm() {
-        if ((isVibrate || isEnableTone) && !isRinging) {
+        if ((isEnableVibration || isEnableTone) && !isRinging) {
 
             if (ringToneUri == null) {
                 ringToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             }
 
-            if (isVibrate) {
-                if (vibrator != null) {
-                    long[] pattern = {500, 500};
-                    vibrator.vibrate(pattern, 0);
-                }
+            if (vibrator != null) {
+                long[] pattern = {500, 500};
+                vibrator.vibrate(pattern, 0);
             }
 
             if (isEnableTone) {
@@ -1142,18 +1167,6 @@ public class ReminderModel {
 
             isRinging = true;
         }
-    }
-
-    private void stopAlarm() {
-        if (playingRingtone != null) {
-            playingRingtone.stop();
-        }
-
-        if (vibrator != null) {
-            vibrator.cancel();
-        }
-
-        isRinging = false;
     }
 
 }
