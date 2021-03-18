@@ -158,7 +158,7 @@ public class ReminderModel {
                     // App getting killed after a while. But Broadcast receiver recreating app which leads to rescheduling.
                     // And for the logic below it getting dismissed before it could be snoozed from alerts.
                     // isDeviceRebooted will prevent this from happening.
-                    reminderModel.dismiss(calendar, true);
+                    reminderModel.dismissByApp(calendar);
                 } else if (!reminderModel.isAlertExists()) {
                     reminderModel.setAlarm();
                 }
@@ -779,7 +779,11 @@ public class ReminderModel {
                         case ReminderModel.ALERT_INTENT_DISMISS_ALERT:
                             isUser = intent.getBooleanExtra(ALERT_INTENT_IS_USER, false);
                             // STOP RINGING and DISMISS
-                            reminderModel.dismiss(Calendar.getInstance(), isUser);
+                            if (isUser) {
+                                reminderModel.dismissByUser();
+                            } else {
+                                reminderModel.dismissByApp(Calendar.getInstance());
+                            }
 
                             stopAlarm();
                             if (reminderModel.alarmIntentId != 0) {
@@ -830,26 +834,26 @@ public class ReminderModel {
         context.sendBroadcast(intent);
     }
 
-    private void dismiss(final Calendar currentTime, boolean isArchiveAsMissed) {
-        //stop
-        Date nextTime = getNextScheduleTime(currentTime);
-        if (isArchiveAsMissed) {
-            archiveToMissed();
-            Toast.makeText(context, "Dismissing to missed! " + alarmIntentId, Toast.LENGTH_LONG).show();
-            if (nextTime == null) { // EOF situation
-                deleteAndCancelAlert();
-            } else {
-                time = nextTime; // Set next trigger time.
-                insertOrUpdateAndSetAlert(true); // Save changes. // Set alarm for next trigger time.
-            }
+    private void dismissByUser() {
+        Date nextTime = getNextScheduleTime(Calendar.getInstance());
+        if (nextTime == null) { // EOF situation
+            archiveToFinished();
+            deleteAndCancelAlert();
         } else {
-            if (nextTime == null) { // EOF situation
-                archiveToFinished();
-                deleteAndCancelAlert();
-            } else {
-                time = nextTime; // Set next trigger time.
-                insertOrUpdateAndSetAlert(true); // Save changes. // Set alarm for next trigger time.
-            }
+            time = nextTime; // Set next trigger time.
+            insertOrUpdateAndSetAlert(true); // Save changes. // Set alarm for next trigger time.
+        }
+    }
+
+    private void dismissByApp(final Calendar currentTime) {
+        Date nextTime = getNextScheduleTime(currentTime);
+        archiveToMissed();
+        Toast.makeText(context, "Dismissing to missed! " + alarmIntentId, Toast.LENGTH_LONG).show();
+        if (nextTime == null) { // EOF situation
+            deleteAndCancelAlert();
+        } else {
+            time = nextTime; // Set next trigger time.
+            insertOrUpdateAndSetAlert(true); // Save changes. // Set alarm for next trigger time.
         }
     }
 
@@ -1053,10 +1057,18 @@ public class ReminderModel {
 
                 if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
                     Toast.makeText(context, "Dismissing from snooze! " + alarmIntentId, Toast.LENGTH_LONG).show();
-                    dismiss(Calendar.getInstance(), !isByUser);
+                    if (isByUser) {
+                        dismissByUser();
+                    } else {
+                        dismissByApp(Calendar.getInstance());
+                    }
                 } else if (currentTime.getTime().after(nextSnoozeOffTime)) { // Snooze makes no sense if its in past!
                     Toast.makeText(context, "Dismissing from snooze! " + alarmIntentId, Toast.LENGTH_LONG).show();
-                    dismiss(Calendar.getInstance(), !isByUser);
+                    if (isByUser) {
+                        dismissByUser();
+                    } else {
+                        dismissByApp(Calendar.getInstance());
+                    }
                 } else {
                     insertOrUpdateAndSetAlert(true, false);
                 }
