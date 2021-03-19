@@ -24,6 +24,8 @@ public class ActivityReminderRinging extends AppCompatActivity {
     boolean isReady = false;
     ReminderModel reminderModel = null;
     CountDownTimer timer = null;
+    private static final long ringTimeDuration = 60 * 1000L;
+    private static final long ringTimeInterval = 1000L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +89,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
                 ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
                 ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
 
-                timer = new CountDownTimer(3 * 60 * 1000L, 60 * 1000L) {
+                timer = new CountDownTimer(ringTimeDuration, ringTimeInterval) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         ringing_elapse_counter++;

@@ -11,7 +11,7 @@ public class AlertBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        ReminderModel.receiveBroadcast(context, intent);
+        ReminderModel.onBroadcastReceive(context, intent);
 
 //        if (intent != null) {
 //            String receivedAction = intent.getStringExtra(ReminderModel.ALERT_RECEIVER_ACTION_INTENT_KEY);

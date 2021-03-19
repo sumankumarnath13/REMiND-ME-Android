@@ -11,7 +11,7 @@ public class BootCompletedBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             ReminderModel.showToast(context, "Remind me: Device reboot acknowledged");
-            ReminderModel.bootCompletedOnReceive(context);
+            ReminderModel.onBootCompleted(context);
         }
     }
 }
