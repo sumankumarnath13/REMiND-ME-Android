@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,11 +18,12 @@ import com.example.remindme.util.UtilsDateTime;
 import com.example.remindme.viewModels.ReminderModel;
 
 public class ActivityReminderRinging extends AppCompatActivity {
-    int ringing_elapse_counter = 0;
-    boolean isTouched = false;
-    boolean isReady = false;
-    ReminderModel reminderModel = null;
-    CountDownTimer timer = null;
+    private int ringing_elapse_counter = 0;
+    private boolean isTouched = false;
+    private boolean isFirstLoad = true;
+    //boolean isChangingConfig = false;
+    private ReminderModel reminderModel = null;
+    private CountDownTimer timer = null;
     private static final long ringTimeDuration = 60 * 1000L;
     private static final long ringTimeInterval = 1000L;
 
@@ -69,26 +69,35 @@ public class ActivityReminderRinging extends AppCompatActivity {
         });
     }
 
+    private String reminderId;
+
     @Override
     protected void onResume() {
         super.onResume();
-        if (isReady) {
-            final String id = ReminderModel.getReminderId(getIntent());
-            reminderModel = ReminderModel.read(ActivityReminderRinging.this, id);
-            if (reminderModel == null) { // Second null check if it present in the database.
-                Toast.makeText(this, "Reminder not found!", Toast.LENGTH_SHORT).show();
+        if (isFirstLoad) { // Second null check if it present in the database.
+            isFirstLoad = false;
+
+            reminderId = ReminderModel.getReminderId(getIntent());
+            reminderModel = ReminderModel.read(ActivityReminderRinging.this, reminderId);
+            if (reminderModel == null) {
+                ReminderModel.error(this, "Reminder not found!");
                 finish();
-            } else {
-                String date_str = UtilsDateTime.toTimeDateString(reminderModel.time);
-                TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
-                Spannable spannable = new SpannableString(date_str);
-                spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                t_date.setText(spannable);
+                return;
+            }
+        }
 
-                ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
-                ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
+        if (reminderModel != null) {
+            String date_str = UtilsDateTime.toTimeDateString(reminderModel.time);
+            TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
+            Spannable spannable = new SpannableString(date_str);
+            spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            t_date.setText(spannable);
 
+            ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
+            ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
+
+            if (timer != null) {
                 timer = new CountDownTimer(ringTimeDuration, ringTimeInterval) {
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -123,21 +132,17 @@ public class ActivityReminderRinging extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (!isReady) {
-            isReady = !isChangingConfigurations();
-        }
-    }
+//        if (!isReady) { // If not ready then only make it read. Else, just keep the state.
+//            isReady = !isChangingConfigurations(); //isChangingConfigurations returns true if switching from "landscape <> portrait"
+//        }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (isReady) {
+        //isChangingConfig = isChangingConfigurations();
 
+        if (!isChangingConfigurations()) {
             if (!isTouched) {
-                if (reminderModel == null) {
-                    ReminderModel.error(this, "Reminder not found!");
-                } else {
+                if (reminderModel != null) {
                     reminderModel.broadcastSnooze(false);
+                    reminderModel = null;
                 }
             }
 
@@ -145,5 +150,24 @@ public class ActivityReminderRinging extends AppCompatActivity {
                 timer.cancel();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        if (isReady) {
+//
+//            if (!isTouched) {
+//                if (reminderModel == null) {
+//                    ReminderModel.error(this, "Reminder not found!");
+//                } else {
+//                    reminderModel.broadcastSnooze(false);
+//                }
+//            }
+//
+//            if (timer != null) {
+//                timer.cancel();
+//            }
+//        }
     }
 }

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
@@ -82,17 +81,25 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             @Override
             public void onClick(View v) {
                 ReminderModel reminderModel = ReminderModel.transform(holder.linearLayout.getContext(), (ActiveReminder) reminder);
+
+                enabled.setChecked(reminderModel.trySetEnabled(enabled.isChecked()));
                 if (enabled.isChecked()) {
-                    if (reminderModel.canEnable()) {
-                        reminderModel.setIsEnabled(enabled.isChecked());
-                        time.setText(UtilsDateTime.toTimeDateString(reminderModel.time));
-                    } else {
-                        Toast.makeText(holder.linearLayout.getContext(), "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
-                        enabled.setChecked(false);
-                    }
-                } else {
-                    reminderModel.setIsEnabled(false);
+                    time.setText(UtilsDateTime.toTimeDateString(reminderModel.time));
                 }
+                reminderModel.trySaveAndSetAlert(true, true);
+
+
+//                if (enabled.isChecked()) {
+//                    if (reminderModel.canEnable()) {
+//                        reminderModel.trySetEnabled(true, true);
+//                        time.setText(UtilsDateTime.toTimeDateString(reminderModel.time));
+//                    } else {
+//                        Toast.makeText(holder.linearLayout.getContext(), "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
+//                        enabled.setChecked(false);
+//                    }
+//                } else {
+//                    reminderModel.trySetEnabled(false, false);
+//                }
             }
         });
 

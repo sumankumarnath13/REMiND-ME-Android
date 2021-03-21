@@ -25,8 +25,7 @@
             android:name=".ActivityReminderRinging"
             android:autoRemoveFromRecents="true"
             android:excludeFromRecents="true"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
+            android:noHistory="true" />
         <activity android:name=".ActivityReminderView" />
         <activity android:name=".ActivityReminderInput" />
         <activity

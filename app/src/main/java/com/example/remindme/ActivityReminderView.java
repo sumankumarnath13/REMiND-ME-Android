@@ -95,17 +95,11 @@ public class ActivityReminderView extends AppCompatActivity {
             public void onClick(View v) {
                 ReminderModel reminderModel = ReminderModel.read(ActivityReminderView.this, id);
                 if (reminderModel != null) {
+                    enabled.setChecked(reminderModel.trySetEnabled(enabled.isChecked()));
                     if (enabled.isChecked()) {
-                        if (reminderModel.canEnable()) {
-                            reminderModel.setIsEnabled(enabled.isChecked());
-                            ((TextView) findViewById(R.id.tv_reminder_time)).setText(UtilsDateTime.toTimeDateString(reminderModel.time));
-                        } else {
-                            Toast.makeText(ActivityReminderView.this, "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
-                            enabled.setChecked(false);
-                        }
-                    } else {
-                        reminderModel.setIsEnabled(false);
+                        ((TextView) findViewById(R.id.tv_reminder_time)).setText(UtilsDateTime.toTimeDateString(reminderModel.time));
                     }
+                    reminderModel.trySaveAndSetAlert(true, true);
                 }
             }
         });

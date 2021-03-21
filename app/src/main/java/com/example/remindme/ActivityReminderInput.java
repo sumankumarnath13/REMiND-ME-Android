@@ -8,6 +8,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
@@ -46,6 +47,12 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
 
     private boolean isUserSetDate = false;
 
+
+    private DialogReminderSnoozeInput snoozeInput;
+    private DialogReminderNameInput nameInput;
+    private DialogReminderNoteInput noteInput;
+    private DialogReminderRepeatInput repeatInput;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -67,32 +74,39 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        reminderModel = new ReminderModel(ActivityReminderInput.this, UUID.randomUUID().toString());
         setContentView(R.layout.activity_reminder_input);
 
         final TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
 
-        Intent i = getIntent();
-        final String reminder_id = ReminderModel.getReminderId(i);
-        if (reminder_id != null) {
-            UtilsActivity.setTitle(this, "UPDATE");
+        if (reminderModel == null) {
 
-            final String from = i.getStringExtra("FROM");
-            if (from != null && from.equals("ACTIVE")) {
+            nameInput = new DialogReminderNameInput();
+            noteInput = new DialogReminderNoteInput();
+            snoozeInput = new DialogReminderSnoozeInput();
+            repeatInput = new DialogReminderRepeatInput();
+
+            Intent i = getIntent();
+            final String reminder_id = ReminderModel.getReminderId(i);
+            if (reminder_id != null) {
+                UtilsActivity.setTitle(this, "UPDATE");
                 reminderModel = ReminderModel.read(ActivityReminderInput.this, reminder_id);
+                final String from = i.getStringExtra("FROM");
+                if (from != null && from.equals("ACTIVE")) {
+                    // Do nothing
+                } else {
+                    //ReminderModel reminder_from = ReminderModel.read(reminder_id);
+                    //ReminderModel.copy(reminder_from, reminderModel);
+                    Calendar _c = Calendar.getInstance();
+                    _c.add(Calendar.HOUR, 1);
+                    reminderModel.time = _c.getTime();
+                }
             } else {
-                //ReminderModel reminder_from = ReminderModel.read(reminder_id);
-                //ReminderModel.copy(reminder_from, reminderModel);
+                UtilsActivity.setTitle(this, "NEW");
+                reminderModel = new ReminderModel(ActivityReminderInput.this, UUID.randomUUID().toString());
                 Calendar _c = Calendar.getInstance();
                 _c.add(Calendar.HOUR, 1);
                 reminderModel.time = _c.getTime();
             }
-        } else {
-            UtilsActivity.setTitle(this, "NEW");
-
-            Calendar _c = Calendar.getInstance();
-            _c.add(Calendar.HOUR, 1);
-            reminderModel.time = _c.getTime();
         }
 
         tv_reminder_name_summary = findViewById(R.id.tv_reminder_name_summary);
@@ -148,7 +162,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 final Calendar alertTime = Calendar.getInstance();
                 //final Calendar currentTime = Calendar.getInstance();
                 alertTime.setTime(reminderModel.time);
-                int mYear, mMonth, mDay;
+                final int mYear, mMonth, mDay;
                 mYear = alertTime.get(Calendar.YEAR);
                 mMonth = alertTime.get(Calendar.MONTH);
                 mDay = alertTime.get(Calendar.DAY_OF_MONTH);
@@ -169,6 +183,9 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                                 isUserSetDate = true;
                             }
                         }, mYear, mMonth, mDay);
+                datePickerDialog.getDatePicker().setMinDate(alertTime.getTimeInMillis()); // This will cause extra title on the top of the regular date picker
+                datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
+                datePickerDialog.setTitle(null); // This line will try to solve the issue above
                 datePickerDialog.show();
             }
         });
@@ -181,7 +198,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 final Calendar alertTime = Calendar.getInstance();
                 final Calendar currentTime = Calendar.getInstance();
                 alertTime.setTime(reminderModel.time);
-                int mHour, mMinute;
+                final int mHour, mMinute;
                 mHour = alertTime.get(Calendar.HOUR_OF_DAY);
                 mMinute = alertTime.get(Calendar.MINUTE);
                 TimePickerDialog timePickerDialog = new TimePickerDialog(ActivityReminderInput.this, R.style.TimePickerDialog,
@@ -210,8 +227,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         mnu_reminder_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogReminderNameInput input = new DialogReminderNameInput();
-                input.show(getSupportFragmentManager(), "Reminder_Input_Name");
+                nameInput.show(getSupportFragmentManager(), "Reminder_Input_Name");
             }
         });
 
@@ -219,8 +235,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         mnu_reminder_note.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogReminderNoteInput input = new DialogReminderNoteInput();
-                input.show(getSupportFragmentManager(), "Reminder_Input_Note");
+                noteInput.show(getSupportFragmentManager(), "Reminder_Input_Note");
             }
         });
 
@@ -235,8 +250,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 repeatModelBuffer.dailyModel = reminderModel.repeatModel.dailyModel;
                 repeatModelBuffer.monthlyModel = reminderModel.repeatModel.monthlyModel;
 
-                DialogReminderRepeatInput input = new DialogReminderRepeatInput();
-                input.show(getSupportFragmentManager(), "Reminder_Repeat");
+                repeatInput.show(getSupportFragmentManager(), "Reminder_Repeat");
 
             }
         });
@@ -245,8 +259,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         mnu_reminder_snooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogReminderSnoozeInput input = new DialogReminderSnoozeInput();
-                input.show(getSupportFragmentManager(), "Reminder_Snooze");
+                snoozeInput.show(getSupportFragmentManager(), "Reminder_Snooze");
             }
         });
 
@@ -293,17 +306,18 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         sw_reminder_disable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sw_reminder_disable.isChecked()) {
-                    if (reminderModel.canEnable()) {
-                        reminderModel.setIsEnabled(sw_reminder_disable.isChecked());
-                        btn_reminder_time.setText(UtilsDateTime.toTimeString(ActivityReminderInput.this.reminderModel.time));
-                        btn_reminder_date.setText(UtilsDateTime.toDateString(ActivityReminderInput.this.reminderModel.time));
-                    } else {
-                        Toast.makeText(ActivityReminderInput.this, "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
-                        sw_reminder_disable.setChecked(false);
-                    }
+                if (reminderModel.trySetEnabled(!sw_reminder_disable.isChecked())) {
+                    btn_reminder_time.setText(UtilsDateTime.toTimeString(ActivityReminderInput.this.reminderModel.time));
+                    btn_reminder_date.setText(UtilsDateTime.toDateString(ActivityReminderInput.this.reminderModel.time));
+
+//                    if (reminderModel.canEnable()) {
+//                        reminderModel.trySetEnabled(sw_reminder_disable.isChecked());
+//                    } else {
+//                        Toast.makeText(ActivityReminderInput.this, "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
+//
+//                    }
                 } else {
-                    reminderModel.setIsEnabled(false);
+                    sw_reminder_disable.setChecked(true);
                 }
             }
         });
@@ -312,15 +326,42 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         btn_reminder_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (reminderModel.canUpdate()) {
-                    reminderModel.isEnableVibration = sw_reminder_vibrate.isChecked();
-                    reminderModel.setIsEnabled(!sw_reminder_disable.isChecked());
+                reminderModel.isEnableVibration = sw_reminder_vibrate.isChecked();
+                if (reminderModel.trySaveAndSetAlert(true, true)) {
                     finish();
                 } else {
                     Toast.makeText(ActivityReminderInput.this, "Time cannot be set in past!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (isChangingConfigurations()) {
+            if (nameInput.isVisible()) {
+                nameInput.dismiss();
+            }
+            if (noteInput.isVisible()) {
+                noteInput.dismiss();
+            }
+            if (snoozeInput.isVisible()) {
+                snoozeInput.dismiss();
+            }
+            if (repeatInput.isVisible()) {
+                repeatInput.dismiss();
+            }
+
+
+        } else {
+            reminderModel = null;
+        }
+
+//        if (!isReady) { // If not ready then only make it read. Else, just keep the state.
+//            isReady = !isChangingConfigurations(); //isChangingConfigurations returns true if switching from "landscape <> portrait"
+//        }
     }
 
     @Override
