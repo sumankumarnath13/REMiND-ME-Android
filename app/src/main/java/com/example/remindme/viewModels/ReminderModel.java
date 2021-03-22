@@ -73,11 +73,12 @@ public class ReminderModel extends ViewModel {
     private static Class<? extends BroadcastReceiver> alertBroadcastReceiverClass;
     private static Class<? extends Activity> lockScreenAlertActivityClass;
     private static Class<? extends Service> alertServiceClass;
-    private static Ringtone playingRingtone = null;
-    private static boolean isRinging = false;
+    private static Application application;
     private static Vibrator vibrator;
     private static AlarmManager alarmManager;
-    private static Application application;
+    private static boolean isRinging;
+    private static Ringtone playingRingtone;
+    private static String ringingReminderId;
 
     //endregion
 
@@ -109,7 +110,7 @@ public class ReminderModel extends ViewModel {
                         notify(reminderModel.intId, "New reminder warning!", "id : " + reminderModel.intId, reminderModel.note);
                     }
                     isNewAlertFound = true;
-                    reminderModel.setAlarm(false);
+                    reminderModel.setAlarm(_time, false);
                 }
             }
         }
@@ -389,23 +390,14 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    private void setAlarm(boolean isShowElapseTimeToast) {
+    private void setAlarm(Date atTime, boolean isShowElapseTimeToast) {
         if (!isEnable) {
             return;
         }
 
-        Date _time;
-        if (nextSnoozeOffTime == null) {
-            _time = time;
-        } else {
-            _time = nextSnoozeOffTime;
-        }
-
-        String x = UtilsDateTime.toTimeString(_time);
-
         Calendar calendar = Calendar.getInstance();
 
-        long different = _time.getTime() - calendar.getTime().getTime();
+        long different = atTime.getTime() - calendar.getTime().getTime();
 
         if (different <= 0) // Meaningless to set time in past. BUG ALERT: negative value means something is very wrong somewhere
         {
@@ -431,7 +423,7 @@ public class ReminderModel extends ViewModel {
 
         long elapsedSeconds = different / secondsInMilli;
 
-        calendar.setTime(_time);
+        calendar.setTime(atTime);
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), getAlarmManagerAlarmPendingIntent(true));
 
@@ -650,6 +642,11 @@ public class ReminderModel extends ViewModel {
 
     private boolean trySaveAndSetAlert(boolean isResetSnooze, boolean isShowElapseTimeToast) {
 
+        if (isResetSnooze) {
+            nextSnoozeOffTime = null;
+            snoozeModel.count = 0;
+        }
+
         Date _time;
         if (nextSnoozeOffTime == null) {
             _time = time;
@@ -660,10 +657,6 @@ public class ReminderModel extends ViewModel {
         Calendar calendar = Calendar.getInstance();
 
         if (_time.after(calendar.getTime())) {
-            if (isResetSnooze) {
-                nextSnoozeOffTime = null;
-                snoozeModel.count = 0;
-            }
 
             if (id == null) { // First save
                 UUID uuid = UUID.randomUUID();
@@ -685,13 +678,13 @@ public class ReminderModel extends ViewModel {
             });
 
             if (isEnable) {
-                setAlarm(isShowElapseTimeToast);
+                setAlarm(_time, isShowElapseTimeToast);
             }
 
             return true;
 
         } else {
-            showToast("Alarm cannot be set in past.");
+            showToast("Cannot save reminder. The time set is in past!");
             return false;
         }
     }
@@ -874,13 +867,15 @@ public class ReminderModel extends ViewModel {
 
                 if (!reminderModel.tryReadFrom(intent)) {
                     stopAlarm(); // STOP RINGING
+
+                    //notificationManager.get
                     notificationManager.cancel(ALARM_NOTIFICATION_ID);
                     notify(DEFAULT_NOTIFICATION_ID, "Error!", "Reminder not found!", null);
                 } else {
 
                     boolean isUser = intent.getBooleanExtra(ALERT_INTENT_IS_USER, false);
                     stopAlarm(); // STOP RINGING
-                    notificationManager.cancel(ALARM_NOTIFICATION_ID);
+                    notificationManager.cancel(ALARM_NOTIFICATION_ID); // Need to do something with previous alarm (Overlapping)
 
                     switch (receivedAction) {
                         case ReminderModel.ALERT_INTENT_RAISE_ALERT:

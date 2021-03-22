@@ -14,7 +14,6 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -216,6 +215,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                 alertTime.set(Calendar.MINUTE, minute);
+                                alertTime.set(Calendar.SECOND, 0); // Setting second to 0 is important.
                                 if (!isUserSetDate) {
                                     if (alertTime.before(currentTime)) {
                                         alertTime.add(Calendar.DAY_OF_YEAR, 1); // Set it for tomorrow if the time has already passed for today ( If user has not set the date already )
@@ -326,7 +326,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 if (reminderModel.trySaveAndSetAlert(true)) {
                     finish();
                 } else {
-                    Toast.makeText(ActivityReminderInput.this, "Time cannot be set in past!", Toast.LENGTH_SHORT).show();
+                    ReminderModel.showToast("Time cannot be set in past!");
                 }
             }
         });
