@@ -15,10 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.remindme.R;
-import com.example.remindme.dataModels.ActiveReminder;
 import com.example.remindme.viewModels.ReminderModel;
-
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,8 +83,6 @@ public class FragmentActiveReminder extends Fragment {
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //search(query);
-                //return true;
                 return false;
             }
 
@@ -103,13 +98,7 @@ public class FragmentActiveReminder extends Fragment {
     }
 
     public void search(String input) {
-        List<ActiveReminder> data;
-        if (input == null || input.length() == 0) {
-            data = ReminderModel.getAll();
-        } else {
-            data = ReminderModel.getAll(input);
-        }
-        RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(data, EnumReminderTypes.Active);
+        RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(ReminderModel.getActiveReminders(input), EnumReminderTypes.Active);
         recyclerView.setAdapter(mAdapter);
     }
 }

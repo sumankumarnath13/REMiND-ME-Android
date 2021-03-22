@@ -57,54 +57,43 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(holder.linearLayout.getContext(), ActivityReminderView.class);
+                Intent intent = new Intent(holder.linearLayout.getContext(), ActivityReminderView.class);
 
                 if (reminderType == EnumReminderTypes.Active) {
                     final ActiveReminder activeReminder = (ActiveReminder) reminder;
-                    ReminderModel.setReminderId(i, activeReminder.id);
-                    i.putExtra("FROM", "ACTIVE");
+                    ReminderModel.setReminderId(intent, activeReminder.id);
+                    intent.putExtra(ReminderModel.INTENT_ATTR_FROM, "ACTIVE");
                 } else if (reminderType == EnumReminderTypes.Missed) {
                     final MissedReminder missedReminder = (MissedReminder) reminder;
-                    ReminderModel.setReminderId(i, missedReminder.id);
-                    i.putExtra("FROM", "MISSED");
+                    ReminderModel.setReminderId(intent, missedReminder.id);
+                    intent.putExtra(ReminderModel.INTENT_ATTR_FROM, "MISSED");
                 } else {
                     final DismissedReminder dismissedReminder = (DismissedReminder) reminder;
-                    ReminderModel.setReminderId(i, dismissedReminder.id);
-                    i.putExtra("FROM", "DISMISSED");
+                    ReminderModel.setReminderId(intent, dismissedReminder.id);
+                    intent.putExtra(ReminderModel.INTENT_ATTR_FROM, "DISMISSED");
                 }
 
-                holder.linearLayout.getContext().startActivity(i);
+                holder.linearLayout.getContext().startActivity(intent);
             }
         });
 
         enabled.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReminderModel reminderModel = ReminderModel.transform(holder.linearLayout.getContext(), (ActiveReminder) reminder);
+                ReminderModel reminderModel = new ReminderModel();
+                ReminderModel.transformToModel((ActiveReminder) reminder, reminderModel);
 
                 enabled.setChecked(reminderModel.trySetEnabled(enabled.isChecked()));
                 if (enabled.isChecked()) {
                     time.setText(UtilsDateTime.toTimeDateString(reminderModel.time));
                 }
-                reminderModel.trySaveAndSetAlert(true, true);
-
-
-//                if (enabled.isChecked()) {
-//                    if (reminderModel.canEnable()) {
-//                        reminderModel.trySetEnabled(true, true);
-//                        time.setText(UtilsDateTime.toTimeDateString(reminderModel.time));
-//                    } else {
-//                        Toast.makeText(holder.linearLayout.getContext(), "Cannot enable in past time.", Toast.LENGTH_SHORT).show();
-//                        enabled.setChecked(false);
-//                    }
-//                } else {
-//                    reminderModel.trySetEnabled(false, false);
-//                }
+                reminderModel.trySaveAndSetAlert(true);
             }
         });
 
         if (reminderType == EnumReminderTypes.Active) {
-            ReminderModel reminderModel = ReminderModel.transform(holder.linearLayout.getContext(), (ActiveReminder) reminder);
+            ReminderModel reminderModel = new ReminderModel();
+            ReminderModel.transformToModel((ActiveReminder) reminder, reminderModel);
             time.setText(UtilsDateTime.toTimeDateString(reminderModel.time));
             if (reminderModel.nextSnoozeOffTime != null) {
                 next_snooze.setText(UtilsDateTime.toTimeString(reminderModel.nextSnoozeOffTime));

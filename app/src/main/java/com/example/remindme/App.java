@@ -15,6 +15,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        ReminderModel.onAppCreate(AlertBroadcastReceiver.class, AlertService.class, ActivityReminderRinging.class, getApplicationContext());
+        ReminderModel.onAppCreate(AlertBroadcastReceiver.class, AlertService.class, ActivityReminderRinging.class, App.this);
     }
 }

@@ -11,27 +11,44 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.util.UtilsActivity;
 import com.example.remindme.util.UtilsDateTime;
 import com.example.remindme.viewModels.ReminderModel;
 
 public class ActivityReminderRinging extends AppCompatActivity {
-    private int ringing_elapse_counter = 0;
-    private boolean isTouched = false;
-    private boolean isFirstLoad = true;
-    //boolean isChangingConfig = false;
-    private ReminderModel reminderModel = null;
+    private static final long TIMER_INTERVAL = 1000L;
+    private static final long TIMER_DURATION = 60 * TIMER_INTERVAL;
+    private int timer_elapse;
+    private static final String KEY_TIMER_ELAPSE = "¨NV/®L¹µ:G";
+
+    private boolean isTouched;
+    private boolean isRestarted;
+    private static final String KEY_IS_RESTARTED = "¶tÁÑ9HÊ¶´×";
+    private ReminderModel reminderModel;
     private CountDownTimer timer = null;
-    private static final long ringTimeDuration = 60 * 1000L;
-    private static final long ringTimeInterval = 1000L;
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt(KEY_TIMER_ELAPSE, timer_elapse);
+        outState.putBoolean(KEY_IS_RESTARTED, isRestarted);
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_ringing);
-        UtilsActivity.setTitle(this, "ALERT!");
+        UtilsActivity.setTitle(this, getResources().getString(R.string.reminder_alert_heading));
+
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            timer_elapse = savedInstanceState.getInt(KEY_TIMER_ELAPSE);
+            isRestarted = savedInstanceState.getBoolean(KEY_IS_RESTARTED);
+        }
 
         // Important: have to do the following in order to show without unlocking
         this.getWindow().addFlags(
@@ -45,11 +62,8 @@ public class ActivityReminderRinging extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 isTouched = true;
-
-                if (reminderModel != null) {
-                    reminderModel.broadcastDismiss(true);
-                }
-
+                timer.cancel();
+                reminderModel.broadcastDismiss(true);
                 finish();
             }
         });
@@ -59,115 +73,77 @@ public class ActivityReminderRinging extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 isTouched = true;
-
-                if (reminderModel != null) {
-                    reminderModel.broadcastSnooze(true);
-                }
-
+                timer.cancel();
+                reminderModel.broadcastSnooze(true);
                 finish();
             }
         });
     }
 
-    private String reminderId;
-
     @Override
     protected void onResume() {
         super.onResume();
-        if (isFirstLoad) { // Second null check if it present in the database.
-            isFirstLoad = false;
 
-            reminderId = ReminderModel.getReminderId(getIntent());
-            reminderModel = ReminderModel.read(ActivityReminderRinging.this, reminderId);
-            if (reminderModel == null) {
-                ReminderModel.error(this, "Reminder not found!");
+        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
+        if (reminderModel.isEmpty()) {
+            if (!reminderModel.tryReadFrom(getIntent())) {
+                ReminderModel.error("Reminder not found!");
                 finish();
-                return;
             }
         }
 
-        if (reminderModel != null) {
+        if (!reminderModel.isEmpty()) {
             String date_str = UtilsDateTime.toTimeDateString(reminderModel.time);
             TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
             Spannable spannable = new SpannableString(date_str);
             spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             t_date.setText(spannable);
-
             ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
             ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
 
-            if (timer != null) {
-                timer = new CountDownTimer(ringTimeDuration, ringTimeInterval) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        ringing_elapse_counter++;
-                        if (reminderModel != null) {
-                            if (reminderModel.name == null) {
-                                ((TextView) findViewById(R.id.tv_reminder_name)).setText(" (" + ringing_elapse_counter + ")");
-                            } else {
-                                ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name + " (" + ringing_elapse_counter + ")");
-                            }
-                        }
+            timer = new CountDownTimer(TIMER_DURATION - timer_elapse * TIMER_INTERVAL, TIMER_INTERVAL) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    timer_elapse++;
+                    if (reminderModel != null) {
+                        ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name + " (" + timer_elapse + ")");
                     }
+                }
 
-                    @Override
-                    public void onFinish() {
-                        if (reminderModel != null) {
-                            isTouched = true;
-                            reminderModel.broadcastSnooze(false);
-                        }
-                        finish();
-                    }
-                }.start();
-            }
+                @Override
+                public void onFinish() {
+                    reminderModel.broadcastSnooze(false);
+                    finish();
+                }
+            }.start();
         }
     }
 
     @Override
-    public void onBackPressed() {
-        //super.onBackPressed(); // Disables back button
+    protected void onPause() {
+        super.onPause();
+        timer.cancel();
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-//        if (!isReady) { // If not ready then only make it read. Else, just keep the state.
-//            isReady = !isChangingConfigurations(); //isChangingConfigurations returns true if switching from "landscape <> portrait"
-//        }
-
-        //isChangingConfig = isChangingConfigurations();
-
-        if (!isChangingConfigurations()) {
-            if (!isTouched) {
-                if (reminderModel != null) {
-                    reminderModel.broadcastSnooze(false);
-                    reminderModel = null;
-                }
-            }
-
-            if (timer != null) {
-                timer.cancel();
-            }
+    protected void onRestart() {
+        super.onRestart();
+        if (!isRestarted) {
+            isRestarted = true;
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        if (isReady) {
-//
-//            if (!isTouched) {
-//                if (reminderModel == null) {
-//                    ReminderModel.error(this, "Reminder not found!");
-//                } else {
-//                    reminderModel.broadcastSnooze(false);
-//                }
-//            }
-//
-//            if (timer != null) {
-//                timer.cancel();
-//            }
-//        }
+        if (isRestarted && !isTouched && !isChangingConfigurations()) {
+            reminderModel.broadcastSnooze(false);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed(); // Disables back button
     }
 }

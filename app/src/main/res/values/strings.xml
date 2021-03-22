@@ -11,9 +11,7 @@
     <string name="tab_text_1">Active</string>
     <string name="tab_text_2">Missed</string>
     <string name="tab_text_3">Finished</string>
-    <string name="new_reminder_heading">NEW REMINDER</string>
-    <string name="view_reminder_heading">VIEW REMINDER</string>
-    <string name="edit_reminder_heading">UPDATE REMINDER</string>
+
     <string name="hint_reminder_name">Write something here …</string>
     <string name="hint_reminder_note">Write something here …</string>
     <string name="btn_save">Save</string>
@@ -63,12 +61,18 @@
     <string name="snooze_interval_m15">15 Minutes</string>
     <string name="snooze_interval_m30">30 Minutes</string>
 
-    <string name="snooze_repeat_heading">Repeat</string>
+
     <string name="snooze_repeat_r3">3 Times</string>
     <string name="snooze_repeat_r5">5 Times</string>
     <string name="snooze_repeat_rc">Continuously</string>
     <string name="add_new_reminder">Add New Reminder</string>
     <string name="reminder_snooze_menu_caption">Snooze</string>
     <string name="btn_alarm_action_dismiss">Dismiss</string>
+
+    <string name="snooze_repeat_heading">Repeat</string>
+
+    <string name="new_reminder_heading">NEW</string>
+    <string name="view_reminder_heading">VIEW</string>
+    <string name="edit_reminder_heading">UPDATE</string>
     <string name="reminder_alert_heading">ALERT</string>
 </resources>

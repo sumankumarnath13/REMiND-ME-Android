@@ -34,7 +34,7 @@ public class ActivityReminderView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_view);
-        UtilsActivity.setTitle(this, "VIEW");
+        UtilsActivity.setTitle(this, getResources().getString(R.string.view_reminder_heading));
 
         Intent i = getIntent();
         id = ReminderModel.getReminderId(i);
@@ -45,8 +45,8 @@ public class ActivityReminderView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (from.equals("ACTIVE")) {
-                    ReminderModel reminderModel = ReminderModel.read(ActivityReminderView.this, id);
-                    if (reminderModel != null) {
+                    ReminderModel reminderModel = new ReminderModel();
+                    if (reminderModel.tryReadFrom(getIntent())) {
                         reminderModel.deleteAndCancelAlert();
                     }
                 } else if (from.equals("MISSED")) {
@@ -93,13 +93,13 @@ public class ActivityReminderView extends AppCompatActivity {
         enabled.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReminderModel reminderModel = ReminderModel.read(ActivityReminderView.this, id);
-                if (reminderModel != null) {
+                ReminderModel reminderModel = new ReminderModel();
+                if (reminderModel.tryReadFrom(getIntent())) {
                     enabled.setChecked(reminderModel.trySetEnabled(enabled.isChecked()));
                     if (enabled.isChecked()) {
                         ((TextView) findViewById(R.id.tv_reminder_time)).setText(UtilsDateTime.toTimeDateString(reminderModel.time));
                     }
-                    reminderModel.trySaveAndSetAlert(true, true);
+                    reminderModel.trySaveAndSetAlert(true);
                 }
             }
         });
@@ -119,9 +119,8 @@ public class ActivityReminderView extends AppCompatActivity {
         sw_enabled.setVisibility(View.GONE);
 
         if (from.equals("ACTIVE")) {
-            ReminderModel reminderModel = ReminderModel.read(ActivityReminderView.this, id);
-
-            if (reminderModel != null) {
+            ReminderModel reminderModel = new ReminderModel();
+            if (reminderModel.tryReadFrom(getIntent())) {
                 alarm_time = UtilsDateTime.toTimeDateString(reminderModel.time);
                 if (reminderModel.nextSnoozeOffTime != null) {
                     ImageView snooze_img = findViewById(R.id.img_snooze);
@@ -135,7 +134,7 @@ public class ActivityReminderView extends AppCompatActivity {
                 name = reminderModel.name;
                 note = reminderModel.note;
             } else {
-                Toast.makeText(ActivityReminderView.this, "Reminder not found!", Toast.LENGTH_LONG).show();
+                ReminderModel.error("Reminder not found!");
                 finish();
             }
         } else if (from.equals("MISSED")) {

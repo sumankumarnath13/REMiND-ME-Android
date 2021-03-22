@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,10 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.remindme.R;
-import com.example.remindme.dataModels.DismissedReminder;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
+import com.example.remindme.viewModels.ReminderModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,10 +69,7 @@ public class FragmentDismissedReminder extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // specify an adapter (see also next example)
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<DismissedReminder> data = realm.where(DismissedReminder.class).findAll();
-        RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(data, EnumReminderTypes.Dismissed);
+        RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(ReminderModel.getDismissedReminders(null), EnumReminderTypes.Dismissed);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -90,14 +83,14 @@ public class FragmentDismissedReminder extends Fragment {
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(FragmentDismissedReminder.this.getContext(), query, Toast.LENGTH_SHORT).show();
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //Toast.makeText(MainActivity.this, newText, Toast.LENGTH_SHORT).show();
-                return false;
+                RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(ReminderModel.getDismissedReminders(newText), EnumReminderTypes.Dismissed);
+                recyclerView.setAdapter(mAdapter);
+                return true;
             }
         });
     }
