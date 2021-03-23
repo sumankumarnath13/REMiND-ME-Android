@@ -8,13 +8,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
 import com.example.remindme.viewModels.IReminderRepeatListener;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
-public class DialogReminderRepeatInputMonthly extends DialogFragment {
+public class DialogReminderRepeatInputMonthlyCustom extends DialogFragment {
 
     private IReminderRepeatListener listener;
     private ReminderRepeatModel model;
@@ -36,7 +38,7 @@ public class DialogReminderRepeatInputMonthly extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat_monthly, null);
+        final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat_monthly_custom, null);
 
         final CheckBox chk_monthly_jan = view.findViewById(R.id.chk_monthly_jan);
         final CheckBox chk_monthly_feb = view.findViewById(R.id.chk_monthly_feb);
@@ -51,34 +53,65 @@ public class DialogReminderRepeatInputMonthly extends DialogFragment {
         final CheckBox chk_monthly_nov = view.findViewById(R.id.chk_monthly_nov);
         final CheckBox chk_monthly_dec = view.findViewById(R.id.chk_monthly_dec);
 
-        chk_monthly_jan.setChecked(model.monthlyModel.isJan);
-        chk_monthly_feb.setChecked(model.monthlyModel.isFeb);
-        chk_monthly_mar.setChecked(model.monthlyModel.isMar);
-        chk_monthly_apr.setChecked(model.monthlyModel.isApr);
-        chk_monthly_may.setChecked(model.monthlyModel.isMay);
-        chk_monthly_jun.setChecked(model.monthlyModel.isJun);
-        chk_monthly_jul.setChecked(model.monthlyModel.isJul);
-        chk_monthly_aug.setChecked(model.monthlyModel.isAug);
-        chk_monthly_sep.setChecked(model.monthlyModel.isSep);
-        chk_monthly_oct.setChecked(model.monthlyModel.isOct);
-        chk_monthly_nov.setChecked(model.monthlyModel.isNov);
-        chk_monthly_dec.setChecked(model.monthlyModel.isDec);
+        for (int i = 0; i < model.customMonths.size(); i++) {
+            int value = model.customMonths.get(i);
+            switch (value) {
+                default:
+                case 0:
+                    chk_monthly_jan.setChecked(true);
+                    break;
+                case 1:
+                    chk_monthly_feb.setChecked(true);
+                    break;
+                case 2:
+                    chk_monthly_mar.setChecked(true);
+                    break;
+                case 3:
+                    chk_monthly_apr.setChecked(true);
+                    break;
+                case 4:
+                    chk_monthly_may.setChecked(true);
+                    break;
+                case 5:
+                    chk_monthly_jun.setChecked(true);
+                    break;
+                case 6:
+                    chk_monthly_jul.setChecked(true);
+                    break;
+                case 7:
+                    chk_monthly_aug.setChecked(true);
+                    break;
+                case 8:
+                    chk_monthly_sep.setChecked(true);
+                    break;
+                case 9:
+                    chk_monthly_oct.setChecked(true);
+                    break;
+                case 10:
+                    chk_monthly_nov.setChecked(true);
+                    break;
+                case 11:
+                    chk_monthly_dec.setChecked(true);
+                    break;
+            }
+        }
 
         builder.setView(view).setTitle("Select months to Repeat").setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                model.monthlyModel.isJan = chk_monthly_jan.isChecked();
-                model.monthlyModel.isFeb = chk_monthly_feb.isChecked();
-                model.monthlyModel.isMar = chk_monthly_mar.isChecked();
-                model.monthlyModel.isApr = chk_monthly_apr.isChecked();
-                model.monthlyModel.isMay = chk_monthly_may.isChecked();
-                model.monthlyModel.isJun = chk_monthly_jun.isChecked();
-                model.monthlyModel.isJul = chk_monthly_jul.isChecked();
-                model.monthlyModel.isAug = chk_monthly_aug.isChecked();
-                model.monthlyModel.isSep = chk_monthly_sep.isChecked();
-                model.monthlyModel.isOct = chk_monthly_oct.isChecked();
-                model.monthlyModel.isNov = chk_monthly_nov.isChecked();
-                model.monthlyModel.isDec = chk_monthly_dec.isChecked();
+                model.customMonths.clear();
+                if (chk_monthly_jan.isChecked()) model.customMonths.add(0);
+                if (chk_monthly_feb.isChecked()) model.customMonths.add(1);
+                if (chk_monthly_mar.isChecked()) model.customMonths.add(2);
+                if (chk_monthly_apr.isChecked()) model.customMonths.add(3);
+                if (chk_monthly_may.isChecked()) model.customMonths.add(4);
+                if (chk_monthly_jun.isChecked()) model.customMonths.add(5);
+                if (chk_monthly_jul.isChecked()) model.customMonths.add(6);
+                if (chk_monthly_aug.isChecked()) model.customMonths.add(7);
+                if (chk_monthly_sep.isChecked()) model.customMonths.add(8);
+                if (chk_monthly_oct.isChecked()) model.customMonths.add(9);
+                if (chk_monthly_nov.isChecked()) model.customMonths.add(10);
+                if (chk_monthly_dec.isChecked()) model.customMonths.add(11);
                 listener.set(model, true);
             }
         }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {

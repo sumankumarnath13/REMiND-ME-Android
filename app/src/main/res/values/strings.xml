@@ -23,31 +23,40 @@
 
     <string name="repeat_none">No Repeat</string>
     <string name="repeat_hourly">Hourly</string>
+    <string name="repeat_hourly_custom">(Custom)</string>
     <string name="repeat_daily">Daily</string>
+    <string name="repeat_daily_custom">(Custom)</string>
     <string name="repeat_weekly">Weekly</string>
+    <string name="repeat_weekly_custom">(Custom)</string>
     <string name="repeat_monthly">Monthly</string>
+    <string name="repeat_monthly_custom">(Custom)</string>
     <string name="repeat_yearly">Yearly</string>
 
-    <string name="repeat_daily_mon">Monday</string>
-    <string name="repeat_daily_tue">Tuesday</string>
-    <string name="repeat_daily_wed">Wednesday</string>
-    <string name="repeat_daily_thu">Thursday</string>
-    <string name="repeat_daily_fri">Friday</string>
-    <string name="repeat_daily_sat">Saturday</string>
-    <string name="repeat_daily_sun">Sunday</string>
+    <string name="repeat_daily_custom_mon">Monday</string>
+    <string name="repeat_daily_custom_tue">Tuesday</string>
+    <string name="repeat_daily_custom_wed">Wednesday</string>
+    <string name="repeat_daily_custom_thu">Thursday</string>
+    <string name="repeat_daily_custom_fri">Friday</string>
+    <string name="repeat_daily_custom_sat">Saturday</string>
+    <string name="repeat_daily_custom_sun">Sunday</string>
 
-    <string name="repeat_monthly_jan">January</string>
-    <string name="repeat_monthly_feb">February</string>
-    <string name="repeat_monthly_mar">March</string>
-    <string name="repeat_monthly_apr">April</string>
-    <string name="repeat_monthly_may">May</string>
-    <string name="repeat_monthly_jun">June</string>
-    <string name="repeat_monthly_jul">July</string>
-    <string name="repeat_monthly_aug">August</string>
-    <string name="repeat_monthly_sep">September</string>
-    <string name="repeat_monthly_oct">October</string>
-    <string name="repeat_monthly_nov">November</string>
-    <string name="repeat_monthly_dec">December</string>
+    <string name="repeat_weekly_custom_week1">1st week of the month</string>
+    <string name="repeat_weekly_custom_week2">2nd week of the month</string>
+    <string name="repeat_weekly_custom_week3">3rd week of the month</string>
+    <string name="repeat_weekly_custom_week4">4th week of the month</string>
+
+    <string name="repeat_monthly_custom_jan">January</string>
+    <string name="repeat_monthly_custom_feb">February</string>
+    <string name="repeat_monthly_custom_mar">March</string>
+    <string name="repeat_monthly_custom_apr">April</string>
+    <string name="repeat_monthly_custom_may">May</string>
+    <string name="repeat_monthly_custom_jun">June</string>
+    <string name="repeat_monthly_custom_jul">July</string>
+    <string name="repeat_monthly_custom_aug">August</string>
+    <string name="repeat_monthly_custom_sep">September</string>
+    <string name="repeat_monthly_custom_oct">October</string>
+    <string name="repeat_monthly_custom_nov">November</string>
+    <string name="repeat_monthly_custom_dec">December</string>
 
     <string name="btn_vibration">Vibration</string>
     <string name="btn_disable">Disable</string>

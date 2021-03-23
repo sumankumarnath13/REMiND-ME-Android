@@ -1,16 +1,18 @@
 package com.example.remindme;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.View;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RadioButton;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
 import com.example.remindme.viewModels.IReminderRepeatListener;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
@@ -49,79 +51,131 @@ public class DialogReminderRepeatInput extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
-                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.None;
+                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.NONE;
                 listener.set(model, true);
             }
         });
 
         final RadioButton rdo_reminder_repeat_hourly = view.findViewById(R.id.rdo_reminder_repeat_hourly);
-        rdo_reminder_repeat_hourly.setOnClickListener(new RadioButton.OnClickListener(){
+        rdo_reminder_repeat_hourly.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Hourly;
+                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.HOURLY;
                 listener.set(model, true);
             }
         });
 
-        final RadioButton rdo_reminder_repeat_daily = view.findViewById(R.id.rdo_reminder_repeat_daily);
-        rdo_reminder_repeat_daily.setOnClickListener(new RadioButton.OnClickListener(){
+        final RadioButton rdo_reminder_repeat_hourly_custom = view.findViewById(R.id.rdo_reminder_repeat_hourly_custom);
+        rdo_reminder_repeat_hourly_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Daily;
+                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM;
+                listener.set(model, false);
+            }
+        });
+
+        final RadioButton rdo_reminder_repeat_daily = view.findViewById(R.id.rdo_reminder_repeat_daily);
+        rdo_reminder_repeat_daily.setOnClickListener(new RadioButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.DAILY;
+                listener.set(model, true);
+            }
+        });
+
+        final RadioButton rdo_reminder_repeat_daily_custom = view.findViewById(R.id.rdo_reminder_repeat_daily_custom);
+        rdo_reminder_repeat_daily_custom.setOnClickListener(new RadioButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM;
                 listener.set(model, false);
             }
         });
 
         final RadioButton rdo_reminder_repeat_weekly = view.findViewById(R.id.rdo_reminder_repeat_weekly);
-        rdo_reminder_repeat_weekly.setOnClickListener(new RadioButton.OnClickListener(){
+        rdo_reminder_repeat_weekly.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Weekly;
+                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.WEEKLY;
                 listener.set(model, true);
             }
         });
 
-        final RadioButton rdo_reminder_repeat_monthly = view.findViewById(R.id.rdo_reminder_repeat_monthly);
-        rdo_reminder_repeat_monthly.setOnClickListener(new RadioButton.OnClickListener(){
+        final RadioButton rdo_reminder_repeat_weekly_custom = view.findViewById(R.id.rdo_reminder_repeat_weekly_custom);
+        rdo_reminder_repeat_weekly_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Monthly;
+                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM;
+                listener.set(model, false);
+            }
+        });
+
+        final RadioButton rdo_reminder_repeat_monthly = view.findViewById(R.id.rdo_reminder_repeat_monthly);
+        rdo_reminder_repeat_monthly.setOnClickListener(new RadioButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.MONTHLY;
+                listener.set(model, true);
+            }
+        });
+
+        final RadioButton rdo_reminder_repeat_monthly_custom = view.findViewById(R.id.rdo_reminder_repeat_monthly_custom);
+        rdo_reminder_repeat_monthly_custom.setOnClickListener(new RadioButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM;
                 listener.set(model, false);
             }
         });
 
         final RadioButton rdo_reminder_repeat_yearly = view.findViewById(R.id.rdo_reminder_repeat_yearly);
-        rdo_reminder_repeat_yearly.setOnClickListener(new RadioButton.OnClickListener(){
+        rdo_reminder_repeat_yearly.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Yearly;
+                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.YEARLY;
                 listener.set(model, true);
             }
         });
 
-        switch (model.repeatOption){
+        switch (model.repeatOption) {
             default:
-            case None:
+            case NONE:
                 rdo_reminder_repeat_none.setChecked(true);
                 break;
-            case Hourly:
+            case HOURLY:
                 rdo_reminder_repeat_hourly.setChecked(true);
                 break;
-            case Daily:
+            case HOURLY_CUSTOM:
+                rdo_reminder_repeat_hourly_custom.setChecked(true);
+                break;
+            case DAILY:
                 rdo_reminder_repeat_daily.setChecked(true);
                 break;
-            case Weekly:
+            case DAILY_CUSTOM:
+                rdo_reminder_repeat_daily_custom.setChecked(true);
+                break;
+            case WEEKLY:
                 rdo_reminder_repeat_weekly.setChecked(true);
                 break;
-            case Monthly:
+            case WEEKLY_CUSTOM:
+                rdo_reminder_repeat_weekly_custom.setChecked(true);
+                break;
+            case MONTHLY:
                 rdo_reminder_repeat_monthly.setChecked(true);
                 break;
-            case Yearly:
+            case MONTHLY_CUSTOM:
+                rdo_reminder_repeat_monthly_custom.setChecked(true);
+                break;
+            case YEARLY:
                 rdo_reminder_repeat_yearly.setChecked(true);
                 break;
         }

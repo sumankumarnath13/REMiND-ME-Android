@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/dp_16">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
+            android:gravity="start">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Morning"
+                android:textSize="@dimen/font_size_h1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="@color/text_gray1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="start"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Night"
+                android:textSize="@dimen/font_size_h1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_warning"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_warning"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_warning"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_warning"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_warning"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_warning"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_warning"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_warning"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_warning"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_warning"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_warning"
+                android:textColor="@color/text_gray1" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_warning"
+                android:textColor="@color/text_gray1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
+

@@ -93,7 +93,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
         }
 
         if (!reminderModel.isEmpty()) {
-            String date_str = UtilsDateTime.toTimeDateString(reminderModel.time);
+            String date_str = UtilsDateTime.toTimeDateString(reminderModel.getTime());
             TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
             Spannable spannable = new SpannableString(date_str);
             spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

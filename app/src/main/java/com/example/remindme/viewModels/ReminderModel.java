@@ -30,6 +30,7 @@ import com.example.remindme.dataModels.MissedReminder;
 import com.example.remindme.util.UtilsDateTime;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -68,7 +69,6 @@ public class ReminderModel extends ViewModel {
     private static final String ALERT_NOTIFICATION_FULLSCREEN_INTENT_ACTION = ")F#¦¬ÔVI*N";
     //endregion
 
-
     //region Private static Members
     private static Class<? extends BroadcastReceiver> alertBroadcastReceiverClass;
     private static Class<? extends Activity> lockScreenAlertActivityClass;
@@ -79,7 +79,6 @@ public class ReminderModel extends ViewModel {
     private static boolean isRinging;
     private static Ringtone playingRingtone;
     private static String ringingReminderId;
-
     //endregion
 
     //region Private static Functions
@@ -144,47 +143,44 @@ public class ReminderModel extends ViewModel {
         to.isEnable = from.isEnable;
         to.isVibrate = from.isEnableVibration;
 
+        to.repeatHours.clear();
+        to.repeatDays.clear();
+        to.repeatWeeks.clear();
+        to.repeatMonths.clear();
         switch (from.repeatModel.repeatOption) {
             default:
-            case None:
+            case NONE:
                 to.repeatOption = 0;
                 break;
-            case Hourly:
+            case HOURLY:
                 to.repeatOption = 1;
                 break;
-            case Daily:
-                to.repeatOption = 2;
-
-                to.isRepeatOn_Sun = from.repeatModel.dailyModel.isSun;
-                to.isRepeatOn_Mon = from.repeatModel.dailyModel.isMon;
-                to.isRepeatOn_Tue = from.repeatModel.dailyModel.isTue;
-                to.isRepeatOn_Wed = from.repeatModel.dailyModel.isWed;
-                to.isRepeatOn_Thu = from.repeatModel.dailyModel.isThu;
-                to.isRepeatOn_Fri = from.repeatModel.dailyModel.isFri;
-                to.isRepeatOn_Sat = from.repeatModel.dailyModel.isSat;
-
+            case HOURLY_CUSTOM:
+                to.repeatOption = 11;
+                to.repeatHours.addAll(from.repeatModel.customHours);
                 break;
-            case Weekly:
+            case DAILY:
+                to.repeatOption = 2;
+                break;
+            case DAILY_CUSTOM:
+                to.repeatOption = 21;
+                to.repeatDays.addAll(from.repeatModel.customDays);
+                break;
+            case WEEKLY:
                 to.repeatOption = 3;
                 break;
-            case Monthly:
-                to.repeatOption = 4;
-
-                to.isRepeatOn_Jan = from.repeatModel.monthlyModel.isJan;
-                to.isRepeatOn_Feb = from.repeatModel.monthlyModel.isFeb;
-                to.isRepeatOn_Mar = from.repeatModel.monthlyModel.isMar;
-                to.isRepeatOn_Apr = from.repeatModel.monthlyModel.isApr;
-                to.isRepeatOn_May = from.repeatModel.monthlyModel.isMay;
-                to.isRepeatOn_Jun = from.repeatModel.monthlyModel.isJun;
-                to.isRepeatOn_Jul = from.repeatModel.monthlyModel.isJul;
-                to.isRepeatOn_Aug = from.repeatModel.monthlyModel.isAug;
-                to.isRepeatOn_Sep = from.repeatModel.monthlyModel.isSep;
-                to.isRepeatOn_Oct = from.repeatModel.monthlyModel.isOct;
-                to.isRepeatOn_Nov = from.repeatModel.monthlyModel.isNov;
-                to.isRepeatOn_Dec = from.repeatModel.monthlyModel.isDec;
-
+            case WEEKLY_CUSTOM:
+                to.repeatOption = 31;
+                to.repeatWeeks.addAll(from.repeatModel.customWeeks);
                 break;
-            case Yearly:
+            case MONTHLY:
+                to.repeatOption = 4;
+                break;
+            case MONTHLY_CUSTOM:
+                to.repeatOption = 41;
+                to.repeatMonths.addAll(from.repeatModel.customMonths);
+                break;
+            case YEARLY:
                 to.repeatOption = 5;
                 break;
         }
@@ -242,48 +238,45 @@ public class ReminderModel extends ViewModel {
         to.isEnable = from.isEnable;
         to.isEnableVibration = from.isVibrate;
 
+        to.repeatModel.customHours.clear();
+        to.repeatModel.customDays.clear();
+        to.repeatModel.customWeeks.clear();
+        to.repeatModel.customMonths.clear();
         switch (from.repeatOption) {
             default:
             case 0:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.None;
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.NONE;
                 break;
             case 1:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Hourly;
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.HOURLY;
+                break;
+            case 11:
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM;
+                to.repeatModel.customHours.addAll(from.repeatHours);
                 break;
             case 2:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Daily;
-
-                to.repeatModel.dailyModel.isSun = from.isRepeatOn_Sun;
-                to.repeatModel.dailyModel.isMon = from.isRepeatOn_Mon;
-                to.repeatModel.dailyModel.isTue = from.isRepeatOn_Tue;
-                to.repeatModel.dailyModel.isWed = from.isRepeatOn_Wed;
-                to.repeatModel.dailyModel.isThu = from.isRepeatOn_Thu;
-                to.repeatModel.dailyModel.isFri = from.isRepeatOn_Fri;
-                to.repeatModel.dailyModel.isSat = from.isRepeatOn_Sat;
-
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.DAILY;
+                break;
+            case 21:
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM;
+                to.repeatModel.customDays.addAll(from.repeatDays);
                 break;
             case 3:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Weekly;
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.WEEKLY;
+                break;
+            case 31:
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM;
+                to.repeatModel.customWeeks.addAll(from.repeatWeeks);
                 break;
             case 4:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Monthly;
-
-                to.repeatModel.monthlyModel.isJan = from.isRepeatOn_Jan;
-                to.repeatModel.monthlyModel.isFeb = from.isRepeatOn_Feb;
-                to.repeatModel.monthlyModel.isMar = from.isRepeatOn_Mar;
-                to.repeatModel.monthlyModel.isApr = from.isRepeatOn_Apr;
-                to.repeatModel.monthlyModel.isMay = from.isRepeatOn_May;
-                to.repeatModel.monthlyModel.isJun = from.isRepeatOn_Jun;
-                to.repeatModel.monthlyModel.isJul = from.isRepeatOn_Jul;
-                to.repeatModel.monthlyModel.isAug = from.isRepeatOn_Aug;
-                to.repeatModel.monthlyModel.isSep = from.isRepeatOn_Sep;
-                to.repeatModel.monthlyModel.isOct = from.isRepeatOn_Oct;
-                to.repeatModel.monthlyModel.isNov = from.isRepeatOn_Nov;
-                to.repeatModel.monthlyModel.isDec = from.isRepeatOn_Dec;
-
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.MONTHLY;
+                break;
+            case 41:
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM;
+                to.repeatModel.customMonths.addAll(from.repeatMonths);
                 break;
             case 5:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.Yearly;
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.YEARLY;
                 break;
         }
 
@@ -330,6 +323,7 @@ public class ReminderModel extends ViewModel {
     private int intId;
     private boolean isEnable = true;
     private final NotificationManagerCompat notificationManager;
+    private ReminderRepeatModel repeatModel;
 
     public ReminderModel() {
         id = null;
@@ -906,16 +900,28 @@ public class ReminderModel extends ViewModel {
     //region Public instance Members
     public String name;
     public String note;
-    public Date time;
+    private Date time;
     public Uri ringToneUri = null;
     public boolean isEnableTone = true;
     public boolean isEnableVibration = true;
-    public ReminderRepeatModel repeatModel;
     public ReminderSnoozeModel snoozeModel;
     public Date nextSnoozeOffTime = null;
     //endregion
 
     //region Public instance functions
+
+    public void setTime(Date reminderTime) {
+        time = reminderTime;
+        ReminderRepeatModel m = beginRepeatModelChange();
+        Calendar c = Calendar.getInstance();
+        c.setTime(time);
+        m.customMinute = c.get(Calendar.MINUTE);
+        tryEndRepeatModelChange();
+    }
+
+    public Date getTime() {
+        return time;
+    }
 
     public boolean isEmpty() {
         return id == null;
@@ -981,6 +987,103 @@ public class ReminderModel extends ViewModel {
         return isEnable;
     }
 
+    private ReminderRepeatModel buffer;
+
+    public ReminderRepeatModel beginRepeatModelChange() {
+        if (buffer == null) {
+            buffer = new ReminderRepeatModel();
+            // Copy from real object:
+            Calendar c = Calendar.getInstance();
+            c.setTime(time);
+            buffer.repeatOption = repeatModel.repeatOption;
+            buffer.customMinute = c.get(Calendar.MINUTE);
+            buffer.customHours.addAll(repeatModel.customHours);
+            buffer.customDays.addAll(repeatModel.customDays);
+            buffer.customWeeks.addAll(repeatModel.customWeeks);
+            buffer.customMonths.addAll(repeatModel.customMonths);
+        }
+        return buffer;
+    }
+
+    public boolean tryEndRepeatModelChange() {
+        if (buffer == null) return false;
+        switch (buffer.repeatOption) {
+            default: //NONE: HOURLY: DAILY: WEEKLY: MONTHLY: YEARLY:
+                repeatModel.repeatOption = buffer.repeatOption;
+                repeatModel.customHours.clear();
+                repeatModel.customDays.clear();
+                repeatModel.customWeeks.clear();
+                repeatModel.customMonths.clear();
+                repeatModel.customMinute = 0;
+                buffer = null;
+                return true;
+            case HOURLY_CUSTOM:
+                if (buffer.customHours.size() > 0) {
+                    repeatModel.customHours.clear();
+                    repeatModel.customDays.clear();
+                    repeatModel.customWeeks.clear();
+                    repeatModel.customMonths.clear();
+                    repeatModel.customMinute = buffer.customMinute;
+                    repeatModel.repeatOption = buffer.repeatOption;
+                    repeatModel.customHours.addAll(buffer.customHours);
+                    buffer = null;
+                    return true;
+                } else {
+                    buffer = null;
+                    return false;
+                }
+            case DAILY_CUSTOM:
+                if (buffer.customDays.size() > 0) {
+                    repeatModel.customHours.clear();
+                    repeatModel.customDays.clear();
+                    repeatModel.customWeeks.clear();
+                    repeatModel.customMonths.clear();
+                    repeatModel.customMinute = 0;
+                    repeatModel.repeatOption = buffer.repeatOption;
+                    repeatModel.customDays.addAll(buffer.customDays);
+                    buffer = null;
+                    return true;
+                } else {
+                    buffer = null;
+                    return false;
+                }
+            case WEEKLY_CUSTOM:
+                if (buffer.customWeeks.size() > 0) {
+                    repeatModel.customHours.clear();
+                    repeatModel.customDays.clear();
+                    repeatModel.customWeeks.clear();
+                    repeatModel.customMonths.clear();
+                    repeatModel.customMinute = 0;
+                    repeatModel.repeatOption = buffer.repeatOption;
+                    repeatModel.customWeeks.addAll(buffer.customWeeks);
+                    buffer = null;
+                    return true;
+                } else {
+                    buffer = null;
+                    return false;
+                }
+            case MONTHLY_CUSTOM:
+                if (buffer.customMonths.size() > 0) {
+                    repeatModel.customHours.clear();
+                    repeatModel.customDays.clear();
+                    repeatModel.customWeeks.clear();
+                    repeatModel.customMonths.clear();
+                    repeatModel.customMinute = 0;
+                    repeatModel.repeatOption = buffer.repeatOption;
+                    repeatModel.customMonths.addAll(buffer.customMonths);
+                    buffer = null;
+                    return true;
+                } else {
+                    buffer = null;
+                    return false;
+                }
+        }
+    }
+
+    public String getRepeatModelString() {
+        return repeatModel.toString();
+    }
+
     public void deleteAndCancelAlert() {
         cancelAlarm();
         Realm realm = Realm.getDefaultInstance();
@@ -1007,286 +1110,200 @@ public class ReminderModel extends ViewModel {
 //            // Do nothing. As result  nextTime will be null and this indicate end of life for the reminder
 //        } else
 
-        if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.Hourly) {
+        if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.HOURLY) {
             Calendar alarmTime = Calendar.getInstance();
             alarmTime.setTime(time);
             // Take the VALUES from alarm time
             int alarmMin = alarmTime.get(Calendar.MINUTE);
-
             // Set current time to alarm time
             alarmTime.setTime(currentTime.getTime());
             // Set alarm values to current time onwards
             alarmTime.set(Calendar.MINUTE, alarmMin);
+
             alarmTime.set(Calendar.SECOND, 0);
+
             // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
             if (currentTime.after(alarmTime)) {
                 alarmTime.add(Calendar.HOUR_OF_DAY, 1);
             }
             nextTime = alarmTime.getTime();
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.Daily) {
+        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM) {
             boolean firstMatch = false;
+            Calendar alarmTime = Calendar.getInstance();
+            alarmTime.setTime(time);
+            // Take the VALUES from alarm time
+            int alarmMin = alarmTime.get(Calendar.MINUTE);
+            // Set current time to alarm time
+            alarmTime.setTime(currentTime.getTime());
+            // Set alarm values to current time onwards
+            alarmTime.set(Calendar.MINUTE, alarmMin);
+
+            alarmTime.set(Calendar.SECOND, 0);
+
+            //Find the closet next date and time
+            Collections.sort(repeatModel.customHours);
+            for (int i = 0; i < repeatModel.customHours.size(); i++) {
+                if (i == 0) {
+                    alarmTime.set(Calendar.HOUR_OF_DAY, repeatModel.customHours.get(i));
+                } else {
+                    alarmTime.add(Calendar.HOUR_OF_DAY, repeatModel.customHours.get(i));
+                }
+                if (!firstMatch) {
+                    firstMatch = true;
+                    nextTime = alarmTime.getTime();
+                } else if (nextTime.after(alarmTime.getTime())) {
+                    nextTime = alarmTime.getTime();
+                }
+            }
+        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.DAILY) {
             Calendar alarmTime = Calendar.getInstance();
             alarmTime.setTime(time);
             // Take the VALUES from alarm time
             int alarmHour = alarmTime.get(Calendar.HOUR_OF_DAY);
             int alarmMin = alarmTime.get(Calendar.MINUTE);
-
             // Set current time to alarm time
             alarmTime.setTime(currentTime.getTime());
             // Set alarm values to current time onwards
             alarmTime.set(Calendar.HOUR_OF_DAY, alarmHour);
             alarmTime.set(Calendar.MINUTE, alarmMin);
+
             alarmTime.set(Calendar.SECOND, 0);
+
             // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
             if (currentTime.after(alarmTime)) {
                 alarmTime.add(Calendar.DAY_OF_YEAR, 1);
             }
-            // Add 1 day till the next days comes for the coming/this week
-            for (int i = 0; i < 7; i++) {
-                switch (alarmTime.get(Calendar.DAY_OF_WEEK)) {
-                    case Calendar.SUNDAY:
-                        if (repeatModel.dailyModel.isSun) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.MONDAY:
-                        if (repeatModel.dailyModel.isMon) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.TUESDAY:
-                        if (repeatModel.dailyModel.isTue) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.WEDNESDAY:
-                        if (repeatModel.dailyModel.isWed) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.THURSDAY:
-                        if (repeatModel.dailyModel.isThu) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.FRIDAY:
-                        if (repeatModel.dailyModel.isFri) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.SATURDAY:
-                        if (repeatModel.dailyModel.isSat) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                }
-                alarmTime.add(Calendar.DAY_OF_YEAR, 1); // Increase a day to scan other days of week
-            }
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.Weekly) {
-            Calendar alarmTime = Calendar.getInstance();
-            alarmTime.setTime(time);
-
-            // Merge current time to alarm time
-            alarmTime.set(Calendar.WEEK_OF_YEAR, currentTime.get(Calendar.WEEK_OF_YEAR));
-            alarmTime.set(Calendar.SECOND, 0);
-            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
-            if (currentTime.after(alarmTime)) {
-                alarmTime.add(Calendar.WEEK_OF_YEAR, 1);
-            }
-
-            alarmTime.add(Calendar.WEEK_OF_YEAR, 1);
             nextTime = alarmTime.getTime();
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.Monthly) {
+        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM) {
             boolean firstMatch = false;
             Calendar alarmTime = Calendar.getInstance();
             alarmTime.setTime(time);
             // Take the VALUES from alarm time
-            int alarmMonth = alarmTime.get(Calendar.MONTH);
-            int alarmDay = alarmTime.get(Calendar.DAY_OF_MONTH);
             int alarmHour = alarmTime.get(Calendar.HOUR_OF_DAY);
             int alarmMin = alarmTime.get(Calendar.MINUTE);
 
             // Set current time to alarm time
             alarmTime.setTime(currentTime.getTime());
             // Set alarm values to current time onwards
-            alarmTime.set(Calendar.MONTH, alarmMonth);
+            alarmTime.set(Calendar.HOUR_OF_DAY, alarmHour);
+            alarmTime.set(Calendar.MINUTE, alarmMin);
+
+            alarmTime.set(Calendar.SECOND, 0);
+
+            //Find the closet next date and time
+            Collections.sort(repeatModel.customDays);
+            for (int i = 0; i < repeatModel.customDays.size(); i++) {
+                if (i == 0) {
+                    alarmTime.set(Calendar.DAY_OF_YEAR, repeatModel.customDays.get(i));
+                } else {
+                    alarmTime.add(Calendar.DAY_OF_YEAR, repeatModel.customDays.get(i));
+                }
+                if (!firstMatch) {
+                    firstMatch = true;
+                    nextTime = alarmTime.getTime();
+                } else if (nextTime.after(alarmTime.getTime())) {
+                    nextTime = alarmTime.getTime();
+                }
+            }
+        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.WEEKLY) {
+            Calendar alarmTime = Calendar.getInstance();
+            alarmTime.setTime(time);
+            // Merge current time to alarm time
+            alarmTime.set(Calendar.WEEK_OF_YEAR, currentTime.get(Calendar.WEEK_OF_YEAR));
+
+            alarmTime.set(Calendar.SECOND, 0);
+
+            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
+            if (currentTime.after(alarmTime)) {
+                alarmTime.add(Calendar.WEEK_OF_YEAR, 1);
+            }
+            alarmTime.add(Calendar.WEEK_OF_YEAR, 1);
+            nextTime = alarmTime.getTime();
+        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM) {
+            boolean firstMatch = false;
+            Calendar alarmTime = Calendar.getInstance();
+            alarmTime.setTime(time);
+            // Take the VALUES from alarm time
+            int alarmHour = alarmTime.get(Calendar.HOUR_OF_DAY);
+            int alarmMin = alarmTime.get(Calendar.MINUTE);
+
+            // Set current time to alarm time
+            alarmTime.setTime(currentTime.getTime());
+            // Set alarm values to current time onwards
+            alarmTime.set(Calendar.HOUR_OF_DAY, alarmHour);
+            alarmTime.set(Calendar.MINUTE, alarmMin);
+
+            alarmTime.set(Calendar.SECOND, 0);
+
+            //Find the closet next date and time
+            Collections.sort(repeatModel.customWeeks);
+            for (int i = 0; i < repeatModel.customWeeks.size(); i++) {
+                if (i == 0) {
+                    alarmTime.set(Calendar.WEEK_OF_MONTH, repeatModel.customWeeks.get(i));
+                } else {
+                    alarmTime.add(Calendar.WEEK_OF_MONTH, repeatModel.customWeeks.get(i));
+                }
+                if (!firstMatch) {
+                    firstMatch = true;
+                    nextTime = alarmTime.getTime();
+                } else if (nextTime.after(alarmTime.getTime())) {
+                    nextTime = alarmTime.getTime();
+                }
+            }
+        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.MONTHLY) {
+            Calendar alarmTime = Calendar.getInstance();
+            alarmTime.setTime(time);
+            // Merge current time to alarm time
+            alarmTime.set(Calendar.MONTH, currentTime.get(Calendar.MONTH));
+
+            alarmTime.set(Calendar.SECOND, 0);
+
+            //Move to next month
+            alarmTime.add(Calendar.MONTH, 1);
+            nextTime = alarmTime.getTime();
+        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM) {
+            boolean firstMatch = false;
+            Calendar alarmTime = Calendar.getInstance();
+            alarmTime.setTime(time);
+            // Take the VALUES from alarm time
+            //int alarmMonth = alarmTime.get(Calendar.MONTH);
+            int alarmDay = alarmTime.get(Calendar.DAY_OF_MONTH);
+            int alarmHour = alarmTime.get(Calendar.HOUR_OF_DAY);
+            int alarmMin = alarmTime.get(Calendar.MINUTE);
+            // Set current time to alarm time
+            alarmTime.setTime(currentTime.getTime());
+            // Set alarm values to current time onwards
+            //alarmTime.set(Calendar.MONTH, alarmMonth);
             alarmTime.set(Calendar.DAY_OF_MONTH, alarmDay);
             alarmTime.set(Calendar.HOUR_OF_DAY, alarmHour);
             alarmTime.set(Calendar.MINUTE, alarmMin);
-            alarmTime.set(Calendar.SECOND, 0);
-            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
-            if (currentTime.after(alarmTime)) {
-                alarmTime.add(Calendar.MONTH, 1);
-            }
 
-            // Add 1 month till the next month comes for the coming/this year
-            for (int i = 0; i < 12; i++) {
-                switch (alarmTime.get(Calendar.MONTH)) {
-                    case Calendar.JANUARY:
-                        if (repeatModel.monthlyModel.isJan) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.FEBRUARY:
-                        if (repeatModel.monthlyModel.isFeb) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.MARCH:
-                        if (repeatModel.monthlyModel.isMar) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.APRIL:
-                        if (repeatModel.monthlyModel.isApr) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.MAY:
-                        if (repeatModel.monthlyModel.isMay) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.JUNE:
-                        if (repeatModel.monthlyModel.isJun) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.JULY:
-                        if (repeatModel.monthlyModel.isJul) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.AUGUST:
-                        if (repeatModel.monthlyModel.isAug) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.SEPTEMBER:
-                        if (repeatModel.monthlyModel.isSep) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.OCTOBER:
-                        if (repeatModel.monthlyModel.isOct) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.NOVEMBER:
-                        if (repeatModel.monthlyModel.isNov) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
-                    case Calendar.DECEMBER:
-                        if (repeatModel.monthlyModel.isDec) {
-                            if (!firstMatch) {
-                                nextTime = alarmTime.getTime();
-                                firstMatch = true;
-                            } else if (nextTime.after(alarmTime.getTime())) {
-                                nextTime = alarmTime.getTime();
-                            }
-                        }
-                        break;
+            alarmTime.set(Calendar.SECOND, 0);
+
+            //Find the closet next date and time
+            Collections.sort(repeatModel.customMonths);
+            for (int i = 0; i < repeatModel.customMonths.size(); i++) {
+                if (i == 0) {
+                    alarmTime.set(Calendar.MONTH, repeatModel.customMonths.get(i));
+                } else {
+                    alarmTime.add(Calendar.MONTH, repeatModel.customMonths.get(i));
                 }
-                alarmTime.add(Calendar.MONTH, 1);
+                if (!firstMatch) {
+                    firstMatch = true;
+                    nextTime = alarmTime.getTime();
+                } else if (nextTime.after(alarmTime.getTime())) {
+                    nextTime = alarmTime.getTime();
+                }
             }
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.Yearly) {
+        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.YEARLY) {
             Calendar alarmTime = Calendar.getInstance();
             alarmTime.setTime(time);
 
             // Merge current time to alarm time
             alarmTime.set(Calendar.YEAR, currentTime.get(Calendar.YEAR));
+
             alarmTime.set(Calendar.SECOND, 0);
+
             // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
             if (currentTime.after(alarmTime)) {
                 alarmTime.add(Calendar.YEAR, 1);
