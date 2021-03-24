@@ -3,6 +3,7 @@ package com.example.remindme.viewModels;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ReminderRepeatModel {
@@ -49,13 +50,18 @@ public class ReminderRepeatModel {
             case HOURLY_CUSTOM:
                 builder.append("On ");
                 for (int i = 0; i < customHours.size(); i++) {
-                    int h = customHours.get(i) + 1;
-                    if (h <= 11) {
-                        builder.append(h + ":" + customMinute + " am,");
+                    int h = customHours.get(i);
+                    if (h == 0) {
+                        builder.append("12:" + customMinute + " am, ");
+                    } else if (h == 12) {
+                        builder.append("12:" + customMinute + " pm, ");
+                    } else if (h < 12) {
+                        builder.append(h + ":" + customMinute + " am, ");
                     } else {
-                        builder.append(h - 11 + ":" + customMinute + " pm,");
+                        builder.append(h - 11 + ":" + customMinute + " pm, ");
                     }
                 }
+                builder.replace(builder.lastIndexOf(", "), builder.length(), "");
                 builder.append(" of every day");
                 break;
             case DAILY:
@@ -64,9 +70,33 @@ public class ReminderRepeatModel {
             case DAILY_CUSTOM:
                 builder.append("On ");
                 for (int i = 0; i < customDays.size(); i++) {
-                    int value = customDays.get(i) + 1;
-                    builder.append(value + ",");
+                    int value = customDays.get(i);
+                    switch (value) {
+                        default:
+                        case Calendar.SUNDAY:
+                            builder.append("Sun, ");
+                            break;
+                        case Calendar.MONDAY:
+                            builder.append("Mon, ");
+                            break;
+                        case Calendar.TUESDAY:
+                            builder.append("Tue, ");
+                            break;
+                        case Calendar.WEDNESDAY:
+                            builder.append("Wed, ");
+                            break;
+                        case Calendar.THURSDAY:
+                            builder.append("Thu, ");
+                            break;
+                        case Calendar.FRIDAY:
+                            builder.append("Fri, ");
+                            break;
+                        case Calendar.SATURDAY:
+                            builder.append("Sat, ");
+                            break;
+                    }
                 }
+                builder.replace(builder.lastIndexOf(", "), builder.length(), "");
                 builder.append(" of every week");
                 break;
             case WEEKLY:
@@ -79,19 +109,20 @@ public class ReminderRepeatModel {
                     switch (value) {
                         default:
                         case 0:
-                            builder.append("1st,");
+                            builder.append("1st, ");
                             break;
                         case 1:
-                            builder.append("2nd,");
+                            builder.append("2nd, ");
                             break;
                         case 2:
-                            builder.append("3rd,");
+                            builder.append("3rd, ");
                             break;
                         case 3:
-                            builder.append("4th,");
+                            builder.append("4th, ");
                             break;
                     }
                 }
+                builder.replace(builder.lastIndexOf(", "), builder.length(), "");
                 builder.append(" week of every month");
                 break;
             case MONTHLY:
@@ -103,44 +134,45 @@ public class ReminderRepeatModel {
                     int value = customMonths.get(i);
                     switch (value) {
                         default:
-                        case 0:
-                            builder.append("Jan ");
+                        case Calendar.JANUARY:
+                            builder.append("Jan, ");
                             break;
-                        case 1:
-                            builder.append("Feb ");
+                        case Calendar.FEBRUARY:
+                            builder.append("Feb, ");
                             break;
-                        case 2:
-                            builder.append("Mar ");
+                        case Calendar.MARCH:
+                            builder.append("Mar, ");
                             break;
-                        case 3:
-                            builder.append("Apr ");
+                        case Calendar.APRIL:
+                            builder.append("Apr, ");
                             break;
-                        case 4:
-                            builder.append("May ");
+                        case Calendar.MAY:
+                            builder.append("May, ");
                             break;
-                        case 5:
-                            builder.append("Jun ");
+                        case Calendar.JUNE:
+                            builder.append("Jun, ");
                             break;
-                        case 6:
-                            builder.append("Jul ");
+                        case Calendar.JULY:
+                            builder.append("Jul, ");
                             break;
-                        case 7:
-                            builder.append("Aug ");
+                        case Calendar.AUGUST:
+                            builder.append("Aug, ");
                             break;
-                        case 8:
-                            builder.append("Sep ");
+                        case Calendar.SEPTEMBER:
+                            builder.append("Sep, ");
                             break;
-                        case 9:
-                            builder.append("Oct ");
+                        case Calendar.OCTOBER:
+                            builder.append("Oct, ");
                             break;
-                        case 10:
-                            builder.append("Nov ");
+                        case Calendar.NOVEMBER:
+                            builder.append("Nov, ");
                             break;
-                        case 11:
-                            builder.append("Dec ");
+                        case Calendar.DECEMBER:
+                            builder.append("Dec, ");
                             break;
                     }
                 }
+                builder.replace(builder.lastIndexOf(", "), builder.length(), "");
                 builder.append(" of every year");
                 break;
             case YEARLY:

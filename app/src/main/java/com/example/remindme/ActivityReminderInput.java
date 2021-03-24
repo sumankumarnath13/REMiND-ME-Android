@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
@@ -41,20 +40,20 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
 
 
     private ReminderModel reminderModel = null;
-    private TextView tv_reminder_tone_summary = null;
-    private TextView tv_reminder_name_summary = null;
-    private TextView tv_reminder_note_summary = null;
-    private SwitchCompat sw_reminder_repeat = null;
-    private SwitchCompat sw_reminder_snooze = null;
-    private TextView tv_reminder_repeat_summary = null;
-    private TextView tv_reminder_snooze_summary = null;
-    private static final int RINGTONE_DIALOG_REQ_CODE = 117;
 
-    private boolean isUserSetDate = false;
-    private static String KEY_IS_USER_SET_DATE = "_DIMDIM";
-    private boolean isDefaultAlarmTimeSet = false;
-    private static String KEY_IS_DEFAULT_ALARM_TIME_SET = "_DIMDIM1";
-    private ReminderRepeatModel repeatModelBuffer = null;
+    private TextView tv_reminder_trigger_datetime;
+    private Button btn_reminder_time;
+    private Button btn_reminder_date;
+    private TextView tv_reminder_tone_summary;
+    private TextView tv_reminder_name_summary;
+    private TextView tv_reminder_note_summary;
+    private SwitchCompat sw_reminder_repeat;
+    private SwitchCompat sw_reminder_snooze;
+    private TextView tv_reminder_repeat_summary;
+    private TextView tv_reminder_snooze_summary;
+    private LinearLayout lvc_diff_next_reminder_trigger;
+
+    private static final int RINGTONE_DIALOG_REQ_CODE = 117;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -75,22 +74,9 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean(KEY_IS_USER_SET_DATE, isUserSetDate);
-        outState.putBoolean(KEY_IS_DEFAULT_ALARM_TIME_SET, isDefaultAlarmTimeSet);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_input);
-
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            isUserSetDate = savedInstanceState.getBoolean(KEY_IS_USER_SET_DATE);
-            isDefaultAlarmTimeSet = savedInstanceState.getBoolean(KEY_IS_DEFAULT_ALARM_TIME_SET);
-        }
 
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
 
@@ -102,7 +88,6 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 if (reminderModel.tryReadFrom(getIntent())) {
                     // Everything looks good so far. Set the title as Update
                     UtilsActivity.setTitle(this, getResources().getString(R.string.edit_reminder_heading));
-
                 } else {
                     // Close the activity if intent was update bu no existing reminder found!
                     ReminderModel.error("Reminder not found!");
@@ -110,30 +95,22 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 }
             } else { // Advance the time 1 hour if intent is new
                 UtilsActivity.setTitle(this, getResources().getString(R.string.new_reminder_heading));
-                if (!isDefaultAlarmTimeSet) {
-                    isDefaultAlarmTimeSet = true;
-                    Calendar _c = Calendar.getInstance();
-                    _c.add(Calendar.HOUR, 1);
-                    reminderModel.setTime(_c.getTime());
-                }
             }
         }
 
         tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
-
         tv_reminder_name_summary = findViewById(R.id.tv_reminder_name_summary);
-        tv_reminder_name_summary.setText(reminderModel.name);
-
         tv_reminder_note_summary = findViewById(R.id.tv_reminder_note_summary);
-        tv_reminder_note_summary.setText(reminderModel.note);
-
         tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
-        tv_reminder_repeat_summary.setText(reminderModel.beginRepeatModelChange().toString());
-
         sw_reminder_repeat = findViewById(R.id.sw_reminder_repeat);
-        if (reminderModel.beginRepeatModelChange().repeatOption != ReminderRepeatModel.ReminderRepeatOptions.NONE) {
-            sw_reminder_repeat.setChecked(true);
-        }
+        tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
+        sw_reminder_snooze = findViewById(R.id.sw_reminder_snooze);
+        tv_reminder_trigger_datetime = findViewById(R.id.tv_reminder_trigger_datetime);
+        btn_reminder_date = findViewById(R.id.btn_reminder_date);
+        btn_reminder_time = findViewById(R.id.btn_reminder_time);
+        lvc_diff_next_reminder_trigger = findViewById(R.id.lvc_diff_next_reminder_trigger);
+
+
         sw_reminder_repeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,40 +119,27 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 } else {
                     reminderModel.beginRepeatModelChange().repeatOption = ReminderRepeatModel.ReminderRepeatOptions.NONE;
                 }
-                reminderModel.tryEndRepeatModelChange();
-                tv_reminder_repeat_summary.setText(reminderModel.beginRepeatModelChange().toString());
+
+                if (reminderModel.tryEndRepeatModelChange()) {
+                    refreshForm();
+                }
             }
         });
 
-        tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
-        tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
-        sw_reminder_snooze = findViewById(R.id.sw_reminder_snooze);
-        sw_reminder_snooze.setChecked(reminderModel.snoozeModel.isEnable);
         sw_reminder_snooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 reminderModel.snoozeModel.isEnable = sw_reminder_snooze.isChecked();
-                tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
+                refreshForm();
             }
         });
 
-        if (reminderModel.ringToneUri == null) {
-            Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), alarmToneUri);
-            tv_reminder_tone_summary.setText(ringtone.getTitle(this));
-        } else {
-            Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.ringToneUri);
-            tv_reminder_tone_summary.setText(ringtone.getTitle(this));
-        }
-
-        final Button btn_reminder_date = findViewById(R.id.btn_reminder_date);
-        btn_reminder_date.setText(UtilsDateTime.toDateString(reminderModel.getTime()));
         btn_reminder_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Calendar alertTime = Calendar.getInstance();
                 //final Calendar currentTime = Calendar.getInstance();
-                alertTime.setTime(reminderModel.getTime());
+                alertTime.setTime(reminderModel.getScheduledTime());
                 final int mYear, mMonth, mDay;
                 mYear = alertTime.get(Calendar.YEAR);
                 mMonth = alertTime.get(Calendar.MONTH);
@@ -189,25 +153,23 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                                 alertTime.set(Calendar.MONTH, monthOfYear);
                                 alertTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                                 reminderModel.setTime(alertTime.getTime());
-                                btn_reminder_date.setText(UtilsDateTime.toDateString(ActivityReminderInput.this.reminderModel.getTime()));
-                                isUserSetDate = true;
+                                refreshForm();
                             }
                         }, mYear, mMonth, mDay);
-                datePickerDialog.getDatePicker().setMinDate(alertTime.getTimeInMillis()); // This will cause extra title on the top of the regular date picker
+                datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis()); // This will cause extra title on the top of the regular date picker
                 datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
                 datePickerDialog.setTitle(null); // This line will try to solve the issue above
                 datePickerDialog.show();
             }
         });
 
-        final Button btn_reminder_time = findViewById(R.id.btn_reminder_time);
-        btn_reminder_time.setText(UtilsDateTime.toTimeString(reminderModel.getTime()));
+
         btn_reminder_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Calendar alertTime = Calendar.getInstance();
                 final Calendar currentTime = Calendar.getInstance();
-                alertTime.setTime(reminderModel.getTime());
+                alertTime.setTime(reminderModel.getScheduledTime());
                 final int mHour, mMinute;
                 mHour = alertTime.get(Calendar.HOUR_OF_DAY);
                 mMinute = alertTime.get(Calendar.MINUTE);
@@ -218,17 +180,8 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                                 alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                 alertTime.set(Calendar.MINUTE, minute);
                                 alertTime.set(Calendar.SECOND, 0); // Setting second to 0 is important.
-                                if (!isUserSetDate) {
-                                    if (alertTime.before(currentTime)) {
-                                        alertTime.add(Calendar.DAY_OF_YEAR, 1); // Set it for tomorrow if the time has already passed for today ( If user has not set the date already )
-                                    } else {
-                                        alertTime.set(Calendar.DAY_OF_YEAR, currentTime.get(Calendar.DAY_OF_YEAR));
-                                    }
-                                    btn_reminder_date.setText(UtilsDateTime.toDateString(alertTime.getTime()));
-                                }
                                 reminderModel.setTime(alertTime.getTime());
-                                btn_reminder_time.setText(UtilsDateTime.toTimeString(ActivityReminderInput.this.reminderModel.getTime()));
-                                tv_reminder_repeat_summary.setText(reminderModel.getRepeatModelString());
+                                refreshForm();
                             }
                         }, mHour, mMinute, false);
                 timePickerDialog.show();
@@ -312,12 +265,8 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         sw_reminder_disable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (reminderModel.trySetEnabled(!sw_reminder_disable.isChecked())) {
-                    btn_reminder_time.setText(UtilsDateTime.toTimeString(ActivityReminderInput.this.reminderModel.getTime()));
-                    btn_reminder_date.setText(UtilsDateTime.toDateString(ActivityReminderInput.this.reminderModel.getTime()));
-                } else {
-                    sw_reminder_disable.setChecked(true);
-                }
+                reminderModel.trySetEnabled(!sw_reminder_disable.isChecked());
+                sw_reminder_disable.setChecked(!reminderModel.getIsEnabled());
             }
         });
 
@@ -333,6 +282,54 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 }
             }
         });
+
+        refreshForm();
+    }
+
+    private void refreshForm() {
+        if (reminderModel.getScheduledTime() == null) {
+            //Not initialized with default time yet! Set a default time.
+            Calendar _c = Calendar.getInstance();
+            _c.add(Calendar.HOUR_OF_DAY, 1);
+            reminderModel.setTime(_c.getTime());
+            btn_reminder_time.setText(UtilsDateTime.toTimeString(reminderModel.getScheduledTime()));
+            btn_reminder_date.setText(UtilsDateTime.toDateString(reminderModel.getScheduledTime()));
+        } else {
+            if (reminderModel.getGivenTime() == null) { //User has not entered any new time yet but previously set time exists. Hence, its Edit mode.
+                btn_reminder_time.setText(UtilsDateTime.toTimeString(reminderModel.getScheduledTime()));
+                btn_reminder_date.setText(UtilsDateTime.toDateString(reminderModel.getScheduledTime()));
+                lvc_diff_next_reminder_trigger.setVisibility(View.GONE);
+                tv_reminder_trigger_datetime.setText("");
+            } else {
+                btn_reminder_time.setText(UtilsDateTime.toTimeString(reminderModel.getGivenTime()));
+                btn_reminder_date.setText(UtilsDateTime.toDateString(reminderModel.getGivenTime()));
+
+                if (reminderModel.getGivenTime().equals(reminderModel.getScheduledTime())) {
+                    lvc_diff_next_reminder_trigger.setVisibility(View.GONE);
+                    tv_reminder_trigger_datetime.setText("");
+                } else {
+                    lvc_diff_next_reminder_trigger.setVisibility(View.VISIBLE);
+                    tv_reminder_trigger_datetime.setText(UtilsDateTime.toTimeDateString(reminderModel.getScheduledTime()));
+                }
+            }
+        }
+
+        tv_reminder_name_summary.setText(reminderModel.name);
+        tv_reminder_note_summary.setText(reminderModel.note);
+        tv_reminder_repeat_summary.setText(reminderModel.getRepeatModelString());
+        tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
+
+        sw_reminder_snooze.setChecked(reminderModel.snoozeModel.isEnable);
+        sw_reminder_repeat.setChecked(reminderModel.getRepeatOption() != ReminderRepeatModel.ReminderRepeatOptions.NONE);
+
+        if (reminderModel.ringToneUri == null) {
+            Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), alarmToneUri);
+            tv_reminder_tone_summary.setText(ringtone.getTitle(this));
+        } else {
+            Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.ringToneUri);
+            tv_reminder_tone_summary.setText(ringtone.getTitle(this));
+        }
     }
 
     @Override
@@ -340,14 +337,16 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         switch (model.repeatOption) {
             default:
                 reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-                reminderModel.tryEndRepeatModelChange();
-                tv_reminder_repeat_summary.setText(reminderModel.getRepeatModelString());
+                if (reminderModel.tryEndRepeatModelChange()) {
+                    refreshForm();
+                }
                 break;
             case HOURLY_CUSTOM:
                 if (isEOF) {
                     reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-                    reminderModel.tryEndRepeatModelChange();
-                    tv_reminder_repeat_summary.setText(reminderModel.getRepeatModelString());
+                    if (reminderModel.tryEndRepeatModelChange()) {
+                        refreshForm();
+                    }
                 } else {
                     DialogReminderRepeatInputHourlyCustom hourlyCustom = new DialogReminderRepeatInputHourlyCustom();
                     hourlyCustom.show(getSupportFragmentManager(), "T1");
@@ -356,8 +355,9 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             case DAILY_CUSTOM:
                 if (isEOF) {
                     reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-                    reminderModel.tryEndRepeatModelChange();
-                    tv_reminder_repeat_summary.setText(reminderModel.getRepeatModelString());
+                    if (reminderModel.tryEndRepeatModelChange()) {
+                        refreshForm();
+                    }
                 } else {
                     DialogReminderRepeatInputDailyCustom dailyCustom = new DialogReminderRepeatInputDailyCustom();
                     dailyCustom.show(getSupportFragmentManager(), "T2");
@@ -366,8 +366,9 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             case WEEKLY_CUSTOM:
                 if (isEOF) {
                     reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-                    reminderModel.tryEndRepeatModelChange();
-                    tv_reminder_repeat_summary.setText(reminderModel.getRepeatModelString());
+                    if (reminderModel.tryEndRepeatModelChange()) {
+                        refreshForm();
+                    }
                 } else {
                     DialogReminderRepeatInputWeeklyCustom weeklyCustom = new DialogReminderRepeatInputWeeklyCustom();
                     weeklyCustom.show(getSupportFragmentManager(), "T3");
@@ -376,8 +377,9 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             case MONTHLY_CUSTOM:
                 if (isEOF) {
                     reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-                    reminderModel.tryEndRepeatModelChange();
-                    tv_reminder_repeat_summary.setText(reminderModel.getRepeatModelString());
+                    if (reminderModel.tryEndRepeatModelChange()) {
+                        refreshForm();
+                    }
                 } else {
                     DialogReminderRepeatInputMonthlyCustom monthlyCustom = new DialogReminderRepeatInputMonthlyCustom();
                     monthlyCustom.show(getSupportFragmentManager(), "T4");
@@ -389,8 +391,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     @Override
     public void set(ReminderSnoozeModel model, boolean isEOF) {
         if (isEOF) {
-            sw_reminder_snooze.setChecked(reminderModel.snoozeModel.isEnable);
-            tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
+            refreshForm();
         }
     }
 
@@ -398,7 +399,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     public void setName(String name, boolean isEOF) {
         if (isEOF) {
             reminderModel.name = name;
-            tv_reminder_name_summary.setText(reminderModel.name);
+            refreshForm();
         }
     }
 
@@ -406,7 +407,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     public void setNote(String note, boolean isEOF) {
         if (isEOF) {
             reminderModel.note = note;
-            tv_reminder_note_summary.setText(reminderModel.note);
+            refreshForm();
         }
     }
 

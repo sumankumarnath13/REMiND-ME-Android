@@ -131,6 +131,8 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
                 case 11:
                     chk_daily_11.setChecked(true);
                     break;
+
+
                 case 12:
                     chk_daily_12.setChecked(true);
                     break;
@@ -171,12 +173,12 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
         }
 
         builder.setView(view)
-                .setTitle("Select days to Repeat")
+                .setTitle("Select hours to Repeat")
                 .setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         model.customHours.clear();
-                        int day = 0;
+                        //int day = 0;
                         if (chk_daily_0.isChecked()) model.customHours.add(0);
                         if (chk_daily_1.isChecked()) model.customHours.add(1);
                         if (chk_daily_2.isChecked()) model.customHours.add(2);

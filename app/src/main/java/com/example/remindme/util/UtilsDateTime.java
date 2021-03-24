@@ -10,15 +10,27 @@ public class UtilsDateTime {
     public static final SimpleDateFormat uniqueDateTimeFormat = new SimpleDateFormat("yyMMddHHmm");
 
     public static String toTimeString(Date value) {
-        return timeFormat.format(value);
+        if (value != null) {
+            return timeFormat.format(value);
+        } else {
+            return "null";
+        }
     }
 
     public static String toDateString(Date value) {
-        return dateFormat.format(value);
+        if (value != null) {
+            return dateFormat.format(value);
+        } else {
+            return "null";
+        }
     }
 
     public static String toTimeDateString(Date value) {
-        return timeDateFormat.format(value);
+        if (value != null) {
+            return timeDateFormat.format(value);
+        } else {
+            return "null";
+        }
     }
 
 }

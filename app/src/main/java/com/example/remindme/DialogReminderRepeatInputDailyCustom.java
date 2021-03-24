@@ -16,6 +16,8 @@ import androidx.fragment.app.DialogFragment;
 import com.example.remindme.viewModels.IReminderRepeatListener;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
+import java.util.Calendar;
+
 public class DialogReminderRepeatInputDailyCustom extends DialogFragment {
 
     private IReminderRepeatListener listener;
@@ -51,25 +53,25 @@ public class DialogReminderRepeatInputDailyCustom extends DialogFragment {
             int value = model.customDays.get(i);
             switch (value) {
                 default:
-                case 0:
+                case Calendar.SUNDAY:
                     chk_daily_sun.setChecked(true);
                     break;
-                case 1:
+                case Calendar.MONDAY:
                     chk_daily_mon.setChecked(true);
                     break;
-                case 2:
+                case Calendar.TUESDAY:
                     chk_daily_tue.setChecked(true);
                     break;
-                case 3:
+                case Calendar.WEDNESDAY:
                     chk_daily_wed.setChecked(true);
                     break;
-                case 4:
+                case Calendar.THURSDAY:
                     chk_daily_thu.setChecked(true);
                     break;
-                case 5:
+                case Calendar.FRIDAY:
                     chk_daily_fri.setChecked(true);
                     break;
-                case 6:
+                case Calendar.SATURDAY:
                     chk_daily_sat.setChecked(true);
                     break;
             }
@@ -81,13 +83,13 @@ public class DialogReminderRepeatInputDailyCustom extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         model.customDays.clear();
-                        if (chk_daily_sun.isChecked()) model.customDays.add(0);
-                        if (chk_daily_mon.isChecked()) model.customDays.add(1);
-                        if (chk_daily_tue.isChecked()) model.customDays.add(2);
-                        if (chk_daily_wed.isChecked()) model.customDays.add(3);
-                        if (chk_daily_thu.isChecked()) model.customDays.add(4);
-                        if (chk_daily_fri.isChecked()) model.customDays.add(5);
-                        if (chk_daily_sat.isChecked()) model.customDays.add(6);
+                        if (chk_daily_sun.isChecked()) model.customDays.add(Calendar.SUNDAY);
+                        if (chk_daily_mon.isChecked()) model.customDays.add(Calendar.MONDAY);
+                        if (chk_daily_tue.isChecked()) model.customDays.add(Calendar.TUESDAY);
+                        if (chk_daily_wed.isChecked()) model.customDays.add(Calendar.WEDNESDAY);
+                        if (chk_daily_thu.isChecked()) model.customDays.add(Calendar.THURSDAY);
+                        if (chk_daily_fri.isChecked()) model.customDays.add(Calendar.FRIDAY);
+                        if (chk_daily_sat.isChecked()) model.customDays.add(Calendar.SATURDAY);
                         listener.set(model, true);
                     }
                 }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {

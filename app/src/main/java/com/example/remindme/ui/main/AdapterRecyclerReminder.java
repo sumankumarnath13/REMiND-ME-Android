@@ -85,7 +85,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
                 enabled.setChecked(reminderModel.trySetEnabled(enabled.isChecked()));
                 if (enabled.isChecked()) {
-                    time.setText(UtilsDateTime.toTimeDateString(reminderModel.getTime()));
+                    time.setText(UtilsDateTime.toTimeDateString(reminderModel.getScheduledTime()));
                 }
                 reminderModel.trySaveAndSetAlert(true);
             }
@@ -94,9 +94,9 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
         if (reminderType == EnumReminderTypes.Active) {
             ReminderModel reminderModel = new ReminderModel();
             ReminderModel.transformToModel((ActiveReminder) reminder, reminderModel);
-            time.setText(UtilsDateTime.toTimeDateString(reminderModel.getTime()));
-            if (reminderModel.nextSnoozeOffTime != null) {
-                next_snooze.setText(UtilsDateTime.toTimeString(reminderModel.nextSnoozeOffTime));
+            time.setText(UtilsDateTime.toTimeDateString(reminderModel.getScheduledTime()));
+            if (reminderModel.getNextSnoozeOffTime() != null) {
+                next_snooze.setText(UtilsDateTime.toTimeString(reminderModel.getNextSnoozeOffTime()));
                 img.setVisibility(View.VISIBLE);
             } else {
                 img.setVisibility(View.GONE);

@@ -8,7 +8,7 @@
     <color name="text_info">#93c</color>
     <color name="text_warning">#f80</color>
     <color name="text_danger">#c00</color>
-
+    <color name="text_black">#000000</color>
 
 
     <color name="bg_black">#000000</color>

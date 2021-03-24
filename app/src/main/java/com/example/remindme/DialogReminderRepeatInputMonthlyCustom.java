@@ -16,6 +16,8 @@ import androidx.fragment.app.DialogFragment;
 import com.example.remindme.viewModels.IReminderRepeatListener;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
+import java.util.Calendar;
+
 public class DialogReminderRepeatInputMonthlyCustom extends DialogFragment {
 
     private IReminderRepeatListener listener;
@@ -57,40 +59,40 @@ public class DialogReminderRepeatInputMonthlyCustom extends DialogFragment {
             int value = model.customMonths.get(i);
             switch (value) {
                 default:
-                case 0:
+                case Calendar.JANUARY:
                     chk_monthly_jan.setChecked(true);
                     break;
-                case 1:
+                case Calendar.FEBRUARY:
                     chk_monthly_feb.setChecked(true);
                     break;
-                case 2:
+                case Calendar.MARCH:
                     chk_monthly_mar.setChecked(true);
                     break;
-                case 3:
+                case Calendar.APRIL:
                     chk_monthly_apr.setChecked(true);
                     break;
-                case 4:
+                case Calendar.MAY:
                     chk_monthly_may.setChecked(true);
                     break;
-                case 5:
+                case Calendar.JUNE:
                     chk_monthly_jun.setChecked(true);
                     break;
-                case 6:
+                case Calendar.JULY:
                     chk_monthly_jul.setChecked(true);
                     break;
-                case 7:
+                case Calendar.AUGUST:
                     chk_monthly_aug.setChecked(true);
                     break;
-                case 8:
+                case Calendar.SEPTEMBER:
                     chk_monthly_sep.setChecked(true);
                     break;
-                case 9:
+                case Calendar.OCTOBER:
                     chk_monthly_oct.setChecked(true);
                     break;
-                case 10:
+                case Calendar.NOVEMBER:
                     chk_monthly_nov.setChecked(true);
                     break;
-                case 11:
+                case Calendar.DECEMBER:
                     chk_monthly_dec.setChecked(true);
                     break;
             }
@@ -100,18 +102,18 @@ public class DialogReminderRepeatInputMonthlyCustom extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 model.customMonths.clear();
-                if (chk_monthly_jan.isChecked()) model.customMonths.add(0);
-                if (chk_monthly_feb.isChecked()) model.customMonths.add(1);
-                if (chk_monthly_mar.isChecked()) model.customMonths.add(2);
-                if (chk_monthly_apr.isChecked()) model.customMonths.add(3);
-                if (chk_monthly_may.isChecked()) model.customMonths.add(4);
-                if (chk_monthly_jun.isChecked()) model.customMonths.add(5);
-                if (chk_monthly_jul.isChecked()) model.customMonths.add(6);
-                if (chk_monthly_aug.isChecked()) model.customMonths.add(7);
-                if (chk_monthly_sep.isChecked()) model.customMonths.add(8);
-                if (chk_monthly_oct.isChecked()) model.customMonths.add(9);
-                if (chk_monthly_nov.isChecked()) model.customMonths.add(10);
-                if (chk_monthly_dec.isChecked()) model.customMonths.add(11);
+                if (chk_monthly_jan.isChecked()) model.customMonths.add(Calendar.JANUARY);
+                if (chk_monthly_feb.isChecked()) model.customMonths.add(Calendar.FEBRUARY);
+                if (chk_monthly_mar.isChecked()) model.customMonths.add(Calendar.MARCH);
+                if (chk_monthly_apr.isChecked()) model.customMonths.add(Calendar.APRIL);
+                if (chk_monthly_may.isChecked()) model.customMonths.add(Calendar.MAY);
+                if (chk_monthly_jun.isChecked()) model.customMonths.add(Calendar.JUNE);
+                if (chk_monthly_jul.isChecked()) model.customMonths.add(Calendar.JULY);
+                if (chk_monthly_aug.isChecked()) model.customMonths.add(Calendar.AUGUST);
+                if (chk_monthly_sep.isChecked()) model.customMonths.add(Calendar.SEPTEMBER);
+                if (chk_monthly_oct.isChecked()) model.customMonths.add(Calendar.OCTOBER);
+                if (chk_monthly_nov.isChecked()) model.customMonths.add(Calendar.NOVEMBER);
+                if (chk_monthly_dec.isChecked()) model.customMonths.add(Calendar.DECEMBER);
                 listener.set(model, true);
             }
         }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {

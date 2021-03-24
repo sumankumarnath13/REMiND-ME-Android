@@ -97,7 +97,7 @@ public class ActivityReminderView extends AppCompatActivity {
                 if (reminderModel.tryReadFrom(getIntent())) {
                     enabled.setChecked(reminderModel.trySetEnabled(enabled.isChecked()));
                     if (enabled.isChecked()) {
-                        ((TextView) findViewById(R.id.tv_reminder_time)).setText(UtilsDateTime.toTimeDateString(reminderModel.getTime()));
+                        ((TextView) findViewById(R.id.tv_reminder_time)).setText(UtilsDateTime.toTimeDateString(reminderModel.getScheduledTime()));
                     }
                     reminderModel.trySaveAndSetAlert(true);
                 }
@@ -121,11 +121,11 @@ public class ActivityReminderView extends AppCompatActivity {
         if (from.equals("ACTIVE")) {
             ReminderModel reminderModel = new ReminderModel();
             if (reminderModel.tryReadFrom(getIntent())) {
-                alarm_time = UtilsDateTime.toTimeDateString(reminderModel.getTime());
-                if (reminderModel.nextSnoozeOffTime != null) {
+                alarm_time = UtilsDateTime.toTimeDateString(reminderModel.getScheduledTime());
+                if (reminderModel.getNextSnoozeOffTime() != null) {
                     ImageView snooze_img = findViewById(R.id.img_snooze);
                     TextView next_snooze = findViewById(R.id.tv_reminder_next_snooze);
-                    next_snooze.setText(UtilsDateTime.toTimeString(reminderModel.nextSnoozeOffTime));
+                    next_snooze.setText(UtilsDateTime.toTimeString(reminderModel.getNextSnoozeOffTime()));
                     img.setVisibility(View.VISIBLE);
                     snooze_img.setVisibility(View.VISIBLE);
                 }
