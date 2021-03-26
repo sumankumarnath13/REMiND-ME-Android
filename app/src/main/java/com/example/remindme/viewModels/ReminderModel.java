@@ -1119,6 +1119,9 @@ public class ReminderModel extends ViewModel {
                 if (Calendar.getInstance().compareTo(userTimeCl) >= 0) {
                     //If the user value "effectively" is in past then calculate next schedule.
                     calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime); // Given_time will be used if its not null.
+                } else {
+                    // If not then no need of calculated time. The given time will be used.
+                    calculatedTime = null;
                 }
                 break;
             case HOURLY_CUSTOM:
