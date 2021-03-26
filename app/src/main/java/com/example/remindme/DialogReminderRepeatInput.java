@@ -34,11 +34,6 @@ public class DialogReminderRepeatInput extends DialogFragment
         }
     }
 
-//    @Override
-//    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-//        super.onConfigurationChanged(newConfig);
-//    }
-
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);

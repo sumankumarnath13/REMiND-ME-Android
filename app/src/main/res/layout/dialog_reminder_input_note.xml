@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/dp_16">
 
-    <EditText
-        android:id="@+id/txt_reminder_note"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autofillHints="@string/hint_reminder_note"
-        android:hint="@string/hint_reminder_note"
-        android:inputType="textLongMessage|textMultiLine"
-        android:backgroundTint="@color/bg_warning" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/txt_reminder_note"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autofillHints="@string/hint_reminder_note"
+            android:backgroundTint="@color/bg_warning"
+            android:hint="@string/hint_reminder_note"
+            android:inputType="textLongMessage|textMultiLine" />
+
+        <ImageView
+            android:id="@+id/img_reminder_note_voice_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mic"
+            app:tint="@color/bg_warning" />
+    </LinearLayout>
 
 </LinearLayout>

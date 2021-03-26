@@ -7,10 +7,12 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -31,13 +33,16 @@ import com.example.remindme.viewModels.ReminderRepeatModel;
 import com.example.remindme.viewModels.ReminderSnoozeModel;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class ActivityReminderInput extends AppCompatActivity implements IReminderNameListener, IReminderNoteListener, IReminderRepeatListener, IReminderSnoozeListener {
     private static final String INTENT_FROM = "FROM";
     private static final String FLAG_REMINDER_TYPE_ACTIVE = "ACTIVE";
     private static final String FLAG_MISSED = "MISSED";
     private static final String FLAG_DISMISSED = "DISMISSED";
-
+    private static final int NAME_SPEECH_REQUEST_CODE = 119;
+    private static final int NOTE_SPEECH_REQUEST_CODE = 113;
+    private static final int RINGTONE_DIALOG_REQ_CODE = 117;
 
     private ReminderModel reminderModel = null;
 
@@ -52,8 +57,6 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     private TextView tv_reminder_repeat_summary;
     private TextView tv_reminder_snooze_summary;
     private LinearLayout lvc_diff_next_reminder_trigger;
-
-    private static final int RINGTONE_DIALOG_REQ_CODE = 117;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -70,6 +73,14 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 Ringtone alarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarmToneUri);
                 tv_reminder_tone_summary.setText(alarmTone.getTitle(this));
             }
+        } else if (requestCode == NAME_SPEECH_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            String spokenText = results.get(0);
+            tv_reminder_name_summary.setText(spokenText);
+        } else if (requestCode == NOTE_SPEECH_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            String spokenText = results.get(0);
+            tv_reminder_note_summary.setText(spokenText);
         }
     }
 
@@ -282,6 +293,28 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 } else {
                     ReminderModel.showToast("Time cannot be set in past!");
                 }
+            }
+        });
+
+        final ImageView img_reminder_name_voice_input = findViewById(R.id.img_reminder_name_voice_input);
+        img_reminder_name_voice_input.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                // This starts the activity and populates the intent with the speech text.
+                startActivityForResult(intent, NAME_SPEECH_REQUEST_CODE);
+            }
+        });
+
+        final ImageView img_reminder_note_voice_input = findViewById(R.id.img_reminder_note_voice_input);
+        img_reminder_note_voice_input.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                // This starts the activity and populates the intent with the speech text.
+                startActivityForResult(intent, NOTE_SPEECH_REQUEST_CODE);
             }
         });
 
