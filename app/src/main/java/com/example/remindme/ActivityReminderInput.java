@@ -61,7 +61,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RINGTONE_DIALOG_REQ_CODE) {
+        if (requestCode == RINGTONE_DIALOG_REQ_CODE && data != null) {
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
             if (uri != null) {
@@ -77,10 +77,12 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
             tv_reminder_name_summary.setText(spokenText);
+            reminderModel.name = spokenText;
         } else if (requestCode == NOTE_SPEECH_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
             tv_reminder_note_summary.setText(spokenText);
+            reminderModel.note = spokenText;
         }
     }
 
