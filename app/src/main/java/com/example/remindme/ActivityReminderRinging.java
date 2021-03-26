@@ -85,15 +85,15 @@ public class ActivityReminderRinging extends AppCompatActivity {
         super.onResume();
 
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        if (reminderModel.isEmpty()) {
+        if (reminderModel.getIsEmpty()) {
             if (!reminderModel.tryReadFrom(getIntent())) {
                 ReminderModel.error("Reminder not found!");
                 finish();
             }
         }
 
-        if (!reminderModel.isEmpty()) {
-            String date_str = UtilsDateTime.toTimeDateString(reminderModel.getScheduledTime());
+        if (!reminderModel.getIsEmpty()) {
+            String date_str = UtilsDateTime.toTimeDateString(reminderModel.getOriginalTime());
             TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
             Spannable spannable = new SpannableString(date_str);
             spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

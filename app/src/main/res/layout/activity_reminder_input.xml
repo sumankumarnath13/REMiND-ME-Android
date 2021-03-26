@@ -71,12 +71,12 @@
                 android:visibility="gone"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:background="@color/bg_success">
+                android:background="@color/bg_info">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_black"
+                    android:textColor="@color/text_warning"
                     android:layout_gravity="center"
                     android:textAlignment="center"
                     android:textSize="@dimen/font_size_s1"
@@ -87,7 +87,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textSize="@dimen/font_size_xh5"
-                    android:textColor="@color/text_black"
+                    android:textColor="@color/text_white"
+                    android:textStyle="bold"
                     android:layout_marginBottom="@dimen/dp_3" />
             </LinearLayout>
 

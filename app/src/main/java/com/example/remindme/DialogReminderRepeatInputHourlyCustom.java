@@ -20,6 +20,7 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
 
     private IReminderRepeatListener listener;
     private ReminderRepeatModel model;
+    private boolean isCancel;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -29,6 +30,20 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
             model = listener.getRepeatModel();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
+        }
+    }
+
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        isCancel = true;
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (isCancel) {
+            listener.set(null, true);
         }
     }
 
@@ -208,8 +223,7 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
                 }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //model.isEnd = true;
-                //listener.set(model);
+                listener.set(null, true);
             }
         });
 
