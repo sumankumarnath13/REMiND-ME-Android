@@ -178,6 +178,14 @@ public class DialogReminderRepeatInput extends DialogFragment
         rdo_reminder_repeat_monthly_custom.setChecked(false);
         rdo_reminder_repeat_yearly.setChecked(false);
 
+
+        /* WEEKLY custom system isn't ready yet
+         *
+         *
+         *  */
+        rdo_reminder_repeat_weekly_custom.setVisibility(View.GONE);
+
+
         switch (model.repeatOption) {
             default:
             case NONE:
