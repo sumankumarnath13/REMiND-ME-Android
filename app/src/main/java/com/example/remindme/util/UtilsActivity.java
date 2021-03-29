@@ -58,6 +58,10 @@ public class UtilsActivity {
         }
 
         activity.getSupportActionBar().setTitle(spannable);
+
+        //activity.getSupportActionBar().setTitle(spannable.toString());
+
+
         //Let the line below controlled by the theme and not to force the title to be shown by the code:
         //activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
     }

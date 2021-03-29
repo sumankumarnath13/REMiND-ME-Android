@@ -15,8 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.remindme.util.StringHelper;
 import com.example.remindme.util.UtilsActivity;
-import com.example.remindme.util.UtilsDateTime;
 import com.example.remindme.viewModels.ReminderModel;
 
 public class ActivityReminderRinging extends AppCompatActivity {
@@ -93,7 +93,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
         }
 
         if (!reminderModel.getIsEmpty()) {
-            String date_str = UtilsDateTime.toTimeDateString(reminderModel.getOriginalTime());
+            String date_str = StringHelper.toTimeDate(reminderModel.getOriginalTime());
             TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
             Spannable spannable = new SpannableString(date_str);
             spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

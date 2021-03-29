@@ -8,8 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,7 +28,9 @@ public class DialogReminderNameInput extends DialogFragment {
     private IReminderNameListener listener;
     private String name;
     private static final int SPEECH_REQUEST_CODE = 117;
-    private TextView txt_reminder_name;
+    private EditText txt_reminder_name;
+    private TextView tv_reminder_name_limit_msg;
+    private static final int NOTE_MAX_LENGTH = 50;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -58,7 +63,34 @@ public class DialogReminderNameInput extends DialogFragment {
         final View view = inflater.inflate(R.layout.dialog_reminder_input_name, null);
 
         txt_reminder_name = view.findViewById(R.id.txt_reminder_name);
+        tv_reminder_name_limit_msg = view.findViewById(R.id.tv_reminder_name_limit_msg);
+        //tv_reminder_name_limit_msg.setMax
+
         txt_reminder_name.setText(name);
+        txt_reminder_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int len = s.length();
+                if (len > NOTE_MAX_LENGTH) {
+                    s.delete(NOTE_MAX_LENGTH, len);
+                }
+                if (NOTE_MAX_LENGTH - len > 0) {
+                    tv_reminder_name_limit_msg.setText(NOTE_MAX_LENGTH - len + " characters available");
+                } else {
+                    tv_reminder_name_limit_msg.setText("0 character available");
+                }
+            }
+        });
 
         final ImageView img_reminder_name_voice_input = view.findViewById(R.id.img_reminder_name_voice_input);
         img_reminder_name_voice_input.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +114,6 @@ public class DialogReminderNameInput extends DialogFragment {
 
             }
         });
-
 
         return builder.create();
     }

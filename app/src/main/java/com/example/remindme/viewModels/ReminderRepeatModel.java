@@ -2,6 +2,8 @@ package com.example.remindme.viewModels;
 
 import androidx.annotation.NonNull;
 
+import com.example.remindme.util.StringHelper;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -61,8 +63,8 @@ public class ReminderRepeatModel {
                         builder.append(h - 11 + ":" + customMinute + " pm, ");
                     }
                 }
-                builder.replace(builder.lastIndexOf(", "), builder.length(), "");
-                builder.append(" of every day");
+                //builder.replace(builder.lastIndexOf(", "), builder.length(), "");
+                builder.append("of every day");
                 break;
             case DAILY:
                 builder.append("Daily");
@@ -96,7 +98,7 @@ public class ReminderRepeatModel {
                             break;
                     }
                 }
-                builder.replace(builder.lastIndexOf(", "), builder.length(), "");
+                //builder.replace(builder.lastIndexOf(", "), builder.length(), "");
                 builder.append(" of every week");
                 break;
             case WEEKLY:
@@ -122,8 +124,8 @@ public class ReminderRepeatModel {
                             break;
                     }
                 }
-                builder.replace(builder.lastIndexOf(", "), builder.length(), "");
-                builder.append(" week of every month");
+                //builder.replace(builder.lastIndexOf(", "), builder.length(), "");
+                builder.append("week of every month");
                 break;
             case MONTHLY:
                 builder.append("Monthly");
@@ -172,15 +174,15 @@ public class ReminderRepeatModel {
                             break;
                     }
                 }
-                builder.replace(builder.lastIndexOf(", "), builder.length(), "");
-                builder.append(" of every year");
+                //builder.replace(builder.lastIndexOf(", "), builder.length(), "");
+                builder.append("of every year");
                 break;
             case YEARLY:
                 builder.append("Yearly");
                 break;
         }
 
-        return builder.toString();
+        return StringHelper.trimEnd(builder.toString(), ",");
     }
 
 

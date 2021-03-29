@@ -12,41 +12,6 @@ public class AlertBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         ReminderModel.onBroadcastReceive(context, intent);
-
-//        if (intent != null) {
-//            String receivedAction = intent.getStringExtra(ReminderModel.ALERT_RECEIVER_ACTION_INTENT_KEY);
-//            String reminderId = intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT_KEY);
-//            ReminderModel reminderModel = ReminderModel.read(reminderId);
-//            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-//            if (notificationManager != null) {
-//                if (reminderModel == null) {
-//                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context, App.DEFAULT_NOTIFICATION_CHANNEL_ID)
-//                            .setContentTitle("Error!")
-//                            .setContentText("Reminder not found!")
-//                            .setSmallIcon(R.drawable.ic_reminder_time)
-//                            .setAutoCancel(true);
-//                    notificationManager.notify(reminderModel.alarmIntentId, builder.build());
-//                } else {
-//                    if (receivedAction != null) {
-//                        if (receivedAction.equals(ReminderModel.ALERT_RECEIVER_ACTION_INTENT_RAISE_ALARM)) {
-//                            raiseAlarm(reminderModel, notificationManager, context);
-//                        } else if (receivedAction.equals(ReminderModel.ALERT_RECEIVER_ACTION_INTENT_SNOOZE_ALARM)) {
-//                            int notificationId = intent.getIntExtra(ReminderModel.REMINDER_INT_ID_INTENT_KEY, 0);
-//                            if (notificationId != 0) {
-//                                notificationManager.cancel(notificationId);
-//                                reminderModel.snooze(true, context);
-//                            }
-//                        } else if (receivedAction.equals(ReminderModel.ALERT_RECEIVER_ACTION_INTENT_DISMISS_ALARM)) {
-//                            int notificationId = intent.getIntExtra(ReminderModel.REMINDER_INT_ID_INTENT_KEY, 0);
-//                            if (notificationId != 0) {
-//                                notificationManager.cancel(notificationId);
-//                                reminderModel.dismiss(context);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
 
 //    private void raiseAlarm(ReminderModel reminderModel, NotificationManagerCompat notificationManager, Context context) {

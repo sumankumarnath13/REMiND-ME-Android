@@ -27,7 +27,7 @@ import com.example.remindme.R;
 import com.example.remindme.dataModels.ActiveReminder;
 import com.example.remindme.dataModels.DismissedReminder;
 import com.example.remindme.dataModels.MissedReminder;
-import com.example.remindme.util.UtilsDateTime;
+import com.example.remindme.util.StringHelper;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -91,25 +91,29 @@ public class ReminderModel extends ViewModel {
             final ReminderModel reminderModel = new ReminderModel();
             transformToModel(r, reminderModel);
             if (reminderModel.isEnable) {
-                Date _time;
-                if (reminderModel.nextSnoozeOffTime == null) {
-                    _time = reminderModel.originalTime;
-                } else {
-                    _time = reminderModel.nextSnoozeOffTime;
-                }
-                if (calendar.getTime().after(_time) && isDeviceRebooted) {
+                if (calendar.getTime().after(reminderModel.getAlarmTime()) && isDeviceRebooted) {
                     // App getting killed after a while. But Broadcast receiver recreating app which leads to rescheduling.
                     // And for the logic below it getting dismissed before it could be snoozed from alerts.
                     // isDeviceRebooted will prevent this from happening.
                     reminderModel.dismissByApp(calendar);
                 } else if (!reminderModel.isAlertExists()) {
-                    if (reminderModel.name != null && !reminderModel.name.isEmpty()) {
-                        notify(reminderModel.intId, "New reminder warning!", "name : " + reminderModel.name, reminderModel.note);
-                    } else {
-                        notify(reminderModel.intId, "New reminder warning!", "id : " + reminderModel.intId, reminderModel.note);
-                    }
                     isNewAlertFound = true;
-                    reminderModel.setAlarm(_time, false);
+
+                    if (calendar.getTime().after(reminderModel.getAlarmTime())) {
+                        if (reminderModel.name != null && !reminderModel.name.isEmpty()) {
+                            notify(reminderModel.intId, "Dismissing reminder warning!", "name : " + reminderModel.name, reminderModel.note);
+                        } else {
+                            notify(reminderModel.intId, "Dismissing reminder warning!", "id : " + reminderModel.intId, reminderModel.note);
+                        }
+                        reminderModel.dismissByApp(calendar);
+                    } else {
+                        if (reminderModel.name != null && !reminderModel.name.isEmpty()) {
+                            notify(reminderModel.intId, "New reminder warning!", "name : " + reminderModel.name, reminderModel.note);
+                        } else {
+                            notify(reminderModel.intId, "New reminder warning!", "id : " + reminderModel.intId, reminderModel.note);
+                        }
+                        reminderModel.setAlarm(reminderModel.getAlarmTime(), false);
+                    }
                 }
             }
         }
@@ -454,7 +458,7 @@ public class ReminderModel extends ViewModel {
             }
 
             stringBuilder.append(" from now");
-            showToast(stringBuilder.toString());
+            showToast(StringHelper.trimEnd(stringBuilder.toString(), ","));
         }
     }
 
@@ -471,6 +475,31 @@ public class ReminderModel extends ViewModel {
             }
 
             if (isEnableTone) {
+//
+//                AudioManager audioManager = (AudioManager) application.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+//                AudioManager.OnAudioFocusChangeListener afChangeListener = null;
+//
+//                playbackAttributes = new AudioAttributes.Builder()
+//                        .setUsage(AudioAttributes.USAGE_GAME)
+//                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+//                        .build();
+//                focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+//                        .setAudioAttributes(playbackAttributes)
+//                        .setAcceptsDelayedFocusGain(true)
+//                        .setOnAudioFocusChangeListener(afChangeListener, handler)
+//                        .build();
+//                final Object focusLock = new Object();
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
                 playingRingtone = RingtoneManager.getRingtone(application.getApplicationContext(), ringToneUri);
                 playingRingtone.play();
             }
@@ -478,6 +507,39 @@ public class ReminderModel extends ViewModel {
             isRinging = true;
         }
     }
+
+//    public void onAudioFocusChange(int focusChange) {
+//        switch (focusChange) {
+//            case AudioManager.AUDIOFOCUS_GAIN:
+//                if (playbackDelayed || resumeOnFocusGain) {
+//                    synchronized(focusLock) {
+//                        playbackDelayed = false;
+//                        resumeOnFocusGain = false;
+//                    }
+//                    playbackNow();
+//                }
+//                break;
+//            case AudioManager.AUDIOFOCUS_LOSS:
+//                synchronized(focusLock) {
+//                    resumeOnFocusGain = false;
+//                    playbackDelayed = false;
+//                }
+//                pausePlayback();
+//                break;
+//            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+//                synchronized(focusLock) {
+//                    // only resume if playback is being interrupted
+//                    resumeOnFocusGain = isPlaying();
+//                    playbackDelayed = false;
+//                }
+//                pausePlayback();
+//                break;
+//            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+//                // ... pausing or ducking depends on your app
+//                break;
+//        }
+//    }
+
 
     private void archiveToMissed() {
         Realm realm = Realm.getDefaultInstance();
@@ -594,9 +656,9 @@ public class ReminderModel extends ViewModel {
             if (isScreenOn) {
                 String timeStamp;
                 if (nextSnoozeOffTime == null) {
-                    timeStamp = UtilsDateTime.toTimeString(originalTime) + " " + intId;
+                    timeStamp = StringHelper.toTime(originalTime) + " " + intId;
                 } else {
-                    timeStamp = UtilsDateTime.toTimeString(originalTime) + " & was snoozed for " + snoozeModel.count + " times" + " " + intId;
+                    timeStamp = StringHelper.toTime(originalTime) + " & was snoozed for " + snoozeModel.count + " times" + " " + intId;
                 }
                 //ALERT_INTENT_SNOOZE_ALERT
                 PendingIntent snoozePendingIntent = PendingIntent
@@ -1027,9 +1089,9 @@ public class ReminderModel extends ViewModel {
     public static List<ActiveReminder> getActiveReminders(String name) {
         Realm realm = Realm.getDefaultInstance();
         if (name != null && !name.isEmpty()) {
-            return realm.where(ActiveReminder.class).beginsWith("name", name).findAll();
+            return realm.where(ActiveReminder.class).beginsWith("name", name).sort("time").findAll();
         } else {
-            return realm.where(ActiveReminder.class).findAll();
+            return realm.where(ActiveReminder.class).sort("time").findAll();
         }
     }
 
@@ -1351,6 +1413,5 @@ public class ReminderModel extends ViewModel {
         application.getApplicationContext().sendBroadcast(createNotificationActionBroadcastIntent(isByUser, ALERT_INTENT_DISMISS_ALERT));
     }
     //endregion
-
 
 }

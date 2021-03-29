@@ -22,8 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.remindme.util.StringHelper;
 import com.example.remindme.util.UtilsActivity;
-import com.example.remindme.util.UtilsDateTime;
 import com.example.remindme.viewModels.IReminderNameListener;
 import com.example.remindme.viewModels.IReminderNoteListener;
 import com.example.remindme.viewModels.IReminderRepeatListener;
@@ -331,19 +331,12 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             reminderModel.setOriginalTime(_c.getTime());
         }
 
-        btn_reminder_time.setText(UtilsDateTime.toTimeString(reminderModel.getOriginalTime()));
-        btn_reminder_date.setText(UtilsDateTime.toDateString(reminderModel.getOriginalTime()));
-
-//        if (reminderModel.getCalculatedTime() != null) {
-//            btn_reminder_time.setText(UtilsDateTime.toTimeString(reminderModel.getCalculatedTime()));
-//            btn_reminder_date.setText(UtilsDateTime.toDateString(reminderModel.getCalculatedTime()));
-//        } else {
-//
-//        }
+        btn_reminder_time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
+        btn_reminder_date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
 
         if (reminderModel.getIsHasDifferentTimeCalculated()) {
             lvc_diff_next_reminder_trigger.setVisibility(View.VISIBLE);
-            tv_reminder_trigger_datetime.setText(UtilsDateTime.toTimeDateString(reminderModel.getCalculatedTime()));
+            tv_reminder_trigger_datetime.setText(StringHelper.toTimeDate(reminderModel.getCalculatedTime()));
         } else {
             lvc_diff_next_reminder_trigger.setVisibility(View.GONE);
             tv_reminder_trigger_datetime.setText("");

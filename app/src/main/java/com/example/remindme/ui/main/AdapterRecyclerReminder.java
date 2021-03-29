@@ -17,7 +17,7 @@ import com.example.remindme.R;
 import com.example.remindme.dataModels.ActiveReminder;
 import com.example.remindme.dataModels.DismissedReminder;
 import com.example.remindme.dataModels.MissedReminder;
-import com.example.remindme.util.UtilsDateTime;
+import com.example.remindme.util.StringHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
 import java.util.List;
@@ -85,7 +85,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
                 enabled.setChecked(reminderModel.trySetEnabled(enabled.isChecked()));
                 if (enabled.isChecked()) {
-                    time.setText(UtilsDateTime.toTimeDateString(reminderModel.getOriginalTime()));
+                    time.setText(StringHelper.toTimeDate(reminderModel.getOriginalTime()));
                 }
                 reminderModel.trySaveAndSetAlert(true);
             }
@@ -94,30 +94,67 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
         if (reminderType == EnumReminderTypes.Active) {
             ReminderModel reminderModel = new ReminderModel();
             ReminderModel.transformToModel((ActiveReminder) reminder, reminderModel);
-            time.setText(UtilsDateTime.toTimeDateString(reminderModel.getOriginalTime()));
+            time.setText(StringHelper.toTimeDate(reminderModel.getOriginalTime()));
             if (reminderModel.getNextSnoozeOffTime() != null) {
-                next_snooze.setText(UtilsDateTime.toTimeString(reminderModel.getNextSnoozeOffTime()));
+                next_snooze.setText(StringHelper.toTime(reminderModel.getNextSnoozeOffTime()));
                 img.setVisibility(View.VISIBLE);
             } else {
                 img.setVisibility(View.GONE);
             }
             enabled.setChecked(reminderModel.getIsEnabled());
-            name.setText(reminderModel.name);
-            note.setText(reminderModel.note);
+
+            if (StringHelper.isEmpty(reminderModel.name)) {
+                name.setVisibility(View.GONE);
+            } else {
+                name.setText(reminderModel.name);
+                name.setVisibility(View.VISIBLE);
+            }
+
+            if (StringHelper.isEmpty(reminderModel.note)) {
+                note.setVisibility(View.GONE);
+            } else {
+                note.setText(reminderModel.note);
+                note.setVisibility(View.VISIBLE);
+            }
+
         } else if (holder.reminderType == EnumReminderTypes.Missed) {
             final MissedReminder missedReminder = (MissedReminder) reminder;
-            time.setText(UtilsDateTime.toTimeDateString(missedReminder.time));
+            time.setText(StringHelper.toTimeDate(missedReminder.time));
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_danger));
             enabled.setVisibility(View.GONE);
-            name.setText(missedReminder.name);
-            note.setText(missedReminder.note);
+
+            if (StringHelper.isEmpty(missedReminder.name)) {
+                name.setVisibility(View.GONE);
+            } else {
+                name.setText(missedReminder.name);
+                name.setVisibility(View.VISIBLE);
+            }
+
+            if (StringHelper.isEmpty(missedReminder.note)) {
+                note.setVisibility(View.GONE);
+            } else {
+                note.setText(missedReminder.note);
+                note.setVisibility(View.VISIBLE);
+            }
         } else {
             final DismissedReminder dismissedReminder = (DismissedReminder) reminder;
-            time.setText(UtilsDateTime.toTimeDateString(dismissedReminder.time));
+            time.setText(StringHelper.toTimeDate(dismissedReminder.time));
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_gray2));
             enabled.setVisibility(View.GONE);
-            name.setText(dismissedReminder.name);
-            note.setText(dismissedReminder.note);
+
+            if (StringHelper.isEmpty(dismissedReminder.name)) {
+                name.setVisibility(View.GONE);
+            } else {
+                name.setText(dismissedReminder.name);
+                name.setVisibility(View.VISIBLE);
+            }
+
+            if (StringHelper.isEmpty(dismissedReminder.note)) {
+                note.setVisibility(View.GONE);
+            } else {
+                note.setText(dismissedReminder.note);
+                note.setVisibility(View.VISIBLE);
+            }
         }
     }
 

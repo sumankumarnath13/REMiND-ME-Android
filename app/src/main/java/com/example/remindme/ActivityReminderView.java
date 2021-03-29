@@ -13,8 +13,8 @@ import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.remindme.dataModels.DismissedReminder;
 import com.example.remindme.dataModels.MissedReminder;
+import com.example.remindme.util.StringHelper;
 import com.example.remindme.util.UtilsActivity;
-import com.example.remindme.util.UtilsDateTime;
 import com.example.remindme.viewModels.ReminderModel;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -97,7 +97,7 @@ public class ActivityReminderView extends AppCompatActivity {
                 if (reminderModel.tryReadFrom(getIntent())) {
                     enabled.setChecked(reminderModel.trySetEnabled(enabled.isChecked()));
                     if (enabled.isChecked()) {
-                        ((TextView) findViewById(R.id.tv_reminder_time)).setText(UtilsDateTime.toTimeDateString(reminderModel.getOriginalTime()));
+                        ((TextView) findViewById(R.id.tv_reminder_time)).setText(StringHelper.toTimeDate(reminderModel.getOriginalTime()));
                     }
                     reminderModel.trySaveAndSetAlert(true);
                 }
@@ -121,11 +121,11 @@ public class ActivityReminderView extends AppCompatActivity {
         if (from.equals("ACTIVE")) {
             ReminderModel reminderModel = new ReminderModel();
             if (reminderModel.tryReadFrom(getIntent())) {
-                alarm_time = UtilsDateTime.toTimeDateString(reminderModel.getOriginalTime());
+                alarm_time = StringHelper.toTimeDate(reminderModel.getOriginalTime());
                 if (reminderModel.getNextSnoozeOffTime() != null) {
                     ImageView snooze_img = findViewById(R.id.img_snooze);
                     TextView next_snooze = findViewById(R.id.tv_reminder_next_snooze);
-                    next_snooze.setText(UtilsDateTime.toTimeString(reminderModel.getNextSnoozeOffTime()));
+                    next_snooze.setText(StringHelper.toTime(reminderModel.getNextSnoozeOffTime()));
                     img.setVisibility(View.VISIBLE);
                     snooze_img.setVisibility(View.VISIBLE);
                 }
@@ -144,7 +144,7 @@ public class ActivityReminderView extends AppCompatActivity {
                     .equalTo("id", id)
                     .findFirst();
             if (reminder != null) {
-                alarm_time = UtilsDateTime.toTimeDateString(reminder.time);
+                alarm_time = StringHelper.toTimeDate(reminder.time);
                 name = reminder.name;
                 note = reminder.note;
             } else {
@@ -158,7 +158,7 @@ public class ActivityReminderView extends AppCompatActivity {
                     .equalTo("id", id)
                     .findFirst();
             if (reminder != null) {
-                alarm_time = UtilsDateTime.toTimeDateString(reminder.time);
+                alarm_time = StringHelper.toTimeDate(reminder.time);
                 name = reminder.name;
                 note = reminder.note;
             } else {
