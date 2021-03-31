@@ -3,6 +3,7 @@ package com.example.remindme.viewModels;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Application;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
@@ -641,49 +642,60 @@ public class ReminderModel extends ViewModel {
         }
     }
 
+    private Notification getAlarmHeadsUp(Context context) {
+        String timeStamp;
+        if (nextSnoozeOffTime == null) {
+            timeStamp = StringHelper.toTime(originalTime) + " " + intId;
+        } else {
+            timeStamp = StringHelper.toTime(originalTime) + " & was snoozed for " + snoozeModel.count + " times" + " " + intId;
+        }
+        //ALERT_INTENT_SNOOZE_ALERT
+        PendingIntent snoozePendingIntent = PendingIntent
+                .getBroadcast(context, intId, createNotificationActionBroadcastIntent(true, ACTION_SNOOZE_ALARM), PendingIntent.FLAG_CANCEL_CURRENT);
+
+        //ALERT_INTENT_DISMISS_ALERT
+        PendingIntent dismissPendingIntent = PendingIntent
+                .getBroadcast(context, intId, createNotificationActionBroadcastIntent(true, ACTION_DISMISS_ALARM), PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, ALARM_NOTIFICATION_CHANNEL_ID)
+                .addAction(R.drawable.ic_reminder_snooze, context.getString(R.string.btn_snooze), snoozePendingIntent)
+                .addAction(R.drawable.ic_reminder_dismiss, application.getApplicationContext().getString(R.string.btn_alarm_action_dismiss), dismissPendingIntent)
+                .setContentTitle(name)
+                .setContentText(timeStamp)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(note))
+                //.setSubText(note)
+                .setSmallIcon(R.drawable.ic_reminder_time)
+                .setOngoing(true)
+                .setAutoCancel(false)
+                .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
+                .setWhen(0)
+                .setCategory(NotificationCompat.CATEGORY_ALARM);
+
+        builder.setContentIntent(PendingIntent
+                .getActivity(context, intId, createLockScreenAlertIntent(ALERT_NOTIFICATION_CONTENT_INTENT_ACTION), PendingIntent.FLAG_UPDATE_CURRENT));
+
+        builder.setFullScreenIntent(PendingIntent
+                        .getActivity(context, intId, createLockScreenAlertIntent(ALERT_NOTIFICATION_FULLSCREEN_INTENT_ACTION), PendingIntent.FLAG_UPDATE_CURRENT),
+                true);
+
+        builder.setLocalOnly(true);
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        return builder.build();
+    }
+
+
     private void raiseAlert(Context context) {
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        if (Build.VERSION.SDK_INT >= 21) { // Show heads up notification if screen is on
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // Show heads up notification if screen is on
             boolean isScreenOn = powerManager.isInteractive();
             if (isScreenOn) {
-                String timeStamp;
-                if (nextSnoozeOffTime == null) {
-                    timeStamp = StringHelper.toTime(originalTime) + " " + intId;
+                // Start the service
+                Intent startService = new Intent(context, alertServiceClass).setAction(ACTION_START_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(startService);
                 } else {
-                    timeStamp = StringHelper.toTime(originalTime) + " & was snoozed for " + snoozeModel.count + " times" + " " + intId;
+                    context.startService(startService);
                 }
-                //ALERT_INTENT_SNOOZE_ALERT
-                PendingIntent snoozePendingIntent = PendingIntent
-                        .getBroadcast(context, intId, createNotificationActionBroadcastIntent(true, ACTION_SNOOZE_ALARM), PendingIntent.FLAG_CANCEL_CURRENT);
-
-                //ALERT_INTENT_DISMISS_ALERT
-                PendingIntent dismissPendingIntent = PendingIntent
-                        .getBroadcast(context, intId, createNotificationActionBroadcastIntent(true, ACTION_DISMISS_ALARM), PendingIntent.FLAG_CANCEL_CURRENT);
-
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, ALARM_NOTIFICATION_CHANNEL_ID)
-                        .addAction(R.drawable.ic_reminder_snooze, context.getString(R.string.btn_snooze), snoozePendingIntent)
-                        .addAction(R.drawable.ic_reminder_dismiss, application.getApplicationContext().getString(R.string.btn_alarm_action_dismiss), dismissPendingIntent)
-                        .setContentTitle(name)
-                        .setContentText(timeStamp)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(note))
-                        //.setSubText(note)
-                        .setSmallIcon(R.drawable.ic_reminder_time)
-                        .setOngoing(true)
-                        .setAutoCancel(false)
-                        .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
-                        .setWhen(0)
-                        .setCategory(NotificationCompat.CATEGORY_ALARM);
-
-                builder.setContentIntent(PendingIntent
-                        .getActivity(context, intId, createLockScreenAlertIntent(ALERT_NOTIFICATION_CONTENT_INTENT_ACTION), PendingIntent.FLAG_UPDATE_CURRENT));
-
-                builder.setFullScreenIntent(PendingIntent
-                                .getActivity(context, intId, createLockScreenAlertIntent(ALERT_NOTIFICATION_FULLSCREEN_INTENT_ACTION), PendingIntent.FLAG_UPDATE_CURRENT),
-                        true);
-
-                builder.setLocalOnly(true);
-                builder.setPriority(NotificationCompat.PRIORITY_HIGH);
-                notificationManager.notify(ALARM_NOTIFICATION_ID, builder.build());
             } else {
                 raiseFullScreenAlert();
             }
@@ -1026,7 +1038,14 @@ public class ReminderModel extends ViewModel {
 
         switch (intent.getAction()) {
             case ACTION_START_SERVICE:
-                startRinging(service);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    // Oreo and onwards won't allow service to just run without notification.
+                    service.startForeground(ALARM_NOTIFICATION_ID, ringingReminder.getAlarmHeadsUp(service.getApplicationContext()));
+                } else {
+                    ringingReminder.notificationManager.notify(ALARM_NOTIFICATION_ID, ringingReminder.getAlarmHeadsUp(service.getApplicationContext()));
+                }
+
+                startRinging(service.getApplicationContext());
                 break;
 
             case ACTION_STOP_SERVICE:
@@ -1053,7 +1072,7 @@ public class ReminderModel extends ViewModel {
             isInternalBroadcastReceiverRegistered = false;
         }
 
-        stopRinging(service);
+        stopRinging(service.getApplicationContext());
 
         ringingReminder.notificationManager.cancel(ALARM_NOTIFICATION_ID);
         ringingReminder = null;
@@ -1165,11 +1184,8 @@ public class ReminderModel extends ViewModel {
                     if (ringingReminder == null) {
                         // 1. Set the model first. This is important as everything else depends on it.
                         ringingReminder = reminderModel;
-                        // Start the service
-                        Intent startService = new Intent(context, alertServiceClass).setAction(ACTION_START_SERVICE);
-                        context.startService(startService);
-                        // Notify or Start activity depend on situation.
-                        ringingReminder.raiseAlert(context);
+                        // Start the service > Notify or Start activity depend on situation.
+                        ringingReminder.raiseAlert(context.getApplicationContext());
                     } else {// An alarm is raised already. Snooze this one with a notification.
                         notify(DEFAULT_NOTIFICATION_ID, "Missed alarm @ " + StringHelper.toTime(reminderModel.getOriginalTime()), reminderModel.name, reminderModel.note);
                         reminderModel.snooze(false);

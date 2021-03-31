@@ -90,8 +90,8 @@ public class ActivityReminderRinging extends AppCompatActivity {
             return;
         }
 
-        ReminderModel.startVibrating(this);
-        ReminderModel.cancelAlarmHeadsUp();
+        //ReminderModel.startVibrating(this);
+        //ReminderModel.cancelAlarmHeadsUp();
 
         String date_str = StringHelper.toTimeDate(reminderModel.getOriginalTime());
         TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
