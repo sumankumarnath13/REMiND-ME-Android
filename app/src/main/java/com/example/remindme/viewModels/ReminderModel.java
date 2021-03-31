@@ -11,10 +11,13 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.widget.Toast;
@@ -44,10 +47,9 @@ import io.realm.exceptions.RealmMigrationNeededException;
 public class ReminderModel extends ViewModel {
 
     //region Private constants
-    //private static final String REMINDER_EDIT_MODE_NEW = "NEW";
-    //private static final String REMINDER_EDIT_MODE_UPDATE = "NEW";
     public static final String INTENT_ATTR_FROM = "FROM";
 
+    private static long[] VIBRATE_PATTERN = {500, 500};
     private static final String ALARM_NOTIFICATION_CHANNEL_ID = "z_0EdcKpGP";
     private static final String ALARM_NOTIFICATION_CHANNEL_NAME = "Alarm notifications";
     private static final int ALARM_NOTIFICATION_ID = 117;
@@ -59,10 +61,12 @@ public class ReminderModel extends ViewModel {
     private static final int DEFAULT_NOTIFICATION_ID = 25;
     private static final int DEFAULT_NOTIFICATION_GROUP_ID = 13;
 
-    private static final String ALERT_INTENT_ACTION = "È)wß³ç{TÃ£";
-    private static final String ALERT_INTENT_RAISE_ALERT = "Å'*»àLÇ)»í";
-    private static final String ALERT_INTENT_SNOOZE_ALERT = "n)QmeW¸æ#±";
-    private static final String ALERT_INTENT_DISMISS_ALERT = "ÿÃ(Y£ÝZïJ<";
+    private static final String ACTION_RECEIVE_ALARM = "com.example.remindme.RECEIVE.ALARM";
+    private static final String ACTION_START_SERVICE = "com.example.remindme.START.SERVICE";
+    private static final String ACTION_STOP_SERVICE = "com.example.remindme.STOP.SERVICE";
+    private static final String ACTION_SNOOZE_ALARM = "com.example.remindme.SNOOZE.ALARM";
+    private static final String ACTION_DISMISS_ALARM = "com.example.remindme.DISMISS.ALARM";
+
     private static final String ALERT_INTENT_IS_USER = "öÈýl®4óþ¿?";
     private static final String REMINDER_ID_INTENT = "uNX¯3Á×MòP";
     private static final String ALERT_NOTIFICATION_CONTENT_INTENT_ACTION = "£fcEB]¬B9æ";
@@ -70,18 +74,55 @@ public class ReminderModel extends ViewModel {
     //endregion
 
     //region Private static Members
-    private static Class<? extends BroadcastReceiver> alertBroadcastReceiverClass;
+    private static Class<? extends BroadcastReceiver> externalBroadcastReceiverClass;
     private static Class<? extends Activity> lockScreenAlertActivityClass;
     private static Class<? extends Service> alertServiceClass;
     private static Application application;
-    private static Vibrator vibrator;
     private static AlarmManager alarmManager;
-    private static boolean isRinging;
+    private static boolean isRinging = false;
     private static Ringtone playingRingtone;
-    //private static String ringingReminderId;
+    private static ReminderModel ringingReminder;
+    private static boolean isInternalBroadcastReceiverRegistered = false;
+    private static final BroadcastReceiver internalBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent == null) {
+                return;
+            }
+
+            ReminderModel reminderModel = new ReminderModel();
+            if (!reminderModel.tryReadFrom(intent)) {
+                return;
+            }
+
+            boolean isUser = intent.getBooleanExtra(ALERT_INTENT_IS_USER, false);
+            Intent stopService = new Intent(context, alertServiceClass).setAction(ACTION_STOP_SERVICE);
+
+            switch (intent.getAction()) {
+                case ACTION_SNOOZE_ALARM:
+                    context.stopService(stopService);
+                    reminderModel.snooze(isUser);
+                    break;
+                case ACTION_DISMISS_ALARM:
+                    context.stopService(stopService);
+                    if (isUser) {
+                        reminderModel.dismissByUser();
+                    } else {
+                        reminderModel.dismissByApp(Calendar.getInstance());
+                    }
+                    break;
+            }
+        }
+    };
+
     //endregion
 
     //region Private static Functions
+
+    private static Vibrator getVibrator(Context context) {
+        return ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE));
+    }
+
     private static void reScheduleAllActive(boolean isDeviceRebooted) {
         final Calendar calendar = Calendar.getInstance();
         List<ActiveReminder> reminders = getActiveReminders(null);
@@ -122,19 +163,49 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    private static void stopAlarm() {
-        if (playingRingtone != null) {
-            playingRingtone.stop();
-        }
-
-        if (vibrator != null) {
-            vibrator.cancel();
-        }
-
-        isRinging = false;
+    public static ReminderModel getAlarmReminder() {
+        return ringingReminder;
     }
 
-    public static void transformToData(ReminderModel from, ActiveReminder to) {
+    public static void startVibrating(Context context) {
+        if (ringingReminder != null && ringingReminder.isEnableVibration) {
+            final Vibrator vibrator = getVibrator(context);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                vibrator.vibrate(VIBRATE_PATTERN, 0, new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build());
+            } else {
+                vibrator.vibrate(VIBRATE_PATTERN, 0);
+            }
+        }
+    }
+
+    private static void startRinging(Context context) {
+        if (ringingReminder == null) return;
+
+        if (ringingReminder.isEnableTone && !isRinging) {
+            if (ringingReminder.ringToneUri == null) {
+                ringingReminder.ringToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            }
+            playingRingtone = RingtoneManager.getRingtone(context, ringingReminder.ringToneUri);
+            playingRingtone.play();
+            isRinging = true;
+        }
+
+        startVibrating(context);
+    }
+
+    private static void stopRinging(Context context) {
+        if (playingRingtone != null && isRinging) {
+            playingRingtone.stop();
+            isRinging = false;
+        }
+
+        getVibrator(context).cancel();
+    }
+
+    private static void transformToData(ReminderModel from, ActiveReminder to) {
         to.id = from.id;
         to.alarmIntentId = from.intId;
         to.name = from.name;
@@ -462,85 +533,6 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    private void raiseAlarm() {
-        if ((isEnableVibration || isEnableTone) && !isRinging) {
-
-            if (ringToneUri == null) {
-                ringToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            }
-
-            if (vibrator != null) {
-                long[] pattern = {500, 500};
-                vibrator.vibrate(pattern, 0);
-            }
-
-            if (isEnableTone) {
-//
-//                AudioManager audioManager = (AudioManager) application.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-//                AudioManager.OnAudioFocusChangeListener afChangeListener = null;
-//
-//                playbackAttributes = new AudioAttributes.Builder()
-//                        .setUsage(AudioAttributes.USAGE_GAME)
-//                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-//                        .build();
-//                focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-//                        .setAudioAttributes(playbackAttributes)
-//                        .setAcceptsDelayedFocusGain(true)
-//                        .setOnAudioFocusChangeListener(afChangeListener, handler)
-//                        .build();
-//                final Object focusLock = new Object();
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-                playingRingtone = RingtoneManager.getRingtone(application.getApplicationContext(), ringToneUri);
-                playingRingtone.play();
-            }
-
-            isRinging = true;
-        }
-    }
-
-//    public void onAudioFocusChange(int focusChange) {
-//        switch (focusChange) {
-//            case AudioManager.AUDIOFOCUS_GAIN:
-//                if (playbackDelayed || resumeOnFocusGain) {
-//                    synchronized(focusLock) {
-//                        playbackDelayed = false;
-//                        resumeOnFocusGain = false;
-//                    }
-//                    playbackNow();
-//                }
-//                break;
-//            case AudioManager.AUDIOFOCUS_LOSS:
-//                synchronized(focusLock) {
-//                    resumeOnFocusGain = false;
-//                    playbackDelayed = false;
-//                }
-//                pausePlayback();
-//                break;
-//            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-//                synchronized(focusLock) {
-//                    // only resume if playback is being interrupted
-//                    resumeOnFocusGain = isPlaying();
-//                    playbackDelayed = false;
-//                }
-//                pausePlayback();
-//                break;
-//            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-//                // ... pausing or ducking depends on your app
-//                break;
-//        }
-//    }
-
-
     private void archiveToMissed() {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
@@ -649,8 +641,8 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    private void raiseAlert() {
-        PowerManager powerManager = (PowerManager) application.getApplicationContext().getSystemService(Context.POWER_SERVICE);
+    private void raiseAlert(Context context) {
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         if (Build.VERSION.SDK_INT >= 21) { // Show heads up notification if screen is on
             boolean isScreenOn = powerManager.isInteractive();
             if (isScreenOn) {
@@ -662,14 +654,14 @@ public class ReminderModel extends ViewModel {
                 }
                 //ALERT_INTENT_SNOOZE_ALERT
                 PendingIntent snoozePendingIntent = PendingIntent
-                        .getBroadcast(application.getApplicationContext(), intId, createNotificationActionBroadcastIntent(true, ALERT_INTENT_SNOOZE_ALERT), PendingIntent.FLAG_CANCEL_CURRENT);
+                        .getBroadcast(context, intId, createNotificationActionBroadcastIntent(true, ACTION_SNOOZE_ALARM), PendingIntent.FLAG_CANCEL_CURRENT);
 
                 //ALERT_INTENT_DISMISS_ALERT
                 PendingIntent dismissPendingIntent = PendingIntent
-                        .getBroadcast(application.getApplicationContext(), intId, createNotificationActionBroadcastIntent(true, ALERT_INTENT_DISMISS_ALERT), PendingIntent.FLAG_CANCEL_CURRENT);
+                        .getBroadcast(context, intId, createNotificationActionBroadcastIntent(true, ACTION_DISMISS_ALARM), PendingIntent.FLAG_CANCEL_CURRENT);
 
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(application.getApplicationContext(), ALARM_NOTIFICATION_CHANNEL_ID)
-                        .addAction(R.drawable.ic_reminder_snooze, application.getApplicationContext().getString(R.string.btn_snooze), snoozePendingIntent)
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, ALARM_NOTIFICATION_CHANNEL_ID)
+                        .addAction(R.drawable.ic_reminder_snooze, context.getString(R.string.btn_snooze), snoozePendingIntent)
                         .addAction(R.drawable.ic_reminder_dismiss, application.getApplicationContext().getString(R.string.btn_alarm_action_dismiss), dismissPendingIntent)
                         .setContentTitle(name)
                         .setContentText(timeStamp)
@@ -683,10 +675,10 @@ public class ReminderModel extends ViewModel {
                         .setCategory(NotificationCompat.CATEGORY_ALARM);
 
                 builder.setContentIntent(PendingIntent
-                        .getActivity(application.getApplicationContext(), intId, createLockScreenAlertIntent(ALERT_NOTIFICATION_CONTENT_INTENT_ACTION), PendingIntent.FLAG_UPDATE_CURRENT));
+                        .getActivity(context, intId, createLockScreenAlertIntent(ALERT_NOTIFICATION_CONTENT_INTENT_ACTION), PendingIntent.FLAG_UPDATE_CURRENT));
 
                 builder.setFullScreenIntent(PendingIntent
-                                .getActivity(application.getApplicationContext(), intId, createLockScreenAlertIntent(ALERT_NOTIFICATION_FULLSCREEN_INTENT_ACTION), PendingIntent.FLAG_UPDATE_CURRENT),
+                                .getActivity(context, intId, createLockScreenAlertIntent(ALERT_NOTIFICATION_FULLSCREEN_INTENT_ACTION), PendingIntent.FLAG_UPDATE_CURRENT),
                         true);
 
                 builder.setLocalOnly(true);
@@ -698,8 +690,6 @@ public class ReminderModel extends ViewModel {
         } else { // Show full screen anyway
             raiseFullScreenAlert();
         }
-
-        raiseAlarm();
     }
 
     private void raiseFullScreenAlert() {
@@ -948,10 +938,8 @@ public class ReminderModel extends ViewModel {
 
     //region Private instance Functions : Intent Creators/Managers
     private Intent createNotificationActionBroadcastIntent(boolean isByUser, String actionName) {
-        return new Intent(application.getApplicationContext(), alertBroadcastReceiverClass)
-                .setAction(actionName)
+        return new Intent(actionName)
                 .putExtra(REMINDER_ID_INTENT, id)
-                .putExtra(ALERT_INTENT_ACTION, actionName)
                 .putExtra(ALERT_INTENT_IS_USER, isByUser);
     }
 
@@ -964,9 +952,9 @@ public class ReminderModel extends ViewModel {
     }
 
     private Intent createAlarmManagerAlarmIntent() {
-        return new Intent(application.getApplicationContext(), alertBroadcastReceiverClass)
-                .putExtra(REMINDER_ID_INTENT, id)
-                .putExtra(ALERT_INTENT_ACTION, ALERT_INTENT_RAISE_ALERT);
+        return new Intent(application.getApplicationContext(), externalBroadcastReceiverClass)
+                .setAction(ACTION_RECEIVE_ALARM)
+                .putExtra(REMINDER_ID_INTENT, id);
     }
 
     private PendingIntent getAlarmManagerAlarmPendingIntent(boolean isCreateNew) {
@@ -982,9 +970,9 @@ public class ReminderModel extends ViewModel {
     //endregion
 
     //region Public static Functions
-    public static void onAppCreate(Class<? extends BroadcastReceiver> alertReceiver, Class<? extends Service> alertService, Class<? extends Activity> ringingActivity, Application app) {
-        alertBroadcastReceiverClass = alertReceiver;
-        alertServiceClass = alertService;
+    public static void onAppCreate(Class<? extends BroadcastReceiver> broadcastReceiverClass, Class<? extends Service> serviceClass, Class<? extends Activity> ringingActivity, Application app) {
+        externalBroadcastReceiverClass = broadcastReceiverClass;
+        alertServiceClass = serviceClass;
         lockScreenAlertActivityClass = ringingActivity;
         application = app;
 
@@ -1013,7 +1001,6 @@ public class ReminderModel extends ViewModel {
             notificationManager.createNotificationChannel(defaultChannel);
         }
 
-        vibrator = (Vibrator) application.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         alarmManager = (AlarmManager) application.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 
         // Initialize Realm database
@@ -1028,8 +1015,48 @@ public class ReminderModel extends ViewModel {
         reScheduleAllActive(false);
     }
 
-    public static void onBootCompleted() {
-        reScheduleAllActive(true);
+    public static IBinder onServiceBind(Service service, Intent intent) {
+        return null;
+    }
+
+    public static int onServiceStart(Service service, Intent intent, int flags, int startId) {
+        if (intent == null) {
+            return Service.START_NOT_STICKY;
+        }
+
+        switch (intent.getAction()) {
+            case ACTION_START_SERVICE:
+                startRinging(service);
+                break;
+
+            case ACTION_STOP_SERVICE:
+                service.stopSelf();
+                break;
+        }
+
+        return Service.START_NOT_STICKY;
+    }
+
+    public static void onServiceCreate(Service service) {
+        if (!isInternalBroadcastReceiverRegistered) {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(ACTION_SNOOZE_ALARM);
+            filter.addAction(ACTION_DISMISS_ALARM);
+            service.registerReceiver(internalBroadcastReceiver, filter);
+            isInternalBroadcastReceiverRegistered = true;
+        }
+    }
+
+    public static void onServiceDestroy(Service service) {
+        if (isInternalBroadcastReceiverRegistered) {
+            service.unregisterReceiver(internalBroadcastReceiver);
+            isInternalBroadcastReceiverRegistered = false;
+        }
+
+        stopRinging(service);
+
+        ringingReminder.notificationManager.cancel(ALARM_NOTIFICATION_ID);
+        ringingReminder = null;
     }
 
     public static String getReminderId(Intent intent) {
@@ -1041,12 +1068,17 @@ public class ReminderModel extends ViewModel {
     }
 
     public static void error(String message) {
-        stopAlarm();
         Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     public static void showToast(String message) {
         Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    public static void cancelAlarmHeadsUp() {
+        if (ringingReminder != null) {
+            ringingReminder.notificationManager.cancel(ALARM_NOTIFICATION_ID);
+        }
     }
 
     public static void notify(int Id, String title, String text, String bigText) {
@@ -1114,46 +1146,36 @@ public class ReminderModel extends ViewModel {
     }
 
     public static void onBroadcastReceive(Context context, Intent intent) {
-        if (intent != null) {
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            if (notificationManager != null) {
+        if (intent == null) {
+            return;
+        }
 
-                String receivedAction = intent.getStringExtra(ALERT_INTENT_ACTION);
+        String action = intent.getAction();
+        if (StringHelper.isEmpty(action)) {
+            return;
+        }
+
+        switch (action) {
+            case Intent.ACTION_BOOT_COMPLETED:
+                reScheduleAllActive(true);
+                break;
+            case ACTION_RECEIVE_ALARM:
                 ReminderModel reminderModel = new ReminderModel();
-
-                if (!reminderModel.tryReadFrom(intent)) {
-                    stopAlarm(); // STOP RINGING
-
-                    //notificationManager.get
-                    notificationManager.cancel(ALARM_NOTIFICATION_ID);
-                    notify(DEFAULT_NOTIFICATION_ID, "Error!", "Reminder not found!", null);
-                } else {
-
-                    boolean isUser = intent.getBooleanExtra(ALERT_INTENT_IS_USER, false);
-                    stopAlarm(); // STOP RINGING
-                    notificationManager.cancel(ALARM_NOTIFICATION_ID); // Need to do something with previous alarm (Overlapping)
-
-                    switch (receivedAction) {
-                        case ReminderModel.ALERT_INTENT_RAISE_ALERT:
-                            // START RINGING
-                            reminderModel.raiseAlert();
-                            break;
-
-                        default:
-                        case ReminderModel.ALERT_INTENT_SNOOZE_ALERT:
-                            reminderModel.snooze(isUser);
-                            break;
-
-                        case ReminderModel.ALERT_INTENT_DISMISS_ALERT:
-                            if (isUser) {
-                                reminderModel.dismissByUser();
-                            } else {
-                                reminderModel.dismissByApp(Calendar.getInstance());
-                            }
-                            break;
+                if (reminderModel.tryReadFrom(intent)) {
+                    if (ringingReminder == null) {
+                        // 1. Set the model first. This is important as everything else depends on it.
+                        ringingReminder = reminderModel;
+                        // Start the service
+                        Intent startService = new Intent(context, alertServiceClass).setAction(ACTION_START_SERVICE);
+                        context.startService(startService);
+                        // Notify or Start activity depend on situation.
+                        ringingReminder.raiseAlert(context);
+                    } else {// An alarm is raised already. Snooze this one with a notification.
+                        notify(DEFAULT_NOTIFICATION_ID, "Missed alarm @ " + StringHelper.toTime(reminderModel.getOriginalTime()), reminderModel.name, reminderModel.note);
+                        reminderModel.snooze(false);
                     }
                 }
-            }
+                break;
         }
     }
 
@@ -1406,11 +1428,11 @@ public class ReminderModel extends ViewModel {
     }
 
     public void broadcastSnooze(boolean isByUser) {
-        application.getApplicationContext().sendBroadcast(createNotificationActionBroadcastIntent(isByUser, ALERT_INTENT_SNOOZE_ALERT));
+        application.getApplicationContext().sendBroadcast(createNotificationActionBroadcastIntent(isByUser, ACTION_SNOOZE_ALARM));
     }
 
     public void broadcastDismiss(boolean isByUser) {
-        application.getApplicationContext().sendBroadcast(createNotificationActionBroadcastIntent(isByUser, ALERT_INTENT_DISMISS_ALERT));
+        application.getApplicationContext().sendBroadcast(createNotificationActionBroadcastIntent(isByUser, ACTION_DISMISS_ALARM));
     }
     //endregion
 

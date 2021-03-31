@@ -6,12 +6,9 @@ import android.content.Intent;
 
 import com.example.remindme.viewModels.ReminderModel;
 
-public class BootCompletedBroadcastReceiver extends BroadcastReceiver {
+public class AppBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            ReminderModel.showToast("Remind me: Device reboot acknowledged");
-            ReminderModel.onBootCompleted();
-        }
+        ReminderModel.onBroadcastReceive(context, intent);
     }
 }

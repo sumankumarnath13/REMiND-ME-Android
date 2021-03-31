@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.util.StringHelper;
 import com.example.remindme.util.UtilsActivity;
@@ -84,40 +83,40 @@ public class ActivityReminderRinging extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        if (reminderModel.getIsEmpty()) {
-            if (!reminderModel.tryReadFrom(getIntent())) {
-                ReminderModel.error("Reminder not found!");
+        reminderModel = ReminderModel.getAlarmReminder();
+        if (reminderModel == null) {
+            ReminderModel.showToast("Serious flow trouble!");
+            finish();
+            return;
+        }
+
+        ReminderModel.startVibrating(this);
+        ReminderModel.cancelAlarmHeadsUp();
+
+        String date_str = StringHelper.toTimeDate(reminderModel.getOriginalTime());
+        TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
+        Spannable spannable = new SpannableString(date_str);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        t_date.setText(spannable);
+        ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
+        ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
+
+        timer = new CountDownTimer(TIMER_DURATION - timer_elapse * TIMER_INTERVAL, TIMER_INTERVAL) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timer_elapse++;
+                if (reminderModel != null) {
+                    ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name + " (" + timer_elapse + ")");
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                reminderModel.broadcastSnooze(false);
                 finish();
             }
-        }
-
-        if (!reminderModel.getIsEmpty()) {
-            String date_str = StringHelper.toTimeDate(reminderModel.getOriginalTime());
-            TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
-            Spannable spannable = new SpannableString(date_str);
-            spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            t_date.setText(spannable);
-            ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
-            ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
-
-            timer = new CountDownTimer(TIMER_DURATION - timer_elapse * TIMER_INTERVAL, TIMER_INTERVAL) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    timer_elapse++;
-                    if (reminderModel != null) {
-                        ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name + " (" + timer_elapse + ")");
-                    }
-                }
-
-                @Override
-                public void onFinish() {
-                    reminderModel.broadcastSnooze(false);
-                    finish();
-                }
-            }.start();
-        }
+        }.start();
     }
 
     @Override
