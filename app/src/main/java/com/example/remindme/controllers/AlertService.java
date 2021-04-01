@@ -11,6 +11,7 @@ import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.Vibrator;
@@ -26,11 +27,6 @@ import com.example.remindme.viewModels.ReminderModel;
 
 public class AlertService extends Service {
     private ReminderModel servingReminder;
-
-    public ReminderModel getServingReminder() {
-        return servingReminder;
-    }
-
     private NotificationManagerCompat notificationManager;
     private boolean isBusy = false;
     private boolean isChanged = false;
@@ -52,6 +48,20 @@ public class AlertService extends Service {
                     dismiss();
                     break;
             }
+        }
+    };
+
+    private final long INTERVAL = 1000L;
+    private final long DURATION = 60 * INTERVAL;
+    private final CountDownTimer timer = new CountDownTimer(DURATION, INTERVAL) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+
+        }
+
+        @Override
+        public void onFinish() {
+            snooze();
         }
     };
 
@@ -145,8 +155,12 @@ public class AlertService extends Service {
         getVibrator(context).cancel();
     }
 
+    public ReminderModel getServingReminder() {
+        return servingReminder;
+    }
+
     public void snooze() {
-        if (!isChanged) {
+        if (!isChanged && isBusy) {
             isChanged = true;
             servingReminder.snooze(true);
             broadcastServiceStop();
@@ -155,7 +169,7 @@ public class AlertService extends Service {
     }
 
     public void dismiss() {
-        if (!isChanged) {
+        if (!isChanged && isBusy) {
             isChanged = true;
             servingReminder.dismissByUser();
             broadcastServiceStop();
@@ -237,6 +251,7 @@ public class AlertService extends Service {
         }
 
         startRinging(this);
+        timer.start();
 
         return START_NOT_STICKY;
         // return ReminderModel.onServiceStart(this, intent, flags, startId);
@@ -244,6 +259,7 @@ public class AlertService extends Service {
 
     @Override
     public void onDestroy() {
+        timer.cancel();
         stopRinging(this);
 
         if (isInternalBroadcastReceiverRegistered) {
