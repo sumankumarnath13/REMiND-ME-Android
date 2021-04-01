@@ -34,14 +34,19 @@ public class AlertService extends Service {
     private boolean isChanged = false;
     private boolean isActivityEverOpened = false;
     private boolean isActivityOpen = false;
+    private boolean isIdle = true;
+    private boolean isCallDetected = false;
+
+    public boolean getIsIdle() {
+        return isIdle;
+    }
 
     public void setActivityOpen(boolean value) {
+        isActivityOpen = value;
 
-        if (!isActivityEverOpened) {
+        if (isActivityOpen && !isActivityEverOpened) {
             isActivityEverOpened = true;
         }
-
-        isActivityOpen = value;
     }
 
     private boolean isRinging = false;
@@ -90,12 +95,24 @@ public class AlertService extends Service {
         @Override
         public void onCallStateChanged(int state, String ignored) {
             if (state == TelephonyManager.CALL_STATE_IDLE) {
+                isIdle = true;
+
                 service.startRinging(service);
+
                 if (isActivityEverOpened && !isActivityOpen) {
+                    openAlarmActivity();
+                } else if (isCallDetected && !isActivityOpen) {
                     openAlarmActivity();
                 }
             } else {
+                isIdle = false;
+
+                if (!isCallDetected) {
+                    isCallDetected = true;
+                }
+
                 service.stopRinging(service);
+
                 // Close the activity if it was opened
                 if (isActivityEverOpened && isActivityOpen) {
                     broadcastCloseAlarmActivity();
@@ -265,6 +282,7 @@ public class AlertService extends Service {
             final ReminderModel newReminder = new ReminderModel();
             if (newReminder.tryReadFrom(intent)) {
                 newReminder.snooze(false);
+                ReminderModel.notify(newReminder.getIntId(), "Missed alarm " + StringHelper.toTime(newReminder.getOriginalTime()), newReminder.name, newReminder.note);
             }
             return START_NOT_STICKY;
         }
@@ -296,6 +314,7 @@ public class AlertService extends Service {
         }
 
         startRinging(this);
+        mTelephonyManager.getCallState();
         mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         timer.start();
 

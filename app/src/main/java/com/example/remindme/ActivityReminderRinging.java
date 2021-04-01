@@ -46,30 +46,36 @@ public class ActivityReminderRinging extends AppCompatActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             serviceBinder = (AlertServiceBinder) service;
 
-            ReminderModel reminderModel = serviceBinder.getServingReminder();
-            if (reminderModel == null) {
-                ReminderModel.showToast("Serious flow trouble!");
+            if (serviceBinder.getIsIdle()) {
+                serviceBinder.setActivityOpen(true);
+
+                ReminderModel reminderModel = serviceBinder.getServingReminder();
+                if (reminderModel == null) {
+                    ReminderModel.showToast("Serious flow trouble!");
+                    finish();
+                    return;
+                }
+
+                String date_str = StringHelper.toTimeDate(reminderModel.getOriginalTime());
+                TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
+                Spannable spannable = new SpannableString(date_str);
+                spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                t_date.setText(spannable);
+                ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
+                ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
+
+                btnSnooze.setVisibility(View.VISIBLE);
+                btnDismiss.setVisibility(View.VISIBLE);
+
+            } else {
                 finish();
-                return;
             }
-
-            String date_str = StringHelper.toTimeDate(reminderModel.getOriginalTime());
-            TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
-            Spannable spannable = new SpannableString(date_str);
-            spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            t_date.setText(spannable);
-            ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
-            ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
-
-            btnSnooze.setVisibility(View.VISIBLE);
-            btnDismiss.setVisibility(View.VISIBLE);
-            serviceBinder.setActivityOpen(true);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            serviceBinder.setActivityOpen(false);
+            //mServiceBound = false;
         }
     };
 
@@ -139,18 +145,23 @@ public class ActivityReminderRinging extends AppCompatActivity {
                 finish();
             }
         });
+
+        bindAlarmService();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver();
         bindAlarmService();
+        registerReceiver();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        if (serviceBinder != null && mServiceBound) {
+            serviceBinder.setActivityOpen(false);
+        }
         unbindAlarmService();
         unRegisterReceiver();
     }
@@ -159,5 +170,4 @@ public class ActivityReminderRinging extends AppCompatActivity {
     public void onBackPressed() {
         //super.onBackPressed(); // Disables back button
     }
-
 }
