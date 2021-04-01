@@ -47,7 +47,7 @@ public class ReminderModel extends ViewModel {
     public static final String ACTION_ALERT_NOTIFICATION_CONTENT_FULLSCREEN = "com.example.remindme.DISMISS.ALARM";
     public static final String ACTION_ALERT_NOTIFICATION_CONTENT = "£fcEB]¬B9æ";
     public static final String ACTION_ALERT_FULLSCREEN = "com.example.remindme.ALERT.FULLSCREEN";
-    public static final String ACTION_STOP_SERVICE = "com.example.remindme.STOP.SERVICE";
+    public static final String ACTION_CLOSE_ALARM_ACTIVITY = "com.example.remindme.CLOSE.ALARM.ACTIVITY";
 
     //region Private constants
     public static final String INTENT_ATTR_FROM = "FROM";

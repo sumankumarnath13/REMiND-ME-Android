@@ -33,7 +33,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if (intent == null) return;
 
-            if (ReminderModel.ACTION_STOP_SERVICE.equals(intent.getAction())) {
+            if (ReminderModel.ACTION_CLOSE_ALARM_ACTIVITY.equals(intent.getAction())) {
                 finish();
             }
         }
@@ -64,18 +64,19 @@ public class ActivityReminderRinging extends AppCompatActivity {
 
             btnSnooze.setVisibility(View.VISIBLE);
             btnDismiss.setVisibility(View.VISIBLE);
+            serviceBinder.setActivityOpen(true);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            serviceBinder.setActivityOpen(false);
         }
     };
 
     private void registerReceiver() {
         if (!isReceiverRegistered) {
             IntentFilter filter = new IntentFilter();
-            filter.addAction(ReminderModel.ACTION_STOP_SERVICE);
+            filter.addAction(ReminderModel.ACTION_CLOSE_ALARM_ACTIVITY);
             registerReceiver(receiver, filter);
             isReceiverRegistered = true;
         }
@@ -158,4 +159,5 @@ public class ActivityReminderRinging extends AppCompatActivity {
     public void onBackPressed() {
         //super.onBackPressed(); // Disables back button
     }
+
 }

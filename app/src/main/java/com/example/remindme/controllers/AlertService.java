@@ -15,6 +15,8 @@ import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -30,6 +32,18 @@ public class AlertService extends Service {
     private NotificationManagerCompat notificationManager;
     private boolean isBusy = false;
     private boolean isChanged = false;
+    private boolean isActivityEverOpened = false;
+    private boolean isActivityOpen = false;
+
+    public void setActivityOpen(boolean value) {
+
+        if (!isActivityEverOpened) {
+            isActivityEverOpened = true;
+        }
+
+        isActivityOpen = value;
+    }
+
     private boolean isRinging = false;
     private Ringtone playingRingtone;
     private boolean isInternalBroadcastReceiverRegistered = false;
@@ -64,6 +78,35 @@ public class AlertService extends Service {
             snooze();
         }
     };
+
+    private final class PhoneStateChangeListener extends PhoneStateListener {
+
+        private AlertService service;
+
+        public PhoneStateChangeListener(AlertService hostService) {
+            service = hostService;
+        }
+
+        @Override
+        public void onCallStateChanged(int state, String ignored) {
+            if (state == TelephonyManager.CALL_STATE_IDLE) {
+                service.startRinging(service);
+                if (isActivityEverOpened && !isActivityOpen) {
+                    openAlarmActivity();
+                }
+            } else {
+                service.stopRinging(service);
+                // Close the activity if it was opened
+                if (isActivityEverOpened && isActivityOpen) {
+                    broadcastCloseAlarmActivity();
+                }
+            }
+        }
+    }
+
+    private final PhoneStateChangeListener mPhoneStateListener = new PhoneStateChangeListener(this);
+
+    private TelephonyManager mTelephonyManager;
 
     private Intent createNotificationActionBroadcastIntent(String actionName) {
         return new Intent(actionName);
@@ -118,7 +161,7 @@ public class AlertService extends Service {
     }
 
     public void startVibrating(Context context) {
-        if (servingReminder != null && servingReminder.isEnableVibration) {
+        if (isBusy && servingReminder.isEnableVibration) {
             final Vibrator vibrator = getVibrator(context);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 vibrator.vibrate(ReminderModel.VIBRATE_PATTERN, 0, new AudioAttributes.Builder()
@@ -132,9 +175,7 @@ public class AlertService extends Service {
     }
 
     private void startRinging(Context context) {
-        if (servingReminder == null) return;
-
-        if (servingReminder.isEnableTone && !isRinging) {
+        if (isBusy && servingReminder.isEnableTone && !isRinging) {
             if (servingReminder.ringToneUri == null) {
                 servingReminder.ringToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             }
@@ -147,6 +188,7 @@ public class AlertService extends Service {
     }
 
     private void stopRinging(Context context) {
+
         if (playingRingtone != null && isRinging) {
             playingRingtone.stop();
             isRinging = false;
@@ -163,7 +205,7 @@ public class AlertService extends Service {
         if (!isChanged && isBusy) {
             isChanged = true;
             servingReminder.snooze(true);
-            broadcastServiceStop();
+            broadcastCloseAlarmActivity();
             stopService();
         }
     }
@@ -172,13 +214,18 @@ public class AlertService extends Service {
         if (!isChanged && isBusy) {
             isChanged = true;
             servingReminder.dismissByUser();
-            broadcastServiceStop();
+            broadcastCloseAlarmActivity();
             stopService();
         }
     }
 
-    private void broadcastServiceStop() {
-        Intent stopServiceBroadcast = new Intent(ReminderModel.ACTION_STOP_SERVICE);
+    private void openAlarmActivity() {
+        Intent ringingActivity = createAlarmActivityIntent(ReminderModel.ACTION_ALERT_FULLSCREEN);
+        startActivity(ringingActivity);
+    }
+
+    private void broadcastCloseAlarmActivity() {
+        Intent stopServiceBroadcast = new Intent(ReminderModel.ACTION_CLOSE_ALARM_ACTIVITY);
         sendBroadcast(stopServiceBroadcast);
     }
 
@@ -203,7 +250,7 @@ public class AlertService extends Service {
             isInternalBroadcastReceiverRegistered = true;
         }
 
-        //ReminderModel.onServiceCreate(this);
+        mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     @Override
@@ -241,16 +288,15 @@ public class AlertService extends Service {
                 if (isScreenOn) { // show heads up
                     notificationManager.notify(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
                 } else { // show full screen ringing activity
-                    Intent ringingActivity = createAlarmActivityIntent(ReminderModel.ACTION_ALERT_FULLSCREEN);
-                    startActivity(ringingActivity);
+                    openAlarmActivity();
                 }
             } else { // heads ups not supported. Show full screen ringing activity is only option available.
-                Intent ringingActivity = createAlarmActivityIntent(ReminderModel.ACTION_ALERT_FULLSCREEN);
-                startActivity(ringingActivity);
+                openAlarmActivity();
             }
         }
 
         startRinging(this);
+        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         timer.start();
 
         return START_NOT_STICKY;
@@ -260,6 +306,7 @@ public class AlertService extends Service {
     @Override
     public void onDestroy() {
         timer.cancel();
+        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
         stopRinging(this);
 
         if (isInternalBroadcastReceiverRegistered) {

@@ -24,4 +24,8 @@ public class AlertServiceBinder extends Binder {
         service.dismiss();
     }
 
+    public void setActivityOpen(boolean value) {
+        service.setActivityOpen(value);
+    }
+
 }
