@@ -2,7 +2,7 @@ package com.example.remindme.viewModels;
 
 import androidx.annotation.NonNull;
 
-import com.example.remindme.util.StringHelper;
+import com.example.remindme.helpers.StringHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;

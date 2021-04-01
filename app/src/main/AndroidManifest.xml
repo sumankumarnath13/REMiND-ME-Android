@@ -34,9 +34,9 @@
         </activity>
 
         <service
-            android:name=".util.AlertService"
+            android:name=".controllers.AlertService"
             android:exported="false" />
-        <receiver android:name=".util.AppBroadcastReceiver">
+        <receiver android:name=".controllers.AppBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="com.example.remindme.RECEIVE.ALARM" />

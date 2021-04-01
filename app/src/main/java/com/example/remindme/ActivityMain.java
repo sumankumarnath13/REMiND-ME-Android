@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.ui.main.AdapterSectionsPager;
-import com.example.remindme.util.UtilsActivity;
 import com.google.android.material.tabs.TabLayout;
 
 public class ActivityMain extends AppCompatActivity {
@@ -48,7 +48,7 @@ public class ActivityMain extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        UtilsActivity.setTitle(this, "");
+        ActivityHelper.setTitle(this, "");
 
         final Button btnNewReminder = findViewById(R.id.btn_main_new_reminder);
         btnNewReminder.setOnClickListener(new View.OnClickListener() {

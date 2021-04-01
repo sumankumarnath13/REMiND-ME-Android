@@ -1,4 +1,4 @@
-package com.example.remindme.util;
+package com.example.remindme.helpers;
 
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.remindme.R;
 
-public class UtilsActivity {
+public class ActivityHelper {
     public static void setTitle(AppCompatActivity activity, String activityTitle) {
         String divider = " \u2026 ";
         String title = null;

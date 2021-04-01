@@ -17,7 +17,7 @@ import com.example.remindme.R;
 import com.example.remindme.dataModels.ActiveReminder;
 import com.example.remindme.dataModels.DismissedReminder;
 import com.example.remindme.dataModels.MissedReminder;
-import com.example.remindme.util.StringHelper;
+import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
 import java.util.List;

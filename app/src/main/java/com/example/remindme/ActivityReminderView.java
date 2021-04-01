@@ -13,8 +13,8 @@ import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.remindme.dataModels.DismissedReminder;
 import com.example.remindme.dataModels.MissedReminder;
-import com.example.remindme.util.StringHelper;
-import com.example.remindme.util.UtilsActivity;
+import com.example.remindme.helpers.ActivityHelper;
+import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,7 +34,7 @@ public class ActivityReminderView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_view);
-        UtilsActivity.setTitle(this, getResources().getString(R.string.view_reminder_heading));
+        ActivityHelper.setTitle(this, getResources().getString(R.string.view_reminder_heading));
 
         Intent i = getIntent();
         id = ReminderModel.getReminderId(i);

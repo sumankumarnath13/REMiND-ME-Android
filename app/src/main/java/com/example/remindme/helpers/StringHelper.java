@@ -1,4 +1,4 @@
-package com.example.remindme.util;
+package com.example.remindme.helpers;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

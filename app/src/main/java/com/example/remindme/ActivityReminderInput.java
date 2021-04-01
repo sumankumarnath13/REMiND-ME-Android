@@ -22,8 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.remindme.util.StringHelper;
-import com.example.remindme.util.UtilsActivity;
+import com.example.remindme.helpers.ActivityHelper;
+import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.viewModels.IReminderNameListener;
 import com.example.remindme.viewModels.IReminderNoteListener;
 import com.example.remindme.viewModels.IReminderRepeatListener;
@@ -100,14 +100,14 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             if (FLAG_REMINDER_TYPE_ACTIVE.equals(reminderType)) {
                 if (reminderModel.tryReadFrom(getIntent())) {
                     // Everything looks good so far. Set the title as Update
-                    UtilsActivity.setTitle(this, getResources().getString(R.string.edit_reminder_heading));
+                    ActivityHelper.setTitle(this, getResources().getString(R.string.edit_reminder_heading));
                 } else {
                     // Close the activity if intent was update bu no existing reminder found!
                     ReminderModel.error("Reminder not found!");
                     finish();
                 }
             } else { // Advance the time 1 hour if intent is new
-                UtilsActivity.setTitle(this, getResources().getString(R.string.new_reminder_heading));
+                ActivityHelper.setTitle(this, getResources().getString(R.string.new_reminder_heading));
             }
         }
 

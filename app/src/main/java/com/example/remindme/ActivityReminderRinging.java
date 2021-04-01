@@ -1,7 +1,13 @@
 package com.example.remindme;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.CountDownTimer;
+import android.os.IBinder;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -11,43 +17,100 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.remindme.util.StringHelper;
-import com.example.remindme.util.UtilsActivity;
+import com.example.remindme.controllers.AlertService;
+import com.example.remindme.controllers.AlertServiceBinder;
+import com.example.remindme.helpers.ActivityHelper;
+import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
 public class ActivityReminderRinging extends AppCompatActivity {
-    private static final long TIMER_INTERVAL = 1000L;
-    private static final long TIMER_DURATION = 60 * TIMER_INTERVAL;
-    private int timer_elapse;
-    private static final String KEY_TIMER_ELAPSE = "¨NV/®L¹µ:G";
 
-    private boolean isTouched;
-    private boolean isRestarted;
-    private static final String KEY_IS_RESTARTED = "¶tÁÑ9HÊ¶´×";
-    private ReminderModel reminderModel;
-    private CountDownTimer timer = null;
+    private boolean isReceiverRegistered = false;
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent == null) return;
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putInt(KEY_TIMER_ELAPSE, timer_elapse);
-        outState.putBoolean(KEY_IS_RESTARTED, isRestarted);
-        super.onSaveInstanceState(outState);
+            if (ReminderModel.ACTION_STOP_SERVICE.equals(intent.getAction())) {
+                finish();
+            }
+        }
+    };
+
+    private boolean mServiceBound = false;
+    private AlertServiceBinder serviceBinder;
+    private final ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            serviceBinder = (AlertServiceBinder) service;
+
+            ReminderModel reminderModel = serviceBinder.getServingReminder();
+            if (reminderModel == null) {
+                ReminderModel.showToast("Serious flow trouble!");
+                finish();
+                return;
+            }
+
+            String date_str = StringHelper.toTimeDate(reminderModel.getOriginalTime());
+            TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
+            Spannable spannable = new SpannableString(date_str);
+            spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            t_date.setText(spannable);
+            ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
+            ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
+
+            btnSnooze.setVisibility(View.VISIBLE);
+            btnDismiss.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    private void registerReceiver() {
+        if (!isReceiverRegistered) {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(ReminderModel.ACTION_STOP_SERVICE);
+            registerReceiver(receiver, filter);
+            isReceiverRegistered = true;
+        }
     }
+
+    private void unRegisterReceiver() {
+        if (isReceiverRegistered) {
+            unregisterReceiver(receiver);
+            isReceiverRegistered = false;
+        }
+    }
+
+    private void bindAlarmService() {
+        if (!mServiceBound) {
+            final Intent intent = new Intent(this, AlertService.class);
+            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            mServiceBound = true;
+        }
+    }
+
+    private void unbindAlarmService() {
+        if (mServiceBound) {
+            unbindService(mConnection);
+            mServiceBound = false;
+        }
+    }
+
+    private Button btnSnooze;
+    private Button btnDismiss;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_ringing);
-        UtilsActivity.setTitle(this, getResources().getString(R.string.reminder_alert_heading));
-
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            timer_elapse = savedInstanceState.getInt(KEY_TIMER_ELAPSE);
-            isRestarted = savedInstanceState.getBoolean(KEY_IS_RESTARTED);
-        }
+        ActivityHelper.setTitle(this, getResources().getString(R.string.reminder_alert_heading));
 
         // Important: have to do the following in order to show without unlocking
         this.getWindow().addFlags(
@@ -56,24 +119,22 @@ public class ActivityReminderRinging extends AppCompatActivity {
                         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                         WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
-        final Button btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
+        btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
+        btnDismiss.setVisibility(View.INVISIBLE);
         btnDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isTouched = true;
-                timer.cancel();
-                reminderModel.broadcastDismiss(true);
+                serviceBinder.dismiss();
                 finish();
             }
         });
 
-        final Button btnSnooze = findViewById(R.id.btn_reminder_ringing_snooze);
+        btnSnooze = findViewById(R.id.btn_reminder_ringing_snooze);
+        btnSnooze.setVisibility(View.INVISIBLE);
         btnSnooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isTouched = true;
-                timer.cancel();
-                reminderModel.broadcastSnooze(true);
+                serviceBinder.snooze();
                 finish();
             }
         });
@@ -82,63 +143,15 @@ public class ActivityReminderRinging extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        reminderModel = ReminderModel.getAlarmReminder();
-        if (reminderModel == null) {
-            ReminderModel.showToast("Serious flow trouble!");
-            finish();
-            return;
-        }
-
-        //ReminderModel.startVibrating(this);
-        //ReminderModel.cancelAlarmHeadsUp();
-
-        String date_str = StringHelper.toTimeDate(reminderModel.getOriginalTime());
-        TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
-        Spannable spannable = new SpannableString(date_str);
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        t_date.setText(spannable);
-        ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
-        ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
-
-        timer = new CountDownTimer(TIMER_DURATION - timer_elapse * TIMER_INTERVAL, TIMER_INTERVAL) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                timer_elapse++;
-                if (reminderModel != null) {
-                    ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name + " (" + timer_elapse + ")");
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                reminderModel.broadcastSnooze(false);
-                finish();
-            }
-        }.start();
+        registerReceiver();
+        bindAlarmService();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        timer.cancel();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (!isRestarted) {
-            isRestarted = true;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (isRestarted && !isTouched && !isChangingConfigurations()) {
-            reminderModel.broadcastSnooze(false);
-        }
+        unbindAlarmService();
+        unRegisterReceiver();
     }
 
     @Override
