@@ -85,25 +85,17 @@ public class ReminderModel extends ViewModel {
                     isNewAlertFound = true;
 
                     if (calendar.getTime().after(reminderModel.getAlarmTime())) {
-                        if (reminderModel.name != null && !reminderModel.name.isEmpty()) {
-                            notify(reminderModel.getIntId(), "Dismissing reminder warning!", "name : " + reminderModel.name, reminderModel.note);
-                        } else {
-                            notify(reminderModel.getIntId(), "Dismissing reminder warning!", "id : " + reminderModel.getIntId(), reminderModel.note);
-                        }
+                        notify(reminderModel.getIntId(), "Dismissing reminder!", reminderModel.getSignatureName(), reminderModel.note);
                         reminderModel.dismissByApp(calendar);
                     } else {
-                        if (reminderModel.name != null && !reminderModel.name.isEmpty()) {
-                            notify(reminderModel.getIntId(), "New reminder warning!", "name : " + reminderModel.name, reminderModel.note);
-                        } else {
-                            notify(reminderModel.getIntId(), "New reminder warning!", "id : " + reminderModel.getIntId(), reminderModel.note);
-                        }
+                        notify(reminderModel.getIntId(), "New reminder!", reminderModel.getSignatureName(), reminderModel.note);
                         reminderModel.setAlarm(reminderModel.getAlarmTime(), false);
                     }
                 }
             }
         }
         if (isNewAlertFound) {
-            notifySummary("Resetting alarms", null, null);
+            notifySummary("Rescheduling reminders", null, null);
         }
     }
 
@@ -321,6 +313,16 @@ public class ReminderModel extends ViewModel {
 
     public int getIntId() {
         return intId;
+    }
+
+    public String getSignatureName() {
+        if (StringHelper.isEmpty(name)) {
+            return String.valueOf(getIntId());
+        } else {
+            return getIntId() +
+                    " - " +
+                    name;
+        }
     }
 
     //region Private instance Functions
@@ -813,8 +815,6 @@ public class ReminderModel extends ViewModel {
     //region Public static Functions
     public static boolean tryAppCreate(Class<? extends BroadcastReceiver> broadcastReceiverClass, Application app) {
         externalBroadcastReceiverClass = broadcastReceiverClass;
-        //alertServiceClass = serviceClass;
-        //lockScreenAlertActivityClass = ringingActivity;
         application = app;
 
         // Initialize notification channels

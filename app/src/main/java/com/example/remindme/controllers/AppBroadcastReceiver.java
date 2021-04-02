@@ -26,7 +26,7 @@ public class AppBroadcastReceiver extends BroadcastReceiver {
                 break;
             case ReminderModel.ACTION_RECEIVE_ALARM:
                 Intent startService = new Intent(context, AlertService.class).putExtra(ReminderModel.REMINDER_ID_INTENT, ReminderModel.getReminderId(intent));
-                if (OsHelper.isForegroundServiceRequired()) {
+                if (OsHelper.isOreoOrLater()) {
                     context.startForegroundService(startService);
                 } else {
                     context.startService(startService);

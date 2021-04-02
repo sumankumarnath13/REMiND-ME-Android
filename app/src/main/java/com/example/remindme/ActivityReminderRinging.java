@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.remindme.controllers.AlertService;
 import com.example.remindme.controllers.AlertServiceBinder;
 import com.example.remindme.helpers.ActivityHelper;
+import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
@@ -121,10 +122,17 @@ public class ActivityReminderRinging extends AppCompatActivity {
 
         // Important: have to do the following in order to show without unlocking
         this.getWindow().addFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
                         WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
                         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        WindowManager.LayoutParams.FLAG_FULLSCREEN
+        );
+
+        if (OsHelper.isOreoMr1OrLater()) {
+            setShowWhenLocked(true);
+            setTurnScreenOn(true);
+        }
 
         btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
         btnDismiss.setVisibility(View.INVISIBLE);

@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
-import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.Vibrator;
@@ -100,7 +99,7 @@ public class AlertService extends Service {
 
                 if (isActivityEverOpened && !isActivityOpen) {
                     openAlarmActivity();
-                } else if (isCallDetected && !isActivityOpen && !(OsHelper.isInteractive(service) && OsHelper.isHeadsUpContinued())) {
+                } else if (isCallDetected && !isActivityOpen && !(OsHelper.isInteractive(service) && OsHelper.isPostOreo())) {
                     openAlarmActivity();
                 }
             } else {
@@ -179,7 +178,7 @@ public class AlertService extends Service {
     public void startVibrating(Context context) {
         if (isBusy && servingReminder.isEnableVibration) {
             final Vibrator vibrator = getVibrator(context);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (OsHelper.isLollipopOrLater()) {
                 vibrator.vibrate(ReminderModel.VIBRATE_PATTERN, 0, new AudioAttributes.Builder()
                         .setUsage(AudioAttributes.USAGE_ALARM)
                         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -246,7 +245,7 @@ public class AlertService extends Service {
     }
 
     private void stopService() {
-        if (OsHelper.isForegroundServiceRequired()) {
+        if (OsHelper.isOreoOrLater()) {
             stopForeground(true);
         }
         stopSelf();
@@ -294,11 +293,11 @@ public class AlertService extends Service {
 
         isBusy = true;
 
-        if (OsHelper.isForegroundServiceRequired()) {
+        if (OsHelper.isOreoOrLater()) {
             //Oreo and onwards won't allow service to just run without notification.
             startForeground(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
         } else {
-            if (OsHelper.isHeadsUpSupported()) { // Show heads up notification if screen is on
+            if (OsHelper.isLollipopOrLater()) { // Show heads up notification if screen is on
                 if (OsHelper.isInteractive(this)) { // show heads up
                     notificationManager.notify(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
                 } else { // show full screen ringing activity
