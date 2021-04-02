@@ -36,20 +36,23 @@ import io.realm.RealmConfiguration;
 import io.realm.exceptions.RealmMigrationNeededException;
 
 public class ReminderModel extends ViewModel {
-    //region Private constants
+
+    //region Constants
+
+    //region Private Constants
     private static final String DEFAULT_NOTIFICATION_GROUP_KEY = "ÆjËèúÒ+·_²";
     private static final String DEFAULT_NOTIFICATION_GROUP_NAME = "Default notification group";
     private static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "RxLwKNdHEL";
     private static final String DEFAULT_NOTIFICATION_CHANNEL_NAME = "Other notifications";
     //endregion
 
-    //region Public constants
+    //region Public Constants
     public static long[] VIBRATE_PATTERN = {500, 500};
     public static final int ALARM_NOTIFICATION_ID = 117;
     public static final String ACTION_SNOOZE_ALARM = "com.example.remindme.SNOOZE.ALARM";
     public static final String ACTION_DISMISS_ALARM = "com.example.remindme.DISMISS.ALARM";
     public static final String ACTION_ALERT_NOTIFICATION_CONTENT_FULLSCREEN = "com.example.remindme.DISMISS.ALARM";
-    public static final String ACTION_ALERT_NOTIFICATION_CONTENT = "£fcEB]¬B9æ";
+    public static final String ACTION_ALERT_NOTIFICATION_CONTENT = "com.example.remindme.£fcEB]¬B9æ";
     public static final String ACTION_ALERT_FULLSCREEN = "com.example.remindme.ALERT.FULLSCREEN";
     public static final String ACTION_CLOSE_ALARM_ACTIVITY = "com.example.remindme.CLOSE.ALARM.ACTIVITY";
 
@@ -58,47 +61,23 @@ public class ReminderModel extends ViewModel {
     public static final String ALARM_NOTIFICATION_CHANNEL_NAME = "Alarm notifications";
 
     public static final int DEFAULT_NOTIFICATION_GROUP_ID = 13;
-    public static final String ACTION_RECEIVE_ALARM = "com.example.remindme.RECEIVE.ALARM";
+    public static final String ACTION_RECEIVE_ALARM = "com.example.remindme.2eXXCW2ZrH.RECEIVE.ALARM";
     public static final String REMINDER_ID_INTENT = "uNX¯3Á×MòP";
     //endregion
 
-    //region Private static Members
+    //endregion
+
+    //region Static Members
+
+    //region Private Static Members
+
+    //region Private Static Variables
     private static Class<? extends BroadcastReceiver> externalBroadcastReceiverClass;
     private static Application application;
     private static AlarmManager alarmManager;
+    //endregion
 
-    public static void reScheduleAllActive(boolean isDeviceRebooted) {
-        final Calendar calendar = Calendar.getInstance();
-        List<ActiveReminder> reminders = getActiveReminders(null);
-        boolean isNewAlertFound = false;
-        for (int i = 0; i < reminders.size(); i++) {
-            final ActiveReminder r = reminders.get(i);
-            final ReminderModel reminderModel = new ReminderModel();
-            transformToModel(r, reminderModel);
-            if (reminderModel.getIsEnabled()) {
-                if (calendar.getTime().after(reminderModel.getAlarmTime()) && isDeviceRebooted) {
-                    // App getting killed after a while. But Broadcast receiver recreating app which leads to rescheduling.
-                    // And for the logic below it getting dismissed before it could be snoozed from alerts.
-                    // isDeviceRebooted will prevent this from happening.
-                    reminderModel.dismissByApp(calendar);
-                } else if (!reminderModel.isAlertExists()) {
-                    isNewAlertFound = true;
-
-                    if (calendar.getTime().after(reminderModel.getAlarmTime())) {
-                        notify(reminderModel.getIntId(), "Dismissing reminder!", reminderModel.getSignatureName(), reminderModel.note);
-                        reminderModel.dismissByApp(calendar);
-                    } else {
-                        notify(reminderModel.getIntId(), "New reminder!", reminderModel.getSignatureName(), reminderModel.note);
-                        reminderModel.setAlarm(reminderModel.getAlarmTime(), false);
-                    }
-                }
-            }
-        }
-        if (isNewAlertFound) {
-            notifySummary("Rescheduling reminders", null, null);
-        }
-    }
-
+    //region Private Static Functions
     private static void transformToData(ReminderModel from, ActiveReminder to) {
         to.id = from.id;
         to.alarmIntentId = from.getIntId();
@@ -191,6 +170,42 @@ public class ReminderModel extends ViewModel {
         } else {
             to.snoozeLength = 0;
             to.snoozeInterval = 0;
+        }
+    }
+    //endregion
+
+    //endregion
+
+    //region Public Static Functions
+    public static void reScheduleAllActive(boolean isDeviceRebooted) {
+        final Calendar calendar = Calendar.getInstance();
+        List<ActiveReminder> reminders = getActiveReminders(null);
+        boolean isNewAlertFound = false;
+        for (int i = 0; i < reminders.size(); i++) {
+            final ActiveReminder r = reminders.get(i);
+            final ReminderModel reminderModel = new ReminderModel();
+            transformToModel(r, reminderModel);
+            if (reminderModel.getIsEnabled()) {
+                if (calendar.getTime().after(reminderModel.getAlarmTime()) && isDeviceRebooted) {
+                    // App getting killed after a while. But Broadcast receiver recreating app which leads to rescheduling.
+                    // And for the logic below it getting dismissed before it could be snoozed from alerts.
+                    // isDeviceRebooted will prevent this from happening.
+                    reminderModel.dismissByApp(calendar);
+                } else if (!reminderModel.isAlertExists()) {
+                    isNewAlertFound = true;
+
+                    if (calendar.getTime().after(reminderModel.getAlarmTime())) {
+                        notify(reminderModel.getIntId(), "Dismissing reminder!", reminderModel.getSignatureName(), reminderModel.note);
+                        reminderModel.dismissByApp(calendar);
+                    } else {
+                        notify(reminderModel.getIntId(), "New reminder!", reminderModel.getSignatureName(), reminderModel.note);
+                        reminderModel.setAlarm(reminderModel.getAlarmTime(), false);
+                    }
+                }
+            }
+        }
+        if (isNewAlertFound) {
+            notifySummary("Rescheduling reminders", null, null);
         }
     }
 
@@ -286,70 +301,158 @@ public class ReminderModel extends ViewModel {
             }
         }
     }
+
+    public static boolean tryAppCreate(Class<? extends BroadcastReceiver> broadcastReceiverClass, Application app) {
+        externalBroadcastReceiverClass = broadcastReceiverClass;
+        application = app;
+
+        // Initialize notification channels
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(application.getApplicationContext());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager.createNotificationChannelGroup(
+                    new NotificationChannelGroup(
+                            DEFAULT_NOTIFICATION_GROUP_KEY,
+                            DEFAULT_NOTIFICATION_GROUP_NAME));
+
+            NotificationChannel alarmChannel = new NotificationChannel(
+                    ALARM_NOTIFICATION_CHANNEL_ID,
+                    ALARM_NOTIFICATION_CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_HIGH);
+            alarmChannel.setSound(null, null);
+            alarmChannel.enableVibration(false);
+
+            NotificationChannel defaultChannel = new NotificationChannel(
+                    DEFAULT_NOTIFICATION_CHANNEL_ID,
+                    DEFAULT_NOTIFICATION_CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            defaultChannel.setGroup(DEFAULT_NOTIFICATION_GROUP_KEY);
+
+            notificationManager.createNotificationChannel(alarmChannel);
+            notificationManager.createNotificationChannel(defaultChannel);
+        }
+
+        alarmManager = (AlarmManager) application.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+
+        // Initialize Realm database
+        Realm.init(application.getApplicationContext());
+        // Force drop the database and create new in case of schema mismatch
+        try {
+            Realm.getDefaultInstance();
+        } catch (RealmMigrationNeededException r) {
+            RealmConfiguration config = Realm.getDefaultConfiguration();
+            if (config == null) {
+                error("Couldn't load required configurations for Remind Me! ");
+                return false;
+            }
+            try {
+                Realm.deleteRealm(config);
+            } catch (IllegalStateException e) {
+                error("Error in initializing the Remind Me! " + e.getMessage());
+                return false;
+            }
+        }
+
+        reScheduleAllActive(false);
+
+        return true;
+    }
+
+    public static String getReminderId(Intent intent) {
+        return intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT);
+    }
+
+    public static void setReminderId(Intent intent, String reminderId) {
+        intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminderId);
+    }
+
+    public static void error(String message) {
+        Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    public static void showToast(String message) {
+        Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    public static void notify(int Id, String title, String text, String bigText) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(application.getApplicationContext(), DEFAULT_NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_reminder_notification)
+                .setLocalOnly(true)
+                .setGroup(DEFAULT_NOTIFICATION_GROUP_KEY)
+                .setContentTitle(title)
+                .setContentText(text);
+
+        if (bigText != null && !bigText.isEmpty()) {
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
+        }
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(application.getApplicationContext());
+        notificationManager.notify(Id, builder.build());
+    }
+
+    public static void notifySummary(String title, String text, String bigText) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(application.getApplicationContext(), DEFAULT_NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_reminder_notification)
+                .setLocalOnly(true)
+                .setGroup(DEFAULT_NOTIFICATION_GROUP_KEY)
+                .setGroupSummary(true)
+                .setContentTitle(title)
+                .setContentText(text);
+
+        if (bigText != null && !bigText.isEmpty()) {
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
+        }
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(application.getApplicationContext());
+        notificationManager.notify(DEFAULT_NOTIFICATION_GROUP_ID, builder.build());
+    }
+
+    public static List<ActiveReminder> getActiveReminders(String name) {
+        Realm realm = Realm.getDefaultInstance();
+        if (name != null && !name.isEmpty()) {
+            return realm.where(ActiveReminder.class).beginsWith("name", name).sort("time").findAll();
+        } else {
+            return realm.where(ActiveReminder.class).sort("time").findAll();
+        }
+    }
+
+    public static List<MissedReminder> getMissedReminders(String name) {
+        Realm realm = Realm.getDefaultInstance();
+        if (name != null && !name.isEmpty()) {
+            return realm.where(MissedReminder.class).beginsWith("name", name).findAll();
+        } else {
+            return realm.where(MissedReminder.class).findAll();
+        }
+    }
+
+    public static List<DismissedReminder> getDismissedReminders(String name) {
+        Realm realm = Realm.getDefaultInstance();
+        if (name != null && !name.isEmpty()) {
+            return realm.where(DismissedReminder.class).beginsWith("name", name).findAll();
+        } else {
+            return realm.where(DismissedReminder.class).findAll();
+        }
+    }
     //endregion
 
-    //region Private instance Members
+    //endregion
+
+    //region Instanced Members
+
+    //region Private
+
+    //region Private Instanced Variables
     private String id;
     private int intId;
     private boolean isEnable = true;
     private final ReminderRepeatModel repeatModel;
     private final ReminderSnoozeModel snoozeModel;
-
-    public ReminderSnoozeModel getSnoozeModel() {
-        return snoozeModel;
-    }
-
     private Date nextSnoozeOffTime = null;
     private ReminderRepeatModel repeatValueChangeBuffer;
     private Date originalTime;
     private Date calculatedTime;
-
-    public ReminderModel() {
-        id = null;
-        repeatModel = new ReminderRepeatModel();
-        snoozeModel = new ReminderSnoozeModel();
-    }
     //endregion
 
-    public int getIntId() {
-        return intId;
-    }
-
-    public String getSignatureName() {
-        if (StringHelper.isEmpty(name)) {
-            return String.valueOf(getIntId());
-        } else {
-            return getIntId() +
-                    " - " +
-                    name;
-        }
-    }
-
-    //region Private instance Functions
-    public void dismissByUser() {
-        Date nextTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
-        if (nextTime == null) { // EOF situation
-            archiveToFinished();
-            deleteAndCancelAlert();
-        } else {
-            calculatedTime = nextTime; // Set next trigger time.
-            //String net = UtilsDateTime.toTimeDateString(time);
-            trySaveAndSetAlert(true, false); // Save changes. // Set alarm for next trigger time.
-        }
-    }
-
-    public void dismissByApp(final Calendar currentTime) {
-        Date nextTime = getNextScheduleTime(currentTime, originalTime);
-        archiveToMissed();
-        Toast.makeText(application.getApplicationContext(), "Dismissing to missed! " + getIntId(), Toast.LENGTH_LONG).show();
-        if (nextTime == null) { // EOF situation
-            deleteAndCancelAlert();
-        } else {
-            calculatedTime = nextTime; // Set next trigger time.
-            trySaveAndSetAlert(true, false); // Save changes. // Set alarm for next trigger time.
-        }
-    }
-
+    //region Private Instanced Functions
     private boolean isAlertExists() {
         if (getIntId() != 0) {
             if (alarmManager == null) {
@@ -485,72 +588,6 @@ public class ReminderModel extends ViewModel {
             _time = nextSnoozeOffTime;
         }
         return _time;
-    }
-
-    public void snooze(boolean isByUser) {
-        Date _time = getAlarmTime();
-
-        if (snoozeModel.isEnable) {
-            Calendar currentTime = Calendar.getInstance();
-            if (currentTime.getTime().after(_time)) { // Set snooze only if current time is past alarm time or previous snooze time.
-                nextSnoozeOffTime = null; // RESET
-                Calendar nextSnoozeOff = Calendar.getInstance();
-                nextSnoozeOff.setTime(_time);
-                switch (snoozeModel.intervalOption) {
-                    default:
-                    case M5:
-                        nextSnoozeOff.add(Calendar.MINUTE, 5);
-                        break;
-                    case M10:
-                        nextSnoozeOff.add(Calendar.MINUTE, 10);
-                        break;
-                    case M15:
-                        nextSnoozeOff.add(Calendar.MINUTE, 15);
-                        break;
-                    case M30:
-                        nextSnoozeOff.add(Calendar.MINUTE, 30);
-                        break;
-                }
-                switch (snoozeModel.countOptions) {
-                    default:
-                    case R3:
-                        if (snoozeModel.count < 3) {
-                            snoozeModel.count++;
-                            nextSnoozeOffTime = nextSnoozeOff.getTime();
-                        }
-                        break;
-                    case R5:
-                        if (snoozeModel.count < 5) {
-                            snoozeModel.count++;
-                            nextSnoozeOffTime = nextSnoozeOff.getTime();
-                        }
-                        break;
-                    case RC:
-                        snoozeModel.count++;
-                        nextSnoozeOffTime = nextSnoozeOff.getTime();
-                        break;
-                }
-
-                if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
-                    showToast("Dismissing from snooze! " + getIntId());
-                    if (isByUser) {
-                        dismissByUser();
-                    } else {
-                        dismissByApp(Calendar.getInstance());
-                    }
-                } else if (currentTime.getTime().after(nextSnoozeOffTime)) { // Snooze makes no sense if its in past!
-                    showToast("Dismissing from snooze! " + getIntId());
-                    if (isByUser) {
-                        dismissByUser();
-                    } else {
-                        dismissByApp(Calendar.getInstance());
-                    }
-                } else {
-                    showToast("Snoozing! " + getIntId());
-                    trySaveAndSetAlert(false, false);
-                }
-            }
-        }
     }
 
     private boolean trySaveAndSetAlert(boolean isResetSnooze, boolean isShowElapseTimeToast) {
@@ -791,8 +828,6 @@ public class ReminderModel extends ViewModel {
         }
         return nextTime;
     }
-    //endregion
-
 
     private Intent createAlarmManagerAlarmIntent() {
         return new Intent(application.getApplicationContext(), externalBroadcastReceiverClass)
@@ -812,148 +847,132 @@ public class ReminderModel extends ViewModel {
     }
     //endregion
 
-    //region Public static Functions
-    public static boolean tryAppCreate(Class<? extends BroadcastReceiver> broadcastReceiverClass, Application app) {
-        externalBroadcastReceiverClass = broadcastReceiverClass;
-        application = app;
+    //endregion
 
-        // Initialize notification channels
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(application.getApplicationContext());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.createNotificationChannelGroup(
-                    new NotificationChannelGroup(
-                            DEFAULT_NOTIFICATION_GROUP_KEY,
-                            DEFAULT_NOTIFICATION_GROUP_NAME));
+    //region Public
 
-            NotificationChannel alarmChannel = new NotificationChannel(
-                    ALARM_NOTIFICATION_CHANNEL_ID,
-                    ALARM_NOTIFICATION_CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_HIGH);
-            alarmChannel.setSound(null, null);
-            alarmChannel.enableVibration(false);
+    //region Public Instanced Functions/Constructor
+    public ReminderModel() {
+        id = null;
+        repeatModel = new ReminderRepeatModel();
+        snoozeModel = new ReminderSnoozeModel();
+    }
 
-            NotificationChannel defaultChannel = new NotificationChannel(
-                    DEFAULT_NOTIFICATION_CHANNEL_ID,
-                    DEFAULT_NOTIFICATION_CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            defaultChannel.setGroup(DEFAULT_NOTIFICATION_GROUP_KEY);
+    public ReminderSnoozeModel getSnoozeModel() {
+        return snoozeModel;
+    }
 
-            notificationManager.createNotificationChannel(alarmChannel);
-            notificationManager.createNotificationChannel(defaultChannel);
+    public int getIntId() {
+        return intId;
+    }
+
+    public String getSignatureName() {
+        if (StringHelper.isEmpty(name)) {
+            return String.valueOf(getIntId());
+        } else {
+            return getIntId() +
+                    " - " +
+                    name;
         }
+    }
 
-        alarmManager = (AlarmManager) application.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+    public void dismissByUser() {
+        Date nextTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
+        if (nextTime == null) { // EOF situation
+            archiveToFinished();
+            deleteAndCancelAlert();
+        } else {
+            calculatedTime = nextTime; // Set next trigger time.
+            //String net = UtilsDateTime.toTimeDateString(time);
+            trySaveAndSetAlert(true, false); // Save changes. // Set alarm for next trigger time.
+        }
+    }
 
-        // Initialize Realm database
-        Realm.init(application.getApplicationContext());
-        // Force drop the database and create new in case of schema mismatch
-        try {
-            Realm.getDefaultInstance();
-        } catch (RealmMigrationNeededException r) {
-            RealmConfiguration config = Realm.getDefaultConfiguration();
-            if (config == null) {
-                error("Couldn't load required configurations for Remind Me! ");
-                return false;
+    public void dismissByApp(final Calendar currentTime) {
+        Date nextTime = getNextScheduleTime(currentTime, originalTime);
+        archiveToMissed();
+        Toast.makeText(application.getApplicationContext(), "Dismissing to missed! " + getIntId(), Toast.LENGTH_LONG).show();
+        if (nextTime == null) { // EOF situation
+            deleteAndCancelAlert();
+        } else {
+            calculatedTime = nextTime; // Set next trigger time.
+            trySaveAndSetAlert(true, false); // Save changes. // Set alarm for next trigger time.
+        }
+    }
+
+    public void snooze(boolean isByUser) {
+        Date _time = getAlarmTime();
+
+        if (snoozeModel.isEnable) {
+            Calendar currentTime = Calendar.getInstance();
+            if (currentTime.getTime().after(_time)) { // Set snooze only if current time is past alarm time or previous snooze time.
+                nextSnoozeOffTime = null; // RESET
+                Calendar nextSnoozeOff = Calendar.getInstance();
+                nextSnoozeOff.setTime(_time);
+                switch (snoozeModel.intervalOption) {
+                    default:
+                    case M5:
+                        nextSnoozeOff.add(Calendar.MINUTE, 5);
+                        break;
+                    case M10:
+                        nextSnoozeOff.add(Calendar.MINUTE, 10);
+                        break;
+                    case M15:
+                        nextSnoozeOff.add(Calendar.MINUTE, 15);
+                        break;
+                    case M30:
+                        nextSnoozeOff.add(Calendar.MINUTE, 30);
+                        break;
+                }
+                switch (snoozeModel.countOptions) {
+                    default:
+                    case R3:
+                        if (snoozeModel.count < 3) {
+                            snoozeModel.count++;
+                            nextSnoozeOffTime = nextSnoozeOff.getTime();
+                        }
+                        break;
+                    case R5:
+                        if (snoozeModel.count < 5) {
+                            snoozeModel.count++;
+                            nextSnoozeOffTime = nextSnoozeOff.getTime();
+                        }
+                        break;
+                    case RC:
+                        snoozeModel.count++;
+                        nextSnoozeOffTime = nextSnoozeOff.getTime();
+                        break;
+                }
+
+                if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
+                    showToast("Dismissing from snooze! " + getIntId());
+                    if (isByUser) {
+                        dismissByUser();
+                    } else {
+                        dismissByApp(Calendar.getInstance());
+                    }
+                } else if (currentTime.getTime().after(nextSnoozeOffTime)) { // Snooze makes no sense if its in past!
+                    showToast("Dismissing from snooze! " + getIntId());
+                    if (isByUser) {
+                        dismissByUser();
+                    } else {
+                        dismissByApp(Calendar.getInstance());
+                    }
+                } else {
+                    showToast("Snoozing! " + getIntId());
+                    trySaveAndSetAlert(false, false);
+                }
             }
-            try {
-                Realm.deleteRealm(config);
-            } catch (IllegalStateException e) {
-                error("Error in initializing the Remind Me! " + e.getMessage());
-                return false;
-            }
-        }
-
-        reScheduleAllActive(false);
-
-        return true;
-    }
-
-    public static String getReminderId(Intent intent) {
-        return intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT);
-    }
-
-    public static void setReminderId(Intent intent, String reminderId) {
-        intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminderId);
-    }
-
-    public static void error(String message) {
-        Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    public static void showToast(String message) {
-        Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    public static void notify(int Id, String title, String text, String bigText) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(application.getApplicationContext(), DEFAULT_NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_reminder_notification)
-                .setLocalOnly(true)
-                .setGroup(DEFAULT_NOTIFICATION_GROUP_KEY)
-                .setContentTitle(title)
-                .setContentText(text);
-
-        if (bigText != null && !bigText.isEmpty()) {
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
-        }
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(application.getApplicationContext());
-        notificationManager.notify(Id, builder.build());
-    }
-
-    public static void notifySummary(String title, String text, String bigText) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(application.getApplicationContext(), DEFAULT_NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_reminder_notification)
-                .setLocalOnly(true)
-                .setSound(null)
-                .setVibrate(null)
-                .setGroup(DEFAULT_NOTIFICATION_GROUP_KEY)
-                .setGroupSummary(true)
-                .setContentTitle(title)
-                .setContentText(text);
-
-        if (bigText != null && !bigText.isEmpty()) {
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
-        }
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(application.getApplicationContext());
-        notificationManager.notify(DEFAULT_NOTIFICATION_GROUP_ID, builder.build());
-    }
-
-    public static List<ActiveReminder> getActiveReminders(String name) {
-        Realm realm = Realm.getDefaultInstance();
-        if (name != null && !name.isEmpty()) {
-            return realm.where(ActiveReminder.class).beginsWith("name", name).sort("time").findAll();
-        } else {
-            return realm.where(ActiveReminder.class).sort("time").findAll();
-        }
-    }
-
-    public static List<MissedReminder> getMissedReminders(String name) {
-        Realm realm = Realm.getDefaultInstance();
-        if (name != null && !name.isEmpty()) {
-            return realm.where(MissedReminder.class).beginsWith("name", name).findAll();
-        } else {
-            return realm.where(MissedReminder.class).findAll();
-        }
-    }
-
-    public static List<DismissedReminder> getDismissedReminders(String name) {
-        Realm realm = Realm.getDefaultInstance();
-        if (name != null && !name.isEmpty()) {
-            return realm.where(DismissedReminder.class).beginsWith("name", name).findAll();
-        } else {
-            return realm.where(DismissedReminder.class).findAll();
         }
     }
     //endregion
 
-    //region Public instance Members
+    //region Public Instanced Members
     public String name;
     public String note;
     public Uri ringToneUri = null;
     public boolean isEnableTone = true;
     public boolean isEnableVibration = true;
-
     //endregion
 
     //region Public instance functions
@@ -1192,5 +1211,10 @@ public class ReminderModel extends ViewModel {
     public boolean trySaveAndSetAlert(boolean isShowElapseTimeToast) {
         return trySaveAndSetAlert(true, isShowElapseTimeToast);
     }
+    //endregion
+
+    //endregion
+
+    //endregion
 
 }
