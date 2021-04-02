@@ -66,7 +66,7 @@ public class ReminderModel extends ViewModel {
     private static Class<? extends BroadcastReceiver> externalBroadcastReceiverClass;
     private static Application application;
     private static AlarmManager alarmManager;
-    private static boolean isRinging = false;
+
     public static void reScheduleAllActive(boolean isDeviceRebooted) {
         final Calendar calendar = Calendar.getInstance();
         List<ActiveReminder> reminders = getActiveReminders(null);
@@ -300,7 +300,13 @@ public class ReminderModel extends ViewModel {
     private String id;
     private int intId;
     private boolean isEnable = true;
-    private ReminderRepeatModel repeatModel;
+    private final ReminderRepeatModel repeatModel;
+    private final ReminderSnoozeModel snoozeModel;
+
+    public ReminderSnoozeModel getSnoozeModel() {
+        return snoozeModel;
+    }
+
     private Date nextSnoozeOffTime = null;
     private ReminderRepeatModel repeatValueChangeBuffer;
     private Date originalTime;
@@ -310,7 +316,6 @@ public class ReminderModel extends ViewModel {
         id = null;
         repeatModel = new ReminderRepeatModel();
         snoozeModel = new ReminderSnoozeModel();
-        //notificationManager = NotificationManagerCompat.from(application.getApplicationContext());
     }
     //endregion
 
@@ -806,7 +811,7 @@ public class ReminderModel extends ViewModel {
     //endregion
 
     //region Public static Functions
-    public static void onAppCreate(Class<? extends BroadcastReceiver> broadcastReceiverClass, Application app) {
+    public static boolean tryAppCreate(Class<? extends BroadcastReceiver> broadcastReceiverClass, Application app) {
         externalBroadcastReceiverClass = broadcastReceiverClass;
         //alertServiceClass = serviceClass;
         //lockScreenAlertActivityClass = ringingActivity;
@@ -846,9 +851,21 @@ public class ReminderModel extends ViewModel {
             Realm.getDefaultInstance();
         } catch (RealmMigrationNeededException r) {
             RealmConfiguration config = Realm.getDefaultConfiguration();
-            Realm.deleteRealm(config);
+            if (config == null) {
+                error("Couldn't load required configurations for Remind Me! ");
+                return false;
+            }
+            try {
+                Realm.deleteRealm(config);
+            } catch (IllegalStateException e) {
+                error("Error in initializing the Remind Me! " + e.getMessage());
+                return false;
+            }
         }
+
         reScheduleAllActive(false);
+
+        return true;
     }
 
     public static String getReminderId(Intent intent) {
@@ -880,9 +897,7 @@ public class ReminderModel extends ViewModel {
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(application.getApplicationContext());
-        if (notificationManager != null) {
-            notificationManager.notify(Id, builder.build());
-        }
+        notificationManager.notify(Id, builder.build());
     }
 
     public static void notifySummary(String title, String text, String bigText) {
@@ -901,9 +916,7 @@ public class ReminderModel extends ViewModel {
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(application.getApplicationContext());
-        if (notificationManager != null) {
-            notificationManager.notify(DEFAULT_NOTIFICATION_GROUP_ID, builder.build());
-        }
+        notificationManager.notify(DEFAULT_NOTIFICATION_GROUP_ID, builder.build());
     }
 
     public static List<ActiveReminder> getActiveReminders(String name) {
@@ -940,7 +953,7 @@ public class ReminderModel extends ViewModel {
     public Uri ringToneUri = null;
     public boolean isEnableTone = true;
     public boolean isEnableVibration = true;
-    public ReminderSnoozeModel snoozeModel;
+
     //endregion
 
     //region Public instance functions

@@ -143,7 +143,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         sw_reminder_snooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reminderModel.snoozeModel.isEnable = sw_reminder_snooze.isChecked();
+                reminderModel.getSnoozeModel().isEnable = sw_reminder_snooze.isChecked();
                 refreshForm();
             }
         });
@@ -345,9 +345,9 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         tv_reminder_name_summary.setText(reminderModel.name);
         tv_reminder_note_summary.setText(reminderModel.note);
         tv_reminder_repeat_summary.setText(reminderModel.getRepeatSettingString());
-        tv_reminder_snooze_summary.setText(reminderModel.snoozeModel.toString());
+        tv_reminder_snooze_summary.setText(reminderModel.getSnoozeModel().toString());
 
-        sw_reminder_snooze.setChecked(reminderModel.snoozeModel.isEnable);
+        sw_reminder_snooze.setChecked(reminderModel.getSnoozeModel().isEnable);
         sw_reminder_repeat.setChecked(reminderModel.getRepeatOption() != ReminderRepeatModel.ReminderRepeatOptions.NONE);
 
         if (reminderModel.ringToneUri == null) {
@@ -431,7 +431,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     @Override
     public ReminderSnoozeModel getSnoozeModel() {
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.snoozeModel;
+        return reminderModel.getSnoozeModel();
     }
 
     @Override

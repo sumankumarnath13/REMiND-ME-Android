@@ -13,7 +13,6 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.os.Vibrator;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -101,7 +100,7 @@ public class AlertService extends Service {
 
                 if (isActivityEverOpened && !isActivityOpen) {
                     openAlarmActivity();
-                } else if (isCallDetected && !isActivityOpen) {
+                } else if (isCallDetected && !isActivityOpen && !(OsHelper.isInteractive(service) && OsHelper.isHeadsUpContinued())) {
                     openAlarmActivity();
                 }
             } else {
@@ -299,11 +298,8 @@ public class AlertService extends Service {
             //Oreo and onwards won't allow service to just run without notification.
             startForeground(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
         } else {
-
             if (OsHelper.isHeadsUpSupported()) { // Show heads up notification if screen is on
-                PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                boolean isScreenOn = powerManager.isInteractive();
-                if (isScreenOn) { // show heads up
+                if (OsHelper.isInteractive(this)) { // show heads up
                     notificationManager.notify(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
                 } else { // show full screen ringing activity
                     openAlarmActivity();
