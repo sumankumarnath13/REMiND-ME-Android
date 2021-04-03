@@ -28,8 +28,4 @@ public class AlertServiceBinder extends Binder {
         service.setActivityOpen(value);
     }
 
-    public boolean getIsIdle() {
-        return service.getIsIdle();
-    }
-
 }

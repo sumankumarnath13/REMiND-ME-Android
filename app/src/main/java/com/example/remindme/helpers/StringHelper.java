@@ -6,6 +6,7 @@ import java.util.Date;
 public class StringHelper {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yy");
     public static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm a");
+    public static final SimpleDateFormat ALERT_TIME_FORMAT = new SimpleDateFormat("h:mm a");
     public static final SimpleDateFormat WEEKDAY_FORMAT = new SimpleDateFormat("EEE");
     public static final SimpleDateFormat WEEKDAY_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yy");
     public static final SimpleDateFormat TIME_DATE_FORMAT = new SimpleDateFormat("hh:mm a - EEE, dd MMM yy");
@@ -15,6 +16,14 @@ public class StringHelper {
     public static String toTime(Date value) {
         if (value != null) {
             return TIME_FORMAT.format(value);
+        } else {
+            return "null";
+        }
+    }
+
+    public static String toAlertTime(Date value) {
+        if (value != null) {
+            return ALERT_TIME_FORMAT.format(value);
         } else {
             return "null";
         }

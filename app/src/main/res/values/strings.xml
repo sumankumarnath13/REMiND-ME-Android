@@ -83,6 +83,6 @@
     <string name="new_reminder_heading">NEW</string>
     <string name="view_reminder_heading">VIEW</string>
     <string name="edit_reminder_heading">UPDATE</string>
-    <string name="reminder_alert_heading">ALERT</string>
+    <string name="reminder_alert_heading">DING DONG</string>
     <string name="heading_calculated_alarm_time">Calculated alarm time</string>
 </resources>

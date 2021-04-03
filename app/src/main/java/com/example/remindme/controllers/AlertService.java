@@ -30,20 +30,16 @@ public class AlertService extends Service {
     private NotificationManagerCompat notificationManager;
     private boolean isBusy = false;
     private boolean isChanged = false;
-    private boolean isActivityEverOpened = false;
+    private boolean isActivityOpenedOnce = false;
     private boolean isActivityOpen = false;
     private boolean isIdle = true;
-    private boolean isCallDetected = false;
-
-    public boolean getIsIdle() {
-        return isIdle;
-    }
+    private boolean isInterrupted = false;
 
     public void setActivityOpen(boolean value) {
         isActivityOpen = value;
 
-        if (isActivityOpen && !isActivityEverOpened) {
-            isActivityEverOpened = true;
+        if (isActivityOpen && !isActivityOpenedOnce) {
+            isActivityOpenedOnce = true;
         }
     }
 
@@ -90,38 +86,47 @@ public class AlertService extends Service {
             service = hostService;
         }
 
+        private final int systemSettleDelay = 531;
+
         @Override
         public void onCallStateChanged(int state, String ignored) {
             if (state == TelephonyManager.CALL_STATE_IDLE) {
                 isIdle = true;
 
-                service.startRinging(service);
+                if (!isActivityOpen) {
+                    if (isActivityOpenedOnce || isInterrupted) {
+                        new CountDownTimer(systemSettleDelay, systemSettleDelay) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
 
-                if (isActivityEverOpened && !isActivityOpen) {
-                    openAlarmActivity();
-                } else if (isCallDetected && !isActivityOpen && !(OsHelper.isInteractive(service) && OsHelper.isPostOreo())) {
-                    openAlarmActivity();
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                service.startRinging(service);
+                                openAlarmActivity();
+                            }
+                        }.start();
+                    }
                 }
             } else {
                 isIdle = false;
-
-                if (!isCallDetected) {
-                    isCallDetected = true;
+                if (!isInterrupted) {
+                    isInterrupted = true;
                 }
-
                 service.stopRinging(service);
 
                 // Close the activity if it was opened
-                if (isActivityEverOpened && isActivityOpen) {
+                if (isActivityOpen) {
                     broadcastCloseAlarmActivity();
                 }
             }
         }
     }
 
-    private final PhoneStateChangeListener mPhoneStateListener = new PhoneStateChangeListener(this);
+    private final PhoneStateChangeListener phoneStateChangeListener = new PhoneStateChangeListener(this);
 
-    private TelephonyManager mTelephonyManager;
+    private TelephonyManager telephonyManager;
 
     private Intent createNotificationActionBroadcastIntent(String actionName) {
         return new Intent(actionName);
@@ -129,9 +134,16 @@ public class AlertService extends Service {
 
     private Intent createAlarmActivityIntent(String actionName) {
         // Setting an action is important. It help distinguish between intents with other values targeting same activity
-        return new Intent(this, ActivityReminderRinging.class)
-                .setAction(actionName)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
+        if (OsHelper.isOreoOrLater()) {
+            return new Intent(this, ActivityReminderRinging.class)
+                    .setAction(actionName)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
+        } else {
+            return new Intent(this, ActivityReminderRinging.class)
+                    .setAction(actionName)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
+
+        }
     }
 
     public Notification getAlarmHeadsUp(ReminderModel model) {
@@ -265,7 +277,7 @@ public class AlertService extends Service {
             isInternalBroadcastReceiverRegistered = true;
         }
 
-        mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     @Override
@@ -292,35 +304,40 @@ public class AlertService extends Service {
         }
 
         isBusy = true;
+        telephonyManager.getCallState();
+        telephonyManager.listen(phoneStateChangeListener, PhoneStateListener.LISTEN_CALL_STATE);
 
         if (OsHelper.isOreoOrLater()) {
+
             //Oreo and onwards won't allow service to just run without notification.
             startForeground(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
-        } else {
-            if (OsHelper.isLollipopOrLater()) { // Show heads up notification if screen is on
-                if (OsHelper.isInteractive(this)) { // show heads up
-                    notificationManager.notify(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
-                } else { // show full screen ringing activity
-                    openAlarmActivity();
-                }
-            } else { // heads ups not supported. Show full screen ringing activity is only option available.
+
+            if (isIdle) startRinging(this);
+
+        } else if (OsHelper.isLollipopOrLater()) {
+
+            notificationManager.notify(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
+
+            if (!OsHelper.isInteractive(this) && isIdle) { // show heads up
+                startRinging(this);
                 openAlarmActivity();
             }
+
+        } else if (isIdle) {
+
+            startRinging(this);
+            openAlarmActivity();
+
         }
 
-        startRinging(this);
-        mTelephonyManager.getCallState();
-        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         timer.start();
-
         return START_NOT_STICKY;
-        // return ReminderModel.onServiceStart(this, intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         timer.cancel();
-        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        telephonyManager.listen(phoneStateChangeListener, PhoneStateListener.LISTEN_NONE);
         stopRinging(this);
 
         if (isInternalBroadcastReceiverRegistered) {
@@ -334,7 +351,6 @@ public class AlertService extends Service {
         }
 
         isBusy = false;
-
         super.onDestroy();
     }
 }

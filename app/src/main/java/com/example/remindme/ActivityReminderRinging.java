@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -25,6 +26,8 @@ import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.viewModels.ReminderModel;
+
+import java.util.Date;
 
 public class ActivityReminderRinging extends AppCompatActivity {
 
@@ -47,36 +50,52 @@ public class ActivityReminderRinging extends AppCompatActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             serviceBinder = (AlertServiceBinder) service;
 
-            if (serviceBinder.getIsIdle()) {
-                serviceBinder.setActivityOpen(true);
+            serviceBinder.setActivityOpen(true);
 
-                ReminderModel reminderModel = serviceBinder.getServingReminder();
-                if (reminderModel == null) {
-                    ReminderModel.showToast("Serious flow trouble!");
-                    finish();
-                    return;
-                }
-
-                String date_str = StringHelper.toTimeDate(reminderModel.getOriginalTime());
-                TextView t_date = findViewById(R.id.txt_reminder_ringing_date);
-                Spannable spannable = new SpannableString(date_str);
-                spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_success)), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannable.setSpan(new RelativeSizeSpan(1.5f), 0, date_str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                t_date.setText(spannable);
-                ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
-                ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
-
-                btnSnooze.setVisibility(View.VISIBLE);
-                btnDismiss.setVisibility(View.VISIBLE);
-
-            } else {
+            ReminderModel reminderModel = serviceBinder.getServingReminder();
+            if (reminderModel == null) {
+                ReminderModel.showToast("Serious flow trouble!");
                 finish();
+                return;
             }
+
+            txt_reminder_alarm_time.setText(StringHelper.toAlertTime(reminderModel.getOriginalTime()));
+            ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
+            ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
+
+            currentTimeTimer.start();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             //mServiceBound = false;
+            currentTimeTimer.cancel();
+        }
+    };
+
+    private final int[] colors = new int[]{R.color.text_success, R.color.text_info, R.color.text_warning, R.color.text_danger, R.color.text_gray1};
+    private int colorIndex = 0;
+    private final CountDownTimer currentTimeTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            tv_time_now.setText(StringHelper.toAlertTime(new Date()));
+
+            if (colorIndex >= colors.length) {
+                colorIndex = 0;
+            }
+
+            final String alertStr = getString(R.string.reminder_alert_heading);
+            Spannable spannable = new SpannableString(alertStr);
+            spannable.setSpan(new ForegroundColorSpan(getResources().getColor(colors[colorIndex])), 0, alertStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new RelativeSizeSpan(2.7f), 0, alertStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tv_reminder_ringing_title.setText(spannable);
+
+            colorIndex++;
+        }
+
+        @Override
+        public void onFinish() {
+
         }
     };
 
@@ -111,14 +130,15 @@ public class ActivityReminderRinging extends AppCompatActivity {
         }
     }
 
-    private Button btnSnooze;
-    private Button btnDismiss;
+    private TextView tv_time_now;
+    private TextView tv_reminder_ringing_title;
+    private TextView txt_reminder_alarm_time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_ringing);
-        ActivityHelper.setTitle(this, getResources().getString(R.string.reminder_alert_heading));
+        ActivityHelper.setTitle(this, null);
 
         // Important: have to do the following in order to show without unlocking
         this.getWindow().addFlags(
@@ -134,8 +154,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
             setTurnScreenOn(true);
         }
 
-        btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
-        btnDismiss.setVisibility(View.INVISIBLE);
+        Button btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
         btnDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,8 +163,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
             }
         });
 
-        btnSnooze = findViewById(R.id.btn_reminder_ringing_snooze);
-        btnSnooze.setVisibility(View.INVISIBLE);
+        Button btnSnooze = findViewById(R.id.btn_reminder_ringing_snooze);
         btnSnooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,7 +172,9 @@ public class ActivityReminderRinging extends AppCompatActivity {
             }
         });
 
-        bindAlarmService();
+        tv_time_now = findViewById(R.id.tv_time_now);
+        tv_reminder_ringing_title = findViewById(R.id.tv_reminder_ringing_title);
+        txt_reminder_alarm_time = findViewById(R.id.txt_reminder_alarm_time);
     }
 
     @Override
@@ -166,12 +186,12 @@ public class ActivityReminderRinging extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        super.onPause();
         if (serviceBinder != null && mServiceBound) {
             serviceBinder.setActivityOpen(false);
         }
         unbindAlarmService();
         unRegisterReceiver();
+        super.onPause();
     }
 
     @Override
