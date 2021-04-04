@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
+import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.os.CountDownTimer;
@@ -45,6 +47,10 @@ public class AlertService extends Service {
 
     private boolean isRinging = false;
     private Ringtone playingRingtone;
+    private AudioManager audioManager;
+    private AudioFocusRequest audioFocusRequest;
+    private int audioFocusGrantStatus = -1;
+    private boolean isAudioFocusRequested = false;
     private boolean isInternalBroadcastReceiverRegistered = false;
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -201,12 +207,57 @@ public class AlertService extends Service {
         }
     }
 
+    private final AudioManager.OnAudioFocusChangeListener audioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+
+            }
+        }
+    };
+
     private void startRinging(Context context) {
         if (isBusy && servingReminder.isEnableTone && !isRinging) {
             if (servingReminder.ringToneUri == null) {
                 servingReminder.ringToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             }
+
             playingRingtone = RingtoneManager.getRingtone(context, servingReminder.ringToneUri);
+
+            if (OsHelper.isLollipopOrLater()) {
+
+
+                if (OsHelper.isOreoOrLater()) {
+                    AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_ALARM)
+                            .build();
+                    audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+                            .setAudioAttributes(audioAttributes)
+                            .setOnAudioFocusChangeListener(audioFocusChangeListener).build();
+
+                    if (audioFocusRequest != null) {
+                        audioFocusGrantStatus = audioManager.requestAudioFocus(audioFocusRequest);
+                        //audioManager.getRingerMode()
+                        isAudioFocusRequested = true;
+                    }
+                } else {
+                    audioFocusGrantStatus = audioManager.requestAudioFocus(audioFocusChangeListener,
+                            AudioManager.STREAM_ALARM, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+                    isAudioFocusRequested = true;
+                }
+            } else {
+                audioFocusGrantStatus = audioManager.requestAudioFocus(audioFocusChangeListener,
+                        AudioManager.STREAM_ALARM, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+                isAudioFocusRequested = true;
+            }
+
+            if (!isAudioFocusRequested) {
+                playingRingtone.play();
+                isRinging = true;
+            }
+        }
+
+        if (isAudioFocusRequested && audioFocusGrantStatus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             playingRingtone.play();
             isRinging = true;
         }
@@ -219,6 +270,15 @@ public class AlertService extends Service {
         if (playingRingtone != null && isRinging) {
             playingRingtone.stop();
             isRinging = false;
+        }
+
+        if (audioManager != null && audioFocusGrantStatus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            if (OsHelper.isOreoOrLater()) {
+                audioManager.abandonAudioFocusRequest(audioFocusRequest);
+            } else {
+                audioManager.abandonAudioFocus(audioFocusChangeListener);
+            }
+            isAudioFocusRequested = false;
         }
 
         getVibrator(context).cancel();
@@ -277,6 +337,7 @@ public class AlertService extends Service {
             isInternalBroadcastReceiverRegistered = true;
         }
 
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
     }
 
