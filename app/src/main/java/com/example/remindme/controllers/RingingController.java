@@ -7,12 +7,14 @@ import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.os.Vibrator;
 
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
 public class RingingController {
+    private static final int volumeIncreaseInterval = 3000;
     private boolean isRinging = false;
     private Vibrator vibrator;
     private boolean isVibrating = false;
@@ -21,6 +23,10 @@ public class RingingController {
     private AudioFocusRequest audioFocusRequest;
     private int audioFocusGrantStatus = AudioManager.AUDIOFOCUS_REQUEST_FAILED;
     private boolean isAudioFocusRequested = false;
+    private int originalVolumeIndex = 0;
+    private int maxVolumeIndex = 0;
+    private int adjustedVolumeIndex = 0;
+    private boolean isIncreaseVolume;
 
     private final AudioManager.OnAudioFocusChangeListener audioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
@@ -31,7 +37,27 @@ public class RingingController {
         }
     };
 
+    private final CountDownTimer volumeUpTimer = new CountDownTimer(Integer.MAX_VALUE, volumeIncreaseInterval) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            adjustedVolumeIndex++;
+            if (adjustedVolumeIndex > maxVolumeIndex) {
+                volumeUpTimer.cancel();
+                return;
+            }
+
+            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, adjustedVolumeIndex, 0);
+        }
+
+        @Override
+        public void onFinish() {
+
+        }
+    };
+
     public void startTone(Context context, Uri ringToneUri, boolean isGraduallyIncreaseVolume, int maxVolume) {
+        isIncreaseVolume = isGraduallyIncreaseVolume;
+
         if (audioManager == null) {
             audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         }
@@ -42,6 +68,7 @@ public class RingingController {
             }
 
             playingRingtone = RingtoneManager.getRingtone(context, ringToneUri);
+            playingRingtone.setStreamType(AudioManager.STREAM_ALARM);
 
             if (playingRingtone != null) {
                 if (OsHelper.isOreoOrLater()) {
@@ -63,8 +90,33 @@ public class RingingController {
                 }
 
                 if (isAudioFocusRequested && audioFocusGrantStatus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    playingRingtone.play();
-                    isRinging = true;
+                    if (isIncreaseVolume) {
+                        originalVolumeIndex = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+                        final int possibleMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+
+                        if (OsHelper.isPOrLater()) {
+                            adjustedVolumeIndex = audioManager.getStreamMinVolume(AudioManager.STREAM_ALARM);
+                        } else {
+                            adjustedVolumeIndex = 1;
+                        }
+
+                        if (maxVolume > 0 && maxVolume <= possibleMaxVolume) {
+                            maxVolumeIndex = maxVolume;
+                        } else {
+                            maxVolumeIndex = possibleMaxVolume;
+                        }
+
+                        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, adjustedVolumeIndex, 0);
+
+                        playingRingtone.play();
+                        isRinging = true;
+
+                        volumeUpTimer.start();
+                    } else {
+
+                        playingRingtone.play();
+                        isRinging = true;
+                    }
                 }
             }
         }
@@ -92,13 +144,23 @@ public class RingingController {
 
     public void stopRinging() {
         if (isRinging) {
+
             playingRingtone.stop();
+
             isRinging = false;
+
+            if (isIncreaseVolume) {
+                volumeUpTimer.cancel();
+                //audioManager.adjustVolume(AudioManager.ADJUST_SAME, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolumeIndex, 0);
+            }
+
             if (OsHelper.isOreoOrLater()) {
                 audioManager.abandonAudioFocusRequest(audioFocusRequest);
             } else {
                 audioManager.abandonAudioFocus(audioFocusChangeListener);
             }
+
             isAudioFocusRequested = false;
         }
 

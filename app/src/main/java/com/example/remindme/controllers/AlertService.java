@@ -60,8 +60,7 @@ public class AlertService extends Service {
     };
 
     private final long INTERVAL = 1000L;
-    private final long DURATION = 60 * INTERVAL;
-    private final CountDownTimer timer = new CountDownTimer(DURATION, INTERVAL) {
+    private final CountDownTimer timer = new CountDownTimer(ReminderModel.RING_DURATION, INTERVAL) {
         @Override
         public void onTick(long millisUntilFinished) {
 
@@ -182,7 +181,7 @@ public class AlertService extends Service {
     private void startRinging(Context context) {
         if (isBusy) {
             if (servingReminder.isEnableTone) {
-                ringingController.startTone(context, servingReminder.ringToneUri, false, 0);
+                ringingController.startTone(context, servingReminder.ringToneUri, true, 20);
             }
             if (servingReminder.isEnableVibration) {
                 ringingController.startVibrating(context);
@@ -321,6 +320,7 @@ public class AlertService extends Service {
             servingReminder.snooze(false);
         }
 
+        WakeController.releaseWake();
         isBusy = false;
         super.onDestroy();
     }

@@ -31,6 +31,7 @@ public class AlertBroadcastReceiver extends BroadcastReceiver {
                 ReminderModel.reScheduleAllActive(true);
                 break;
             case ReminderModel.ACTION_RECEIVE_ALARM:
+                WakeController.acquireWake(context);
                 Intent startService = new Intent(context, AlertService.class).putExtra(ReminderModel.REMINDER_ID_INTENT, ReminderModel.getReminderId(intent));
                 if (OsHelper.isOreoOrLater()) {
                     context.startForegroundService(startService);
