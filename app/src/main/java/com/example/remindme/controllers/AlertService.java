@@ -183,7 +183,7 @@ public class AlertService extends Service {
     private void startRinging(Context context) {
         if (isBusy) {
             if (servingReminder.isEnableTone) {
-                ringingController.startTone(context, servingReminder.ringToneUri, servingReminder.isIncreaseVolumeGradually(), servingReminder.getAlarmVolume());
+                ringingController.startTone(context, servingReminder.ringToneUri, servingReminder.isIncreaseVolumeGradually(), servingReminder.getAlarmVolumePercentage());
             }
             if (servingReminder.isEnableVibration) {
                 ringingController.startVibrating(context);

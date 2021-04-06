@@ -74,33 +74,15 @@ public class ReminderModel extends ViewModel {
 
     //region Private Static Variables
     private static Class<? extends BroadcastReceiver> externalBroadcastReceiverClass;
-    private int alarmVolume;
+    private int alarmVolumePercentage;
 
-    public int getAlarmVolume() {
-        return alarmVolume;
+    public int getAlarmVolumePercentage() {
+        return alarmVolumePercentage;
     }
 
-    public int getVolumePercentage(Context context) {
-        int volume = alarmVolume;
-        if (volume == 0) {
-            volume = OsHelper.getAlarmVolume(context);
-        }
-
-        int max = OsHelper.getMaxAlarmVolume(context);
-        if (max > 0) {
-            return (100 / max) * volume;
-        } else {
-            return 0;
-        }
+    public void setAlarmVolumePercentage(int value) {
+        alarmVolumePercentage = Math.min(Math.max(value, 0), 100);
     }
-
-    public void setVolumePercentage(Context context, int value) {
-        int min = OsHelper.getMinAlarmVolume(context);
-        int max = OsHelper.getMaxAlarmVolume(context);
-        final int realValue = (int) ((max / 100F) * value);
-        alarmVolume = Math.max(realValue, min);
-    }
-
 
     private boolean increaseVolumeGradually;
 
@@ -129,7 +111,7 @@ public class ReminderModel extends ViewModel {
         to.isVibrate = from.isEnableVibration;
 
         to.increaseVolumeGradually = from.increaseVolumeGradually;
-        to.alarmVolume = from.alarmVolume;
+        to.alarmVolume = from.alarmVolumePercentage;
 
         to.repeatHours.clear();
         to.repeatDays.clear();
@@ -264,7 +246,7 @@ public class ReminderModel extends ViewModel {
         to.isEnableVibration = from.isVibrate;
 
         to.increaseVolumeGradually = from.increaseVolumeGradually;
-        to.alarmVolume = from.alarmVolume;
+        to.alarmVolumePercentage = from.alarmVolume;
 
         to.repeatModel.customHours.clear();
         to.repeatModel.customDays.clear();

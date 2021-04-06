@@ -50,34 +50,40 @@ public class OsHelper {
         return ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE));
     }
 
-    public static int getMaxAlarmVolume(Context context) {
-        final AudioManager audioManager = getAudioManager(context);
+    public static int getMaxAlarmVolume(AudioManager audioManager) {
         if (audioManager == null) {
             return 0;
         } else {
-            return getAudioManager(context).getStreamMaxVolume(AudioManager.STREAM_ALARM);
+            return audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
         }
     }
 
-    public static int getMinAlarmVolume(Context context) {
-        final AudioManager audioManager = getAudioManager(context);
+    public static int getMinAlarmVolume(AudioManager audioManager) {
         if (audioManager == null) {
             return 0;
         } else {
             if (isPieOrLater()) {
-                return getAudioManager(context).getStreamMinVolume(AudioManager.STREAM_ALARM);
+                return audioManager.getStreamMinVolume(AudioManager.STREAM_ALARM);
             } else {
                 return 0;
             }
         }
     }
 
-    public static int getAlarmVolume(Context context) {
-        final AudioManager audioManager = getAudioManager(context);
+    public static int getAlarmVolume(AudioManager audioManager) {
         if (audioManager == null) {
             return 0;
         } else {
-            return getAudioManager(context).getStreamVolume(AudioManager.STREAM_ALARM);
+            return audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+        }
+    }
+
+    public static int getAlarmVolumeInPercentage(AudioManager audioManager) {
+        final float max = getMaxAlarmVolume(audioManager);
+        if (max > 0) {
+            return (int) ((getAlarmVolume(audioManager) / max) * 100F);
+        } else {
+            return 0;
         }
     }
 }

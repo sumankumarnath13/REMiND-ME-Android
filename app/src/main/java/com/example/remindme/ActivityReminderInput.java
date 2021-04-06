@@ -24,6 +24,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.helpers.ActivityHelper;
+import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.IReminderNameListener;
@@ -293,8 +294,6 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         btn_reminder_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reminderModel.isEnableVibration = sw_reminder_vibrate.isChecked();
-                reminderModel.setVolumePercentage(ActivityReminderInput.this, seeker_alarm_volume.getProgress());
                 if (reminderModel.trySaveAndSetAlert(getApplicationContext(), true)) {
                     finish();
                 } else {
@@ -325,23 +324,11 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
-        final LinearLayout alarm_volume_inputs_layout = findViewById(R.id.alarm_volume_inputs_layout);
-        if (reminderModel.isIncreaseVolumeGradually()) {
-            alarm_volume_inputs_layout.setVisibility(View.VISIBLE);
-        } else {
-            alarm_volume_inputs_layout.setVisibility(View.GONE);
-        }
-
         sw_gradually_increase_volume = findViewById(R.id.sw_gradually_increase_volume);
         sw_gradually_increase_volume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 reminderModel.setIncreaseVolumeGradually(sw_gradually_increase_volume.isChecked());
-                if (reminderModel.isIncreaseVolumeGradually()) {
-                    alarm_volume_inputs_layout.setVisibility(View.VISIBLE);
-                } else {
-                    alarm_volume_inputs_layout.setVisibility(View.GONE);
-                }
             }
         });
 
@@ -362,7 +349,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                reminderModel.setAlarmVolumePercentage(seekBar.getProgress());
             }
         });
 
@@ -397,8 +384,13 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         sw_reminder_snooze.setChecked(reminderModel.getSnoozeModel().isEnable);
         sw_reminder_repeat.setChecked(reminderModel.getRepeatOption() != ReminderRepeatModel.ReminderRepeatOptions.NONE);
         sw_gradually_increase_volume.setChecked(reminderModel.isIncreaseVolumeGradually());
-        seeker_alarm_volume.setProgress(reminderModel.getVolumePercentage(this));
 
+        if (reminderModel.getAlarmVolumePercentage() == 0) {
+            int x = OsHelper.getAlarmVolumeInPercentage(OsHelper.getAudioManager(this));
+            seeker_alarm_volume.setProgress(x);
+        } else {
+            seeker_alarm_volume.setProgress(reminderModel.getAlarmVolumePercentage());
+        }
 
         if (reminderModel.ringToneUri == null) {
             Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
