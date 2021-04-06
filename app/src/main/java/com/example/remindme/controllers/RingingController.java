@@ -93,9 +93,10 @@ public class RingingController {
                     if (isIncreaseVolume) {
                         originalVolumeIndex = OsHelper.getAlarmVolume(context);
                         final int possibleMaxVolume = OsHelper.getMaxAlarmVolume(context);
+                        final int possibleMinVolume = OsHelper.getMinAlarmVolume(context);
 
-                        if (OsHelper.isPieOrLater()) {
-                            adjustedVolumeIndex = OsHelper.getMinAlarmVolume(context);
+                        if (possibleMinVolume > 0) {
+                            adjustedVolumeIndex = possibleMinVolume;
                         } else {
                             adjustedVolumeIndex = 1;
                         }
