@@ -1,7 +1,6 @@
 package com.example.remindme.viewModels;
 
 import android.app.AlarmManager;
-import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
@@ -11,17 +10,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.widget.Toast;
 
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.ViewModel;
 
-import com.example.remindme.R;
 import com.example.remindme.dataModels.ActiveReminder;
 import com.example.remindme.dataModels.DismissedReminder;
 import com.example.remindme.dataModels.MissedReminder;
+import com.example.remindme.helpers.NotificationHelper;
+import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
+import com.example.remindme.helpers.ToastHelper;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -40,9 +39,9 @@ public class ReminderModel extends ViewModel {
     //region Constants
 
     //region Private Constants
-    private static final String DEFAULT_NOTIFICATION_GROUP_KEY = "ÆjËèúÒ+·_²";
+    public static final String DEFAULT_NOTIFICATION_GROUP_KEY = "ÆjËèúÒ+·_²";
     private static final String DEFAULT_NOTIFICATION_GROUP_NAME = "Default notification group";
-    private static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "RxLwKNdHEL";
+    public static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "RxLwKNdHEL";
     private static final String DEFAULT_NOTIFICATION_CHANNEL_NAME = "Other notifications";
     //endregion
 
@@ -74,8 +73,44 @@ public class ReminderModel extends ViewModel {
 
     //region Private Static Variables
     private static Class<? extends BroadcastReceiver> externalBroadcastReceiverClass;
-    private static Application application;
-    private static AlarmManager alarmManager;
+    private int alarmVolume;
+
+    public int getAlarmVolume() {
+        return alarmVolume;
+    }
+
+    public int getVolumePercentage(Context context) {
+        int volume = alarmVolume;
+        if (volume == 0) {
+            volume = OsHelper.getAlarmVolume(context);
+        }
+
+        int max = OsHelper.getMaxAlarmVolume(context);
+        if (max > 0) {
+            return (100 / max) * volume;
+        } else {
+            return 0;
+        }
+    }
+
+    public void setVolumePercentage(Context context, int value) {
+        int min = OsHelper.getMinAlarmVolume(context);
+        int max = OsHelper.getMaxAlarmVolume(context);
+        final int realValue = (int) ((max / 100F) * value);
+        alarmVolume = Math.max(realValue, min);
+    }
+
+
+    private boolean increaseVolumeGradually;
+
+    public boolean isIncreaseVolumeGradually() {
+        return this.increaseVolumeGradually;
+    }
+
+    public void setIncreaseVolumeGradually(boolean value) {
+        increaseVolumeGradually = value;
+    }
+
     //endregion
 
     //region Private Static Functions
@@ -91,6 +126,9 @@ public class ReminderModel extends ViewModel {
         to.isEnableTone = from.isEnableTone;
         to.isEnable = from.isEnable;
         to.isVibrate = from.isEnableVibration;
+
+        to.increaseVolumeGradually = from.increaseVolumeGradually;
+        to.alarmVolume = from.alarmVolume;
 
         to.repeatHours.clear();
         to.repeatDays.clear();
@@ -178,7 +216,7 @@ public class ReminderModel extends ViewModel {
     //endregion
 
     //region Public Static Functions
-    public static void reScheduleAllActive(boolean isDeviceRebooted) {
+    public static void reScheduleAllActive(Context context, boolean isDeviceRebooted) {
         final Calendar calendar = Calendar.getInstance();
         List<ActiveReminder> reminders = getActiveReminders(null);
         boolean isNewAlertFound = false;
@@ -191,22 +229,22 @@ public class ReminderModel extends ViewModel {
                     // App getting killed after a while. But Broadcast receiver recreating app which leads to rescheduling.
                     // And for the logic below it getting dismissed before it could be snoozed from alerts.
                     // isDeviceRebooted will prevent this from happening.
-                    reminderModel.dismissByApp(calendar);
-                } else if (!reminderModel.isAlertExists()) {
+                    reminderModel.dismissByApp(context, calendar);
+                } else if (!reminderModel.isAlertExists(context)) {
                     isNewAlertFound = true;
 
                     if (calendar.getTime().after(reminderModel.getAlarmTime())) {
-                        notify(reminderModel.getIntId(), "Dismissing reminder!", reminderModel.getSignatureName(), reminderModel.note);
-                        reminderModel.dismissByApp(calendar);
+                        NotificationHelper.notify(context, reminderModel.getIntId(), "Dismissing reminder!", reminderModel.getSignatureName(), reminderModel.note);
+                        reminderModel.dismissByApp(context, calendar);
                     } else {
-                        notify(reminderModel.getIntId(), "New reminder!", reminderModel.getSignatureName(), reminderModel.note);
-                        reminderModel.setAlarm(reminderModel.getAlarmTime(), false);
+                        NotificationHelper.notify(context, reminderModel.getIntId(), "New reminder!", reminderModel.getSignatureName(), reminderModel.note);
+                        reminderModel.setAlarm(context, reminderModel.getAlarmTime(), false);
                     }
                 }
             }
         }
         if (isNewAlertFound) {
-            notifySummary("Rescheduling reminders", null, null);
+            NotificationHelper.notifySummary(context, "Rescheduling reminders", null, null);
         }
     }
 
@@ -223,6 +261,9 @@ public class ReminderModel extends ViewModel {
         to.isEnableTone = from.isEnableTone;
         to.isEnable = from.isEnable;
         to.isEnableVibration = from.isVibrate;
+
+        to.increaseVolumeGradually = from.increaseVolumeGradually;
+        to.alarmVolume = from.alarmVolume;
 
         to.repeatModel.customHours.clear();
         to.repeatModel.customDays.clear();
@@ -303,12 +344,11 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    public static boolean tryAppCreate(Class<? extends BroadcastReceiver> broadcastReceiverClass, Application app) {
+    public static boolean tryAppCreate(Class<? extends BroadcastReceiver> broadcastReceiverClass, Context context) {
         externalBroadcastReceiverClass = broadcastReceiverClass;
-        application = app;
 
         // Initialize notification channels
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(application.getApplicationContext());
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.createNotificationChannelGroup(
                     new NotificationChannelGroup(
@@ -332,28 +372,26 @@ public class ReminderModel extends ViewModel {
             notificationManager.createNotificationChannel(defaultChannel);
         }
 
-        alarmManager = (AlarmManager) application.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-
         // Initialize Realm database
-        Realm.init(application.getApplicationContext());
+        Realm.init(context);
         // Force drop the database and create new in case of schema mismatch
         try {
             Realm.getDefaultInstance();
         } catch (RealmMigrationNeededException r) {
             RealmConfiguration config = Realm.getDefaultConfiguration();
             if (config == null) {
-                error("Couldn't load required configurations for Remind Me! ");
+                ToastHelper.error(context, "Couldn't load required configurations for Remind Me! ");
                 return false;
             }
             try {
                 Realm.deleteRealm(config);
             } catch (IllegalStateException e) {
-                error("Error in initializing the Remind Me! " + e.getMessage());
+                ToastHelper.error(context, "Error in initializing the Remind Me! " + e.getMessage());
                 return false;
             }
         }
 
-        reScheduleAllActive(false);
+        reScheduleAllActive(context, false);
 
         return true;
     }
@@ -364,47 +402,6 @@ public class ReminderModel extends ViewModel {
 
     public static void setReminderId(Intent intent, String reminderId) {
         intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminderId);
-    }
-
-    public static void error(String message) {
-        Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    public static void showToast(String message) {
-        Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    public static void notify(int Id, String title, String text, String bigText) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(application.getApplicationContext(), DEFAULT_NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_reminder_notification)
-                .setLocalOnly(true)
-                .setGroup(DEFAULT_NOTIFICATION_GROUP_KEY)
-                .setContentTitle(title)
-                .setContentText(text);
-
-        if (bigText != null && !bigText.isEmpty()) {
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
-        }
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(application.getApplicationContext());
-        notificationManager.notify(Id, builder.build());
-    }
-
-    public static void notifySummary(String title, String text, String bigText) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(application.getApplicationContext(), DEFAULT_NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_reminder_notification)
-                .setLocalOnly(true)
-                .setGroup(DEFAULT_NOTIFICATION_GROUP_KEY)
-                .setGroupSummary(true)
-                .setContentTitle(title)
-                .setContentText(text);
-
-        if (bigText != null && !bigText.isEmpty()) {
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
-        }
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(application.getApplicationContext());
-        notificationManager.notify(DEFAULT_NOTIFICATION_GROUP_ID, builder.build());
     }
 
     public static List<ActiveReminder> getActiveReminders(String name) {
@@ -454,33 +451,25 @@ public class ReminderModel extends ViewModel {
     //endregion
 
     //region Private Instanced Functions
-    private boolean isAlertExists() {
-        if (getIntId() != 0) {
-            if (alarmManager == null) {
-                return false;
-            } else {
-                PendingIntent pendingIntent = getAlarmManagerAlarmPendingIntent(false);
-                return pendingIntent != null;
-            }
-        } else {
+    private boolean isAlertExists(Context context) {
+        if (getIntId() == 0) {
             return false;
+        } else {
+            PendingIntent pendingIntent = getAlarmManagerAlarmPendingIntent(context, false);
+            return pendingIntent != null;
         }
     }
 
-    private void cancelAlarm() {
+    private void cancelAlarm(Context context) {
         if (getIntId() != 0) {
-            if (alarmManager == null) {
-                error("Warning! No alarm manager found for the device.");
-            } else {
-                PendingIntent pendingIntent = getAlarmManagerAlarmPendingIntent(false);
-                if (pendingIntent != null) {
-                    alarmManager.cancel(pendingIntent);
-                }
+            PendingIntent pendingIntent = getAlarmManagerAlarmPendingIntent(context, false);
+            if (pendingIntent != null) {
+                OsHelper.getAlarmManager(context).cancel(pendingIntent);
             }
         }
     }
 
-    private void setAlarm(Date atTime, boolean isShowElapseTimeToast) {
+    private void setAlarm(Context context, Date atTime, boolean isShowElapseTimeToast) {
         if (!isEnable) {
             return;
         }
@@ -492,7 +481,7 @@ public class ReminderModel extends ViewModel {
         if (different <= 0) // Meaningless to set time in past. BUG ALERT: negative value means something is very wrong somewhere
         {
             if (isShowElapseTimeToast) {
-                error("Warning! discarding minus time value for alarm");
+                ToastHelper.error(context, "Warning! discarding minus time value for alarm");
                 return;
             }
         }
@@ -515,7 +504,11 @@ public class ReminderModel extends ViewModel {
 
         calendar.setTime(atTime);
 
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), getAlarmManagerAlarmPendingIntent(true));
+        if (OsHelper.isMarshmallowOrLater()) {
+            OsHelper.getAlarmManager(context).setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), getAlarmManagerAlarmPendingIntent(context, true));
+        } else {
+            OsHelper.getAlarmManager(context).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), getAlarmManagerAlarmPendingIntent(context, true));
+        }
 
         if (isShowElapseTimeToast) {
             StringBuilder stringBuilder = new StringBuilder("Alarm set after");
@@ -545,7 +538,7 @@ public class ReminderModel extends ViewModel {
             }
 
             stringBuilder.append(" from now");
-            showToast(StringHelper.trimEnd(stringBuilder.toString(), ","));
+            ToastHelper.toast(context, StringHelper.trimEnd(stringBuilder.toString(), ","));
         }
     }
 
@@ -591,7 +584,7 @@ public class ReminderModel extends ViewModel {
         return _time;
     }
 
-    private boolean trySaveAndSetAlert(boolean isResetSnooze, boolean isShowElapseTimeToast) {
+    private boolean trySaveAndSetAlert(Context context, boolean isResetSnooze, boolean isShowElapseTimeToast) {
 
         if (isResetSnooze) {
             nextSnoozeOffTime = null;
@@ -606,7 +599,7 @@ public class ReminderModel extends ViewModel {
                 id = uuid.toString();
                 intId = (int) uuid.getMostSignificantBits();
             } else { // Update
-                cancelAlarm();
+                cancelAlarm(context);
             }
 
             final ActiveReminder reminder = new ActiveReminder();
@@ -621,13 +614,13 @@ public class ReminderModel extends ViewModel {
             });
 
             if (isEnable) {
-                setAlarm(_time, isShowElapseTimeToast);
+                setAlarm(context, _time, isShowElapseTimeToast);
             }
 
             return true;
 
         } else {
-            showToast("Cannot save reminder. The time set is in past!");
+            ToastHelper.toast(context, "Cannot save reminder. The time set is in past!");
             return false;
         }
     }
@@ -830,19 +823,19 @@ public class ReminderModel extends ViewModel {
         return nextTime;
     }
 
-    private Intent createAlarmManagerAlarmIntent() {
-        return new Intent(application.getApplicationContext(), externalBroadcastReceiverClass)
+    private Intent createAlarmManagerAlarmIntent(Context context) {
+        return new Intent(context, externalBroadcastReceiverClass)
                 .setAction(ACTION_RECEIVE_ALARM)
                 .putExtra(REMINDER_ID_INTENT, id);
     }
 
-    private PendingIntent getAlarmManagerAlarmPendingIntent(boolean isCreateNew) {
-        Intent intent = createAlarmManagerAlarmIntent();
+    private PendingIntent getAlarmManagerAlarmPendingIntent(Context context, boolean isCreateNew) {
+        Intent intent = createAlarmManagerAlarmIntent(context);
         PendingIntent pendingIntent;
         if (isCreateNew) {
-            pendingIntent = PendingIntent.getBroadcast(application.getApplicationContext(), getIntId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            pendingIntent = PendingIntent.getBroadcast(context, getIntId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
         } else {
-            pendingIntent = PendingIntent.getBroadcast(application.getApplicationContext(), getIntId(), intent, PendingIntent.FLAG_NO_CREATE);
+            pendingIntent = PendingIntent.getBroadcast(context, getIntId(), intent, PendingIntent.FLAG_NO_CREATE);
         }
         return pendingIntent;
     }
@@ -868,7 +861,7 @@ public class ReminderModel extends ViewModel {
     }
 
     public String getSignatureName() {
-        if (StringHelper.isEmpty(name)) {
+        if (StringHelper.isNullOrEmpty(name)) {
             return String.valueOf(getIntId());
         } else {
             return getIntId() +
@@ -877,31 +870,31 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    public void dismissByUser() {
+    public void dismissByUser(Context context) {
         Date nextTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
         if (nextTime == null) { // EOF situation
             archiveToFinished();
-            deleteAndCancelAlert();
+            deleteAndCancelAlert(context);
         } else {
             calculatedTime = nextTime; // Set next trigger time.
             //String net = UtilsDateTime.toTimeDateString(time);
-            trySaveAndSetAlert(true, false); // Save changes. // Set alarm for next trigger time.
+            trySaveAndSetAlert(context, true, false); // Save changes. // Set alarm for next trigger time.
         }
     }
 
-    public void dismissByApp(final Calendar currentTime) {
+    public void dismissByApp(Context context, final Calendar currentTime) {
         Date nextTime = getNextScheduleTime(currentTime, originalTime);
         archiveToMissed();
-        Toast.makeText(application.getApplicationContext(), "Dismissing to missed! " + getIntId(), Toast.LENGTH_LONG).show();
+        ToastHelper.toast(context, "Dismissing to missed! " + getIntId());
         if (nextTime == null) { // EOF situation
-            deleteAndCancelAlert();
+            deleteAndCancelAlert(context);
         } else {
             calculatedTime = nextTime; // Set next trigger time.
-            trySaveAndSetAlert(true, false); // Save changes. // Set alarm for next trigger time.
+            trySaveAndSetAlert(context, true, false); // Save changes. // Set alarm for next trigger time.
         }
     }
 
-    public void snooze(boolean isByUser) {
+    public void snooze(Context context, boolean isByUser) {
         Date _time = getAlarmTime();
 
         if (snoozeModel.isEnable) {
@@ -946,22 +939,22 @@ public class ReminderModel extends ViewModel {
                 }
 
                 if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
-                    showToast("Dismissing from snooze! " + getIntId());
+                    ToastHelper.toast(context, "Dismissing from snooze! " + getIntId());
                     if (isByUser) {
-                        dismissByUser();
+                        dismissByUser(context);
                     } else {
-                        dismissByApp(Calendar.getInstance());
+                        dismissByApp(context, Calendar.getInstance());
                     }
                 } else if (currentTime.getTime().after(nextSnoozeOffTime)) { // Snooze makes no sense if its in past!
-                    showToast("Dismissing from snooze! " + getIntId());
+                    ToastHelper.toast(context, "Dismissing from snooze! " + getIntId());
                     if (isByUser) {
-                        dismissByUser();
+                        dismissByUser(context);
                     } else {
-                        dismissByApp(Calendar.getInstance());
+                        dismissByApp(context, Calendar.getInstance());
                     }
                 } else {
-                    showToast("Snoozing! " + getIntId());
-                    trySaveAndSetAlert(false, false);
+                    ToastHelper.toast(context, "Snoozing! " + getIntId());
+                    trySaveAndSetAlert(context, false, false);
                 }
             }
         }
@@ -1054,7 +1047,7 @@ public class ReminderModel extends ViewModel {
         return isEnable;
     }
 
-    public boolean trySetEnabled(boolean value) {
+    public boolean trySetEnabled(Context context, boolean value) {
         //isEnable = value;
         if (value) {
             //Date buffer = time;
@@ -1066,7 +1059,7 @@ public class ReminderModel extends ViewModel {
                 if (nextTime == null) { // EOF situation. No next schedule possible
                     //archiveToFinished();
                     //deleteAndCancelAlert();
-                    showToast("Alarm cannot be scheduled further. Please set time into future to enable.");
+                    ToastHelper.toast(context, "Alarm cannot be scheduled further. Please set time into future to enable.");
                 } else { // Found next trigger point.
                     calculatedTime = nextTime; // Set next trigger time.
                     isEnable = true;
@@ -1194,8 +1187,8 @@ public class ReminderModel extends ViewModel {
         return repeatModel.toString();
     }
 
-    public void deleteAndCancelAlert() {
-        cancelAlarm();
+    public void deleteAndCancelAlert(Context context) {
+        cancelAlarm(context);
         Realm realm = Realm.getDefaultInstance();
         final ActiveReminder reminder = realm.where(ActiveReminder.class).equalTo("id", id).findFirst();
         if (reminder != null) {
@@ -1209,9 +1202,11 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    public boolean trySaveAndSetAlert(boolean isShowElapseTimeToast) {
-        return trySaveAndSetAlert(true, isShowElapseTimeToast);
+    public boolean trySaveAndSetAlert(Context context, boolean isShowElapseTimeToast) {
+        return trySaveAndSetAlert(context, true, isShowElapseTimeToast);
     }
+
+
     //endregion
 
     //endregion

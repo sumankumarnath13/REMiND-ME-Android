@@ -17,8 +17,10 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.remindme.ActivityReminderRinging;
 import com.example.remindme.R;
+import com.example.remindme.helpers.NotificationHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
+import com.example.remindme.helpers.WakeLockHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
 public class AlertService extends Service {
@@ -181,7 +183,7 @@ public class AlertService extends Service {
     private void startRinging(Context context) {
         if (isBusy) {
             if (servingReminder.isEnableTone) {
-                ringingController.startTone(context, servingReminder.ringToneUri, true, 20);
+                ringingController.startTone(context, servingReminder.ringToneUri, servingReminder.isIncreaseVolumeGradually(), servingReminder.getAlarmVolume());
             }
             if (servingReminder.isEnableVibration) {
                 ringingController.startVibrating(context);
@@ -200,7 +202,7 @@ public class AlertService extends Service {
     public void snooze() {
         if (!isChanged && isBusy) {
             isChanged = true;
-            servingReminder.snooze(true);
+            servingReminder.snooze(this.getApplicationContext(), true);
             broadcastCloseAlarmActivity();
             stopService();
         }
@@ -209,7 +211,7 @@ public class AlertService extends Service {
     public void dismiss() {
         if (!isChanged && isBusy) {
             isChanged = true;
-            servingReminder.dismissByUser();
+            servingReminder.dismissByUser(this.getApplicationContext());
             broadcastCloseAlarmActivity();
             stopService();
         }
@@ -261,8 +263,8 @@ public class AlertService extends Service {
             // snooze concurrent calls if already serving
             final ReminderModel newReminder = new ReminderModel();
             if (newReminder.tryReadFrom(intent)) {
-                newReminder.snooze(false);
-                ReminderModel.notify(newReminder.getIntId(), "Missed alarm " + StringHelper.toTime(newReminder.getOriginalTime()), newReminder.name, newReminder.note);
+                newReminder.snooze(this.getApplicationContext(), false);
+                NotificationHelper.notify(this.getApplicationContext(), newReminder.getIntId(), "Missed alarm " + StringHelper.toTime(newReminder.getOriginalTime()), newReminder.name, newReminder.note);
             }
             return START_NOT_STICKY;
         }
@@ -317,11 +319,11 @@ public class AlertService extends Service {
 
         if (!isChanged & isBusy) {
             // Snooze the reminder if no action was taken.
-            servingReminder.snooze(false);
+            servingReminder.snooze(this.getApplicationContext(), false);
         }
 
-        WakeController.releaseWake();
         isBusy = false;
         super.onDestroy();
+        WakeLockHelper.release();
     }
 }

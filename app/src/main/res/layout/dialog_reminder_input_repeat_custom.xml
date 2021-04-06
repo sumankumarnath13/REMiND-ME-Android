@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/dp_16">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <CheckBox
+            android:id="@+id/chk_weekly_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_gray1"
+            android:buttonTint="@color/bg_info"
+            android:text="@string/repeat_weekly_custom_week1" />
+
+        <CheckBox
+            android:id="@+id/chk_weekly_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_gray1"
+            android:buttonTint="@color/bg_info"
+            android:text="@string/repeat_weekly_custom_week2" />
+
+        <CheckBox
+            android:id="@+id/chk_weekly_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_gray1"
+            android:buttonTint="@color/bg_info"
+            android:text="@string/repeat_weekly_custom_week3" />
+
+        <CheckBox
+            android:id="@+id/chk_weekly_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_gray1"
+            android:buttonTint="@color/bg_info"
+            android:text="@string/repeat_weekly_custom_week4" />
+
+    </LinearLayout>
+
+</ScrollView>
+

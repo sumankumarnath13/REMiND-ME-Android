@@ -19,6 +19,8 @@ public class ActiveReminder extends RealmObject implements RealmModel {
     public boolean isEnableTone = true;
     public boolean isEnable = true;
     public boolean isVibrate;
+    public boolean increaseVolumeGradually = false;
+    public int alarmVolume;
 
     public int repeatOption;
     public RealmList<Integer> repeatHours = new RealmList<>();

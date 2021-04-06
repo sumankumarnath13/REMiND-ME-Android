@@ -83,11 +83,11 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 ReminderModel reminderModel = new ReminderModel();
                 ReminderModel.transformToModel((ActiveReminder) reminder, reminderModel);
 
-                enabled.setChecked(reminderModel.trySetEnabled(enabled.isChecked()));
+                enabled.setChecked(reminderModel.trySetEnabled(holder.linearLayout.getContext().getApplicationContext(), enabled.isChecked()));
                 if (enabled.isChecked()) {
                     time.setText(StringHelper.toTimeDate(reminderModel.getOriginalTime()));
                 }
-                reminderModel.trySaveAndSetAlert(true);
+                reminderModel.trySaveAndSetAlert(holder.linearLayout.getContext().getApplicationContext(), true);
             }
         });
 
@@ -103,14 +103,14 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             }
             enabled.setChecked(reminderModel.getIsEnabled());
 
-            if (StringHelper.isEmpty(reminderModel.name)) {
+            if (StringHelper.isNullOrEmpty(reminderModel.name)) {
                 name.setVisibility(View.GONE);
             } else {
                 name.setText(reminderModel.name);
                 name.setVisibility(View.VISIBLE);
             }
 
-            if (StringHelper.isEmpty(reminderModel.note)) {
+            if (StringHelper.isNullOrEmpty(reminderModel.note)) {
                 note.setVisibility(View.GONE);
             } else {
                 note.setText(reminderModel.note);
@@ -123,14 +123,14 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_danger));
             enabled.setVisibility(View.GONE);
 
-            if (StringHelper.isEmpty(missedReminder.name)) {
+            if (StringHelper.isNullOrEmpty(missedReminder.name)) {
                 name.setVisibility(View.GONE);
             } else {
                 name.setText(missedReminder.name);
                 name.setVisibility(View.VISIBLE);
             }
 
-            if (StringHelper.isEmpty(missedReminder.note)) {
+            if (StringHelper.isNullOrEmpty(missedReminder.note)) {
                 note.setVisibility(View.GONE);
             } else {
                 note.setText(missedReminder.note);
@@ -142,14 +142,14 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_gray2));
             enabled.setVisibility(View.GONE);
 
-            if (StringHelper.isEmpty(dismissedReminder.name)) {
+            if (StringHelper.isNullOrEmpty(dismissedReminder.name)) {
                 name.setVisibility(View.GONE);
             } else {
                 name.setText(dismissedReminder.name);
                 name.setVisibility(View.VISIBLE);
             }
 
-            if (StringHelper.isEmpty(dismissedReminder.note)) {
+            if (StringHelper.isNullOrEmpty(dismissedReminder.note)) {
                 note.setVisibility(View.GONE);
             } else {
                 note.setText(dismissedReminder.note);

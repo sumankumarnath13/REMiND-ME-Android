@@ -25,6 +25,7 @@ import com.example.remindme.controllers.AlertServiceBinder;
 import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
+import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
 import java.util.Date;
@@ -54,7 +55,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
 
             ReminderModel reminderModel = serviceBinder.getServingReminder();
             if (reminderModel == null) {
-                ReminderModel.showToast("Serious flow trouble!");
+                ToastHelper.toast(ActivityReminderRinging.this, "Serious flow trouble!");
                 finish();
                 return;
             }

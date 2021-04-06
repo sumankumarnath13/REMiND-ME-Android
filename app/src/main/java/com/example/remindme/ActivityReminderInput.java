@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -24,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.StringHelper;
+import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.IReminderNameListener;
 import com.example.remindme.viewModels.IReminderNoteListener;
 import com.example.remindme.viewModels.IReminderRepeatListener;
@@ -56,6 +58,8 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     private SwitchCompat sw_reminder_snooze;
     private TextView tv_reminder_repeat_summary;
     private TextView tv_reminder_snooze_summary;
+    private SeekBar seeker_alarm_volume;
+    private SwitchCompat sw_gradually_increase_volume;
     private LinearLayout lvc_diff_next_reminder_trigger;
 
     @Override
@@ -103,7 +107,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                     ActivityHelper.setTitle(this, getResources().getString(R.string.edit_reminder_heading));
                 } else {
                     // Close the activity if intent was update bu no existing reminder found!
-                    ReminderModel.error("Reminder not found!");
+                    ToastHelper.error(this, "Reminder not found!");
                     finish();
                 }
             } else { // Advance the time 1 hour if intent is new
@@ -280,7 +284,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         sw_reminder_disable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reminderModel.trySetEnabled(!sw_reminder_disable.isChecked());
+                reminderModel.trySetEnabled(getApplicationContext(), !sw_reminder_disable.isChecked());
                 sw_reminder_disable.setChecked(!reminderModel.getIsEnabled());
             }
         });
@@ -290,10 +294,11 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             @Override
             public void onClick(View view) {
                 reminderModel.isEnableVibration = sw_reminder_vibrate.isChecked();
-                if (reminderModel.trySaveAndSetAlert(true)) {
+                reminderModel.setVolumePercentage(ActivityReminderInput.this, seeker_alarm_volume.getProgress());
+                if (reminderModel.trySaveAndSetAlert(getApplicationContext(), true)) {
                     finish();
                 } else {
-                    ReminderModel.showToast("Time cannot be set in past!");
+                    ToastHelper.toast(ActivityReminderInput.this, "Time cannot be set in past!");
                 }
             }
         });
@@ -319,6 +324,48 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 startActivityForResult(intent, NOTE_SPEECH_REQUEST_CODE);
             }
         });
+
+        final LinearLayout alarm_volume_inputs_layout = findViewById(R.id.alarm_volume_inputs_layout);
+        if (reminderModel.isIncreaseVolumeGradually()) {
+            alarm_volume_inputs_layout.setVisibility(View.VISIBLE);
+        } else {
+            alarm_volume_inputs_layout.setVisibility(View.GONE);
+        }
+
+        sw_gradually_increase_volume = findViewById(R.id.sw_gradually_increase_volume);
+        sw_gradually_increase_volume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reminderModel.setIncreaseVolumeGradually(sw_gradually_increase_volume.isChecked());
+                if (reminderModel.isIncreaseVolumeGradually()) {
+                    alarm_volume_inputs_layout.setVisibility(View.VISIBLE);
+                } else {
+                    alarm_volume_inputs_layout.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        seeker_alarm_volume = findViewById(R.id.seeker_alarm_volume);
+//        volume_slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                if(fromUser) {
+//                    //reminderModel.setMaxVolume(progress);
+//                    //seekBar.setProgress(progress);
+//                }
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//        });
+
 
         refreshForm();
     }
@@ -349,6 +396,9 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
 
         sw_reminder_snooze.setChecked(reminderModel.getSnoozeModel().isEnable);
         sw_reminder_repeat.setChecked(reminderModel.getRepeatOption() != ReminderRepeatModel.ReminderRepeatOptions.NONE);
+        sw_gradually_increase_volume.setChecked(reminderModel.isIncreaseVolumeGradually());
+        seeker_alarm_volume.setProgress(reminderModel.getVolumePercentage(this));
+
 
         if (reminderModel.ringToneUri == null) {
             Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -358,6 +408,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.ringToneUri);
             tv_reminder_tone_summary.setText(ringtone.getTitle(this));
         }
+
     }
 
     @Override

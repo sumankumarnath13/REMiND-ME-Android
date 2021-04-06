@@ -15,6 +15,7 @@ import com.example.remindme.dataModels.DismissedReminder;
 import com.example.remindme.dataModels.MissedReminder;
 import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.StringHelper;
+import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -47,7 +48,7 @@ public class ActivityReminderView extends AppCompatActivity {
                 if (from.equals("ACTIVE")) {
                     ReminderModel reminderModel = new ReminderModel();
                     if (reminderModel.tryReadFrom(getIntent())) {
-                        reminderModel.deleteAndCancelAlert();
+                        reminderModel.deleteAndCancelAlert(getApplicationContext());
                     }
                 } else if (from.equals("MISSED")) {
                     Realm r = Realm.getDefaultInstance();
@@ -95,11 +96,11 @@ public class ActivityReminderView extends AppCompatActivity {
             public void onClick(View v) {
                 ReminderModel reminderModel = new ReminderModel();
                 if (reminderModel.tryReadFrom(getIntent())) {
-                    enabled.setChecked(reminderModel.trySetEnabled(enabled.isChecked()));
+                    enabled.setChecked(reminderModel.trySetEnabled(getApplicationContext(), enabled.isChecked()));
                     if (enabled.isChecked()) {
                         ((TextView) findViewById(R.id.tv_reminder_time)).setText(StringHelper.toTimeDate(reminderModel.getOriginalTime()));
                     }
-                    reminderModel.trySaveAndSetAlert(true);
+                    reminderModel.trySaveAndSetAlert(getApplicationContext(), true);
                 }
             }
         });
@@ -134,7 +135,7 @@ public class ActivityReminderView extends AppCompatActivity {
                 name = reminderModel.name;
                 note = reminderModel.note;
             } else {
-                ReminderModel.error("Reminder not found!");
+                ToastHelper.toast(ActivityReminderView.this, "Reminder not found!");
                 finish();
             }
         } else if (from.equals("MISSED")) {

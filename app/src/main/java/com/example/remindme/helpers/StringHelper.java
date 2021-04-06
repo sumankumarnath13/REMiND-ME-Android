@@ -62,7 +62,7 @@ public class StringHelper {
     }
 
     public static String trimEnd(String value, String x) {
-        if (!isEmpty(value) && !isEmpty(x)) {
+        if (!isNullOrEmpty(value) && !isNullOrEmpty(x)) {
             StringBuilder stringBuilder = new StringBuilder(value);
             int lastIndex = stringBuilder.lastIndexOf(x);
             int length = stringBuilder.length();
@@ -75,18 +75,18 @@ public class StringHelper {
         }
     }
 
-    public static boolean isEmpty(String value) {
+    public static boolean isNullOrEmpty(String value) {
         if (value == null) {
             return true;
         }
-
-        value = value.replace(" ", ""); // Remove blank spaces
 
         if (value.length() == 0) {
             return true;
         }
 
-        return false;
+        value = value.replace(" ", ""); // Remove blank spaces
+
+        return value.length() == 0;
     }
 
 }

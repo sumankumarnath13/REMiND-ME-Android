@@ -59,7 +59,7 @@ public class RingingController {
         isIncreaseVolume = isGraduallyIncreaseVolume;
 
         if (audioManager == null) {
-            audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            audioManager = OsHelper.getAudioManager(context);
         }
 
         if (audioManager != null) {
@@ -91,11 +91,11 @@ public class RingingController {
 
                 if (isAudioFocusRequested && audioFocusGrantStatus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                     if (isIncreaseVolume) {
-                        originalVolumeIndex = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
-                        final int possibleMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+                        originalVolumeIndex = OsHelper.getAlarmVolume(context);
+                        final int possibleMaxVolume = OsHelper.getMaxAlarmVolume(context);
 
-                        if (OsHelper.isPOrLater()) {
-                            adjustedVolumeIndex = audioManager.getStreamMinVolume(AudioManager.STREAM_ALARM);
+                        if (OsHelper.isPieOrLater()) {
+                            adjustedVolumeIndex = OsHelper.getMinAlarmVolume(context);
                         } else {
                             adjustedVolumeIndex = 1;
                         }
@@ -113,7 +113,6 @@ public class RingingController {
 
                         volumeUpTimer.start();
                     } else {
-
                         playingRingtone.play();
                         isRinging = true;
                     }
@@ -126,7 +125,7 @@ public class RingingController {
 
     public void startVibrating(Context context) {
         if (vibrator == null) {
-            vibrator = ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE));
+            vibrator = OsHelper.getVibrator(context);
         }
 
         if (vibrator != null) {
