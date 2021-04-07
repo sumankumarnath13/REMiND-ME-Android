@@ -803,7 +803,27 @@ public class ReminderModel extends ViewModel {
                 }
             }
         } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.OTHER) {
-
+            newScheduleCl.set(Calendar.DAY_OF_YEAR, DAY_OF_YEAR);
+            newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
+            newScheduleCl.set(Calendar.MINUTE, MINUTE);
+            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
+            if (newScheduleCl.compareTo(baseCl) < 0) {
+                switch (repeatModel.customTimeUnit) {
+                    case DAYS:
+                        newScheduleCl.add(Calendar.DAY_OF_YEAR, repeatModel.customTimeValue);
+                        break;
+                    case WEEKS:
+                        newScheduleCl.add(Calendar.WEEK_OF_YEAR, repeatModel.customTimeValue);
+                        break;
+                    case MONTHS:
+                        newScheduleCl.add(Calendar.MONTH, repeatModel.customTimeValue);
+                        break;
+                    case YEARS:
+                        newScheduleCl.add(Calendar.YEAR, repeatModel.customTimeValue);
+                        break;
+                }
+            }
+            nextTime = newScheduleCl.getTime();
         }
         return nextTime;
     }
@@ -1145,9 +1165,11 @@ public class ReminderModel extends ViewModel {
                     return false;
                 }
             case OTHER:
-                if (repeatModel.customTimeValue > 0 && repeatModel.customTimeValue <= 1000) {
+                if (repeatValueChangeBuffer.customTimeValue > 0 && repeatValueChangeBuffer.customTimeValue <= 1000) {
                     resetRepeatOptions();
                     this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
+                    this.repeatModel.customTimeUnit = repeatValueChangeBuffer.customTimeUnit;
+                    this.repeatModel.customTimeValue = repeatValueChangeBuffer.customTimeValue;
                     calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
                     discardRepeatSettingChanges();
                     return true;

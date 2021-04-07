@@ -195,6 +195,24 @@ public class ReminderRepeatModel {
             case YEARLY:
                 builder.append("Yearly");
                 break;
+            case OTHER:
+                builder.append("On every ");
+                builder.append(customTimeValue);
+                switch (customTimeUnit) {
+                    case DAYS:
+                        builder.append(" days");
+                        break;
+                    case WEEKS:
+                        builder.append(" weeks");
+                        break;
+                    case MONTHS:
+                        builder.append(" months");
+                        break;
+                    case YEARS:
+                        builder.append(" years");
+                        break;
+                }
+                break;
         }
 
         return StringHelper.trimEnd(builder.toString(), ",");

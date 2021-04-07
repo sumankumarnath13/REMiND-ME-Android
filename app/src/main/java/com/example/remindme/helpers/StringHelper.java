@@ -61,10 +61,10 @@ public class StringHelper {
         }
     }
 
-    public static String trimEnd(String value, String x) {
-        if (!isNullOrEmpty(value) && !isNullOrEmpty(x)) {
+    public static String trimEnd(String value, String valueToTrim) {
+        if (!isNullOrEmpty(value) && !isNullOrEmpty(valueToTrim)) {
             StringBuilder stringBuilder = new StringBuilder(value);
-            int lastIndex = stringBuilder.lastIndexOf(x);
+            int lastIndex = stringBuilder.lastIndexOf(valueToTrim);
             int length = stringBuilder.length();
             if (lastIndex >= 0 && length > 0) {
                 stringBuilder.replace(lastIndex, length, "");
