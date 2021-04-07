@@ -468,6 +468,17 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                     monthlyCustom.show(getSupportFragmentManager(), "T4");
                 }
                 break;
+            case OTHER:
+                if (isEOF) {
+                    reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
+                    if (reminderModel.trySetRepeatSettingChanges()) {
+                        refreshForm();
+                    }
+                } else {
+                    DialogReminderRepeatInputCustom custom = new DialogReminderRepeatInputCustom();
+                    custom.show(getSupportFragmentManager(), "T5");
+                }
+                break;
         }
     }
 

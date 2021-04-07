@@ -119,6 +119,14 @@
                 android:buttonTint="@color/bg_danger"
                 android:text="@string/repeat_yearly"
                 android:textColor="@color/text_gray1" />
+
+            <RadioButton
+                android:id="@+id/rdo_reminder_repeat_other"
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_danger"
+                android:text="@string/repeat_other"
+                android:textColor="@color/text_gray1" />
         </RadioGroup>
     </LinearLayout>
 </ScrollView>

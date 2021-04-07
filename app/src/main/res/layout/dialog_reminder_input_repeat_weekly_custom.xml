@@ -43,6 +43,14 @@
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_weekly_custom_week4" />
 
+        <CheckBox
+            android:id="@+id/chk_weekly_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_gray1"
+            android:buttonTint="@color/bg_info"
+            android:text="@string/repeat_weekly_custom_week4" />
+
     </LinearLayout>
 
 </ScrollView>

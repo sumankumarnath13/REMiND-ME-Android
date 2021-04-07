@@ -802,6 +802,8 @@ public class ReminderModel extends ViewModel {
                     }
                 }
             }
+        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.OTHER) {
+
         }
         return nextTime;
     }
@@ -974,8 +976,10 @@ public class ReminderModel extends ViewModel {
             case DAILY_CUSTOM:
             case WEEKLY_CUSTOM:
             case MONTHLY_CUSTOM:
+            case OTHER:
                 calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime); // Given_time will be used if its not null.
                 repeatModel.customMinute = userTimeCl.get(Calendar.MINUTE); // To preserve the minute value for various repeat options provided to user.
+                repeatModel.weekDayName = StringHelper.toWeekday(userTimeCl.getTime());
                 break;
         }
     }
@@ -1069,6 +1073,7 @@ public class ReminderModel extends ViewModel {
             Calendar c = Calendar.getInstance();
             c.setTime(originalTime);
             repeatValueChangeBuffer.repeatOption = repeatModel.repeatOption;
+            repeatValueChangeBuffer.weekDayName = StringHelper.toWeekday(c.getTime());
             repeatValueChangeBuffer.customMinute = c.get(Calendar.MINUTE);
             repeatValueChangeBuffer.customHours.addAll(repeatModel.customHours);
             repeatValueChangeBuffer.customDays.addAll(repeatModel.customDays);
@@ -1082,22 +1087,14 @@ public class ReminderModel extends ViewModel {
         if (repeatValueChangeBuffer == null) return false;
         switch (repeatValueChangeBuffer.repeatOption) {
             default: //NONE: HOURLY: DAILY: WEEKLY: MONTHLY: YEARLY:
+                resetRepeatOptions();
                 this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
-                this.repeatModel.customHours.clear();
-                this.repeatModel.customDays.clear();
-                this.repeatModel.customWeeks.clear();
-                this.repeatModel.customMonths.clear();
-                this.repeatModel.customMinute = 0;
                 calculatedTime = null;
                 discardRepeatSettingChanges();
                 return true;
             case HOURLY_CUSTOM:
                 if (repeatValueChangeBuffer.customHours.size() > 0) {
-                    this.repeatModel.customHours.clear();
-                    this.repeatModel.customDays.clear();
-                    this.repeatModel.customWeeks.clear();
-                    this.repeatModel.customMonths.clear();
-                    this.repeatModel.customMinute = repeatValueChangeBuffer.customMinute;
+                    resetRepeatOptions();
                     this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
                     this.repeatModel.customHours.addAll(repeatValueChangeBuffer.customHours);
                     //Reminder time will be different than given time only if if Custom option are selected.
@@ -1110,11 +1107,7 @@ public class ReminderModel extends ViewModel {
                 }
             case DAILY_CUSTOM:
                 if (repeatValueChangeBuffer.customDays.size() > 0) {
-                    this.repeatModel.customHours.clear();
-                    this.repeatModel.customDays.clear();
-                    this.repeatModel.customWeeks.clear();
-                    this.repeatModel.customMonths.clear();
-                    this.repeatModel.customMinute = 0;
+                    resetRepeatOptions();
                     this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
                     this.repeatModel.customDays.addAll(repeatValueChangeBuffer.customDays);
                     //Reminder time will be different than given time only if if Custom option are selected.
@@ -1127,11 +1120,7 @@ public class ReminderModel extends ViewModel {
                 }
             case WEEKLY_CUSTOM:
                 if (repeatValueChangeBuffer.customWeeks.size() > 0) {
-                    this.repeatModel.customHours.clear();
-                    this.repeatModel.customDays.clear();
-                    this.repeatModel.customWeeks.clear();
-                    this.repeatModel.customMonths.clear();
-                    this.repeatModel.customMinute = 0;
+                    resetRepeatOptions();
                     this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
                     this.repeatModel.customWeeks.addAll(repeatValueChangeBuffer.customWeeks);
                     //Reminder time will be different than given time only if if Custom option are selected.
@@ -1144,11 +1133,7 @@ public class ReminderModel extends ViewModel {
                 }
             case MONTHLY_CUSTOM:
                 if (repeatValueChangeBuffer.customMonths.size() > 0) {
-                    this.repeatModel.customHours.clear();
-                    this.repeatModel.customDays.clear();
-                    this.repeatModel.customWeeks.clear();
-                    this.repeatModel.customMonths.clear();
-                    this.repeatModel.customMinute = 0;
+                    resetRepeatOptions();
                     this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
                     this.repeatModel.customMonths.addAll(repeatValueChangeBuffer.customMonths);
                     //Reminder time will be different than given time only if if Custom option are selected.
@@ -1159,7 +1144,26 @@ public class ReminderModel extends ViewModel {
                     discardRepeatSettingChanges();
                     return false;
                 }
+            case OTHER:
+                if (repeatModel.customTimeValue > 0 && repeatModel.customTimeValue <= 1000) {
+                    resetRepeatOptions();
+                    this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
+                    calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
+                    discardRepeatSettingChanges();
+                    return true;
+                } else {
+                    discardRepeatSettingChanges();
+                    return false;
+                }
         }
+    }
+
+    private void resetRepeatOptions() {
+        this.repeatModel.customHours.clear();
+        this.repeatModel.customDays.clear();
+        this.repeatModel.customWeeks.clear();
+        this.repeatModel.customMonths.clear();
+        this.repeatModel.customMinute = 0;
     }
 
     public void discardRepeatSettingChanges() {

@@ -19,14 +19,29 @@ public class ReminderRepeatModel {
         WEEKLY_CUSTOM,
         MONTHLY,
         MONTHLY_CUSTOM,
-        YEARLY
+        YEARLY,
+        OTHER
+    }
+
+    public enum TimeUnits {
+        DAYS,
+        WEEKS,
+        MONTHS,
+        YEARS
     }
 
     public int customMinute;
     public List<Integer> customHours;
     public List<Integer> customDays;
     public List<Integer> customWeeks;
+    public String weekDayName;
     public List<Integer> customMonths;
+
+    public TimeUnits customTimeUnit = TimeUnits.DAYS;
+    public int customTimeValue;
+    public int customTimeHourValue;
+    public int customTimeMinuteValue;
+
     public ReminderRepeatOptions repeatOption;
 
     public ReminderRepeatModel() {

@@ -87,4 +87,5 @@
     <string name="heading_calculated_alarm_time">Calculated alarm time</string>
     <string name="increase_volume_gradually_label">Gradually increase volume</string>
     <string name="alarm_volume_label">Alarm volume</string>
+    <string name="repeat_other">Other</string>
 </resources>

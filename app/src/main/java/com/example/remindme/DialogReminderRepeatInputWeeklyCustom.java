@@ -58,6 +58,14 @@ public class DialogReminderRepeatInputWeeklyCustom extends DialogFragment {
         final CheckBox chk_weekly_2 = view.findViewById(R.id.chk_weekly_2);
         final CheckBox chk_weekly_3 = view.findViewById(R.id.chk_weekly_3);
         final CheckBox chk_weekly_4 = view.findViewById(R.id.chk_weekly_4);
+        final CheckBox chk_weekly_5 = view.findViewById(R.id.chk_weekly_5);
+
+
+        chk_weekly_1.setText("On 1st " + model.weekDayName + " of the month");
+        chk_weekly_2.setText("On 2nd " + model.weekDayName + " of the month");
+        chk_weekly_3.setText("On 3rd " + model.weekDayName + " of the month");
+        chk_weekly_4.setText("On 4th " + model.weekDayName + " of the month");
+        chk_weekly_5.setText("On 5th " + model.weekDayName + " of the month (if exists)");
 
         for (int i = 0; i < model.customWeeks.size(); i++) {
             int value = model.customWeeks.get(i);
@@ -75,6 +83,9 @@ public class DialogReminderRepeatInputWeeklyCustom extends DialogFragment {
                 case 3:
                     chk_weekly_4.setChecked(true);
                     break;
+                case 5:
+                    chk_weekly_5.setChecked(true);
+                    break;
             }
         }
 
@@ -86,6 +97,7 @@ public class DialogReminderRepeatInputWeeklyCustom extends DialogFragment {
                 if (chk_weekly_2.isChecked()) model.customWeeks.add(1);
                 if (chk_weekly_3.isChecked()) model.customWeeks.add(2);
                 if (chk_weekly_4.isChecked()) model.customWeeks.add(3);
+                if (chk_weekly_5.isChecked()) model.customWeeks.add(4);
                 listener.set(model, true);
             }
         }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {

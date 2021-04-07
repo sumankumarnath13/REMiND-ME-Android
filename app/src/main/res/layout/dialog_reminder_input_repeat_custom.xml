@@ -11,37 +11,22 @@
         android:layout_gravity="center_horizontal"
         android:orientation="vertical">
 
-        <CheckBox
-            android:id="@+id/chk_weekly_1"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_gray1"
-            android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_weekly_custom_week1" />
+            android:orientation="horizontal">
 
-        <CheckBox
-            android:id="@+id/chk_weekly_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_gray1"
-            android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_weekly_custom_week2" />
+            <NumberPicker
+                android:id="@+id/value_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-        <CheckBox
-            android:id="@+id/chk_weekly_3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_gray1"
-            android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_weekly_custom_week3" />
+            <NumberPicker
+                android:id="@+id/unit_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-        <CheckBox
-            android:id="@+id/chk_weekly_4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_gray1"
-            android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_weekly_custom_week4" />
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -161,6 +161,16 @@ public class DialogReminderRepeatInput extends DialogFragment
             }
         });
 
+        final RadioButton rdo_reminder_repeat_other = view.findViewById(R.id.rdo_reminder_repeat_other);
+        rdo_reminder_repeat_other.setOnClickListener(new RadioButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.OTHER;
+                listener.set(model, false);
+            }
+        });
+
         // No radio group wont work for the given layout. So resetting programmatically is required.
         rdo_reminder_repeat_none.setChecked(false);
         rdo_reminder_repeat_hourly.setChecked(false);
@@ -172,13 +182,13 @@ public class DialogReminderRepeatInput extends DialogFragment
         rdo_reminder_repeat_monthly.setChecked(false);
         rdo_reminder_repeat_monthly_custom.setChecked(false);
         rdo_reminder_repeat_yearly.setChecked(false);
-
+        rdo_reminder_repeat_other.setChecked(false);
 
         /* WEEKLY custom system isn't ready yet
          *
          *
          *  */
-        rdo_reminder_repeat_weekly_custom.setVisibility(View.GONE);
+        //rdo_reminder_repeat_weekly_custom.setVisibility(View.GONE);
 
 
         switch (model.repeatOption) {
@@ -212,6 +222,9 @@ public class DialogReminderRepeatInput extends DialogFragment
                 break;
             case YEARLY:
                 rdo_reminder_repeat_yearly.setChecked(true);
+                break;
+            case OTHER:
+                rdo_reminder_repeat_other.setChecked(true);
                 break;
         }
 
