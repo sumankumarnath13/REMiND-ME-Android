@@ -71,18 +71,16 @@ public class DialogReminderRepeatInputCustom extends DialogFragment {
 
         // Value of unit must set first before setting up value of time:
         // 1
-        unit_picker.setValue(ReminderRepeatModel.transform(model.customTimeUnit));
+        unit_picker.setValue(ReminderRepeatModel.transform(model.getCustomTimeUnit()));
         value_picker.setMaxValue(ReminderRepeatModel.getMaxForTimeUnit(ReminderRepeatModel.transform(unit_picker.getValue())));
         //unit_picker.
         // 2
-        value_picker.setValue(Math.max(model.customTimeValue, 1));
+        value_picker.setValue(Math.max(model.getCustomTimeValue(), 1));
 
         builder.setView(view).setTitle("Customize time to Repeat").setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                model.customTimeUnit = ReminderRepeatModel.transform(unit_picker.getValue());
-                model.customTimeValue = value_picker.getValue();
-                //model.customTimeHourValue = hour_picker.getValue();
+                model.setRepeatCustom(unit_picker.getValue(), value_picker.getValue());
                 listener.set(model, true);
             }
         }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {

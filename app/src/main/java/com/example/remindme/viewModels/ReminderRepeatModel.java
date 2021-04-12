@@ -30,6 +30,10 @@ public class ReminderRepeatModel {
         MONTHS,
     }
 
+
+    public ReminderRepeatOptions repeatOption;
+
+
     private Date reminderTime;
 
     public Date getReminderTime() {
@@ -49,14 +53,42 @@ public class ReminderRepeatModel {
     public List<Integer> customWeeks;
     public List<Integer> customMonths;
 
-    public TimeUnits customTimeUnit = TimeUnits.DAYS;
-    public int customTimeValue;
+
+    private TimeUnits customTimeUnit;
+    private int customTimeValue;
+
+    public void setRepeatCustom(TimeUnits unit, int value) {
+        customTimeUnit = unit;
+        customTimeValue = value;
+    }
+
+    public void setRepeatCustom(int unit, int value) {
+        customTimeUnit = transform(unit);
+        customTimeValue = value;
+    }
+
+    public TimeUnits getCustomTimeUnit() {
+        return customTimeUnit;
+    }
+
+    public int getCustomTimeValue() {
+        return customTimeValue;
+    }
+
 
     private boolean hasRepeatEnd;
 
     public boolean isHasRepeatEnd() {
         return hasRepeatEnd;
     }
+
+    public void setHasRepeatEnd(boolean isEnabled) {
+        if (isEnabled && repeatEndDate == null) { // Cannot enable without repeat end date
+            return;
+        }
+        hasRepeatEnd = isEnabled;
+    }
+
 
     private Date repeatEndDate;
 
@@ -66,46 +98,10 @@ public class ReminderRepeatModel {
 
     public void setRepeatEndDate(Date value) {
         repeatEndDate = value;
-        hasRepeatEnd = repeatEndDate != null;
+        setHasRepeatEnd(true);
     }
 
-    public static int transform(TimeUnits unit) {
-        switch (unit) {
-            default:
-            case DAYS:
-                return 0;
-            case WEEKS:
-                return 1;
-            case MONTHS:
-                return 2;
-        }
-    }
 
-    public static TimeUnits transform(int unit) {
-        switch (unit) {
-            default:
-            case 0:
-                return TimeUnits.DAYS;
-            case 1:
-                return TimeUnits.WEEKS;
-            case 2:
-                return TimeUnits.MONTHS;
-        }
-    }
-
-    public static int getMaxForTimeUnit(TimeUnits unit) {
-        switch (unit) {
-            default:
-            case DAYS:
-                return 1095;
-            case WEEKS:
-                return 156;
-            case MONTHS:
-                return 36;
-        }
-    }
-
-    public ReminderRepeatOptions repeatOption;
 
     public ReminderRepeatModel() {
         repeatOption = ReminderRepeatOptions.DAILY;
@@ -114,6 +110,7 @@ public class ReminderRepeatModel {
         customWeeks = new ArrayList<>();
         customMonths = new ArrayList<>();
     }
+
 
 
     @NonNull
@@ -297,4 +294,39 @@ public class ReminderRepeatModel {
     }
 
 
+    public static int transform(TimeUnits unit) {
+        switch (unit) {
+            default:
+            case DAYS:
+                return 0;
+            case WEEKS:
+                return 1;
+            case MONTHS:
+                return 2;
+        }
+    }
+
+    public static TimeUnits transform(int unit) {
+        switch (unit) {
+            default:
+            case 0:
+                return TimeUnits.DAYS;
+            case 1:
+                return TimeUnits.WEEKS;
+            case 2:
+                return TimeUnits.MONTHS;
+        }
+    }
+
+    public static int getMaxForTimeUnit(TimeUnits unit) {
+        switch (unit) {
+            default:
+            case DAYS:
+                return 1095;
+            case WEEKS:
+                return 156;
+            case MONTHS:
+                return 36;
+        }
+    }
 }

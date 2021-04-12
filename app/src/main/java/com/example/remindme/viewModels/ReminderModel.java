@@ -242,8 +242,8 @@ public class ReminderModel extends ViewModel {
                 break;
             case OTHER:
                 to.repeatOption = 6;
-                to.customTimeUnit = ReminderRepeatModel.transform(from.repeatModel.customTimeUnit);
-                to.customTimeValue = from.repeatModel.customTimeValue;
+                to.customTimeUnit = ReminderRepeatModel.transform(from.repeatModel.getCustomTimeUnit());
+                to.customTimeValue = from.repeatModel.getCustomTimeValue();
                 //to.customTimeHourValue = from.repeatModel.customTimeHourValue;
                 //to.customTimeMinuteValue = from.repeatModel.customTimeMinuteValue;
                 break;
@@ -385,10 +385,7 @@ public class ReminderModel extends ViewModel {
                 break;
             case 6:
                 to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.OTHER;
-                to.repeatModel.customTimeUnit = ReminderRepeatModel.transform(from.customTimeUnit);
-                to.repeatModel.customTimeValue = from.customTimeValue;
-                //to.repeatModel.customTimeHourValue = from.customTimeHourValue;
-                //to.repeatModel.customTimeMinuteValue = from.customTimeMinuteValue;
+                to.repeatModel.setRepeatCustom(from.customTimeUnit, from.customTimeValue);
                 break;
         }
         to.repeatModel.setRepeatEndDate(from.repeatEndDate);
@@ -956,15 +953,15 @@ public class ReminderModel extends ViewModel {
             newScheduleCl.set(Calendar.MINUTE, MINUTE);
             // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
             if (newScheduleCl.compareTo(baseCl) < 0) {
-                switch (repeatModel.customTimeUnit) {
+                switch (repeatModel.getCustomTimeUnit()) {
                     case DAYS:
-                        newScheduleCl.add(Calendar.DAY_OF_YEAR, repeatModel.customTimeValue);
+                        newScheduleCl.add(Calendar.DAY_OF_YEAR, repeatModel.getCustomTimeValue());
                         break;
                     case WEEKS:
-                        newScheduleCl.add(Calendar.WEEK_OF_YEAR, repeatModel.customTimeValue);
+                        newScheduleCl.add(Calendar.WEEK_OF_YEAR, repeatModel.getCustomTimeValue());
                         break;
                     case MONTHS:
-                        newScheduleCl.add(Calendar.MONTH, repeatModel.customTimeValue);
+                        newScheduleCl.add(Calendar.MONTH, repeatModel.getCustomTimeValue());
                         break;
 //                    case YEARS:
 //                        newScheduleCl.add(Calendar.YEAR, repeatModel.customTimeValue);
@@ -1172,8 +1169,7 @@ public class ReminderModel extends ViewModel {
             repeatValueChangeBuffer.setReminderTime(originalTime);
             repeatValueChangeBuffer.setRepeatEndDate(repeatModel.getRepeatEndDate());
             repeatValueChangeBuffer.repeatOption = repeatModel.repeatOption;
-            repeatValueChangeBuffer.customTimeUnit = repeatModel.customTimeUnit;
-            repeatValueChangeBuffer.customTimeValue = repeatModel.customTimeValue;
+            repeatValueChangeBuffer.setRepeatCustom(repeatModel.getCustomTimeUnit(), repeatModel.getCustomTimeValue());
 
             repeatValueChangeBuffer.customHours.addAll(repeatModel.customHours);
             repeatValueChangeBuffer.customDays.addAll(repeatModel.customDays);
@@ -1251,12 +1247,11 @@ public class ReminderModel extends ViewModel {
                     return false;
                 }
             case OTHER:
-                if (repeatValueChangeBuffer.customTimeValue > 0 &&
-                        repeatValueChangeBuffer.customTimeValue <= ReminderRepeatModel.getMaxForTimeUnit(repeatValueChangeBuffer.customTimeUnit)) {
+                if (repeatValueChangeBuffer.getCustomTimeValue() > 0 &&
+                        repeatValueChangeBuffer.getCustomTimeValue() <= ReminderRepeatModel.getMaxForTimeUnit(repeatValueChangeBuffer.getCustomTimeUnit())) {
                     resetRepeatOptions();
                     this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
-                    this.repeatModel.customTimeUnit = repeatValueChangeBuffer.customTimeUnit;
-                    this.repeatModel.customTimeValue = repeatValueChangeBuffer.customTimeValue;
+                    this.repeatModel.setRepeatCustom(repeatValueChangeBuffer.getCustomTimeUnit(), repeatValueChangeBuffer.getCustomTimeValue());
                     calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
                     discardRepeatSettingChanges();
                     return true;
