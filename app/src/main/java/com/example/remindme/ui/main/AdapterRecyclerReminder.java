@@ -87,7 +87,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 if (enabled.isChecked()) {
                     time.setText(StringHelper.toTimeDate(reminderModel.getOriginalTime()));
                 }
-                reminderModel.trySaveAndSetAlert(holder.linearLayout.getContext().getApplicationContext(), true);
+                reminderModel.trySaveAndSetAlert(holder.linearLayout.getContext().getApplicationContext(), true, true);
             }
         });
 

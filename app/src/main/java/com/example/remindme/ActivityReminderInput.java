@@ -98,7 +98,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
 
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
 
-        if (reminderModel.getIsEmpty()) { // First time creating the activity
+        if (reminderModel.isNew()) { // First time creating the activity
             //Check intents
             final String reminderType = getIntent().getStringExtra(INTENT_FROM);
             // Open if intent is update
@@ -163,7 +163,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 mYear = alertTime.get(Calendar.YEAR);
                 mMonth = alertTime.get(Calendar.MONTH);
                 mDay = alertTime.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(ActivityReminderInput.this, R.style.DatePickerDialog,
+                final DatePickerDialog datePickerDialog = new DatePickerDialog(ActivityReminderInput.this, R.style.DatePickerDialog,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year,
@@ -187,12 +187,12 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             @Override
             public void onClick(View view) {
                 final Calendar alertTime = Calendar.getInstance();
-                final Calendar currentTime = Calendar.getInstance();
+                //final Calendar currentTime = Calendar.getInstance();
                 alertTime.setTime(reminderModel.getOriginalTime());
                 final int mHour, mMinute;
                 mHour = alertTime.get(Calendar.HOUR_OF_DAY);
                 mMinute = alertTime.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(ActivityReminderInput.this, R.style.TimePickerDialog,
+                final TimePickerDialog timePickerDialog = new TimePickerDialog(ActivityReminderInput.this, R.style.TimePickerDialog,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -294,7 +294,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         btn_reminder_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (reminderModel.trySaveAndSetAlert(getApplicationContext(), true)) {
+                if (reminderModel.trySaveAndSetAlert(getApplicationContext(), reminderModel.getIsHasDifferentTimeCalculated(), true)) {
                     finish();
                 } else {
                     ToastHelper.toast(ActivityReminderInput.this, "Time cannot be set in past!");

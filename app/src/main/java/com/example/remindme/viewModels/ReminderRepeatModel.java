@@ -6,6 +6,7 @@ import com.example.remindme.helpers.StringHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ReminderRepeatModel {
@@ -27,20 +28,70 @@ public class ReminderRepeatModel {
         DAYS,
         WEEKS,
         MONTHS,
-        YEARS
     }
 
-    public int customMinute;
+    public Date reminderTime;
     public List<Integer> customHours;
     public List<Integer> customDays;
     public List<Integer> customWeeks;
-    public String weekDayName;
+    //public String weekDayName;
     public List<Integer> customMonths;
 
     public TimeUnits customTimeUnit = TimeUnits.DAYS;
     public int customTimeValue;
-    public int customTimeHourValue;
-    public int customTimeMinuteValue;
+
+    private boolean hasRepeatEnd;
+
+    public boolean isHasRepeatEnd() {
+        return hasRepeatEnd;
+    }
+
+    private Date repeatEndDate;
+
+    public Date getRepeatEndDate() {
+        return repeatEndDate;
+    }
+
+    public void setRepeatEndDate(Date value) {
+        repeatEndDate = value;
+        hasRepeatEnd = repeatEndDate != null;
+    }
+
+    public static int transform(TimeUnits unit) {
+        switch (unit) {
+            default:
+            case DAYS:
+                return 0;
+            case WEEKS:
+                return 1;
+            case MONTHS:
+                return 2;
+        }
+    }
+
+    public static TimeUnits transform(int unit) {
+        switch (unit) {
+            default:
+            case 0:
+                return TimeUnits.DAYS;
+            case 1:
+                return TimeUnits.WEEKS;
+            case 2:
+                return TimeUnits.MONTHS;
+        }
+    }
+
+    public static int getMaxForTimeUnit(TimeUnits unit) {
+        switch (unit) {
+            default:
+            case DAYS:
+                return 1095;
+            case WEEKS:
+                return 156;
+            case MONTHS:
+                return 36;
+        }
+    }
 
     public ReminderRepeatOptions repeatOption;
 
@@ -67,18 +118,23 @@ public class ReminderRepeatModel {
             case HOURLY_CUSTOM:
                 builder.append("On ");
                 for (int i = 0; i < customHours.size(); i++) {
-                    int h = customHours.get(i);
+                    final int h = customHours.get(i);
+                    final Calendar c = Calendar.getInstance();
+                    if (reminderTime != null) {
+                        c.setTime(reminderTime);
+                    }
+                    final int min = c.get(Calendar.MINUTE);
+
                     if (h == 0) {
-                        builder.append("12:" + customMinute + " am, ");
+                        builder.append("12:" + min + " am, ");
                     } else if (h == 12) {
-                        builder.append("12:" + customMinute + " pm, ");
+                        builder.append("12:" + min + " pm, ");
                     } else if (h < 12) {
-                        builder.append(h + ":" + customMinute + " am, ");
+                        builder.append(h + ":" + min + " am, ");
                     } else {
-                        builder.append(h - 11 + ":" + customMinute + " pm, ");
+                        builder.append(h - 11 + ":" + min + " pm, ");
                     }
                 }
-                //builder.replace(builder.lastIndexOf(", "), builder.length(), "");
                 builder.append("of every day");
                 break;
             case DAILY:
@@ -113,7 +169,6 @@ public class ReminderRepeatModel {
                             break;
                     }
                 }
-                //builder.replace(builder.lastIndexOf(", "), builder.length(), "");
                 builder.append(" of every week");
                 break;
             case WEEKLY:
@@ -139,7 +194,6 @@ public class ReminderRepeatModel {
                             break;
                     }
                 }
-                //builder.replace(builder.lastIndexOf(", "), builder.length(), "");
                 builder.append("week of every month");
                 break;
             case MONTHLY:
@@ -189,7 +243,6 @@ public class ReminderRepeatModel {
                             break;
                     }
                 }
-                //builder.replace(builder.lastIndexOf(", "), builder.length(), "");
                 builder.append("of every year");
                 break;
             case YEARLY:
@@ -197,22 +250,34 @@ public class ReminderRepeatModel {
                 break;
             case OTHER:
                 builder.append("On every ");
-                builder.append(customTimeValue);
                 switch (customTimeUnit) {
                     case DAYS:
+                        if (customTimeValue == 1)
+                            builder.append("day");
+                        else
+                            builder.append(customTimeValue);
                         builder.append(" days");
                         break;
                     case WEEKS:
+                        if (customTimeValue == 1)
+                            builder.append("week");
+                        else
+                            builder.append(customTimeValue);
                         builder.append(" weeks");
                         break;
                     case MONTHS:
+                        if (customTimeValue == 1)
+                            builder.append("month");
+                        else
+                            builder.append(customTimeValue);
                         builder.append(" months");
-                        break;
-                    case YEARS:
-                        builder.append(" years");
                         break;
                 }
                 break;
+        }
+
+        if (getRepeatEndDate() != null) {
+            builder.append(" till " + StringHelper.toTimeDate(getRepeatEndDate()));
         }
 
         return StringHelper.trimEnd(builder.toString(), ",");

@@ -100,7 +100,7 @@ public class ActivityReminderView extends AppCompatActivity {
                     if (enabled.isChecked()) {
                         ((TextView) findViewById(R.id.tv_reminder_time)).setText(StringHelper.toTimeDate(reminderModel.getOriginalTime()));
                     }
-                    reminderModel.trySaveAndSetAlert(getApplicationContext(), true);
+                    reminderModel.trySaveAndSetAlert(getApplicationContext(), true, true);
                 }
             }
         });

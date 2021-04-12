@@ -14,12 +14,12 @@ public class ActiveReminder extends RealmObject implements RealmModel {
     public String name;
     public String note;
     public Date time;
-    public String selectedAlarmTone = null;
-    public Date nextSnoozeTime = null;
+    public String selectedAlarmTone;
+    public Date nextSnoozeTime;
     public boolean isEnableTone = true;
     public boolean isEnable = true;
     public boolean isVibrate;
-    public boolean increaseVolumeGradually = false;
+    public boolean increaseVolumeGradually;
     public int alarmVolume;
 
     public int repeatOption;
@@ -27,27 +27,11 @@ public class ActiveReminder extends RealmObject implements RealmModel {
     public RealmList<Integer> repeatDays = new RealmList<>();
     public RealmList<Integer> repeatWeeks = new RealmList<>();
     public RealmList<Integer> repeatMonths = new RealmList<>();
-
-//    public boolean isRepeatOn_Sun;
-//    public boolean isRepeatOn_Mon;
-//    public boolean isRepeatOn_Tue;
-//    public boolean isRepeatOn_Wed;
-//    public boolean isRepeatOn_Thu;
-//    public boolean isRepeatOn_Fri;
-//    public boolean isRepeatOn_Sat;
-//
-//    public boolean isRepeatOn_Jan;
-//    public boolean isRepeatOn_Feb;
-//    public boolean isRepeatOn_Mar;
-//    public boolean isRepeatOn_Apr;
-//    public boolean isRepeatOn_May;
-//    public boolean isRepeatOn_Jun;
-//    public boolean isRepeatOn_Jul;
-//    public boolean isRepeatOn_Aug;
-//    public boolean isRepeatOn_Sep;
-//    public boolean isRepeatOn_Oct;
-//    public boolean isRepeatOn_Nov;
-//    public boolean isRepeatOn_Dec;
+    public int customTimeUnit;
+    public int customTimeValue;
+    //public int customTimeHourValue;
+    //public int customTimeMinuteValue;
+    public Date repeatEndDate;
 
     public boolean isSnoozeEnable;
     public int snoozeInterval;

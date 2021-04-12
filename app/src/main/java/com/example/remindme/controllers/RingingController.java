@@ -24,6 +24,7 @@ public class RingingController {
     private int audioFocusGrantStatus = AudioManager.AUDIOFOCUS_REQUEST_FAILED;
     private boolean isAudioFocusRequested = false;
     private int originalVolumeIndex = 0;
+    private boolean isOriginalVolumeAltered;
     private int maxVolumeIndex = 0;
     private int ringingVolumeIndex = 0;
     private boolean isIncreaseVolume;
@@ -95,12 +96,12 @@ public class RingingController {
 
                 if (isAudioFocusRequested && audioFocusGrantStatus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                     if (alarmVolumePercentage > 0) {
-
                         originalVolumeIndex = OsHelper.getAlarmVolume(audioManager);
                         final int possibleMaxVolume = OsHelper.getMaxAlarmVolume(audioManager);
                         final int possibleMinVolume = OsHelper.getMinAlarmVolume(audioManager);
 
                         maxVolumeIndex = Math.max(Math.min(getVolumeFromPercentage(alarmVolumePercentage), possibleMaxVolume), possibleMinVolume);
+                        isOriginalVolumeAltered = true;
 
                         if (isIncreaseVolume) {
 
@@ -161,7 +162,10 @@ public class RingingController {
                 volumeUpTimer.cancel();
             }
 
-            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolumeIndex, 0);
+            if (isOriginalVolumeAltered) {
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolumeIndex, 0);
+                isOriginalVolumeAltered = false;
+            }
 
             if (OsHelper.isOreoOrLater()) {
                 audioManager.abandonAudioFocusRequest(audioFocusRequest);

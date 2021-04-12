@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_end_date_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/text_danger"
+        android:text="Repeat until : " />
+
+    <TextView
+        android:id="@+id/tv_end_date_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/text_gray2"
+        android:textSize="@dimen/font_size_xh5"
+        android:text="@string/btn_date" />
+
+    <TextView
+        android:id="@+id/tv_end_time_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/text_gray1"
+        android:textSize="@dimen/font_size_h1"
+        android:text="@string/btn_time" />
+
+</LinearLayout>
+
+
+
+
+
+

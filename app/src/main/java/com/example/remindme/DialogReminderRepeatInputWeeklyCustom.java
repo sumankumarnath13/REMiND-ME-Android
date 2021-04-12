@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.viewModels.IReminderRepeatListener;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
@@ -60,12 +61,13 @@ public class DialogReminderRepeatInputWeeklyCustom extends DialogFragment {
         final CheckBox chk_weekly_4 = view.findViewById(R.id.chk_weekly_4);
         final CheckBox chk_weekly_5 = view.findViewById(R.id.chk_weekly_5);
 
+        final String weekDayName = StringHelper.toWeekday(model.reminderTime);
 
-        chk_weekly_1.setText("On 1st " + model.weekDayName + " of the month");
-        chk_weekly_2.setText("On 2nd " + model.weekDayName + " of the month");
-        chk_weekly_3.setText("On 3rd " + model.weekDayName + " of the month");
-        chk_weekly_4.setText("On 4th " + model.weekDayName + " of the month");
-        chk_weekly_5.setText("On 5th " + model.weekDayName + " of the month (if exists)");
+        chk_weekly_1.setText("On 1st " + weekDayName + " of the month");
+        chk_weekly_2.setText("On 2nd " + weekDayName + " of the month");
+        chk_weekly_3.setText("On 3rd " + weekDayName + " of the month");
+        chk_weekly_4.setText("On 4th " + weekDayName + " of the month");
+        chk_weekly_5.setText("On 5th " + weekDayName + " of the month (if exists)");
 
         for (int i = 0; i < model.customWeeks.size(); i++) {
             int value = model.customWeeks.get(i);

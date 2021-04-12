@@ -68,12 +68,8 @@ public class ReminderModel extends ViewModel {
 
     //endregion
 
-    //region Static Members
-
-    //region Private Static Members
-
-    //region Private Static Variables
     private static Class<? extends BroadcastReceiver> externalBroadcastReceiverClass;
+
     private int alarmVolumePercentage;
 
     public int getAlarmVolumePercentage() {
@@ -82,6 +78,93 @@ public class ReminderModel extends ViewModel {
 
     public void setAlarmVolumePercentage(int value) {
         alarmVolumePercentage = Math.min(Math.max(value, 0), 100);
+    }
+
+    private String id;
+
+    public static String getReminderId(Intent intent) {
+        return intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT);
+    }
+
+    public static void setReminderId(Intent intent, String reminderId) {
+        intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminderId);
+    }
+
+    public boolean isNew() {
+        return id == null;
+    }
+
+    private int intId;
+
+    public int getIntId() {
+        return intId;
+    }
+
+    private boolean isEnabled = true;
+
+    public boolean getIsEnabled() {
+        return isEnabled;
+    }
+
+    private final ReminderRepeatModel repeatModel;
+
+    private final ReminderSnoozeModel snoozeModel;
+
+    public ReminderSnoozeModel getSnoozeModel() {
+        return snoozeModel;
+    }
+
+    private Date nextSnoozeOffTime = null;
+    private ReminderRepeatModel repeatValueChangeBuffer;
+
+    private Date originalTime;
+
+    public void setOriginalTime(Date userTime) {
+        Calendar userTimeCl = Calendar.getInstance();
+        userTimeCl.setTime(userTime);
+        userTimeCl.set(Calendar.SECOND, 0);
+        userTimeCl.set(Calendar.MILLISECOND, 0);
+        originalTime = userTimeCl.getTime();
+        //isOriginalTimeChanged = true;
+
+        switch (repeatModel.repeatOption) {
+            default:
+                if (Calendar.getInstance().compareTo(userTimeCl) >= 0) {
+                    //If the user value "effectively" is in past then calculate next schedule.
+                    calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime); // Given_time will be used if its not null.
+                } else {
+                    // If not then no need of calculated time. The given time will be used.
+                    calculatedTime = null;
+                }
+                break;
+            case HOURLY_CUSTOM:
+            case DAILY_CUSTOM:
+            case WEEKLY_CUSTOM:
+            case MONTHLY_CUSTOM:
+            case OTHER:
+                calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime); // Given_time will be used if its not null.
+                repeatModel.reminderTime = userTimeCl.getTime(); // To preserve the minute value for various repeat options provided to user.
+                //repeatModel.weekDayName = StringHelper.toWeekday(userTimeCl.getTime());
+                break;
+        }
+    }
+
+    public Date getOriginalTime() {
+        return originalTime;
+    }
+
+    private Date calculatedTime;
+
+    public Date getCalculatedTime() {
+        return calculatedTime;
+    }
+
+    public Date getNextSnoozeOffTime() {
+        return nextSnoozeOffTime;
+    }
+
+    public boolean getIsHasDifferentTimeCalculated() {
+        return calculatedTime != null && !calculatedTime.equals(originalTime);
     }
 
     private boolean increaseVolumeGradually;
@@ -94,7 +177,12 @@ public class ReminderModel extends ViewModel {
         increaseVolumeGradually = value;
     }
 
-    //endregion
+    public String name;
+    public String note;
+    public Uri ringToneUri = null;
+    public boolean isEnableTone = true;
+    public boolean isEnableVibration = true;
+
 
     //region Private Static Functions
     private static void transformToData(ReminderModel from, ActiveReminder to) {
@@ -107,7 +195,7 @@ public class ReminderModel extends ViewModel {
             to.selectedAlarmTone = from.ringToneUri.toString();
         }
         to.isEnableTone = from.isEnableTone;
-        to.isEnable = from.isEnable;
+        to.isEnable = from.isEnabled;
         to.isVibrate = from.isEnableVibration;
 
         to.increaseVolumeGradually = from.increaseVolumeGradually;
@@ -153,7 +241,15 @@ public class ReminderModel extends ViewModel {
             case YEARLY:
                 to.repeatOption = 5;
                 break;
+            case OTHER:
+                to.repeatOption = 6;
+                to.customTimeUnit = ReminderRepeatModel.transform(from.repeatModel.customTimeUnit);
+                to.customTimeValue = from.repeatModel.customTimeValue;
+                //to.customTimeHourValue = from.repeatModel.customTimeHourValue;
+                //to.customTimeMinuteValue = from.repeatModel.customTimeMinuteValue;
+                break;
         }
+        to.repeatEndDate = from.repeatModel.getRepeatEndDate();
 
         to.isSnoozeEnable = from.snoozeModel.isEnable;
         to.nextSnoozeTime = from.nextSnoozeOffTime;
@@ -242,7 +338,7 @@ public class ReminderModel extends ViewModel {
             to.ringToneUri = Uri.parse(from.selectedAlarmTone);
         }
         to.isEnableTone = from.isEnableTone;
-        to.isEnable = from.isEnable;
+        to.isEnabled = from.isEnable;
         to.isEnableVibration = from.isVibrate;
 
         to.increaseVolumeGradually = from.increaseVolumeGradually;
@@ -288,7 +384,15 @@ public class ReminderModel extends ViewModel {
             case 5:
                 to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.YEARLY;
                 break;
+            case 6:
+                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.OTHER;
+                to.repeatModel.customTimeUnit = ReminderRepeatModel.transform(from.customTimeUnit);
+                to.repeatModel.customTimeValue = from.customTimeValue;
+                //to.repeatModel.customTimeHourValue = from.customTimeHourValue;
+                //to.repeatModel.customTimeMinuteValue = from.customTimeMinuteValue;
+                break;
         }
+        to.repeatModel.setRepeatEndDate(from.repeatEndDate);
 
         to.snoozeModel.isEnable = from.isSnoozeEnable;
         to.nextSnoozeOffTime = from.nextSnoozeTime;
@@ -379,14 +483,6 @@ public class ReminderModel extends ViewModel {
         return true;
     }
 
-    public static String getReminderId(Intent intent) {
-        return intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT);
-    }
-
-    public static void setReminderId(Intent intent, String reminderId) {
-        intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminderId);
-    }
-
     public static List<ActiveReminder> getActiveReminders(String name) {
         Realm realm = Realm.getDefaultInstance();
         if (name != null && !name.isEmpty()) {
@@ -413,27 +509,7 @@ public class ReminderModel extends ViewModel {
             return realm.where(DismissedReminder.class).findAll();
         }
     }
-    //endregion
 
-    //endregion
-
-    //region Instanced Members
-
-    //region Private
-
-    //region Private Instanced Variables
-    private String id;
-    private int intId;
-    private boolean isEnable = true;
-    private final ReminderRepeatModel repeatModel;
-    private final ReminderSnoozeModel snoozeModel;
-    private Date nextSnoozeOffTime = null;
-    private ReminderRepeatModel repeatValueChangeBuffer;
-    private Date originalTime;
-    private Date calculatedTime;
-    //endregion
-
-    //region Private Instanced Functions
     private boolean isAlertExists(Context context) {
         if (getIntId() == 0) {
             return false;
@@ -453,7 +529,7 @@ public class ReminderModel extends ViewModel {
     }
 
     private void setAlarm(Context context, Date atTime, boolean isShowElapseTimeToast) {
-        if (!isEnable) {
+        if (!isEnabled) {
             return;
         }
 
@@ -494,34 +570,35 @@ public class ReminderModel extends ViewModel {
         }
 
         if (isShowElapseTimeToast) {
-            StringBuilder stringBuilder = new StringBuilder("Alarm set after");
+            if (elapsedDays > 0 || elapsedHours > 0 || elapsedMinutes > 0 || elapsedSeconds > 0) {
 
-            if (elapsedDays > 0) {
-                stringBuilder.append(" ");
-                stringBuilder.append(elapsedDays);
-                stringBuilder.append(" days,");
+                StringBuilder stringBuilder = new StringBuilder("Alarm is set after ");
+
+                if (elapsedDays > 0) {
+                    stringBuilder.append(elapsedDays);
+                    stringBuilder.append(" days,");
+                }
+
+                if (elapsedHours > 0) {
+                    stringBuilder.append(elapsedHours);
+                    stringBuilder.append(" hours,");
+                }
+
+                if (elapsedMinutes > 0) {
+                    stringBuilder.append(elapsedMinutes);
+                    stringBuilder.append(" minutes,");
+                }
+
+                if (elapsedSeconds > 0) {
+                    stringBuilder.append(elapsedSeconds);
+                    stringBuilder.append(" seconds,");
+                }
+
+                stringBuilder.append(" from now");
+                ToastHelper.toast(context, StringHelper.trimEnd(stringBuilder.toString(), ","));
+            } else {
+                ToastHelper.toast(context, "Alarm is set");
             }
-
-            if (elapsedHours > 0) {
-                stringBuilder.append(" ");
-                stringBuilder.append(elapsedHours);
-                stringBuilder.append(" hours,");
-            }
-
-            if (elapsedMinutes > 0) {
-                stringBuilder.append(" ");
-                stringBuilder.append(elapsedMinutes);
-                stringBuilder.append(" minutes,");
-            }
-
-            if (elapsedSeconds > 0) {
-                stringBuilder.append(" ");
-                stringBuilder.append(elapsedSeconds);
-                stringBuilder.append(" seconds,");
-            }
-
-            stringBuilder.append(" from now");
-            ToastHelper.toast(context, StringHelper.trimEnd(stringBuilder.toString(), ","));
         }
     }
 
@@ -558,54 +635,131 @@ public class ReminderModel extends ViewModel {
     }
 
     private Date getAlarmTime() {
-        Date _time;
-        if (nextSnoozeOffTime == null) {
-            _time = calculatedTime == null ? originalTime : calculatedTime;
+        final Date _time;
+
+        if (getIsHasDifferentTimeCalculated()) {
+            _time = calculatedTime;
+        } else if (nextSnoozeOffTime == null) {
+            _time = originalTime;
         } else {
             _time = nextSnoozeOffTime;
         }
+
         return _time;
     }
 
-    private boolean trySaveAndSetAlert(Context context, boolean isResetSnooze, boolean isShowElapseTimeToast) {
+    private void saveToDb() {
+        final ActiveReminder reminder = new ActiveReminder();
+        ReminderModel.transformToData(this, reminder);
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @ParametersAreNonnullByDefault
+            @Override
+            public void execute(Realm realm) {
+                realm.insertOrUpdate(reminder);
+            }
+        });
+    }
 
-        if (isResetSnooze) {
-            nextSnoozeOffTime = null;
-            snoozeModel.count = 0;
-        }
+    public boolean trySaveAndSetAlert(Context context, boolean isResetSnooze, boolean isShowElapseTimeToast) {
 
-        Date _time = getAlarmTime();
-        if (_time.after(Calendar.getInstance().getTime())) {
+        if (getAlarmTime().after(Calendar.getInstance().getTime())) {
 
-            if (id == null) { // First save
+            if (isNew()) { // New reminder. First save
+
                 UUID uuid = UUID.randomUUID();
                 id = uuid.toString();
                 intId = (int) uuid.getMostSignificantBits();
-            } else { // Update
+
+            } else { // Edit reminder
+
                 cancelAlarm(context);
+
+                if (isResetSnooze) {
+                    nextSnoozeOffTime = null;
+                    snoozeModel.count = 0;
+                }
+
             }
 
-            final ActiveReminder reminder = new ActiveReminder();
-            ReminderModel.transformToData(this, reminder);
-            Realm realm = Realm.getDefaultInstance();
-            realm.executeTransaction(new Realm.Transaction() {
-                @ParametersAreNonnullByDefault
-                @Override
-                public void execute(Realm realm) {
-                    realm.insertOrUpdate(reminder);
-                }
-            });
+            saveToDb();
 
-            if (isEnable) {
-                setAlarm(context, _time, isShowElapseTimeToast);
+            if (isEnabled) {
+                setAlarm(context, getAlarmTime(), isShowElapseTimeToast);
             }
 
             return true;
 
+
         } else {
+
             ToastHelper.toast(context, "Cannot save reminder. The time set is in past!");
             return false;
+
         }
+
+
+//        if (!isOriginalTimeChanged) {
+//            Date _time = getAlarmTime();
+//            if (_time.after(Calendar.getInstance().getTime())) {
+//
+//                if (id == null) { // First save
+//                    UUID uuid = UUID.randomUUID();
+//                    id = uuid.toString();
+//                    intId = (int) uuid.getMostSignificantBits();
+//                } else { // Update
+//                    cancelAlarm(context);
+//                }
+//
+//                final ActiveReminder reminder = new ActiveReminder();
+//                ReminderModel.transformToData(this, reminder);
+//                Realm realm = Realm.getDefaultInstance();
+//                realm.executeTransaction(new Realm.Transaction() {
+//                    @ParametersAreNonnullByDefault
+//                    @Override
+//                    public void execute(Realm realm) {
+//                        realm.insertOrUpdate(reminder);
+//                    }
+//                });
+//
+//                if (isEnable) {
+//                    setAlarm(context, _time, isShowElapseTimeToast);
+//                }
+//
+//                return true;
+//
+//            } else {
+//                ToastHelper.toast(context, "Cannot save reminder. The time set is in past!");
+//                return false;
+//            }
+//        } else {
+//            if (id == null) { // First save
+//                UUID uuid = UUID.randomUUID();
+//                id = uuid.toString();
+//                intId = (int) uuid.getMostSignificantBits();
+//            } else { // Update
+//                cancelAlarm(context);
+//            }
+//
+//            final ActiveReminder reminder = new ActiveReminder();
+//            ReminderModel.transformToData(this, reminder);
+//            Realm realm = Realm.getDefaultInstance();
+//            realm.executeTransaction(new Realm.Transaction() {
+//                @ParametersAreNonnullByDefault
+//                @Override
+//                public void execute(Realm realm) {
+//                    realm.insertOrUpdate(reminder);
+//                }
+//            });
+//
+//            if (isEnable) {
+//                setAlarm(context, _time, isShowElapseTimeToast);
+//            }
+//
+//            return true;
+//        }
+
+
     }
 
     private Date getNextScheduleTime(final Calendar currentTime, final Date reminderBaseTime) {
@@ -623,11 +777,6 @@ public class ReminderModel extends ViewModel {
         final int MINUTE = reminderCal.get(Calendar.MINUTE);
         final int HOUR_OF_DAY = reminderCal.get(Calendar.HOUR_OF_DAY);
         final int DAY_OF_YEAR = reminderCal.get(Calendar.DAY_OF_YEAR);
-//        final int WEEK_OF_YEAR = baseTimeCal.get(Calendar.WEEK_OF_YEAR);
-//        final int WEEK_OF_MONTH = baseTimeCal.get(Calendar.WEEK_OF_MONTH);
-//        final int MONTH = baseTimeCal.get(Calendar.MONTH);
-//        final int YEAR = baseTimeCal.get(Calendar.YEAR);
-
 
         // If the time from which it needs to calculate is in past then use current time as start point
         final Calendar baseCl = Calendar.getInstance();
@@ -762,7 +911,7 @@ public class ReminderModel extends ViewModel {
                 }
             }
             if (nextTime == null) {
-                //Find next schedule next week :
+                //Find next schedule next month :
                 newScheduleCl.set(Calendar.DAY_OF_MONTH, 1);
                 newScheduleCl.add(Calendar.MONTH, 1);
                 for (int i = 0; i < repeatModel.customWeeks.size(); i++) {
@@ -818,13 +967,18 @@ public class ReminderModel extends ViewModel {
                     case MONTHS:
                         newScheduleCl.add(Calendar.MONTH, repeatModel.customTimeValue);
                         break;
-                    case YEARS:
-                        newScheduleCl.add(Calendar.YEAR, repeatModel.customTimeValue);
-                        break;
+//                    case YEARS:
+//                        newScheduleCl.add(Calendar.YEAR, repeatModel.customTimeValue);
+//                        break;
                 }
             }
             nextTime = newScheduleCl.getTime();
         }
+
+        if (nextTime != null && repeatModel.getRepeatEndDate() != null) {
+            return nextTime.after(repeatModel.getRepeatEndDate()) ? null : nextTime;
+        }
+
         return nextTime;
     }
 
@@ -844,25 +998,11 @@ public class ReminderModel extends ViewModel {
         }
         return pendingIntent;
     }
-    //endregion
 
-    //endregion
-
-    //region Public
-
-    //region Public Instanced Functions/Constructor
     public ReminderModel() {
         id = null;
         repeatModel = new ReminderRepeatModel();
         snoozeModel = new ReminderSnoozeModel();
-    }
-
-    public ReminderSnoozeModel getSnoozeModel() {
-        return snoozeModel;
-    }
-
-    public int getIntId() {
-        return intId;
     }
 
     public String getSignatureName() {
@@ -892,6 +1032,7 @@ public class ReminderModel extends ViewModel {
         archiveToMissed();
         ToastHelper.toast(context, "Dismissing to missed! " + getIntId());
         if (nextTime == null) { // EOF situation
+            archiveToFinished();
             deleteAndCancelAlert(context);
         } else {
             calculatedTime = nextTime; // Set next trigger time.
@@ -964,65 +1105,6 @@ public class ReminderModel extends ViewModel {
             }
         }
     }
-    //endregion
-
-    //region Public Instanced Members
-    public String name;
-    public String note;
-    public Uri ringToneUri = null;
-    public boolean isEnableTone = true;
-    public boolean isEnableVibration = true;
-    //endregion
-
-    //region Public instance functions
-    public void setOriginalTime(Date userTime) {
-        Calendar userTimeCl = Calendar.getInstance();
-        userTimeCl.setTime(userTime);
-        userTimeCl.set(Calendar.SECOND, 0);
-        userTimeCl.set(Calendar.MILLISECOND, 0);
-        originalTime = userTimeCl.getTime();
-
-        switch (repeatModel.repeatOption) {
-            default:
-                if (Calendar.getInstance().compareTo(userTimeCl) >= 0) {
-                    //If the user value "effectively" is in past then calculate next schedule.
-                    calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime); // Given_time will be used if its not null.
-                } else {
-                    // If not then no need of calculated time. The given time will be used.
-                    calculatedTime = null;
-                }
-                break;
-            case HOURLY_CUSTOM:
-            case DAILY_CUSTOM:
-            case WEEKLY_CUSTOM:
-            case MONTHLY_CUSTOM:
-            case OTHER:
-                calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime); // Given_time will be used if its not null.
-                repeatModel.customMinute = userTimeCl.get(Calendar.MINUTE); // To preserve the minute value for various repeat options provided to user.
-                repeatModel.weekDayName = StringHelper.toWeekday(userTimeCl.getTime());
-                break;
-        }
-    }
-
-    public Date getOriginalTime() {
-        return originalTime;
-    }
-
-    public Date getCalculatedTime() {
-        return calculatedTime;
-    }
-
-    public Date getNextSnoozeOffTime() {
-        return nextSnoozeOffTime;
-    }
-
-    public boolean getIsEmpty() {
-        return id == null;
-    }
-
-    public boolean getIsHasDifferentTimeCalculated() {
-        return calculatedTime != null && !calculatedTime.equals(originalTime);
-    }
 
     public boolean tryReadFrom(Intent intent) {
         if (intent == null) {
@@ -1050,10 +1132,6 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    public boolean getIsEnabled() {
-        return isEnable;
-    }
-
     public boolean trySetEnabled(Context context, boolean value) {
         //isEnable = value;
         if (value) {
@@ -1069,16 +1147,16 @@ public class ReminderModel extends ViewModel {
                     ToastHelper.toast(context, "Alarm cannot be scheduled further. Please set time into future to enable.");
                 } else { // Found next trigger point.
                     calculatedTime = nextTime; // Set next trigger time.
-                    isEnable = true;
+                    isEnabled = true;
                 }
             } else {
-                isEnable = true;
+                isEnabled = true;
             }
         } else {
-            isEnable = false;
+            isEnabled = false;
         }
 
-        return isEnable;
+        return isEnabled;
     }
 
     public ReminderRepeatModel.ReminderRepeatOptions getRepeatOption() {
@@ -1090,11 +1168,14 @@ public class ReminderModel extends ViewModel {
             //Make a new instance copied from original. This way original repeat settings wont get affected until applied by method "trySetReminderRepeatModel"
             repeatValueChangeBuffer = new ReminderRepeatModel();
             // Copy from real object:
-            Calendar c = Calendar.getInstance();
-            c.setTime(originalTime);
+            //Calendar c = Calendar.getInstance();
+            //c.setTime(originalTime);
+            repeatValueChangeBuffer.reminderTime = originalTime;
+            repeatValueChangeBuffer.setRepeatEndDate(repeatModel.getRepeatEndDate());
             repeatValueChangeBuffer.repeatOption = repeatModel.repeatOption;
-            repeatValueChangeBuffer.weekDayName = StringHelper.toWeekday(c.getTime());
-            repeatValueChangeBuffer.customMinute = c.get(Calendar.MINUTE);
+            repeatValueChangeBuffer.customTimeUnit = repeatModel.customTimeUnit;
+            repeatValueChangeBuffer.customTimeValue = repeatModel.customTimeValue;
+
             repeatValueChangeBuffer.customHours.addAll(repeatModel.customHours);
             repeatValueChangeBuffer.customDays.addAll(repeatModel.customDays);
             repeatValueChangeBuffer.customWeeks.addAll(repeatModel.customWeeks);
@@ -1105,6 +1186,9 @@ public class ReminderModel extends ViewModel {
 
     public boolean trySetRepeatSettingChanges() {
         if (repeatValueChangeBuffer == null) return false;
+
+        repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
+
         switch (repeatValueChangeBuffer.repeatOption) {
             default: //NONE: HOURLY: DAILY: WEEKLY: MONTHLY: YEARLY:
                 resetRepeatOptions();
@@ -1118,6 +1202,7 @@ public class ReminderModel extends ViewModel {
                     this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
                     this.repeatModel.customHours.addAll(repeatValueChangeBuffer.customHours);
                     //Reminder time will be different than given time only if if Custom option are selected.
+                    //setOriginalTime(originalTime);
                     calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
                     discardRepeatSettingChanges();
                     return true;
@@ -1131,6 +1216,7 @@ public class ReminderModel extends ViewModel {
                     this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
                     this.repeatModel.customDays.addAll(repeatValueChangeBuffer.customDays);
                     //Reminder time will be different than given time only if if Custom option are selected.
+                    //setOriginalTime(originalTime);
                     calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
                     discardRepeatSettingChanges();
                     return true;
@@ -1144,6 +1230,7 @@ public class ReminderModel extends ViewModel {
                     this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
                     this.repeatModel.customWeeks.addAll(repeatValueChangeBuffer.customWeeks);
                     //Reminder time will be different than given time only if if Custom option are selected.
+                    //setOriginalTime(originalTime);
                     calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
                     discardRepeatSettingChanges();
                     return true;
@@ -1165,7 +1252,8 @@ public class ReminderModel extends ViewModel {
                     return false;
                 }
             case OTHER:
-                if (repeatValueChangeBuffer.customTimeValue > 0 && repeatValueChangeBuffer.customTimeValue <= 1000) {
+                if (repeatValueChangeBuffer.customTimeValue > 0 &&
+                        repeatValueChangeBuffer.customTimeValue <= ReminderRepeatModel.getMaxForTimeUnit(repeatValueChangeBuffer.customTimeUnit)) {
                     resetRepeatOptions();
                     this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
                     this.repeatModel.customTimeUnit = repeatValueChangeBuffer.customTimeUnit;
@@ -1185,7 +1273,7 @@ public class ReminderModel extends ViewModel {
         this.repeatModel.customDays.clear();
         this.repeatModel.customWeeks.clear();
         this.repeatModel.customMonths.clear();
-        this.repeatModel.customMinute = 0;
+        //this.repeatModel.reminderTime = null;
     }
 
     public void discardRepeatSettingChanges() {
@@ -1210,16 +1298,5 @@ public class ReminderModel extends ViewModel {
             });
         }
     }
-
-    public boolean trySaveAndSetAlert(Context context, boolean isShowElapseTimeToast) {
-        return trySaveAndSetAlert(context, true, isShowElapseTimeToast);
-    }
-
-
-    //endregion
-
-    //endregion
-
-    //endregion
 
 }
