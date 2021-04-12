@@ -83,7 +83,7 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
         final CheckBox chk_daily_23 = view.findViewById(R.id.chk_daily_23);
 
         Calendar c = Calendar.getInstance();
-        c.setTime(model.reminderTime);
+        c.setTime(model.getReminderTime());
         final int min = c.get(Calendar.MINUTE);
 
         chk_daily_5.setText("5:" + min + " am");

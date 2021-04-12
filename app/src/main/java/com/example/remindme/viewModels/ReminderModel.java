@@ -143,8 +143,7 @@ public class ReminderModel extends ViewModel {
             case MONTHLY_CUSTOM:
             case OTHER:
                 calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime); // Given_time will be used if its not null.
-                repeatModel.reminderTime = userTimeCl.getTime(); // To preserve the minute value for various repeat options provided to user.
-                //repeatModel.weekDayName = StringHelper.toWeekday(userTimeCl.getTime());
+                repeatModel.setReminderTime(userTimeCl); // To preserve the minute value for various repeat options provided to user.
                 break;
         }
     }
@@ -1170,7 +1169,7 @@ public class ReminderModel extends ViewModel {
             // Copy from real object:
             //Calendar c = Calendar.getInstance();
             //c.setTime(originalTime);
-            repeatValueChangeBuffer.reminderTime = originalTime;
+            repeatValueChangeBuffer.setReminderTime(originalTime);
             repeatValueChangeBuffer.setRepeatEndDate(repeatModel.getRepeatEndDate());
             repeatValueChangeBuffer.repeatOption = repeatModel.repeatOption;
             repeatValueChangeBuffer.customTimeUnit = repeatModel.customTimeUnit;

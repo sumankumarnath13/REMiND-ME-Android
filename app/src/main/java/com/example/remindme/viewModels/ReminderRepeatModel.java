@@ -30,11 +30,23 @@ public class ReminderRepeatModel {
         MONTHS,
     }
 
-    public Date reminderTime;
+    private Date reminderTime;
+
+    public Date getReminderTime() {
+        return reminderTime;
+    }
+
+    public void setReminderTime(Date value) {
+        reminderTime = value;
+    }
+
+    public void setReminderTime(Calendar value) {
+        reminderTime = value.getTime();
+    }
+
     public List<Integer> customHours;
     public List<Integer> customDays;
     public List<Integer> customWeeks;
-    //public String weekDayName;
     public List<Integer> customMonths;
 
     public TimeUnits customTimeUnit = TimeUnits.DAYS;
@@ -102,6 +114,7 @@ public class ReminderRepeatModel {
         customWeeks = new ArrayList<>();
         customMonths = new ArrayList<>();
     }
+
 
     @NonNull
     @Override

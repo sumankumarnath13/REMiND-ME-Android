@@ -239,7 +239,7 @@ public class DialogReminderRepeatInput extends DialogFragment
                 if (model.isHasRepeatEnd()) {
                     alertTime.setTime(model.getRepeatEndDate());
                 } else {
-                    alertTime.setTime(model.reminderTime);
+                    alertTime.setTime(model.getReminderTime());
                 }
 
                 final int mYear, mMonth, mDay;
@@ -273,7 +273,7 @@ public class DialogReminderRepeatInput extends DialogFragment
                 if (model.isHasRepeatEnd()) {
                     alertTime.setTime(model.getRepeatEndDate());
                 } else {
-                    alertTime.setTime(model.reminderTime);
+                    alertTime.setTime(model.getReminderTime());
                 }
 
                 final int mHour, mMinute;

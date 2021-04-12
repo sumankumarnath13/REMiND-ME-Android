@@ -61,7 +61,7 @@ public class DialogReminderRepeatInputWeeklyCustom extends DialogFragment {
         final CheckBox chk_weekly_4 = view.findViewById(R.id.chk_weekly_4);
         final CheckBox chk_weekly_5 = view.findViewById(R.id.chk_weekly_5);
 
-        final String weekDayName = StringHelper.toWeekday(model.reminderTime);
+        final String weekDayName = StringHelper.toWeekday(model.getReminderTime());
 
         chk_weekly_1.setText("On 1st " + weekDayName + " of the month");
         chk_weekly_2.setText("On 2nd " + weekDayName + " of the month");
