@@ -132,9 +132,9 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             public void onClick(View v) {
                 ReminderRepeatModel repeatModel = reminderModel.getRepeatSettings();
                 if (sw_reminder_repeat.isChecked()) {
-                    repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.DAILY; // Default
+                    repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY); // Default
                 } else {
-                    repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.NONE;
+                    repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.NONE);
                 }
 
                 if (reminderModel.trySetRepeatSettingChanges()) {

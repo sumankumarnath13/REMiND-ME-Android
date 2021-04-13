@@ -30,7 +30,18 @@ public class ReminderRepeatModel {
         MONTHS,
     }
 
-    public ReminderRepeatOptions repeatOption;
+    private ReminderRepeatOptions repeatOption;
+
+    public ReminderRepeatOptions getRepeatOption() {
+        return repeatOption;
+    }
+
+    public void setRepeatOption(ReminderRepeatOptions value) {
+        repeatOption = value;
+        if (repeatOption == ReminderRepeatOptions.NONE) {
+            setHasRepeatEnd(false);
+        }
+    }
 
     private Date reminderTime;
 
@@ -79,14 +90,20 @@ public class ReminderRepeatModel {
     }
 
     public void setHasRepeatEnd(boolean isEnabled) {
-        if (isEnabled) {
-            hasRepeatEnd = isValid();
+        if (isEnabled && !isRepeatEndValid()) {
+            hasRepeatEnd = false;
+            return;
         }
 
         hasRepeatEnd = isEnabled;
     }
 
-    private boolean isValid() {
+    private boolean isRepeatEndValid() {
+
+        if (getRepeatOption() == ReminderRepeatOptions.NONE) {
+            return false;
+        }
+
         if (repeatEndDate == null || reminderTime == null) { // Cannot enable without repeat end date
             return false;
         }
@@ -106,7 +123,7 @@ public class ReminderRepeatModel {
 
     public void setRepeatEndDate(Date value) {
         repeatEndDate = value;
-        hasRepeatEnd = isValid();
+        hasRepeatEnd = isRepeatEndValid();
     }
 
     public ReminderRepeatModel() {
@@ -248,6 +265,9 @@ public class ReminderRepeatModel {
                             break;
                         case 3:
                             builder.append("4th, ");
+                            break;
+                        case 4:
+                            builder.append("5th (If exists), ");
                             break;
                     }
                 }

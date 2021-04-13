@@ -90,7 +90,7 @@ public class DialogReminderRepeatInputWeeklyCustom extends DialogFragment {
                 case 3:
                     chk_weekly_4.setChecked(true);
                     break;
-                case 5:
+                case 4:
                     chk_weekly_5.setChecked(true);
                     break;
             }
@@ -107,13 +107,11 @@ public class DialogReminderRepeatInputWeeklyCustom extends DialogFragment {
                 if (chk_weekly_5.isChecked()) model.customWeeks.add(4);
                 //listener.setChanges(model);
 
-
                 final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
                 if (fragment != null) {
                     final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
                     hostDialog.setChanges(model);
                 }
-
 
             }
         }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {

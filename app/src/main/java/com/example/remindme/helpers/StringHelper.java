@@ -8,8 +8,8 @@ public class StringHelper {
     public static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm a");
     public static final SimpleDateFormat ALERT_TIME_FORMAT = new SimpleDateFormat("h:mm a");
     public static final SimpleDateFormat WEEKDAY_FORMAT = new SimpleDateFormat("EEE");
-    public static final SimpleDateFormat WEEKDAY_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yy");
-    public static final SimpleDateFormat TIME_DATE_FORMAT = new SimpleDateFormat("hh:mm a - EEE, dd MMM yy");
+    public static final SimpleDateFormat WEEKDAY_DATE_FORMAT = new SimpleDateFormat("EEE dd MMM yy");
+    public static final SimpleDateFormat TIME_DATE_FORMAT = new SimpleDateFormat("hh:mm a - EEE dd MMM yy");
     //public static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("hh:mm:ss a - dd MMM yy");
     //public static final SimpleDateFormat uniqueDateTimeFormat = new SimpleDateFormat("yyMMddHHmm");
 
@@ -67,7 +67,7 @@ public class StringHelper {
             int lastIndex = stringBuilder.lastIndexOf(valueToTrim);
             int length = stringBuilder.length();
             if (lastIndex >= 0 && length > 0) {
-                stringBuilder.replace(lastIndex, length, "");
+                stringBuilder.replace(lastIndex, lastIndex + 1, "");
             }
             return stringBuilder.toString();
         } else {

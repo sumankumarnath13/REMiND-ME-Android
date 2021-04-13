@@ -127,7 +127,7 @@ public class ReminderModel extends ViewModel {
         originalTime = userTimeCl.getTime();
         //isOriginalTimeChanged = true;
 
-        switch (repeatModel.repeatOption) {
+        switch (repeatModel.getRepeatOption()) {
             default:
                 if (Calendar.getInstance().compareTo(userTimeCl) >= 0) {
                     //If the user value "effectively" is in past then calculate next schedule.
@@ -204,7 +204,7 @@ public class ReminderModel extends ViewModel {
         to.repeatDays.clear();
         to.repeatWeeks.clear();
         to.repeatMonths.clear();
-        switch (from.repeatModel.repeatOption) {
+        switch (from.repeatModel.getRepeatOption()) {
             default:
             case NONE:
                 to.repeatOption = 0;
@@ -343,6 +343,7 @@ public class ReminderModel extends ViewModel {
         to.increaseVolumeGradually = from.increaseVolumeGradually;
         to.alarmVolumePercentage = from.alarmVolume;
 
+        to.repeatModel.setReminderTime(from.time);
         to.repeatModel.customHours.clear();
         to.repeatModel.customDays.clear();
         to.repeatModel.customWeeks.clear();
@@ -350,45 +351,46 @@ public class ReminderModel extends ViewModel {
         switch (from.repeatOption) {
             default:
             case 0:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.NONE;
+                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.NONE);
                 break;
             case 1:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.HOURLY;
+                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY);
                 break;
             case 11:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM;
+                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM);
                 to.repeatModel.customHours.addAll(from.repeatHours);
                 break;
             case 2:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.DAILY;
+                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY);
                 break;
             case 21:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM;
+                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM);
                 to.repeatModel.customDays.addAll(from.repeatDays);
                 break;
             case 3:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.WEEKLY;
+                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.WEEKLY);
                 break;
             case 31:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM;
+                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM);
                 to.repeatModel.customWeeks.addAll(from.repeatWeeks);
                 break;
             case 4:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.MONTHLY;
+                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.MONTHLY);
                 break;
             case 41:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM;
+                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM);
                 to.repeatModel.customMonths.addAll(from.repeatMonths);
                 break;
             case 5:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.YEARLY;
+                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.YEARLY);
                 break;
             case 6:
-                to.repeatModel.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.OTHER;
+                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.OTHER);
                 to.repeatModel.setRepeatCustom(from.customTimeUnit, from.customTimeValue);
                 break;
         }
         to.repeatModel.setRepeatEndDate(from.repeatEndDate);
+        to.repeatModel.setHasRepeatEnd(from.repeatEndDate != null);
 
         to.snoozeModel.isEnable = from.isSnoozeEnable;
         to.nextSnoozeOffTime = from.nextSnoozeTime;
@@ -789,7 +791,7 @@ public class ReminderModel extends ViewModel {
         newScheduleCl.set(Calendar.SECOND, 0);
         newScheduleCl.set(Calendar.MILLISECOND, 0);
 
-        if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.HOURLY) {
+        if (repeatModel.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.HOURLY) {
             // Set alarm values to current time onwards
             newScheduleCl.set(Calendar.MINUTE, MINUTE);
             // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
@@ -797,7 +799,7 @@ public class ReminderModel extends ViewModel {
                 newScheduleCl.add(Calendar.HOUR_OF_DAY, 1);
             }
             nextTime = newScheduleCl.getTime();
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.DAILY) {
+        } else if (repeatModel.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.DAILY) {
             // Set alarm values to current time onwards
             newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
             newScheduleCl.set(Calendar.MINUTE, MINUTE);
@@ -806,7 +808,7 @@ public class ReminderModel extends ViewModel {
                 newScheduleCl.add(Calendar.DAY_OF_YEAR, 1);
             }
             nextTime = newScheduleCl.getTime();
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.WEEKLY) {
+        } else if (repeatModel.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.WEEKLY) {
             // Set alarm values to current time onwards
             newScheduleCl.set(Calendar.DAY_OF_YEAR, DAY_OF_YEAR);
             newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
@@ -816,7 +818,7 @@ public class ReminderModel extends ViewModel {
                 newScheduleCl.add(Calendar.WEEK_OF_YEAR, 1);
             }
             nextTime = newScheduleCl.getTime();
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.MONTHLY) {
+        } else if (repeatModel.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.MONTHLY) {
             // Set alarm values to current time onwards
             newScheduleCl.set(Calendar.DAY_OF_YEAR, DAY_OF_YEAR);
             newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
@@ -826,7 +828,7 @@ public class ReminderModel extends ViewModel {
                 newScheduleCl.add(Calendar.MONTH, 1);
             }
             nextTime = newScheduleCl.getTime();
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.YEARLY) {
+        } else if (repeatModel.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.YEARLY) {
             newScheduleCl.set(Calendar.DAY_OF_YEAR, DAY_OF_YEAR);
             newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
             newScheduleCl.set(Calendar.MINUTE, MINUTE);
@@ -835,7 +837,7 @@ public class ReminderModel extends ViewModel {
                 newScheduleCl.add(Calendar.YEAR, 1);
             }
             nextTime = newScheduleCl.getTime();
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM) {
+        } else if (repeatModel.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM) {
             // Set alarm values to current time onwards
             newScheduleCl.set(Calendar.MINUTE, MINUTE);
             // Check when is the next closest time from onwards
@@ -861,7 +863,7 @@ public class ReminderModel extends ViewModel {
                     }
                 }
             }
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM) {
+        } else if (repeatModel.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM) {
             // Set alarm values to current time onwards
             newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
             newScheduleCl.set(Calendar.MINUTE, MINUTE);
@@ -889,7 +891,7 @@ public class ReminderModel extends ViewModel {
                     }
                 }
             }
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM) {
+        } else if (repeatModel.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM) {
             // Set alarm values to current time onwards
             newScheduleCl.set(Calendar.DAY_OF_WEEK, Calendar.DAY_OF_WEEK);
             newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
@@ -918,7 +920,7 @@ public class ReminderModel extends ViewModel {
                     }
                 }
             }
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM) {
+        } else if (repeatModel.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM) {
             // Set alarm values to current time onwards
             newScheduleCl.set(Calendar.DAY_OF_YEAR, DAY_OF_YEAR);
             newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
@@ -947,7 +949,7 @@ public class ReminderModel extends ViewModel {
                     }
                 }
             }
-        } else if (repeatModel.repeatOption == ReminderRepeatModel.ReminderRepeatOptions.OTHER) {
+        } else if (repeatModel.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.OTHER) {
             newScheduleCl.set(Calendar.DAY_OF_YEAR, DAY_OF_YEAR);
             newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
             newScheduleCl.set(Calendar.MINUTE, MINUTE);
@@ -1156,12 +1158,12 @@ public class ReminderModel extends ViewModel {
     }
 
     public ReminderRepeatModel.ReminderRepeatOptions getRepeatOption() {
-        return repeatModel.repeatOption;
+        return repeatModel.getRepeatOption();
     }
-
-    public void setRepeatSettings(ReminderRepeatModel value) {
-        repeatValueChangeBuffer = value;
-    }
+//
+//    public void setRepeatSettings(ReminderRepeatModel value) {
+//        repeatValueChangeBuffer = value;
+//    }
 
     public ReminderRepeatModel getRepeatSettings() {
         if (repeatValueChangeBuffer == null) {
@@ -1173,7 +1175,7 @@ public class ReminderModel extends ViewModel {
             repeatValueChangeBuffer.setReminderTime(originalTime);
             repeatValueChangeBuffer.setRepeatEndDate(repeatModel.getRepeatEndDate());
             repeatValueChangeBuffer.setHasRepeatEnd(repeatModel.isHasRepeatEnd());
-            repeatValueChangeBuffer.repeatOption = repeatModel.repeatOption;
+            repeatValueChangeBuffer.setRepeatOption(repeatModel.getRepeatOption());
             repeatValueChangeBuffer.setRepeatCustom(repeatModel.getCustomTimeUnit(), repeatModel.getCustomTimeValue());
 
             repeatValueChangeBuffer.customHours.addAll(repeatModel.customHours);
@@ -1187,24 +1189,28 @@ public class ReminderModel extends ViewModel {
     public boolean trySetRepeatSettingChanges() {
         if (repeatValueChangeBuffer == null) return false;
 
-        repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
-        repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
-
-        switch (repeatValueChangeBuffer.repeatOption) {
+        switch (repeatValueChangeBuffer.getRepeatOption()) {
             default: //NONE: HOURLY: DAILY: WEEKLY: MONTHLY: YEARLY:
                 resetRepeatOptions();
-                this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
+                this.repeatModel.setRepeatOption(repeatValueChangeBuffer.getRepeatOption());
+                repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
+                repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
+
                 calculatedTime = null;
                 discardRepeatSettingChanges();
                 return true;
             case HOURLY_CUSTOM:
                 if (repeatValueChangeBuffer.customHours.size() > 0) {
                     resetRepeatOptions();
-                    this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
+                    this.repeatModel.setRepeatOption(repeatValueChangeBuffer.getRepeatOption());
                     this.repeatModel.customHours.addAll(repeatValueChangeBuffer.customHours);
+                    repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
+                    repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
                     //Reminder time will be different than given time only if if Custom option are selected.
                     //setOriginalTime(originalTime);
                     calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
+
+
                     discardRepeatSettingChanges();
                     return true;
                 } else {
@@ -1214,8 +1220,11 @@ public class ReminderModel extends ViewModel {
             case DAILY_CUSTOM:
                 if (repeatValueChangeBuffer.customDays.size() > 0) {
                     resetRepeatOptions();
-                    this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
+                    this.repeatModel.setRepeatOption(repeatValueChangeBuffer.getRepeatOption());
                     this.repeatModel.customDays.addAll(repeatValueChangeBuffer.customDays);
+                    repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
+                    repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
+
                     //Reminder time will be different than given time only if if Custom option are selected.
                     //setOriginalTime(originalTime);
                     calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
@@ -1228,8 +1237,11 @@ public class ReminderModel extends ViewModel {
             case WEEKLY_CUSTOM:
                 if (repeatValueChangeBuffer.customWeeks.size() > 0) {
                     resetRepeatOptions();
-                    this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
+                    this.repeatModel.setRepeatOption(repeatValueChangeBuffer.getRepeatOption());
                     this.repeatModel.customWeeks.addAll(repeatValueChangeBuffer.customWeeks);
+                    repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
+                    repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
+
                     //Reminder time will be different than given time only if if Custom option are selected.
                     //setOriginalTime(originalTime);
                     calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
@@ -1242,8 +1254,11 @@ public class ReminderModel extends ViewModel {
             case MONTHLY_CUSTOM:
                 if (repeatValueChangeBuffer.customMonths.size() > 0) {
                     resetRepeatOptions();
-                    this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
+                    this.repeatModel.setRepeatOption(repeatValueChangeBuffer.getRepeatOption());
                     this.repeatModel.customMonths.addAll(repeatValueChangeBuffer.customMonths);
+                    repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
+                    repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
+
                     //Reminder time will be different than given time only if if Custom option are selected.
                     calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
                     discardRepeatSettingChanges();
@@ -1256,8 +1271,12 @@ public class ReminderModel extends ViewModel {
                 if (repeatValueChangeBuffer.getCustomTimeValue() > 0 &&
                         repeatValueChangeBuffer.getCustomTimeValue() <= ReminderRepeatModel.getMaxForTimeUnit(repeatValueChangeBuffer.getCustomTimeUnit())) {
                     resetRepeatOptions();
-                    this.repeatModel.repeatOption = repeatValueChangeBuffer.repeatOption;
+                    this.repeatModel.setRepeatOption(repeatValueChangeBuffer.getRepeatOption());
                     this.repeatModel.setRepeatCustom(repeatValueChangeBuffer.getCustomTimeUnit(), repeatValueChangeBuffer.getCustomTimeValue());
+                    repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
+                    repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
+
+
                     calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
                     discardRepeatSettingChanges();
                     return true;
@@ -1266,6 +1285,7 @@ public class ReminderModel extends ViewModel {
                     return false;
                 }
         }
+
     }
 
     private void resetRepeatOptions() {
