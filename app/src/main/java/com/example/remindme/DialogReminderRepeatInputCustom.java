@@ -12,8 +12,10 @@ import android.widget.NumberPicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
-import com.example.remindme.viewModels.IReminderRepeatListener;
+import com.example.remindme.ui.main.IReminderRepeatListener;
+import com.example.remindme.ui.main.IRepeatInputDialog;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
 public class DialogReminderRepeatInputCustom extends DialogFragment {
@@ -43,8 +45,11 @@ public class DialogReminderRepeatInputCustom extends DialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (isCancel) {
-            listener.set(null, true);
+            listener.discardChanges();
         }
+//        final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+//        transaction.remove(this);
+//        transaction.commit();
     }
 
     @NonNull
@@ -81,12 +86,18 @@ public class DialogReminderRepeatInputCustom extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 model.setRepeatCustom(unit_picker.getValue(), value_picker.getValue());
-                listener.set(model, true);
+                //listener.setChanges(model);
+
+                final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
+                final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
+                hostDialog.setChanges(model);
+
+
             }
         }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.set(null, true);
+                //listener.set(null, true);
             }
         });
 

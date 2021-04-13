@@ -12,8 +12,10 @@ import android.widget.CheckBox;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
-import com.example.remindme.viewModels.IReminderRepeatListener;
+import com.example.remindme.ui.main.IReminderRepeatListener;
+import com.example.remindme.ui.main.IRepeatInputDialog;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
 import java.util.Calendar;
@@ -23,6 +25,7 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
     private IReminderRepeatListener listener;
     private ReminderRepeatModel model;
     private boolean isCancel;
+    //private FragmentTransaction transaction;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -30,6 +33,7 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
         try {
             listener = (IReminderRepeatListener) context;
             model = listener.getRepeatModel();
+            //transaction = listener.getTransaction();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
         }
@@ -45,8 +49,11 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (isCancel) {
-            listener.set(null, true);
+            listener.discardChanges();
         }
+//        final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+//        transaction.remove(this);
+//        transaction.commit();
     }
 
     @NonNull
@@ -224,12 +231,18 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
                         if (chk_daily_21.isChecked()) model.customHours.add(21);
                         if (chk_daily_22.isChecked()) model.customHours.add(22);
                         if (chk_daily_23.isChecked()) model.customHours.add(23);
-                        listener.set(model, true);
+
+                        //listener.setChanges(model);
+                        final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
+                        final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
+                        hostDialog.setChanges(model);
+
+
                     }
                 }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.set(null, true);
+                //listener.setChanges(null, true);
             }
         });
 

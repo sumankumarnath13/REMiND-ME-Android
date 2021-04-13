@@ -12,9 +12,11 @@ import android.widget.CheckBox;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.example.remindme.helpers.StringHelper;
-import com.example.remindme.viewModels.IReminderRepeatListener;
+import com.example.remindme.ui.main.IReminderRepeatListener;
+import com.example.remindme.ui.main.IRepeatInputDialog;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
 public class DialogReminderRepeatInputWeeklyCustom extends DialogFragment {
@@ -44,8 +46,11 @@ public class DialogReminderRepeatInputWeeklyCustom extends DialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (isCancel) {
-            listener.set(null, true);
+            listener.discardChanges();
         }
+//        final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+//        transaction.remove(this);
+//        transaction.commit();
     }
 
     @NonNull
@@ -100,12 +105,19 @@ public class DialogReminderRepeatInputWeeklyCustom extends DialogFragment {
                 if (chk_weekly_3.isChecked()) model.customWeeks.add(2);
                 if (chk_weekly_4.isChecked()) model.customWeeks.add(3);
                 if (chk_weekly_5.isChecked()) model.customWeeks.add(4);
-                listener.set(model, true);
+                //listener.setChanges(model);
+
+
+                final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
+                final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
+                hostDialog.setChanges(model);
+
+
             }
         }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.set(null, true);
+                //listener.setChanges(null, true);
             }
         });
 

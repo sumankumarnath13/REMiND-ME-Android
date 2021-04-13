@@ -16,7 +16,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.remindme.helpers.OsHelper;
-import com.example.remindme.viewModels.IReminderSnoozeListener;
+import com.example.remindme.ui.main.IReminderSnoozeListener;
 import com.example.remindme.viewModels.ReminderSnoozeModel;
 
 public class DialogReminderSnoozeInput extends DialogFragment {
@@ -160,7 +160,7 @@ public class DialogReminderSnoozeInput extends DialogFragment {
                             model.countOptions = ReminderSnoozeModel.SnoozeCountOptions.RC;
                         }
 
-                        listener.set(model, true);
+                        listener.commitChanges(model);
                     }
                 })
                 .setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {

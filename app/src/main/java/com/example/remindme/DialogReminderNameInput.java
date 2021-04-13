@@ -20,7 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.remindme.viewModels.IReminderNameListener;
+import com.example.remindme.ui.main.IReminderNameListener;
 
 import java.util.List;
 

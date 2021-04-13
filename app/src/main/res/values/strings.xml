@@ -2,7 +2,7 @@
     <string name="app_name">RemindMe</string>
     <string name="app_label">R E M i N D \u0020 M E</string>
 
-    <string name="dialog_positive">Done</string>
+    <string name="dialog_positive">Ok</string>
     <string name="dialog_negative">Cancel</string>
     <string name="btn_back">Back</string>
     <string name="btn_edit">Edit</string>
@@ -69,7 +69,6 @@
     <string name="snooze_interval_m10">10 Minutes</string>
     <string name="snooze_interval_m15">15 Minutes</string>
     <string name="snooze_interval_m30">30 Minutes</string>
-
 
     <string name="snooze_repeat_r3">3 Times</string>
     <string name="snooze_repeat_r5">5 Times</string>

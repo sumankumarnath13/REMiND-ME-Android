@@ -1,8 +1,9 @@
-package com.example.remindme.viewModels;
+package com.example.remindme.ui.main;
 
 import com.example.remindme.viewModels.ReminderSnoozeModel;
 
 public interface IReminderSnoozeListener {
-    void set(ReminderSnoozeModel model, boolean isEOF);
+    void commitChanges(ReminderSnoozeModel model);
+
     ReminderSnoozeModel getSnoozeModel();
 }

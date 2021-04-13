@@ -19,7 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.remindme.helpers.StringHelper;
-import com.example.remindme.viewModels.IReminderRepeatListener;
+import com.example.remindme.ui.main.IReminderRepeatListener;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
 import java.util.Calendar;
@@ -52,8 +52,11 @@ public class DialogReminderRepeatInputEndLimit extends DialogFragment
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (isCancel) {
-            listener.set(null, true);
+            listener.discardChanges();
         }
+//        final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+//        transaction.remove(this);
+//        transaction.commit();
     }
 
     @NonNull
@@ -65,7 +68,7 @@ public class DialogReminderRepeatInputEndLimit extends DialogFragment
         builder.setView(view).setTitle("Select Repeat Option").setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.set(null, true);
+
             }
         });
 

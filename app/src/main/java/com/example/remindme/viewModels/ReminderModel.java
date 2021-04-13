@@ -1159,6 +1159,10 @@ public class ReminderModel extends ViewModel {
         return repeatModel.repeatOption;
     }
 
+    public void setRepeatSettings(ReminderRepeatModel value) {
+        repeatValueChangeBuffer = value;
+    }
+
     public ReminderRepeatModel getRepeatSettings() {
         if (repeatValueChangeBuffer == null) {
             //Make a new instance copied from original. This way original repeat settings wont get affected until applied by method "trySetReminderRepeatModel"
