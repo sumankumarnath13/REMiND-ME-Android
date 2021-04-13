@@ -99,7 +99,7 @@ public class AlertService extends Service {
 
                             @Override
                             public void onFinish() {
-                                service.startRinging(service);
+                                service.startRinging();
                                 openAlarmActivity();
                             }
                         }.start();
@@ -180,13 +180,18 @@ public class AlertService extends Service {
         return builder.build();
     }
 
-    private void startRinging(Context context) {
+    private void startRinging() {
         if (isBusy) {
+
+            if (ringingController == null) {
+                ringingController = new RingingController(this, servingReminder.ringToneUri);
+            }
+
             if (servingReminder.isEnableTone) {
-                ringingController.startTone(context, servingReminder.ringToneUri, servingReminder.isIncreaseVolumeGradually(), servingReminder.getAlarmVolumePercentage());
+                ringingController.startTone(servingReminder.isIncreaseVolumeGradually(), servingReminder.getAlarmVolumePercentage());
             }
             if (servingReminder.isEnableVibration) {
-                ringingController.startVibrating(context);
+                ringingController.startVibrating();
             }
         }
     }
@@ -248,7 +253,6 @@ public class AlertService extends Service {
             isInternalBroadcastReceiverRegistered = true;
         }
 
-        ringingController = new RingingController();
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
     }
 
@@ -284,20 +288,20 @@ public class AlertService extends Service {
             //Oreo and onwards won't allow service to just run without notification.
             startForeground(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
 
-            if (isIdle) startRinging(this);
+            if (isIdle) startRinging();
 
         } else if (OsHelper.isLollipopOrLater()) {
 
             notificationManager.notify(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
 
             if (!OsHelper.isInteractive(this) && isIdle) { // show heads up
-                startRinging(this);
+                startRinging();
                 openAlarmActivity();
             }
 
         } else if (isIdle) {
 
-            startRinging(this);
+            startRinging();
             openAlarmActivity();
 
         }

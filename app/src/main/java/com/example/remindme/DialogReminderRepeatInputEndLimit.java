@@ -30,6 +30,8 @@ public class DialogReminderRepeatInputEndLimit extends DialogFragment {
     private ReminderRepeatModel model;
     private boolean isCancel;
     private boolean isSetTime;
+    private TextView tv_end_date_value;
+    private TextView tv_end_time_value;
     private final Calendar alertTime = Calendar.getInstance();
 
     @Override
@@ -148,15 +150,10 @@ public class DialogReminderRepeatInputEndLimit extends DialogFragment {
         return builder.create();
     }
 
-    private TextView tv_end_date_value;
-    private TextView tv_end_time_value;
-
     private void refreshForm() {
-
         if (model.isHasRepeatEnd() || isSetTime) {
             tv_end_date_value.setText(StringHelper.toDate(alertTime.getTime()));
             tv_end_time_value.setText(StringHelper.toTime(alertTime.getTime()));
         }
-
     }
 }

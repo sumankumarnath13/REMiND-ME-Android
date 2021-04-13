@@ -51,8 +51,8 @@ public class ReminderRepeatModel {
     public List<Integer> customWeeks;
     public List<Integer> customMonths;
 
-    private TimeUnits customTimeUnit;
-    private int customTimeValue;
+    private TimeUnits customTimeUnit = TimeUnits.MONTHS;
+    private int customTimeValue = 12;
 
     public void setRepeatCustom(TimeUnits unit, int value) {
         customTimeUnit = unit;
@@ -79,11 +79,23 @@ public class ReminderRepeatModel {
     }
 
     public void setHasRepeatEnd(boolean isEnabled) {
-        if (isEnabled && repeatEndDate == null) { // Cannot enable without repeat end date
-            return;
+        if (isEnabled) {
+            hasRepeatEnd = isValid();
         }
 
         hasRepeatEnd = isEnabled;
+    }
+
+    private boolean isValid() {
+        if (repeatEndDate == null || reminderTime == null) { // Cannot enable without repeat end date
+            return false;
+        }
+
+        if (repeatEndDate.compareTo(reminderTime) <= 0) { // End date cannot be same or less than reminder date
+            return false;
+        }
+
+        return true;
     }
 
     private Date repeatEndDate;
@@ -94,6 +106,7 @@ public class ReminderRepeatModel {
 
     public void setRepeatEndDate(Date value) {
         repeatEndDate = value;
+        hasRepeatEnd = isValid();
     }
 
     public ReminderRepeatModel() {
@@ -103,49 +116,49 @@ public class ReminderRepeatModel {
         customWeeks = new ArrayList<>();
         customMonths = new ArrayList<>();
     }
-
-    public boolean isValid() {
-
-        if (isHasRepeatEnd() && getRepeatEndDate().compareTo(Calendar.getInstance().getTime()) <= 0) {
-            return false;
-        }
-
-        switch (repeatOption) {
-            default:
-                return true;
-            case HOURLY_CUSTOM:
-                if (customHours.size() > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            case DAILY_CUSTOM:
-                if (customDays.size() > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            case WEEKLY_CUSTOM:
-                if (customWeeks.size() > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            case MONTHLY_CUSTOM:
-                if (customMonths.size() > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            case OTHER:
-                if (getCustomTimeValue() > 0 &&
-                        getCustomTimeValue() <= ReminderRepeatModel.getMaxForTimeUnit(getCustomTimeUnit())) {
-                    return true;
-                } else {
-                    return false;
-                }
-        }
-    }
+//
+//    public boolean isValid() {
+//
+//        if (isHasRepeatEnd() && getRepeatEndDate().compareTo(Calendar.getInstance().getTime()) <= 0) {
+//            return false;
+//        }
+//
+//        switch (repeatOption) {
+//            default:
+//                return true;
+//            case HOURLY_CUSTOM:
+//                if (customHours.size() > 0) {
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            case DAILY_CUSTOM:
+//                if (customDays.size() > 0) {
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            case WEEKLY_CUSTOM:
+//                if (customWeeks.size() > 0) {
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            case MONTHLY_CUSTOM:
+//                if (customMonths.size() > 0) {
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            case OTHER:
+//                if (getCustomTimeValue() > 0 &&
+//                        getCustomTimeValue() <= ReminderRepeatModel.getMaxForTimeUnit(getCustomTimeUnit())) {
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//        }
+//    }
 
     @NonNull
     @Override
@@ -320,7 +333,7 @@ public class ReminderRepeatModel {
                 break;
         }
 
-        if (getRepeatEndDate() != null) {
+        if (isHasRepeatEnd()) {
             builder.append(" till " + StringHelper.toTimeDate(getRepeatEndDate()));
         }
 

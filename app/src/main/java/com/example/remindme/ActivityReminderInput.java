@@ -21,9 +21,9 @@ import android.widget.TimePicker;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.remindme.controllers.RingingController;
 import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
@@ -61,7 +61,6 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
     private SeekBar seeker_alarm_volume;
     private SwitchCompat sw_gradually_increase_volume;
     private LinearLayout lvc_diff_next_reminder_trigger;
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -127,7 +126,6 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         btn_reminder_date = findViewById(R.id.btn_reminder_date);
         btn_reminder_time = findViewById(R.id.btn_reminder_time);
         lvc_diff_next_reminder_trigger = findViewById(R.id.lvc_diff_next_reminder_trigger);
-
 
         sw_reminder_repeat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,16 +227,8 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         mnu_reminder_repeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //DialogReminderRepeatInputHourlyCustom hourlyCustom = new DialogReminderRepeatInputHourlyCustom();
-                //DialogReminderRepeatInputDailyCustom dailyCustom = new DialogReminderRepeatInputDailyCustom();
-                //repeatInput.show(getSupportFragmentManager(), "Reminder_Repeat");
-
                 DialogReminderRepeatInput repeatInput = new DialogReminderRepeatInput();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.add(repeatInput, "repeatInput"); // gets the first animations
-                transaction.commit();
-
+                repeatInput.show(getSupportFragmentManager(), "repeatInput");
             }
         });
 
@@ -339,6 +329,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
+        final RingingController controller = new RingingController(this, reminderModel.ringToneUri);
         seeker_alarm_volume = findViewById(R.id.seeker_alarm_volume);
         seeker_alarm_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -346,6 +337,8 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 if (fromUser) {
                     if (progress < ReminderModel.MINIMUM_INPUT_VOLUME_PERCENTAGE)
                         seekBar.setProgress(ReminderModel.MINIMUM_INPUT_VOLUME_PERCENTAGE);
+
+                    controller.setAlarmVolume(seekBar.getProgress());
                 }
             }
 
@@ -564,4 +557,5 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             refreshForm();
         }
     }
+
 }

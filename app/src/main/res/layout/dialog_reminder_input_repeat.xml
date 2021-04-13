@@ -133,7 +133,7 @@
                 android:id="@+id/rdo_reminder_repeat_other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_danger"
+                android:buttonTint="@color/bg_gray1"
                 android:text="@string/repeat_other"
                 android:textColor="@color/text_gray1" />
 
@@ -142,22 +142,25 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/dp_8"
                 android:paddingLeft="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_8"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sw_has_repeat_end"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textColor="@color/text_warning"
+                    android:textColor="@color/text_gray1"
                     android:text="Enable repeat ending " />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/lv_repeat_end_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/dp_8"
                 android:paddingLeft="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_8"
                 android:orientation="horizontal">
 
                 <TextView
@@ -165,21 +168,40 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/dp_16"
                     android:layout_marginEnd="@dimen/dp_16"
-                    android:text="At : " />
+                    android:text="Repeat end date " />
 
                 <TextView
                     android:id="@+id/tv_end_date_value"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:textSize="@dimen/font_size_h2"
+                    android:textColor="@color/text_success" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lv_repeat_end_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/dp_8"
+                android:paddingLeft="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_8"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/dp_16"
                     android:layout_marginEnd="@dimen/dp_16"
-                    android:textColor="@color/text_gray2" />
+                    android:text="Repeat end time " />
+
 
                 <TextView
                     android:id="@+id/tv_end_time_value"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textColor="@color/text_gray1" />
+                    android:textSize="@dimen/font_size_h2"
+                    android:textColor="@color/text_warning" />
 
             </LinearLayout>
 

@@ -10,8 +10,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.ui.main.IReminderRepeatListener;
@@ -48,6 +47,8 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
     private TextView tv_end_date_value;
     private TextView tv_end_time_value;
     private SwitchCompat sw_has_repeat_end;
+    private LinearLayout lv_repeat_end_date;
+    private LinearLayout lv_repeat_end_time;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -55,7 +56,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         try {
             listener = (IReminderRepeatListener) context;
             model = listener.getRepeatModel();
-            //transaction = listener.getTransaction();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
         }
@@ -73,9 +73,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         if (isCancel) {
             listener.discardChanges();
         }
-//        final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-//        transaction.remove(this);
-//        transaction.commit();
     }
 
     @NonNull
@@ -102,10 +99,8 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_none.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss();
                 model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.NONE;
                 setChanges();
-                //listener.set(model, true);
             }
         });
 
@@ -113,10 +108,8 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_hourly.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss();
                 model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.HOURLY;
                 setChanges();
-                //listener.set(model, true);
             }
         });
 
@@ -124,14 +117,9 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_hourly_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss();
                 model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM;
-                setChanges();
-                //listener.set(model, false);
                 final DialogReminderRepeatInputHourlyCustom ting = new DialogReminderRepeatInputHourlyCustom();
-                final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.add(ting, "ting");
-                transaction.commit();
+                ting.show(getParentFragmentManager(), "ting");
             }
         });
 
@@ -139,10 +127,8 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_daily.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss();
                 model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.DAILY;
                 setChanges();
-                //listener.set(model, true);
             }
         });
 
@@ -150,14 +136,9 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_daily_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss();
                 model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM;
-                setChanges();
-                //listener.set(model, false);
                 final DialogReminderRepeatInputDailyCustom ting = new DialogReminderRepeatInputDailyCustom();
-                final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.add(ting, "ting");
-                transaction.commit();
+                ting.show(getParentFragmentManager(), "ting");
             }
         });
 
@@ -165,10 +146,8 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_weekly.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss();
                 model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.WEEKLY;
                 setChanges();
-                //listener.set(model, true);
             }
         });
 
@@ -176,14 +155,9 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_weekly_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss();
                 model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM;
-                setChanges();
-                //listener.set(model, false);
                 final DialogReminderRepeatInputWeeklyCustom ting = new DialogReminderRepeatInputWeeklyCustom();
-                final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.add(ting, "ting");
-                transaction.commit();
+                ting.show(getParentFragmentManager(), "ting");
             }
         });
 
@@ -191,10 +165,8 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_monthly.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss();
                 model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.MONTHLY;
                 setChanges();
-                //listener.set(model, true);
             }
         });
 
@@ -202,14 +174,9 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_monthly_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss();
                 model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM;
-                setChanges();
-                //listener.set(model, false);
                 final DialogReminderRepeatInputMonthlyCustom ting = new DialogReminderRepeatInputMonthlyCustom();
-                final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.add(ting, "ting");
-                transaction.commit();
+                ting.show(getParentFragmentManager(), "ting");
             }
         });
 
@@ -217,10 +184,8 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_yearly.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss();
                 model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.YEARLY;
                 setChanges();
-                //listener.set(model, true);
             }
         });
 
@@ -228,10 +193,25 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_other.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss();
                 model.repeatOption = ReminderRepeatModel.ReminderRepeatOptions.OTHER;
+                final DialogReminderRepeatInputCustom ting = new DialogReminderRepeatInputCustom();
+                ting.show(getParentFragmentManager(), "ting");
+            }
+        });
+
+        sw_has_repeat_end = view.findViewById(R.id.sw_has_repeat_end);
+        sw_has_repeat_end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sw_has_repeat_end.isChecked() && !model.isHasRepeatEnd()) { // Use a default repeat end to next month
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(model.getReminderTime());
+                    c.add(Calendar.MONTH, 1);
+                    model.setRepeatEndDate(c.getTime());
+                }
+
+                model.setHasRepeatEnd(sw_has_repeat_end.isChecked());
                 setChanges();
-                //listener.set(model, false);
             }
         });
 
@@ -239,7 +219,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         tv_end_date_value.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 final Calendar alertTime = Calendar.getInstance();
                 if (model.isHasRepeatEnd()) {
                     alertTime.setTime(model.getRepeatEndDate());
@@ -292,28 +271,15 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
                                 alertTime.set(Calendar.MINUTE, minute);
                                 alertTime.set(Calendar.SECOND, 0); // Setting second to 0 is important.
                                 model.setRepeatEndDate(alertTime.getTime());
-                                setChanges(model);
+                                setChanges();
                             }
                         }, mHour, mMinute, false);
                 timePickerDialog.show();
             }
         });
 
-        sw_has_repeat_end = view.findViewById(R.id.sw_has_repeat_end);
-        sw_has_repeat_end.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sw_has_repeat_end.setChecked(isChecked);
-                if (isChecked) {
-                    final DialogReminderRepeatInputEndLimit ting = new DialogReminderRepeatInputEndLimit();
-                    final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                    transaction.add(ting, "ting");
-                    transaction.commit();
-                } else {
-                    setChanges();
-                }
-            }
-        });
+        lv_repeat_end_date = view.findViewById(R.id.lv_repeat_end_date);
+        lv_repeat_end_time = view.findViewById(R.id.lv_repeat_end_time);
 
         setChanges();
 
@@ -322,13 +288,17 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
 
     private void setChanges() {
         // No radio group wont work for the given layout. So resetting programmatically is required.
+
         sw_has_repeat_end.setChecked(model.isHasRepeatEnd());
+
         if (model.isHasRepeatEnd()) {
-            tv_end_date_value.setText(StringHelper.toDate(model.getRepeatEndDate()));
+            lv_repeat_end_date.setVisibility(View.VISIBLE);
+            lv_repeat_end_time.setVisibility(View.VISIBLE);
+            tv_end_date_value.setText(StringHelper.toWeekdayDate(model.getRepeatEndDate()));
             tv_end_time_value.setText(StringHelper.toTime(model.getRepeatEndDate()));
         } else {
-            tv_end_date_value.setText(null);
-            tv_end_time_value.setText(null);
+            lv_repeat_end_date.setVisibility(View.GONE);
+            lv_repeat_end_time.setVisibility(View.GONE);
         }
 
         rdo_reminder_repeat_none.setChecked(false);
@@ -380,10 +350,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
                 break;
         }
 
-        if (model.isHasRepeatEnd()) {
-            tv_end_date_value.setText(StringHelper.toDate(model.getRepeatEndDate()));
-            tv_end_time_value.setText(StringHelper.toTime(model.getRepeatEndDate()));
-        }
     }
 
     public void setChanges(ReminderRepeatModel m) {

@@ -23,9 +23,9 @@ public class RingingController {
     private AudioFocusRequest audioFocusRequest;
     private int audioFocusGrantStatus = AudioManager.AUDIOFOCUS_REQUEST_FAILED;
     private boolean isAudioFocusRequested = false;
-    private int originalVolumeIndex = 0;
+    private int deviceVolumeIndex = 0;
     private boolean isOriginalVolumeAltered;
-    private int maxVolumeIndex = 0;
+    private int alarmVolumeIndex = 0;
     private int ringingVolumeIndex = 0;
     private boolean isIncreaseVolume;
 
@@ -42,7 +42,7 @@ public class RingingController {
         @Override
         public void onTick(long millisUntilFinished) {
             ringingVolumeIndex++;
-            if (ringingVolumeIndex > maxVolumeIndex) {
+            if (ringingVolumeIndex > alarmVolumeIndex) {
                 volumeUpTimer.cancel();
                 return;
             }
@@ -56,88 +56,82 @@ public class RingingController {
         }
     };
 
+    public RingingController(Context context, Uri ringToneUri) {
+        audioManager = OsHelper.getAudioManager(context);
+        vibrator = OsHelper.getVibrator(context);
+        if (ringToneUri == null) {
+            ringToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        }
+        playingRingtone = RingtoneManager.getRingtone(context, ringToneUri);
+    }
+
     private int getVolumeFromPercentage(int percentValue) {
         return (int) ((OsHelper.getMaxAlarmVolume(audioManager) / 100F) * percentValue);
     }
 
-    public void startTone(Context context, Uri ringToneUri, boolean isGraduallyIncreaseVolume, int alarmVolumePercentage) {
+    public void startTone(boolean isGraduallyIncreaseVolume, int alarmVolumePercentage) {
         isIncreaseVolume = isGraduallyIncreaseVolume;
 
-        if (audioManager == null) {
-            audioManager = OsHelper.getAudioManager(context);
-        }
-
-        if (audioManager != null) {
-            if (ringToneUri == null) {
-                ringToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            }
-
-            playingRingtone = RingtoneManager.getRingtone(context, ringToneUri);
+        if (audioManager != null && playingRingtone != null) {
             playingRingtone.setStreamType(AudioManager.STREAM_ALARM);
+            if (OsHelper.isOreoOrLater()) {
+                AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .build();
+                audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+                        .setAudioAttributes(audioAttributes)
+                        .setOnAudioFocusChangeListener(audioFocusChangeListener).build();
 
-            if (playingRingtone != null) {
-                if (OsHelper.isOreoOrLater()) {
-                    AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_ALARM)
-                            .build();
-                    audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
-                            .setAudioAttributes(audioAttributes)
-                            .setOnAudioFocusChangeListener(audioFocusChangeListener).build();
-
-                    if (audioFocusRequest != null) {
-                        audioFocusGrantStatus = audioManager.requestAudioFocus(audioFocusRequest);
-                        isAudioFocusRequested = true;
-                    }
-                } else {
-                    audioFocusGrantStatus = audioManager.requestAudioFocus(audioFocusChangeListener,
-                            AudioManager.STREAM_ALARM, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+                if (audioFocusRequest != null) {
+                    audioFocusGrantStatus = audioManager.requestAudioFocus(audioFocusRequest);
                     isAudioFocusRequested = true;
                 }
+            } else {
+                audioFocusGrantStatus = audioManager.requestAudioFocus(audioFocusChangeListener,
+                        AudioManager.STREAM_ALARM, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+                isAudioFocusRequested = true;
+            }
 
-                if (isAudioFocusRequested && audioFocusGrantStatus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    if (alarmVolumePercentage > 0) {
-                        originalVolumeIndex = OsHelper.getAlarmVolume(audioManager);
-                        final int possibleMaxVolume = OsHelper.getMaxAlarmVolume(audioManager);
-                        final int possibleMinVolume = OsHelper.getMinAlarmVolume(audioManager);
+            if (isAudioFocusRequested && audioFocusGrantStatus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                if (alarmVolumePercentage > 0) {
+                    deviceVolumeIndex = OsHelper.getAlarmVolume(audioManager);
+                    final int possibleMaxVolume = OsHelper.getMaxAlarmVolume(audioManager);
+                    final int possibleMinVolume = OsHelper.getMinAlarmVolume(audioManager);
 
-                        maxVolumeIndex = Math.max(Math.min(getVolumeFromPercentage(alarmVolumePercentage), possibleMaxVolume), possibleMinVolume);
-                        isOriginalVolumeAltered = true;
+                    alarmVolumeIndex = Math.max(Math.min(getVolumeFromPercentage(alarmVolumePercentage), possibleMaxVolume), possibleMinVolume);
+                    isOriginalVolumeAltered = true;
 
-                        if (isIncreaseVolume) {
+                    if (isIncreaseVolume) {
 
-                            ringingVolumeIndex = Math.max(possibleMinVolume, Math.min(1, possibleMaxVolume));
+                        ringingVolumeIndex = Math.max(possibleMinVolume, Math.min(1, possibleMaxVolume));
 
-                            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, ringingVolumeIndex, 0);
-                            playingRingtone.play();
-                            isRinging = true;
+                        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, ringingVolumeIndex, 0);
+                        playingRingtone.play();
+                        isRinging = true;
 
-                            volumeUpTimer.start();
+                        volumeUpTimer.start();
 
-                        } else {
-
-                            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolumeIndex, 0);
-                            playingRingtone.play();
-                            isRinging = true;
-
-                        }
                     } else {
 
+                        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, alarmVolumeIndex, 0);
                         playingRingtone.play();
                         isRinging = true;
 
                     }
+                } else {
+
+                    playingRingtone.play();
+                    isRinging = true;
+
                 }
             }
         }
 
-        startVibrating(context);
+        startVibrating();
+
     }
 
-    public void startVibrating(Context context) {
-        if (vibrator == null) {
-            vibrator = OsHelper.getVibrator(context);
-        }
-
+    public void startVibrating() {
         if (vibrator != null) {
             if (OsHelper.isLollipopOrLater()) {
                 vibrator.vibrate(ReminderModel.VIBRATE_PATTERN, 0, new AudioAttributes.Builder()
@@ -163,7 +157,7 @@ public class RingingController {
             }
 
             if (isOriginalVolumeAltered) {
-                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolumeIndex, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, deviceVolumeIndex, 0);
                 isOriginalVolumeAltered = false;
             }
 
@@ -179,6 +173,17 @@ public class RingingController {
         if (vibrator != null && isVibrating) {
             vibrator.cancel();
         }
+    }
+
+    public void setAlarmVolume(int percentage) {
+        //int value = getVolumeFromPercentage(percentage);
+        //Values must not exceed maximum or go below minimum:
+        final int possibleMaxVolume = OsHelper.getMaxAlarmVolume(audioManager);
+        final int possibleMinVolume = OsHelper.getMinAlarmVolume(audioManager);
+
+        int value = Math.max(Math.min(getVolumeFromPercentage(percentage), possibleMaxVolume), possibleMinVolume);
+
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, value, 0);
     }
 
 }
