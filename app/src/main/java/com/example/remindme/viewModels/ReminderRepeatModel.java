@@ -30,7 +30,6 @@ public class ReminderRepeatModel {
         MONTHS,
     }
 
-
     public ReminderRepeatOptions repeatOption;
 
     private Date reminderTime;
@@ -51,7 +50,6 @@ public class ReminderRepeatModel {
     public List<Integer> customDays;
     public List<Integer> customWeeks;
     public List<Integer> customMonths;
-
 
     private TimeUnits customTimeUnit;
     private int customTimeValue;
@@ -74,7 +72,6 @@ public class ReminderRepeatModel {
         return customTimeValue;
     }
 
-
     private boolean hasRepeatEnd;
 
     public boolean isHasRepeatEnd() {
@@ -85,9 +82,9 @@ public class ReminderRepeatModel {
         if (isEnabled && repeatEndDate == null) { // Cannot enable without repeat end date
             return;
         }
+
         hasRepeatEnd = isEnabled;
     }
-
 
     private Date repeatEndDate;
 
@@ -97,9 +94,7 @@ public class ReminderRepeatModel {
 
     public void setRepeatEndDate(Date value) {
         repeatEndDate = value;
-        setHasRepeatEnd(true);
     }
-
 
     public ReminderRepeatModel() {
         repeatOption = ReminderRepeatOptions.DAILY;
@@ -108,7 +103,6 @@ public class ReminderRepeatModel {
         customWeeks = new ArrayList<>();
         customMonths = new ArrayList<>();
     }
-
 
     public boolean isValid() {
 
@@ -152,7 +146,6 @@ public class ReminderRepeatModel {
                 }
         }
     }
-
 
     @NonNull
     @Override
@@ -333,7 +326,6 @@ public class ReminderRepeatModel {
 
         return StringHelper.trimEnd(builder.toString(), ",");
     }
-
 
     public static int transform(TimeUnits unit) {
         switch (unit) {

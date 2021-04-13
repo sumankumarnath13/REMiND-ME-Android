@@ -234,8 +234,10 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
 
                         //listener.setChanges(model);
                         final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
-                        final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
-                        hostDialog.setChanges(model);
+                        if (fragment != null) {
+                            final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
+                            hostDialog.setChanges(model);
+                        }
 
 
                     }

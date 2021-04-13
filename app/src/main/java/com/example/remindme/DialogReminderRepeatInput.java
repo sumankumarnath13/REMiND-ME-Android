@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -27,24 +29,25 @@ import com.example.remindme.viewModels.ReminderRepeatModel;
 
 import java.util.Calendar;
 
-public class DialogReminderRepeatInput extends DialogFragment implements IRepeatInputDialog
-        //implements  IReminderRepeatListener
-{
+public class DialogReminderRepeatInput extends DialogFragment implements IRepeatInputDialog {
     private IReminderRepeatListener listener;
     private ReminderRepeatModel model;
     private boolean isCancel;
 
-    RadioButton rdo_reminder_repeat_none;
-    RadioButton rdo_reminder_repeat_hourly;
-    RadioButton rdo_reminder_repeat_hourly_custom;
-    RadioButton rdo_reminder_repeat_daily;
-    RadioButton rdo_reminder_repeat_daily_custom;
-    RadioButton rdo_reminder_repeat_weekly;
-    RadioButton rdo_reminder_repeat_weekly_custom;
-    RadioButton rdo_reminder_repeat_monthly;
-    RadioButton rdo_reminder_repeat_monthly_custom;
-    RadioButton rdo_reminder_repeat_yearly;
-    RadioButton rdo_reminder_repeat_other;
+    private RadioButton rdo_reminder_repeat_none;
+    private RadioButton rdo_reminder_repeat_hourly;
+    private RadioButton rdo_reminder_repeat_hourly_custom;
+    private RadioButton rdo_reminder_repeat_daily;
+    private RadioButton rdo_reminder_repeat_daily_custom;
+    private RadioButton rdo_reminder_repeat_weekly;
+    private RadioButton rdo_reminder_repeat_weekly_custom;
+    private RadioButton rdo_reminder_repeat_monthly;
+    private RadioButton rdo_reminder_repeat_monthly_custom;
+    private RadioButton rdo_reminder_repeat_yearly;
+    private RadioButton rdo_reminder_repeat_other;
+    private TextView tv_end_date_value;
+    private TextView tv_end_time_value;
+    private SwitchCompat sw_has_repeat_end;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -293,23 +296,41 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
                             }
                         }, mHour, mMinute, false);
                 timePickerDialog.show();
-
             }
         });
 
-        tv_end_date_label = view.findViewById(R.id.tv_end_date_label);
+        sw_has_repeat_end = view.findViewById(R.id.sw_has_repeat_end);
+        sw_has_repeat_end.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sw_has_repeat_end.setChecked(isChecked);
+                if (isChecked) {
+                    final DialogReminderRepeatInputEndLimit ting = new DialogReminderRepeatInputEndLimit();
+                    final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    transaction.add(ting, "ting");
+                    transaction.commit();
+                } else {
+                    setChanges();
+                }
+            }
+        });
 
         setChanges();
 
         return builder.create();
     }
 
-    private TextView tv_end_date_value;
-    private TextView tv_end_time_value;
-    private TextView tv_end_date_label;
-
     private void setChanges() {
         // No radio group wont work for the given layout. So resetting programmatically is required.
+        sw_has_repeat_end.setChecked(model.isHasRepeatEnd());
+        if (model.isHasRepeatEnd()) {
+            tv_end_date_value.setText(StringHelper.toDate(model.getRepeatEndDate()));
+            tv_end_time_value.setText(StringHelper.toTime(model.getRepeatEndDate()));
+        } else {
+            tv_end_date_value.setText(null);
+            tv_end_time_value.setText(null);
+        }
+
         rdo_reminder_repeat_none.setChecked(false);
         rdo_reminder_repeat_hourly.setChecked(false);
         rdo_reminder_repeat_hourly_custom.setChecked(false);

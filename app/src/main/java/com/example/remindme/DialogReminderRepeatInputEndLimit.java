@@ -17,26 +17,30 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.ui.main.IReminderRepeatListener;
+import com.example.remindme.ui.main.IRepeatInputDialog;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
 import java.util.Calendar;
 
-public class DialogReminderRepeatInputEndLimit extends DialogFragment
-        //implements  IReminderRepeatListener
-{
-    private IReminderRepeatListener listener;
+public class DialogReminderRepeatInputEndLimit extends DialogFragment {
     private ReminderRepeatModel model;
     private boolean isCancel;
+    private boolean isSetTime;
+    private final Calendar alertTime = Calendar.getInstance();
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            listener = (IReminderRepeatListener) context;
+            final IReminderRepeatListener listener = (IReminderRepeatListener) context;
             model = listener.getRepeatModel();
+            if (model.isHasRepeatEnd()) {
+                alertTime.setTime(model.getRepeatEndDate());
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
         }
@@ -52,11 +56,16 @@ public class DialogReminderRepeatInputEndLimit extends DialogFragment
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (isCancel) {
-            listener.discardChanges();
+            commitToParent();
         }
-//        final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-//        transaction.remove(this);
-//        transaction.commit();
+    }
+
+    private void commitToParent() {
+        final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
+        if (fragment != null) {
+            final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
+            hostDialog.setChanges(model);
+        }
     }
 
     @NonNull
@@ -65,20 +74,30 @@ public class DialogReminderRepeatInputEndLimit extends DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat_end, null);
-        builder.setView(view).setTitle("Select Repeat Option").setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        builder.setView(view).setTitle("Set when to stop repeating")
+                .setPositiveButton(R.string.dialog_positive, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (isSetTime) {
+                            model.setRepeatEndDate(alertTime.getTime());
+                            model.setHasRepeatEnd(true);
+                        }
 
-            }
-        });
+                        commitToParent();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        model.setHasRepeatEnd(false);
+                        commitToParent();
+                    }
+                });
 
         tv_end_date_value = view.findViewById(R.id.tv_end_date_value);
         tv_end_date_value.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar alertTime = Calendar.getInstance();
-                //final Calendar currentTime = Calendar.getInstance();
-                //alertTime.setTime(reminderModel.getOriginalTime());
                 final int mYear, mMonth, mDay;
                 mYear = alertTime.get(Calendar.YEAR);
                 mMonth = alertTime.get(Calendar.MONTH);
@@ -91,7 +110,7 @@ public class DialogReminderRepeatInputEndLimit extends DialogFragment
                                 alertTime.set(Calendar.YEAR, year);
                                 alertTime.set(Calendar.MONTH, monthOfYear);
                                 alertTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                model.setRepeatEndDate(alertTime.getTime());
+                                isSetTime = true;
                                 refreshForm();
                             }
                         }, mYear, mMonth, mDay);
@@ -106,9 +125,6 @@ public class DialogReminderRepeatInputEndLimit extends DialogFragment
         tv_end_time_value.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar alertTime = Calendar.getInstance();
-                //final Calendar currentTime = Calendar.getInstance();
-                //alertTime.setTime(reminderModel.getOriginalTime());
                 final int mHour, mMinute;
                 mHour = alertTime.get(Calendar.HOUR_OF_DAY);
                 mMinute = alertTime.get(Calendar.MINUTE);
@@ -119,7 +135,7 @@ public class DialogReminderRepeatInputEndLimit extends DialogFragment
                                 alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                 alertTime.set(Calendar.MINUTE, minute);
                                 alertTime.set(Calendar.SECOND, 0); // Setting second to 0 is important.
-                                model.setRepeatEndDate(alertTime.getTime());
+                                isSetTime = true;
                                 refreshForm();
                             }
                         }, mHour, mMinute, false);
@@ -127,7 +143,6 @@ public class DialogReminderRepeatInputEndLimit extends DialogFragment
             }
         });
 
-        tv_end_date_label = view.findViewById(R.id.tv_end_date_label);
         refreshForm();
 
         return builder.create();
@@ -135,13 +150,13 @@ public class DialogReminderRepeatInputEndLimit extends DialogFragment
 
     private TextView tv_end_date_value;
     private TextView tv_end_time_value;
-    private TextView tv_end_date_label;
 
     private void refreshForm() {
 
-        if (model.isHasRepeatEnd()) {
-            tv_end_date_value.setText(StringHelper.toDate(model.getRepeatEndDate()));
-            tv_end_time_value.setText(StringHelper.toTime(model.getRepeatEndDate()));
+        if (model.isHasRepeatEnd() || isSetTime) {
+            tv_end_date_value.setText(StringHelper.toDate(alertTime.getTime()));
+            tv_end_time_value.setText(StringHelper.toTime(alertTime.getTime()));
         }
+
     }
 }

@@ -10,178 +10,182 @@
         android:layout_weight="1"
         android:padding="@dimen/dp_16">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
+            android:orientation="vertical">
 
-            <RadioGroup
-                android:id="@+id/rg_repeat_options"
+            <RadioButton
+                android:id="@+id/rdo_reminder_repeat_none"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:buttonTint="@color/bg_success"
+                android:text="@string/repeat_none"
+                android:textColor="@color/text_gray1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/rdo_reminder_repeat_none"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/rdo_reminder_repeat_hourly"
+                    android:layout_width="93dp"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/bg_success"
-                    android:text="@string/repeat_none"
-                    android:textColor="@color/text_gray1" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/rdo_reminder_repeat_hourly"
-                        android:layout_width="93dp"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/bg_warning"
-                        android:text="@string/repeat_hourly"
-                        android:textColor="@color/text_gray1" />
-
-                    <RadioButton
-                        android:id="@+id/rdo_reminder_repeat_hourly_custom"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:buttonTint="@color/bg_gray1"
-                        android:text="@string/repeat_hourly_custom"
-                        android:textColor="@color/text_gray1" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/rdo_reminder_repeat_daily"
-                        android:layout_width="93dp"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/bg_info"
-                        android:text="@string/repeat_daily"
-                        android:textColor="@color/text_gray1" />
-
-                    <RadioButton
-                        android:id="@+id/rdo_reminder_repeat_daily_custom"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:buttonTint="@color/bg_gray1"
-                        android:text="@string/repeat_daily_custom"
-                        android:textColor="@color/text_gray1" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/rdo_reminder_repeat_weekly"
-                        android:layout_width="93dp"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/bg_gray1"
-                        android:text="@string/repeat_weekly"
-                        android:textColor="@color/text_gray1" />
-
-                    <RadioButton
-                        android:id="@+id/rdo_reminder_repeat_weekly_custom"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:buttonTint="@color/bg_gray1"
-                        android:text="@string/repeat_weekly_custom"
-                        android:textColor="@color/text_gray1" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/rdo_reminder_repeat_monthly"
-                        android:layout_width="93dp"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/bg_warning"
-                        android:text="@string/repeat_monthly"
-                        android:textColor="@color/text_gray1" />
-
-                    <RadioButton
-                        android:id="@+id/rdo_reminder_repeat_monthly_custom"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:buttonTint="@color/bg_gray1"
-                        android:text="@string/repeat_monthly_custom"
-                        android:textColor="@color/text_gray1" />
-                </LinearLayout>
-
-                <RadioButton
-                    android:id="@+id/rdo_reminder_repeat_yearly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/bg_danger"
-                    android:text="@string/repeat_yearly"
+                    android:buttonTint="@color/bg_warning"
+                    android:text="@string/repeat_hourly"
                     android:textColor="@color/text_gray1" />
 
                 <RadioButton
-                    android:id="@+id/rdo_reminder_repeat_other"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/rdo_reminder_repeat_hourly_custom"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/bg_danger"
-                    android:text="@string/repeat_other"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:buttonTint="@color/bg_gray1"
+                    android:text="@string/repeat_hourly_custom"
                     android:textColor="@color/text_gray1" />
-            </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rdo_reminder_repeat_daily"
+                    android:layout_width="93dp"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_info"
+                    android:text="@string/repeat_daily"
+                    android:textColor="@color/text_gray1" />
+
+                <RadioButton
+                    android:id="@+id/rdo_reminder_repeat_daily_custom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/bg_gray1"
+                    android:text="@string/repeat_daily_custom"
+                    android:textColor="@color/text_gray1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rdo_reminder_repeat_weekly"
+                    android:layout_width="93dp"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_gray1"
+                    android:text="@string/repeat_weekly"
+                    android:textColor="@color/text_gray1" />
+
+                <RadioButton
+                    android:id="@+id/rdo_reminder_repeat_weekly_custom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/bg_gray1"
+                    android:text="@string/repeat_weekly_custom"
+                    android:textColor="@color/text_gray1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rdo_reminder_repeat_monthly"
+                    android:layout_width="93dp"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_warning"
+                    android:text="@string/repeat_monthly"
+                    android:textColor="@color/text_gray1" />
+
+                <RadioButton
+                    android:id="@+id/rdo_reminder_repeat_monthly_custom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/bg_gray1"
+                    android:text="@string/repeat_monthly_custom"
+                    android:textColor="@color/text_gray1" />
+            </LinearLayout>
+
+            <RadioButton
+                android:id="@+id/rdo_reminder_repeat_yearly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_danger"
+                android:text="@string/repeat_yearly"
+                android:textColor="@color/text_gray1" />
+
+            <RadioButton
+                android:id="@+id/rdo_reminder_repeat_other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_danger"
+                android:text="@string/repeat_other"
+                android:textColor="@color/text_gray1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/dp_8"
+                android:paddingLeft="@dimen/dp_8"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sw_has_repeat_end"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/text_warning"
+                    android:text="Enable repeat ending " />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/dp_8"
+                android:paddingLeft="@dimen/dp_8"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/dp_16"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:text="At : " />
+
+                <TextView
+                    android:id="@+id/tv_end_date_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/dp_16"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:textColor="@color/text_gray2" />
+
+                <TextView
+                    android:id="@+id/tv_end_time_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/text_gray1" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tv_end_date_label"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:layout_marginRight="@dimen/dp_32"
-            android:layout_marginEnd="@dimen/dp_32"
-            android:textColor="@color/text_danger"
-            android:text="Repeat until : " />
-
-        <TextView
-            android:id="@+id/tv_end_date_value"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textColor="@color/text_gray2"
-            android:layout_marginRight="@dimen/dp_32"
-            android:layout_marginEnd="@dimen/dp_32"
-            android:textSize="@dimen/font_size_xh5"
-            android:text="@string/btn_date" />
-
-        <TextView
-            android:id="@+id/tv_end_time_value"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textColor="@color/text_gray1"
-            android:textSize="@dimen/font_size_h1"
-            android:text="@string/btn_time" />
-
-    </LinearLayout>
 
 </LinearLayout>
 

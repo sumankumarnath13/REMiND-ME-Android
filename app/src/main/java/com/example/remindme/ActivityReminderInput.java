@@ -360,7 +360,6 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
-
         refreshForm();
     }
 

@@ -1172,6 +1172,7 @@ public class ReminderModel extends ViewModel {
             //c.setTime(originalTime);
             repeatValueChangeBuffer.setReminderTime(originalTime);
             repeatValueChangeBuffer.setRepeatEndDate(repeatModel.getRepeatEndDate());
+            repeatValueChangeBuffer.setHasRepeatEnd(repeatModel.isHasRepeatEnd());
             repeatValueChangeBuffer.repeatOption = repeatModel.repeatOption;
             repeatValueChangeBuffer.setRepeatCustom(repeatModel.getCustomTimeUnit(), repeatModel.getCustomTimeValue());
 
@@ -1187,6 +1188,7 @@ public class ReminderModel extends ViewModel {
         if (repeatValueChangeBuffer == null) return false;
 
         repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
+        repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
 
         switch (repeatValueChangeBuffer.repeatOption) {
             default: //NONE: HOURLY: DAILY: WEEKLY: MONTHLY: YEARLY:

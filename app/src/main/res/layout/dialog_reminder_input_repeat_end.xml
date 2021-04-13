@@ -2,22 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginVertical="@dimen/dp_16"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/tv_end_date_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textColor="@color/text_danger"
-        android:text="Repeat until : " />
 
     <TextView
         android:id="@+id/tv_end_date_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:textColor="@color/text_gray2"
+        android:textColor="@color/text_success"
+        android:layout_marginBottom="@dimen/dp_32"
         android:textSize="@dimen/font_size_xh5"
         android:text="@string/btn_date" />
 
@@ -26,7 +21,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:textColor="@color/text_gray1"
+        android:textColor="@color/text_warning"
+        android:layout_marginBottom="@dimen/dp_16"
         android:textSize="@dimen/font_size_h1"
         android:text="@string/btn_time" />
 
