@@ -47,11 +47,16 @@ public class DialogReminderRepeatInputDailyCustom extends DialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (isCancel) {
-            listener.discardChanges();
+            commitToParent();
         }
-//        final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-//        transaction.remove(this);
-//        transaction.commit();
+    }
+
+    private void commitToParent() {
+        final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
+        if (fragment != null) {
+            final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
+            hostDialog.setChanges(model);
+        }
     }
 
     @NonNull
@@ -110,20 +115,15 @@ public class DialogReminderRepeatInputDailyCustom extends DialogFragment {
                         if (chk_daily_thu.isChecked()) model.customDays.add(Calendar.THURSDAY);
                         if (chk_daily_fri.isChecked()) model.customDays.add(Calendar.FRIDAY);
                         if (chk_daily_sat.isChecked()) model.customDays.add(Calendar.SATURDAY);
-                        //listener.setChanges(model);
 
-                        final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
-                        if (fragment != null) {
-                            final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
-                            hostDialog.setChanges(model);
-                        }
-
+                        model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM);
+                        commitToParent();
 
                     }
                 }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //listener.set(null, true);
+                commitToParent();
             }
         });
 

@@ -45,11 +45,16 @@ public class DialogReminderRepeatInputCustom extends DialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (isCancel) {
-            listener.discardChanges();
+            commitToParent();
         }
-//        final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-//        transaction.remove(this);
-//        transaction.commit();
+    }
+
+    private void commitToParent() {
+        final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
+        if (fragment != null) {
+            final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
+            hostDialog.setChanges(model);
+        }
     }
 
     @NonNull
@@ -86,19 +91,15 @@ public class DialogReminderRepeatInputCustom extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 model.setRepeatCustom(unit_picker.getValue(), value_picker.getValue());
-                //listener.setChanges(model);
 
-                final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
-                if (fragment != null) {
-                    final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
-                    hostDialog.setChanges(model);
-                }
+                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.OTHER);
+                commitToParent();
 
             }
         }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //listener.set(null, true);
+                commitToParent();
             }
         });
 

@@ -49,11 +49,16 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (isCancel) {
-            listener.discardChanges();
+            commitToParent();
         }
-//        final FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-//        transaction.remove(this);
-//        transaction.commit();
+    }
+
+    private void commitToParent() {
+        final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
+        if (fragment != null) {
+            final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
+            hostDialog.setChanges(model);
+        }
     }
 
     @NonNull
@@ -232,19 +237,14 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
                         if (chk_daily_22.isChecked()) model.customHours.add(22);
                         if (chk_daily_23.isChecked()) model.customHours.add(23);
 
-                        //listener.setChanges(model);
-                        final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
-                        if (fragment != null) {
-                            final IRepeatInputDialog hostDialog = (IRepeatInputDialog) fragment;
-                            hostDialog.setChanges(model);
-                        }
-
+                        model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM);
+                        commitToParent();
 
                     }
                 }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //listener.setChanges(null, true);
+                commitToParent();
             }
         });
 

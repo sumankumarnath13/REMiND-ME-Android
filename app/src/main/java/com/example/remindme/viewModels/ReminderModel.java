@@ -126,6 +126,7 @@ public class ReminderModel extends ViewModel {
         userTimeCl.set(Calendar.MILLISECOND, 0);
         originalTime = userTimeCl.getTime();
         //isOriginalTimeChanged = true;
+        repeatModel.setReminderTime(userTimeCl); //Repeat model has complex calculations for which it needs a reference to the original time.
 
         switch (repeatModel.getRepeatOption()) {
             default:
@@ -143,7 +144,6 @@ public class ReminderModel extends ViewModel {
             case MONTHLY_CUSTOM:
             case OTHER:
                 calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime); // Given_time will be used if its not null.
-                repeatModel.setReminderTime(userTimeCl); // To preserve the minute value for various repeat options provided to user.
                 break;
         }
     }

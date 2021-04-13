@@ -117,7 +117,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_hourly_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM);
                 final DialogReminderRepeatInputHourlyCustom ting = new DialogReminderRepeatInputHourlyCustom();
                 ting.show(getParentFragmentManager(), "ting");
             }
@@ -136,7 +135,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_daily_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM);
                 final DialogReminderRepeatInputDailyCustom ting = new DialogReminderRepeatInputDailyCustom();
                 ting.show(getParentFragmentManager(), "ting");
             }
@@ -155,7 +153,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_weekly_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM);
                 final DialogReminderRepeatInputWeeklyCustom ting = new DialogReminderRepeatInputWeeklyCustom();
                 ting.show(getParentFragmentManager(), "ting");
             }
@@ -174,7 +171,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_monthly_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM);
                 final DialogReminderRepeatInputMonthlyCustom ting = new DialogReminderRepeatInputMonthlyCustom();
                 ting.show(getParentFragmentManager(), "ting");
             }
@@ -193,7 +189,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_other.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.OTHER);
                 final DialogReminderRepeatInputCustom ting = new DialogReminderRepeatInputCustom();
                 ting.show(getParentFragmentManager(), "ting");
             }
