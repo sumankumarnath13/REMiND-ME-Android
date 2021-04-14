@@ -57,10 +57,10 @@ public class ReminderRepeatModel {
         reminderTime = value.getTime();
     }
 
-    public List<Integer> customHours;
-    public List<Integer> customDays;
-    public List<Integer> customWeeks;
-    public List<Integer> customMonths;
+    public final List<Integer> customHours;
+    public final List<Integer> customDays;
+    public final List<Integer> customWeeks;
+    public final List<Integer> customMonths;
 
     private TimeUnits customTimeUnit = TimeUnits.MONTHS;
     private int customTimeValue = 12;
@@ -200,13 +200,13 @@ public class ReminderRepeatModel {
                     final int min = c.get(Calendar.MINUTE);
 
                     if (h == 0) {
-                        builder.append("12:" + min + " am, ");
+                        builder.append("12:").append(min).append(" am, ");
                     } else if (h == 12) {
-                        builder.append("12:" + min + " pm, ");
+                        builder.append("12:").append(min).append(" pm, ");
                     } else if (h < 12) {
-                        builder.append(h + ":" + min + " am, ");
+                        builder.append(h).append(":").append(min).append(" am, ");
                     } else {
-                        builder.append(h - 11 + ":" + min + " pm, ");
+                        builder.append(h - 11).append(":").append(min).append(" pm, ");
                     }
                 }
                 builder.append("of every day");
@@ -354,7 +354,7 @@ public class ReminderRepeatModel {
         }
 
         if (isHasRepeatEnd()) {
-            builder.append(" till " + StringHelper.toTimeDate(getRepeatEndDate()));
+            builder.append(" till ").append(StringHelper.toTimeDate(getRepeatEndDate()));
         }
 
         return StringHelper.trimEnd(builder.toString(), ",");

@@ -180,7 +180,6 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
-
         btn_reminder_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -257,7 +256,6 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 startActivityForResult(intent, RINGTONE_DIALOG_REQ_CODE);
             }
         });
-
 
         final SwitchCompat sw_reminder_tone = findViewById(R.id.sw_reminder_tone);
         sw_reminder_tone.setChecked(reminderModel.isEnableTone);
@@ -427,6 +425,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             refreshForm();
         }
     }
+
 //
 //    @Override
 //    public void setChanges(ReminderRepeatModel model) {

@@ -48,7 +48,7 @@ public class ReminderModel extends ViewModel {
     //region Public Constants
     public static final int MINIMUM_INPUT_VOLUME_PERCENTAGE = 10;
     public static final int RING_DURATION = 1000 * 60;
-    public static long[] VIBRATE_PATTERN = {500, 500};
+    public static final long[] VIBRATE_PATTERN = {500, 500};
     public static final int ALARM_NOTIFICATION_ID = 117;
     public static final String ACTION_SNOOZE_ALARM = "com.example.remindme.SNOOZE.ALARM";
     public static final String ACTION_DISMISS_ALARM = "com.example.remindme.DISMISS.ALARM";

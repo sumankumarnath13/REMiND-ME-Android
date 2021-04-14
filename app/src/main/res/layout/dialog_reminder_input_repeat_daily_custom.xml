@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_daily_custom_sun"></CheckBox>
+            android:text="@string/repeat_daily_custom_sun" />
 
         <CheckBox
             android:id="@+id/chk_daily_mon"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_daily_custom_mon"></CheckBox>
+            android:text="@string/repeat_daily_custom_mon" />
 
         <CheckBox
             android:id="@+id/chk_daily_tue"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_daily_custom_tue"></CheckBox>
+            android:text="@string/repeat_daily_custom_tue" />
 
         <CheckBox
             android:id="@+id/chk_daily_wed"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_daily_custom_wed"></CheckBox>
+            android:text="@string/repeat_daily_custom_wed" />
 
         <CheckBox
             android:id="@+id/chk_daily_thu"
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_daily_custom_thu"></CheckBox>
+            android:text="@string/repeat_daily_custom_thu" />
 
         <CheckBox
             android:id="@+id/chk_daily_fri"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_daily_custom_fri"></CheckBox>
+            android:text="@string/repeat_daily_custom_fri" />
 
         <CheckBox
             android:id="@+id/chk_daily_sat"
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_daily_custom_sat"></CheckBox>
+            android:text="@string/repeat_daily_custom_sat" />
 
     </LinearLayout>
 

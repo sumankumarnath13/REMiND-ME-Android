@@ -2,7 +2,7 @@
     <string name="app_name">RemindMe</string>
     <string name="app_label">R E M i N D \u0020 M E</string>
 
-    <string name="dialog_positive">Ok</string>
+    <string name="dialog_positive">OK</string>
     <string name="dialog_negative">Cancel</string>
     <string name="btn_back">Back</string>
     <string name="btn_edit">Edit</string>
@@ -87,4 +87,6 @@
     <string name="increase_volume_gradually_label">Gradually increase volume</string>
     <string name="alarm_volume_label">Alarm volume</string>
     <string name="repeat_other">Other</string>
+    <string name="search_bar_hint">Search</string>
+    <string name="mnu_settings_label">Settings</string>
 </resources>

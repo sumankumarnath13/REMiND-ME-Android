@@ -26,8 +26,8 @@ import io.realm.RealmObject;
 
 public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecyclerReminder.ReminderHolder> {
 
-    List<? extends RealmObject> _data;
-    EnumReminderTypes reminderType;
+    private final List<? extends RealmObject> _data;
+    private final EnumReminderTypes reminderType;
 
     public AdapterRecyclerReminder(List<? extends RealmObject> data, EnumReminderTypes type) {
         this._data = data;
@@ -165,8 +165,8 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
     public static class ReminderHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public LinearLayout linearLayout;
-        public EnumReminderTypes reminderType;
+        public final LinearLayout linearLayout;
+        public final EnumReminderTypes reminderType;
 
         public ReminderHolder(LinearLayout v, EnumReminderTypes t) {
             super(v);

@@ -2,29 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_search"
-        android:title="Search"
+    <item
+        android:id="@+id/action_search"
         android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="always"
-        app:actionViewClass="android.widget.SearchView">
-    </item>
+        android:title="@string/search_bar_hint"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always" />
 
-    <item android:id="@+id/action_sign_up"
+    <item
+        android:id="@+id/action_sign_up"
         android:title="Sign Up"
         android:visible="false"
-        app:showAsAction="never">
-    </item>
+        app:showAsAction="never" />
 
-    <item android:id="@+id/action_sign_out"
-    android:title="Sign Out"
+    <item
+        android:id="@+id/action_sign_out"
+        android:title="Sign Out"
         android:visible="false"
-    app:showAsAction="never">
-</item>
+        app:showAsAction="never" />
 
-    <item android:id="@+id/action_settings"
-        android:title="Settings"
-        app:showAsAction="never">
-    </item>
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/mnu_settings_label"
+        app:showAsAction="never" />
 
 
 </menu>

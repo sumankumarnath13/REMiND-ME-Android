@@ -19,6 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.ui.main.IReminderNameListener;
 
@@ -46,7 +47,7 @@ public class DialogReminderNameInput extends DialogFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == SPEECH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
             // Do something with spokenText.
@@ -58,8 +59,11 @@ public class DialogReminderNameInput extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        FragmentActivity activity = getActivity();
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        if (activity == null) return builder.create();
+        LayoutInflater inflater = activity.getLayoutInflater();
+
         final View view = inflater.inflate(R.layout.dialog_reminder_input_name, null);
 
         txt_reminder_name = view.findViewById(R.id.txt_reminder_name);

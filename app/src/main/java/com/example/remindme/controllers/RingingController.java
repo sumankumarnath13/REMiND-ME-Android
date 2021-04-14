@@ -16,10 +16,10 @@ import com.example.remindme.viewModels.ReminderModel;
 public class RingingController {
     private static final int volumeIncreaseInterval = 3000;
     private boolean isRinging = false;
-    private Vibrator vibrator;
+    private final Vibrator vibrator;
     private boolean isVibrating = false;
-    private Ringtone playingRingtone;
-    private AudioManager audioManager;
+    private final Ringtone playingRingtone;
+    private final AudioManager audioManager;
     private AudioFocusRequest audioFocusRequest;
     private int audioFocusGrantStatus = AudioManager.AUDIOFOCUS_REQUEST_FAILED;
     private boolean isAudioFocusRequested = false;

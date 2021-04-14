@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.ui.main.IReminderRepeatListener;
@@ -78,8 +79,11 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        FragmentActivity activity = getActivity();
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        if (activity == null) return builder.create();
+        LayoutInflater inflater = activity.getLayoutInflater();
+
         final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat, null);
         builder.setView(view).setTitle("Select Repeat Option")
                 .setPositiveButton(R.string.dialog_positive, new DialogInterface.OnClickListener() {

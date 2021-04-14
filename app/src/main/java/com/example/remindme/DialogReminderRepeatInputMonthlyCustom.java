@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.ui.main.IReminderRepeatListener;
 import com.example.remindme.ui.main.IRepeatInputDialog;
@@ -22,7 +23,6 @@ import java.util.Calendar;
 
 public class DialogReminderRepeatInputMonthlyCustom extends DialogFragment {
 
-    private IReminderRepeatListener listener;
     private ReminderRepeatModel model;
     private boolean isCancel;
 
@@ -30,7 +30,7 @@ public class DialogReminderRepeatInputMonthlyCustom extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            listener = (IReminderRepeatListener) context;
+            IReminderRepeatListener listener = (IReminderRepeatListener) context;
             model = listener.getRepeatModel();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
@@ -62,8 +62,11 @@ public class DialogReminderRepeatInputMonthlyCustom extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        FragmentActivity activity = getActivity();
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        if (activity == null) return builder.create();
+        LayoutInflater inflater = activity.getLayoutInflater();
+
         final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat_monthly_custom, null);
 
         final CheckBox chk_monthly_jan = view.findViewById(R.id.chk_monthly_jan);

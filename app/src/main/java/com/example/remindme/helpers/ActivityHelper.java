@@ -6,6 +6,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.remindme.R;
@@ -57,7 +58,11 @@ public class ActivityHelper {
             //spannable.setSpan(new UnderlineSpan(), finalTitle.length() - activityTitle.length(), finalTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        activity.getSupportActionBar().setTitle(spannable);
+
+        ActionBar bar = activity.getSupportActionBar();
+        if (bar != null) {
+            bar.setTitle(spannable);
+        }
 
         //activity.getSupportActionBar().setTitle(spannable.toString());
 

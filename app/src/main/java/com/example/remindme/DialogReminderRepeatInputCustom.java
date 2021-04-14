@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.ui.main.IReminderRepeatListener;
 import com.example.remindme.ui.main.IRepeatInputDialog;
@@ -20,7 +21,6 @@ import com.example.remindme.viewModels.ReminderRepeatModel;
 
 public class DialogReminderRepeatInputCustom extends DialogFragment {
 
-    private IReminderRepeatListener listener;
     private ReminderRepeatModel model;
     private boolean isCancel;
 
@@ -28,7 +28,7 @@ public class DialogReminderRepeatInputCustom extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            listener = (IReminderRepeatListener) context;
+            IReminderRepeatListener listener = (IReminderRepeatListener) context;
             model = listener.getRepeatModel();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
@@ -60,8 +60,11 @@ public class DialogReminderRepeatInputCustom extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        FragmentActivity activity = getActivity();
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        if (activity == null) return builder.create();
+        LayoutInflater inflater = activity.getLayoutInflater();
+
         final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat_custom, null);
 
         final NumberPicker value_picker = view.findViewById(R.id.value_picker);

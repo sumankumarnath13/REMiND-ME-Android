@@ -17,7 +17,7 @@
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
             android:layout_height="wrap_content"
-            android:text="@string/repeat_monthly_custom_jan"></CheckBox>
+            android:text="@string/repeat_monthly_custom_jan" />
 
         <CheckBox
             android:id="@+id/chk_monthly_feb"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
-            android:text="@string/repeat_monthly_custom_feb"></CheckBox>
+            android:text="@string/repeat_monthly_custom_feb" />
 
         <CheckBox
             android:id="@+id/chk_monthly_mar"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
-            android:text="@string/repeat_monthly_custom_mar"></CheckBox>
+            android:text="@string/repeat_monthly_custom_mar" />
 
         <CheckBox
             android:id="@+id/chk_monthly_apr"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
-            android:text="@string/repeat_monthly_custom_apr"></CheckBox>
+            android:text="@string/repeat_monthly_custom_apr" />
 
         <CheckBox
             android:id="@+id/chk_monthly_may"
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
-            android:text="@string/repeat_monthly_custom_may"></CheckBox>
+            android:text="@string/repeat_monthly_custom_may" />
 
         <CheckBox
             android:id="@+id/chk_monthly_jun"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
-            android:text="@string/repeat_monthly_custom_jun"></CheckBox>
+            android:text="@string/repeat_monthly_custom_jun" />
 
         <CheckBox
             android:id="@+id/chk_monthly_jul"
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
-            android:text="@string/repeat_monthly_custom_jul"></CheckBox>
+            android:text="@string/repeat_monthly_custom_jul" />
 
         <CheckBox
             android:id="@+id/chk_monthly_aug"
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
-            android:text="@string/repeat_monthly_custom_aug"></CheckBox>
+            android:text="@string/repeat_monthly_custom_aug" />
 
         <CheckBox
             android:id="@+id/chk_monthly_sep"
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
-            android:text="@string/repeat_monthly_custom_sep"></CheckBox>
+            android:text="@string/repeat_monthly_custom_sep" />
 
         <CheckBox
             android:id="@+id/chk_monthly_oct"
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
-            android:text="@string/repeat_monthly_custom_oct"></CheckBox>
+            android:text="@string/repeat_monthly_custom_oct" />
 
         <CheckBox
             android:id="@+id/chk_monthly_nov"
@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
-            android:text="@string/repeat_monthly_custom_nov"></CheckBox>
+            android:text="@string/repeat_monthly_custom_nov" />
 
         <CheckBox
             android:id="@+id/chk_monthly_dec"
@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
-            android:text="@string/repeat_monthly_custom_dec"></CheckBox>
+            android:text="@string/repeat_monthly_custom_dec" />
 
     </LinearLayout>
 

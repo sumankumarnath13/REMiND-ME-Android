@@ -76,7 +76,7 @@ public class AlertService extends Service {
 
     private final class PhoneStateChangeListener extends PhoneStateListener {
 
-        private AlertService service;
+        private final AlertService service;
 
         public PhoneStateChangeListener(AlertService hostService) {
             service = hostService;

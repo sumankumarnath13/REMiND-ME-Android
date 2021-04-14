@@ -6,7 +6,7 @@ import com.example.remindme.viewModels.ReminderModel;
 
 public class AlertServiceBinder extends Binder {
 
-    private AlertService service;
+    private final AlertService service;
 
     public AlertServiceBinder(AlertService hostService) {
         service = hostService;
