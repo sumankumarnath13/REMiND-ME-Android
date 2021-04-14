@@ -127,55 +127,12 @@ public class ReminderRepeatModel {
     }
 
     public ReminderRepeatModel() {
-        repeatOption = ReminderRepeatOptions.DAILY;
+        repeatOption = ReminderRepeatOptions.NONE;
         customHours = new ArrayList<>();
         customDays = new ArrayList<>();
         customWeeks = new ArrayList<>();
         customMonths = new ArrayList<>();
     }
-//
-//    public boolean isValid() {
-//
-//        if (isHasRepeatEnd() && getRepeatEndDate().compareTo(Calendar.getInstance().getTime()) <= 0) {
-//            return false;
-//        }
-//
-//        switch (repeatOption) {
-//            default:
-//                return true;
-//            case HOURLY_CUSTOM:
-//                if (customHours.size() > 0) {
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            case DAILY_CUSTOM:
-//                if (customDays.size() > 0) {
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            case WEEKLY_CUSTOM:
-//                if (customWeeks.size() > 0) {
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            case MONTHLY_CUSTOM:
-//                if (customMonths.size() > 0) {
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            case OTHER:
-//                if (getCustomTimeValue() > 0 &&
-//                        getCustomTimeValue() <= ReminderRepeatModel.getMaxForTimeUnit(getCustomTimeUnit())) {
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//        }
-//    }
 
     @NonNull
     @Override

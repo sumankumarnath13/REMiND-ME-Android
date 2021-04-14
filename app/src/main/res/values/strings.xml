@@ -23,13 +23,13 @@
 
     <string name="repeat_none">No Repeat</string>
     <string name="repeat_hourly">Hourly</string>
-    <string name="repeat_hourly_custom">(hourly-Custom)</string>
+    <string name="repeat_hourly_custom">Hourly Custom</string>
     <string name="repeat_daily">Daily</string>
-    <string name="repeat_daily_custom">(Daily-Custom)</string>
+    <string name="repeat_daily_custom">Daily Custom</string>
     <string name="repeat_weekly">Weekly</string>
-    <string name="repeat_weekly_custom">(Weekly-Custom)</string>
+    <string name="repeat_weekly_custom">Weekly Custom</string>
     <string name="repeat_monthly">Monthly</string>
-    <string name="repeat_monthly_custom">(Monthly-Custom)</string>
+    <string name="repeat_monthly_custom">Monthly Custom</string>
     <string name="repeat_yearly">Yearly</string>
 
     <string name="repeat_daily_custom_mon">Monday</string>
