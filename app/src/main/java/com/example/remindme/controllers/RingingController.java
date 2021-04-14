@@ -65,10 +65,6 @@ public class RingingController {
         playingRingtone = RingtoneManager.getRingtone(context, ringToneUri);
     }
 
-    private int getVolumeFromPercentage(int percentValue) {
-        return (int) ((OsHelper.getMaxAlarmVolume(audioManager) / 100F) * percentValue);
-    }
-
     public void startTone(boolean isGraduallyIncreaseVolume, int alarmVolumePercentage) {
         isIncreaseVolume = isGraduallyIncreaseVolume;
 
@@ -98,7 +94,7 @@ public class RingingController {
                     final int possibleMaxVolume = OsHelper.getMaxAlarmVolume(audioManager);
                     final int possibleMinVolume = OsHelper.getMinAlarmVolume(audioManager);
 
-                    alarmVolumeIndex = Math.max(Math.min(getVolumeFromPercentage(alarmVolumePercentage), possibleMaxVolume), possibleMinVolume);
+                    alarmVolumeIndex = Math.max(Math.min(OsHelper.getVolumeFromPercentage(possibleMaxVolume, alarmVolumePercentage), possibleMaxVolume), possibleMinVolume);
                     isOriginalVolumeAltered = true;
 
                     if (isIncreaseVolume) {
@@ -173,17 +169,6 @@ public class RingingController {
         if (vibrator != null && isVibrating) {
             vibrator.cancel();
         }
-    }
-
-    public void setAlarmVolume(int percentage) {
-        //int value = getVolumeFromPercentage(percentage);
-        //Values must not exceed maximum or go below minimum:
-        final int possibleMaxVolume = OsHelper.getMaxAlarmVolume(audioManager);
-        final int possibleMinVolume = OsHelper.getMinAlarmVolume(audioManager);
-
-        int value = Math.max(Math.min(getVolumeFromPercentage(percentage), possibleMaxVolume), possibleMinVolume);
-
-        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, value, 0);
     }
 
 }

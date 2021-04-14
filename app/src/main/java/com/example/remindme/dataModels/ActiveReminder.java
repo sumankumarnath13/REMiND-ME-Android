@@ -16,8 +16,8 @@ public class ActiveReminder extends RealmObject implements RealmModel {
     public Date time;
     public String selectedAlarmTone;
     public Date nextSnoozeTime;
-    public boolean isEnableTone = true;
-    public boolean isEnable = true;
+    public boolean isEnableTone;
+    public boolean isEnable;
     public boolean isVibrate;
     public boolean increaseVolumeGradually;
     public int alarmVolume;
@@ -29,8 +29,7 @@ public class ActiveReminder extends RealmObject implements RealmModel {
     public RealmList<Integer> repeatMonths = new RealmList<>();
     public int customTimeUnit;
     public int customTimeValue;
-    //public int customTimeHourValue;
-    //public int customTimeMinuteValue;
+    public boolean isHasRepeatEnd;
     public Date repeatEndDate;
 
     public boolean isSnoozeEnable;

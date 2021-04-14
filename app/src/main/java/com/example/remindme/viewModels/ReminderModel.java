@@ -190,9 +190,11 @@ public class ReminderModel extends ViewModel {
         to.name = from.name;
         to.note = from.note;
         to.time = from.calculatedTime == null ? from.originalTime : from.calculatedTime;
+
         if (from.ringToneUri != null) {
             to.selectedAlarmTone = from.ringToneUri.toString();
         }
+
         to.isEnableTone = from.isEnableTone;
         to.isEnable = from.isEnabled;
         to.isVibrate = from.isEnableVibration;
@@ -204,6 +206,7 @@ public class ReminderModel extends ViewModel {
         to.repeatDays.clear();
         to.repeatWeeks.clear();
         to.repeatMonths.clear();
+
         switch (from.repeatModel.getRepeatOption()) {
             default:
             case NONE:
@@ -244,10 +247,10 @@ public class ReminderModel extends ViewModel {
                 to.repeatOption = 6;
                 to.customTimeUnit = ReminderRepeatModel.transform(from.repeatModel.getCustomTimeUnit());
                 to.customTimeValue = from.repeatModel.getCustomTimeValue();
-                //to.customTimeHourValue = from.repeatModel.customTimeHourValue;
-                //to.customTimeMinuteValue = from.repeatModel.customTimeMinuteValue;
                 break;
         }
+
+        to.isHasRepeatEnd = from.repeatModel.isHasRepeatEnd();
         to.repeatEndDate = from.repeatModel.getRepeatEndDate();
 
         to.isSnoozeEnable = from.snoozeModel.isEnable;
@@ -348,6 +351,7 @@ public class ReminderModel extends ViewModel {
         to.repeatModel.customDays.clear();
         to.repeatModel.customWeeks.clear();
         to.repeatModel.customMonths.clear();
+
         switch (from.repeatOption) {
             default:
             case 0:
@@ -390,7 +394,7 @@ public class ReminderModel extends ViewModel {
                 break;
         }
         to.repeatModel.setRepeatEndDate(from.repeatEndDate);
-        to.repeatModel.setHasRepeatEnd(from.repeatEndDate != null);
+        to.repeatModel.setHasRepeatEnd(from.isHasRepeatEnd);
 
         to.snoozeModel.isEnable = from.isSnoozeEnable;
         to.nextSnoozeOffTime = from.nextSnoozeTime;
@@ -1160,18 +1164,11 @@ public class ReminderModel extends ViewModel {
     public ReminderRepeatModel.ReminderRepeatOptions getRepeatOption() {
         return repeatModel.getRepeatOption();
     }
-//
-//    public void setRepeatSettings(ReminderRepeatModel value) {
-//        repeatValueChangeBuffer = value;
-//    }
 
     public ReminderRepeatModel getRepeatSettings() {
         if (repeatValueChangeBuffer == null) {
             //Make a new instance copied from original. This way original repeat settings wont get affected until applied by method "trySetReminderRepeatModel"
             repeatValueChangeBuffer = new ReminderRepeatModel();
-            // Copy from real object:
-            //Calendar c = Calendar.getInstance();
-            //c.setTime(originalTime);
             repeatValueChangeBuffer.setReminderTime(originalTime);
             repeatValueChangeBuffer.setRepeatEndDate(repeatModel.getRepeatEndDate());
             repeatValueChangeBuffer.setHasRepeatEnd(repeatModel.isHasRepeatEnd());
@@ -1276,7 +1273,7 @@ public class ReminderModel extends ViewModel {
                     repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
                     repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
 
-
+                    //Reminder time will be different than given time only if if Custom option are selected.
                     calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
                     discardRepeatSettingChanges();
                     return true;

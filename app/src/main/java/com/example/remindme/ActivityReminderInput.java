@@ -3,6 +3,7 @@ package com.example.remindme;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -23,7 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.remindme.controllers.RingingController;
 import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
@@ -329,7 +329,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             }
         });
 
-        final RingingController controller = new RingingController(this, reminderModel.ringToneUri);
+        final AudioManager audioManager = OsHelper.getAudioManager(ActivityReminderInput.this);
         seeker_alarm_volume = findViewById(R.id.seeker_alarm_volume);
         seeker_alarm_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -337,8 +337,7 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
                 if (fromUser) {
                     if (progress < ReminderModel.MINIMUM_INPUT_VOLUME_PERCENTAGE)
                         seekBar.setProgress(ReminderModel.MINIMUM_INPUT_VOLUME_PERCENTAGE);
-
-                    controller.setAlarmVolume(seekBar.getProgress());
+                    OsHelper.setAlarmVolume(audioManager, seekBar.getProgress());
                 }
             }
 

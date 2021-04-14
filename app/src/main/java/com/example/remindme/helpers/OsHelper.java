@@ -78,6 +78,15 @@ public class OsHelper {
         }
     }
 
+    public static void setAlarmVolume(AudioManager audioManager, int percentage) {
+        //int value = getVolumeFromPercentage(percentage);
+        //Values must not exceed maximum or go below minimum:
+        final int possibleMaxVolume = getMaxAlarmVolume(audioManager);
+        final int possibleMinVolume = getMinAlarmVolume(audioManager);
+        int value = Math.max(Math.min(getVolumeFromPercentage(possibleMaxVolume, percentage), possibleMaxVolume), possibleMinVolume);
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, value, 0);
+    }
+
     public static int getAlarmVolumeInPercentage(AudioManager audioManager) {
         final float max = getMaxAlarmVolume(audioManager);
         if (max > 0) {
@@ -85,5 +94,9 @@ public class OsHelper {
         } else {
             return 0;
         }
+    }
+
+    public static int getVolumeFromPercentage(int maxVolume, int percentValue) {
+        return (int) ((maxVolume / 100F) * percentValue);
     }
 }
