@@ -12,12 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.remindme.ActivityReminderView;
 import com.example.remindme.R;
 import com.example.remindme.dataModels.ActiveReminder;
 import com.example.remindme.dataModels.DismissedReminder;
 import com.example.remindme.dataModels.MissedReminder;
 import com.example.remindme.helpers.StringHelper;
+import com.example.remindme.ui.activities.ActivityReminderView;
 import com.example.remindme.viewModels.ReminderModel;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.remindme;
+package com.example.remindme.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.remindme.R;
 import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.ui.main.AdapterSectionsPager;
 import com.google.android.material.tabs.TabLayout;

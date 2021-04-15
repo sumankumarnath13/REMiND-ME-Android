@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_sun" />
 
@@ -24,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_mon" />
 
@@ -32,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_tue" />
 
@@ -40,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_wed" />
 
@@ -48,6 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_thu" />
 
@@ -56,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_fri" />
 
@@ -64,6 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_sat" />
 

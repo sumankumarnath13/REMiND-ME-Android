@@ -1,4 +1,4 @@
-package com.example.remindme.ui.main;
+package com.example.remindme.ui.activities;
 
 public interface ISearchable {
     void search(String input);

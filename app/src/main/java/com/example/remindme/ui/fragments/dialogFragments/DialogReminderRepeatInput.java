@@ -1,4 +1,4 @@
-package com.example.remindme;
+package com.example.remindme.ui.fragments.dialogFragments;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -22,15 +22,14 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.remindme.R;
 import com.example.remindme.helpers.StringHelper;
-import com.example.remindme.ui.main.IReminderRepeatListener;
-import com.example.remindme.ui.main.IRepeatInputDialog;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
 import java.util.Calendar;
 
-public class DialogReminderRepeatInput extends DialogFragment implements IRepeatInputDialog {
-    private IReminderRepeatListener listener;
+public class DialogReminderRepeatInput extends DialogFragment implements IRepeatInputChildDialogListener {
+    private IRepeatInputDialogListener listener;
     private ReminderRepeatModel model;
     private boolean isCancel;
 
@@ -55,7 +54,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            listener = (IReminderRepeatListener) context;
+            listener = (IRepeatInputDialogListener) context;
             model = listener.getRepeatModel();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
@@ -358,4 +357,12 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         setChanges();
     }
 
+    public interface IRepeatInputDialogListener {
+
+        void commitChanges(ReminderRepeatModel repeatModel);
+
+        void discardChanges();
+
+        ReminderRepeatModel getRepeatModel();
+    }
 }

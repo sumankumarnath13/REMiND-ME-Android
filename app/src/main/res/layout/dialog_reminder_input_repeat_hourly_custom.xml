@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:text="Morning"
                 android:textColor="@color/text_success"
-                android:textSize="@dimen/font_size_h1" />
+                android:textSize="@dimen/font_size_large" />
 
             <CheckBox
                 android:id="@+id/chk_daily_5"
@@ -123,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:text="Night"
                 android:textColor="@color/text_danger"
-                android:textSize="@dimen/font_size_h1" />
+                android:textSize="@dimen/font_size_large" />
 
             <CheckBox
                 android:id="@+id/chk_daily_17"

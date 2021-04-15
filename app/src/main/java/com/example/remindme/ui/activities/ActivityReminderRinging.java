@@ -1,4 +1,4 @@
-package com.example.remindme;
+package com.example.remindme.ui.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.remindme.R;
 import com.example.remindme.controllers.AlertService;
 import com.example.remindme.controllers.AlertServiceBinder;
 import com.example.remindme.helpers.ActivityHelper;

@@ -1,4 +1,4 @@
-package com.example.remindme;
+package com.example.remindme.ui.fragments.dialogFragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -16,12 +16,12 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.remindme.R;
 import com.example.remindme.helpers.OsHelper;
-import com.example.remindme.ui.main.IReminderSnoozeListener;
 import com.example.remindme.viewModels.ReminderSnoozeModel;
 
 public class DialogReminderSnoozeInput extends DialogFragment {
-    private IReminderSnoozeListener listener;
+    private ISnoozeInputDialogListener listener;
     private ReminderSnoozeModel model;
 
     @Override
@@ -29,7 +29,7 @@ public class DialogReminderSnoozeInput extends DialogFragment {
         super.onAttach(context);
 
         try {
-            listener = (IReminderSnoozeListener) context;
+            listener = (ISnoozeInputDialogListener) context;
             model = listener.getSnoozeModel();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderSnoozeListener");
@@ -175,5 +175,11 @@ public class DialogReminderSnoozeInput extends DialogFragment {
                 });
 
         return builder.create();
+    }
+
+    public interface ISnoozeInputDialogListener {
+        void commitChanges(ReminderSnoozeModel model);
+
+        ReminderSnoozeModel getSnoozeModel();
     }
 }

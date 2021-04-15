@@ -16,40 +16,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
-            android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_weekly_custom_week1" />
+            android:textSize="@dimen/font_size_medium"
+            android:buttonTint="@color/bg_info" />
 
         <CheckBox
             android:id="@+id/chk_weekly_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
-            android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_weekly_custom_week2" />
+            android:textSize="@dimen/font_size_medium"
+            android:buttonTint="@color/bg_info" />
 
         <CheckBox
             android:id="@+id/chk_weekly_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
-            android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_weekly_custom_week3" />
+            android:textSize="@dimen/font_size_medium"
+            android:buttonTint="@color/bg_info" />
 
         <CheckBox
             android:id="@+id/chk_weekly_4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
-            android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_weekly_custom_week4" />
+            android:textSize="@dimen/font_size_medium"
+            android:buttonTint="@color/bg_info" />
 
         <CheckBox
             android:id="@+id/chk_weekly_5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
-            android:buttonTint="@color/bg_info"
-            android:text="@string/repeat_weekly_custom_week4" />
+            android:textSize="@dimen/font_size_medium"
+            android:buttonTint="@color/bg_info" />
 
     </LinearLayout>
 

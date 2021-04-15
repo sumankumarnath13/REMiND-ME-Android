@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".ActivityReminderRinging">
+    tools:context=".ui.activities.ActivityReminderRinging">
 
     <!-- Header aligned to top -->
     <!--    <RelativeLayout-->
@@ -30,7 +30,7 @@
             android:gravity="center_horizontal"
             android:textAlignment="center"
             android:layout_marginBottom="@dimen/dp_8"
-            android:textSize="@dimen/font_size_h2"
+            android:textSize="@dimen/font_size_medium"
             android:textColor="@color/text_gray2" />
 
         <TextView
@@ -50,7 +50,7 @@
             android:gravity="center_horizontal"
             android:textAlignment="center"
             android:layout_marginBottom="@dimen/dp_8"
-            android:textSize="@dimen/font_size_xh5"
+            android:textSize="@dimen/font_size_extra_large"
             android:textColor="@color/text_white" />
 
         <TextView
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textAlignment="center"
-            android:textSize="@dimen/font_size_h1"
+            android:textSize="@dimen/font_size_large"
             android:layout_marginBottom="@dimen/dp_3"
             android:textColor="@color/text_white" />
 

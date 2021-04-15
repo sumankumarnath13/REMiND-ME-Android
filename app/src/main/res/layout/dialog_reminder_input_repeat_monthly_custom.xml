@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:textColor="@color/text_gray1"
             android:buttonTint="@color/bg_warning"
+            android:textSize="@dimen/font_size_medium"
             android:layout_height="wrap_content"
             android:text="@string/repeat_monthly_custom_jan" />
 
@@ -24,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_warning"
             android:text="@string/repeat_monthly_custom_feb" />
 
@@ -32,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_warning"
             android:text="@string/repeat_monthly_custom_mar" />
 
@@ -40,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_warning"
             android:text="@string/repeat_monthly_custom_apr" />
 
@@ -48,6 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_warning"
             android:text="@string/repeat_monthly_custom_may" />
 
@@ -56,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_warning"
             android:text="@string/repeat_monthly_custom_jun" />
 
@@ -64,6 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_warning"
             android:text="@string/repeat_monthly_custom_jul" />
 
@@ -72,6 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_warning"
             android:text="@string/repeat_monthly_custom_aug" />
 
@@ -80,6 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_warning"
             android:text="@string/repeat_monthly_custom_sep" />
 
@@ -88,6 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_warning"
             android:text="@string/repeat_monthly_custom_oct" />
 
@@ -96,6 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_warning"
             android:text="@string/repeat_monthly_custom_nov" />
 
@@ -104,6 +115,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_warning"
             android:text="@string/repeat_monthly_custom_dec" />
 

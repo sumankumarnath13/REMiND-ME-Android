@@ -39,13 +39,13 @@
             android:directBootAware="true" />
 
         <activity
-            android:name=".ActivityReminderRinging"
+            android:name=".ui.activities.ActivityReminderRinging"
             android:excludeFromRecents="true"
             android:noHistory="true" />
-        <activity android:name=".ActivityReminderView" />
-        <activity android:name=".ActivityReminderInput" />
+        <activity android:name=".ui.activities.ActivityReminderView" />
+        <activity android:name=".ui.activities.ActivityReminderInput" />
         <activity
-            android:name=".ActivityMain"
+            android:name=".ui.activities.ActivityMain"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

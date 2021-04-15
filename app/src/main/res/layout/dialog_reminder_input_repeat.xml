@@ -10,7 +10,6 @@
         android:layout_weight="1"
         android:padding="@dimen/dp_16">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,6 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/bg_success"
+                android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_none"
                 android:textColor="@color/text_gray1" />
 
@@ -32,9 +32,10 @@
 
                 <RadioButton
                     android:id="@+id/rdo_reminder_repeat_hourly"
-                    android:layout_width="93dp"
+                    android:layout_width="117dp"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/bg_warning"
+                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_hourly"
                     android:textColor="@color/text_gray1" />
 
@@ -44,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:buttonTint="@color/bg_gray1"
+                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_hourly_custom"
                     android:textColor="@color/text_gray1" />
             </LinearLayout>
@@ -56,9 +58,10 @@
 
                 <RadioButton
                     android:id="@+id/rdo_reminder_repeat_daily"
-                    android:layout_width="93dp"
+                    android:layout_width="117dp"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/bg_info"
+                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_daily"
                     android:textColor="@color/text_gray1" />
 
@@ -68,6 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:buttonTint="@color/bg_gray1"
+                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_daily_custom"
                     android:textColor="@color/text_gray1" />
             </LinearLayout>
@@ -80,9 +84,10 @@
 
                 <RadioButton
                     android:id="@+id/rdo_reminder_repeat_weekly"
-                    android:layout_width="93dp"
+                    android:layout_width="117dp"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/bg_gray1"
+                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_weekly"
                     android:textColor="@color/text_gray1" />
 
@@ -92,6 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:buttonTint="@color/bg_gray1"
+                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_weekly_custom"
                     android:textColor="@color/text_gray1" />
             </LinearLayout>
@@ -104,9 +110,10 @@
 
                 <RadioButton
                     android:id="@+id/rdo_reminder_repeat_monthly"
-                    android:layout_width="93dp"
+                    android:layout_width="117dp"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/bg_warning"
+                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_monthly"
                     android:textColor="@color/text_gray1" />
 
@@ -116,6 +123,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:buttonTint="@color/bg_gray1"
+                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_monthly_custom"
                     android:textColor="@color/text_gray1" />
             </LinearLayout>
@@ -125,6 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/bg_danger"
+                android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_yearly"
                 android:textColor="@color/text_gray1" />
 
@@ -133,6 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/bg_gray1"
+                android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_other"
                 android:textColor="@color/text_gray1" />
 
@@ -149,6 +159,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@color/text_gray1"
+                    android:textSize="@dimen/font_size_medium"
                     android:text="Enable repeat ending " />
 
             </LinearLayout>
@@ -167,13 +178,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/dp_16"
                     android:layout_marginEnd="@dimen/dp_16"
-                    android:text="Repeat end date " />
+                    android:text="End Date " />
 
                 <TextView
                     android:id="@+id/tv_end_date_value"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textSize="@dimen/font_size_h2"
+                    android:textSize="@dimen/font_size_medium"
                     android:textColor="@color/text_success" />
 
             </LinearLayout>
@@ -192,14 +203,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/dp_16"
                     android:layout_marginEnd="@dimen/dp_16"
-                    android:text="Repeat end time " />
-
+                    android:text="End Time " />
 
                 <TextView
                     android:id="@+id/tv_end_time_value"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textSize="@dimen/font_size_h2"
+                    android:textSize="@dimen/font_size_medium"
                     android:textColor="@color/text_warning" />
 
             </LinearLayout>

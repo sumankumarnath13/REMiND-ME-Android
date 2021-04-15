@@ -1,4 +1,4 @@
-package com.example.remindme;
+package com.example.remindme.ui.fragments.dialogFragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,12 +21,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.example.remindme.ui.main.IReminderNameListener;
+import com.example.remindme.R;
 
 import java.util.List;
 
 public class DialogReminderNameInput extends DialogFragment {
-    private IReminderNameListener listener;
+    private INameInputDialogListener listener;
     private String name;
     private static final int SPEECH_REQUEST_CODE = 117;
     private EditText txt_reminder_name;
@@ -38,7 +38,7 @@ public class DialogReminderNameInput extends DialogFragment {
         super.onAttach(context);
 
         try {
-            listener = (IReminderNameListener) context;
+            listener = (INameInputDialogListener) context;
             name = listener.getReminderName();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderNameListener");
@@ -120,5 +120,11 @@ public class DialogReminderNameInput extends DialogFragment {
         });
 
         return builder.create();
+    }
+
+    public interface INameInputDialogListener {
+        void setName(String name, boolean isEOF);
+
+        String getReminderName();
     }
 }

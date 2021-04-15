@@ -18,23 +18,16 @@
 
             <NumberPicker
                 android:id="@+id/value_picker"
+                android:textSize="@dimen/font_size_large"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <NumberPicker
                 android:id="@+id/unit_picker"
+                android:textSize="@dimen/font_size_large"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <!--            <NumberPicker-->
-            <!--                android:id="@+id/hour_picker"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content" />-->
-            <!--            -->
-            <!--            <NumberPicker-->
-            <!--                android:id="@+id/minute_picker"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content" />-->
         </LinearLayout>
 
     </LinearLayout>

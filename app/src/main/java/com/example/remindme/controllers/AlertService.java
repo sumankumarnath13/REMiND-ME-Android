@@ -15,12 +15,12 @@ import android.telephony.TelephonyManager;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.remindme.ActivityReminderRinging;
 import com.example.remindme.R;
 import com.example.remindme.helpers.NotificationHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.WakeLockHelper;
+import com.example.remindme.ui.activities.ActivityReminderRinging;
 import com.example.remindme.viewModels.ReminderModel;
 
 public class AlertService extends Service {

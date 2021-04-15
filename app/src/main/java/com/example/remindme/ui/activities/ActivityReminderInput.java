@@ -1,4 +1,4 @@
-package com.example.remindme;
+package com.example.remindme.ui.activities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -24,14 +24,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.remindme.R;
 import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
-import com.example.remindme.ui.main.IReminderNameListener;
-import com.example.remindme.ui.main.IReminderNoteListener;
-import com.example.remindme.ui.main.IReminderRepeatListener;
-import com.example.remindme.ui.main.IReminderSnoozeListener;
+import com.example.remindme.ui.fragments.dialogFragments.DialogReminderNameInput;
+import com.example.remindme.ui.fragments.dialogFragments.DialogReminderNoteInput;
+import com.example.remindme.ui.fragments.dialogFragments.DialogReminderRepeatInput;
+import com.example.remindme.ui.fragments.dialogFragments.DialogReminderSnoozeInput;
 import com.example.remindme.viewModels.ReminderModel;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 import com.example.remindme.viewModels.ReminderSnoozeModel;
@@ -39,7 +40,15 @@ import com.example.remindme.viewModels.ReminderSnoozeModel;
 import java.util.Calendar;
 import java.util.List;
 
-public class ActivityReminderInput extends AppCompatActivity implements IReminderNameListener, IReminderNoteListener, IReminderRepeatListener, IReminderSnoozeListener {
+public class ActivityReminderInput
+        extends
+        AppCompatActivity
+        implements
+        DialogReminderNameInput.INameInputDialogListener,
+        DialogReminderNoteInput.INoteInputDialogListener,
+        DialogReminderRepeatInput.IRepeatInputDialogListener,
+        DialogReminderSnoozeInput.ISnoozeInputDialogListener {
+
     private static final String INTENT_FROM = "FROM";
     private static final String FLAG_REMINDER_TYPE_ACTIVE = "ACTIVE";
     private static final int NAME_SPEECH_REQUEST_CODE = 119;
@@ -353,6 +362,10 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
         refreshForm();
     }
 
+    private void createInputFragments() {
+        //lv_reminder_inputs_container
+    }
+
     private void refreshForm() {
         if (reminderModel.getOriginalTime() == null) {
             // User has not entered any value yet! Set a default time to start.
@@ -425,97 +438,6 @@ public class ActivityReminderInput extends AppCompatActivity implements IReminde
             refreshForm();
         }
     }
-
-//
-//    @Override
-//    public void setChanges(ReminderRepeatModel model) {
-//
-////        if (reminderModel == null) {
-////            reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-////        }
-//
-//        reminderModel.setRepeatSettings(model);
-//
-////        if (reminderModel.trySetRepeatSettingChanges()) {
-////            refreshForm();
-////        }
-//
-//
-////        if (isEOF && model == null) { // Cancel changes
-////            reminderModel.discardRepeatSettingChanges();
-////            return;
-////        }
-//
-////        switch (model.repeatOption) {
-////            default:
-////                reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-////                if (reminderModel.trySetRepeatSettingChanges()) {
-////                    refreshForm();
-////                }
-////                break;
-////            case HOURLY_CUSTOM:
-////                if (isEOF) {
-////                    reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-////                    if (reminderModel.trySetRepeatSettingChanges()) {
-////                        refreshForm();
-////                    }
-////
-////                    //DialogReminderRepeatInput repeatInput = new DialogReminderRepeatInput();
-////                    //repeatInput.show(getSupportFragmentManager(), "Reminder_Repeat");
-////
-////                } else {
-////                    //DialogReminderRepeatInputHourlyCustom hourlyCustom = new DialogReminderRepeatInputHourlyCustom();
-////                    //hourlyCustom.show(getSupportFragmentManager(), "T1");
-////
-////
-////                }
-////                break;
-////            case DAILY_CUSTOM:
-////                if (isEOF) {
-////                    reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-////                    if (reminderModel.trySetRepeatSettingChanges()) {
-////                        refreshForm();
-////                    }
-////                } else {
-////                    DialogReminderRepeatInputDailyCustom dailyCustom = new DialogReminderRepeatInputDailyCustom();
-////                    dailyCustom.show(getSupportFragmentManager(), "T2");
-////                }
-////                break;
-////            case WEEKLY_CUSTOM:
-////                if (isEOF) {
-////                    reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-////                    if (reminderModel.trySetRepeatSettingChanges()) {
-////                        refreshForm();
-////                    }
-////                } else {
-////                    DialogReminderRepeatInputWeeklyCustom weeklyCustom = new DialogReminderRepeatInputWeeklyCustom();
-////                    weeklyCustom.show(getSupportFragmentManager(), "T3");
-////                }
-////                break;
-////            case MONTHLY_CUSTOM:
-////                if (isEOF) {
-////                    reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-////                    if (reminderModel.trySetRepeatSettingChanges()) {
-////                        refreshForm();
-////                    }
-////                } else {
-////                    DialogReminderRepeatInputMonthlyCustom monthlyCustom = new DialogReminderRepeatInputMonthlyCustom();
-////                    monthlyCustom.show(getSupportFragmentManager(), "T4");
-////                }
-////                break;
-////            case OTHER:
-////                if (isEOF) {
-////                    reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-////                    if (reminderModel.trySetRepeatSettingChanges()) {
-////                        refreshForm();
-////                    }
-////                } else {
-////                    DialogReminderRepeatInputCustom custom = new DialogReminderRepeatInputCustom();
-////                    custom.show(getSupportFragmentManager(), "T5");
-////                }
-////                break;
-////        }
-//    }
 
     @Override
     public ReminderSnoozeModel getSnoozeModel() {
