@@ -32,8 +32,8 @@
         android:id="@+id/tv_reminder_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_gray1"
         android:layout_gravity="center_horizontal"
+        android:textColor="@color/text_gray1"
         android:textSize="@dimen/font_size_banner" />
 
     <!--    DATE-->
@@ -41,8 +41,8 @@
         android:id="@+id/tv_reminder_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_gray2"
         android:layout_gravity="center_horizontal"
+        android:textColor="@color/text_gray2"
         android:textSize="@dimen/font_size_medium" />
 
     <!--    NAME-->
@@ -50,18 +50,18 @@
         android:id="@+id/tv_reminder_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/dp_8"
-        android:textSize="@dimen/font_size_large"
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/text_white" />
+        android:layout_marginVertical="@dimen/dp_8"
+        android:textColor="@color/text_white"
+        android:textSize="@dimen/font_size_large" />
 
     <!--    ENABLE/DISABLE-->
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/sw_reminder_enabled"
         android:layout_width="wrap_content"
-        android:layout_marginVertical="@dimen/dp_8"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_height="wrap_content" />
+        android:layout_marginVertical="@dimen/dp_8" />
 
     <!--    SNOOZE SUMMARY-->
     <LinearLayout
@@ -87,18 +87,36 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:textColor="@color/text_gray2"
-                android:text="@string/btn_snooze"
-                android:textSize="@dimen/font_size_medium"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    android:layout_marginRight="@dimen/dp_8"
+                    android:gravity="center_vertical"
+                    android:text="@string/btn_snooze"
+                    android:textColor="@color/text_gray2"
+                    android:textSize="@dimen/font_size_medium"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_reminder_next_snooze"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/text_warning"
+                    android:textSize="@dimen/font_size_medium" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_reminder_snooze_summary"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:textColor="@color/text_gray1"
@@ -136,8 +154,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:textColor="@color/text_gray2"
                 android:text="@string/btn_repeat"
+                android:textColor="@color/text_gray2"
                 android:textSize="@dimen/font_size_medium"
                 android:textStyle="bold" />
 
@@ -155,17 +173,17 @@
 
     <!--    NOTE -->
     <ScrollView
-        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/dp_16">
+        android:layout_marginBottom="@dimen/dp_16"
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/txt_reminder_note"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:textSize="@dimen/font_size_medium"
-            android:textColor="@color/text_gray2" />
+            android:textColor="@color/text_gray2"
+            android:textSize="@dimen/font_size_medium" />
 
     </ScrollView>
 
@@ -179,16 +197,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_gray2"
             android:text="T:"
+            android:textColor="@color/text_gray2"
             android:textSize="@dimen/font_size_small" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginRight="@dimen/dp_8"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <TextView
@@ -201,8 +219,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_gray2"
                 android:text=":"
+                android:textColor="@color/text_gray2"
                 android:textSize="@dimen/font_size_small" />
 
             <TextView
@@ -215,8 +233,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_gray2"
             android:text="V:"
+            android:textColor="@color/text_gray2"
             android:textSize="@dimen/font_size_small" />
 
         <TextView
@@ -231,8 +249,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_gray2"
             android:text="AV:"
+            android:textColor="@color/text_gray2"
             android:textSize="@dimen/font_size_small" />
 
         <TextView
@@ -246,8 +264,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_gray2"
             android:text="VB:"
+            android:textColor="@color/text_gray2"
             android:textSize="@dimen/font_size_small" />
 
         <TextView
