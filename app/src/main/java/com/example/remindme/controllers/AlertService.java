@@ -184,7 +184,7 @@ public class AlertService extends Service {
         if (isBusy) {
 
             if (ringingController == null) {
-                ringingController = new RingingController(this, servingReminder.ringToneUri);
+                ringingController = new RingingController(this, servingReminder.getRingToneUri());
             }
 
             if (servingReminder.isEnableTone) {

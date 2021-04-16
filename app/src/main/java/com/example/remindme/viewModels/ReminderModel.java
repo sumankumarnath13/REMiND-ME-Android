@@ -8,6 +8,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 
@@ -178,7 +180,27 @@ public class ReminderModel extends ViewModel {
 
     public String name;
     public String note;
-    public Uri ringToneUri = null;
+    private Uri ringToneUri = null;
+
+    public Uri getRingToneUri() {
+        return ringToneUri;
+    }
+
+    public CharSequence getRingToneUriSummary(Context context) {
+        Uri alarmToneUri = getRingToneUri();
+
+        if (alarmToneUri == null) {
+            alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        }
+
+        Ringtone ringtone = RingtoneManager.getRingtone(context, alarmToneUri);
+        return ringtone.getTitle(context);
+    }
+
+    public void setRingToneUri(Uri value) {
+        ringToneUri = value;
+    }
+
     public boolean isEnableTone = true;
     public boolean isEnableVibration = true;
 

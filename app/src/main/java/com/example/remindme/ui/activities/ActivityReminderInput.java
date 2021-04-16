@@ -77,8 +77,8 @@ public class ActivityReminderInput
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
             if (uri != null) {
-                reminderModel.ringToneUri = uri;
-                Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.ringToneUri);
+                reminderModel.setRingToneUri(uri);
+                Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.getRingToneUri());
                 tv_reminder_tone_summary.setText(ringtone.getTitle(this));
             } else {
                 Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -253,13 +253,13 @@ public class ActivityReminderInput
         mnu_reminder_tone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (reminderModel.ringToneUri == null) {
-                    reminderModel.ringToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                if (reminderModel.getRingToneUri() == null) {
+                    reminderModel.setRingToneUri(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
                 }
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select alarm tone:");
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, reminderModel.ringToneUri);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, reminderModel.getRingToneUri());
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
                 startActivityForResult(intent, RINGTONE_DIALOG_REQ_CODE);
@@ -344,7 +344,6 @@ public class ActivityReminderInput
                 if (fromUser) {
                     if (progress < ReminderModel.MINIMUM_INPUT_VOLUME_PERCENTAGE)
                         seekBar.setProgress(ReminderModel.MINIMUM_INPUT_VOLUME_PERCENTAGE);
-                    //OsHelper.setAlarmVolumeInPercentage(audioManager, seekBar.getProgress());
                 }
             }
 
@@ -356,6 +355,7 @@ public class ActivityReminderInput
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 reminderModel.setAlarmVolumePercentage(seekBar.getProgress());
+                ToastHelper.showShort(ActivityReminderInput.this, "Alarm will ring at " + reminderModel.getAlarmVolumePercentage() + "% volume");
             }
         });
 
@@ -400,14 +400,7 @@ public class ActivityReminderInput
             seeker_alarm_volume.setProgress(reminderModel.getAlarmVolumePercentage());
         }
 
-        if (reminderModel.ringToneUri == null) {
-            Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), alarmToneUri);
-            tv_reminder_tone_summary.setText(ringtone.getTitle(this));
-        } else {
-            Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.ringToneUri);
-            tv_reminder_tone_summary.setText(ringtone.getTitle(this));
-        }
+        tv_reminder_tone_summary.setText(reminderModel.getRingToneUriSummary(this));
 
     }
 

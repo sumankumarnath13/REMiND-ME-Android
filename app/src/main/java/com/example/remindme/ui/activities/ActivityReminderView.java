@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,18 +24,24 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class ActivityReminderView extends AppCompatActivity {
-    String id;
-    String alarm_time = null;
-    String name = null;
-    String note = null;
-    String from = null;
-    //private ReminderModel reminderModel = null;
+    private String id;
+    private String from;
+
+    private TextView tv_reminder_time;
+    private TextView tv_reminder_date;
+    private TextView tv_reminder_name;
+    private TextView tv_reminder_note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_view);
         ActivityHelper.setTitle(this, getResources().getString(R.string.view_reminder_heading));
+
+        tv_reminder_time = findViewById(R.id.tv_reminder_time);
+        tv_reminder_date = findViewById(R.id.tv_reminder_date);
+        tv_reminder_name = findViewById(R.id.tv_reminder_name);
+        tv_reminder_note = findViewById(R.id.txt_reminder_note);
 
         Intent i = getIntent();
         id = ReminderModel.getReminderId(i);
@@ -115,26 +120,54 @@ public class ActivityReminderView extends AppCompatActivity {
         id = ReminderModel.getReminderId(i);
         from = i.getStringExtra("FROM");
 
-        final ImageView img = findViewById((R.id.img_snooze));
         final SwitchCompat sw_enabled = findViewById(R.id.sw_reminder_enabled);
-        img.setVisibility(View.GONE);
         sw_enabled.setVisibility(View.GONE);
 
         if (from.equals("ACTIVE")) {
             ReminderModel reminderModel = new ReminderModel();
             if (reminderModel.tryReadFrom(getIntent())) {
-                alarm_time = StringHelper.toTimeDate(reminderModel.getOriginalTime());
+                tv_reminder_time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
+                tv_reminder_date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
+
                 if (reminderModel.getNextSnoozeOffTime() != null) {
-                    ImageView snooze_img = findViewById(R.id.img_snooze);
-                    TextView next_snooze = findViewById(R.id.tv_reminder_next_snooze);
+                    final TextView next_snooze = findViewById(R.id.tv_reminder_next_snooze);
                     next_snooze.setText(StringHelper.toTime(reminderModel.getNextSnoozeOffTime()));
-                    img.setVisibility(View.VISIBLE);
-                    snooze_img.setVisibility(View.VISIBLE);
                 }
+
                 sw_enabled.setVisibility(View.VISIBLE);
                 sw_enabled.setChecked(reminderModel.getIsEnabled());
-                name = reminderModel.name;
-                note = reminderModel.note;
+
+                final TextView tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
+                tv_reminder_snooze_summary.setText(reminderModel.getSnoozeModel().toString());
+
+                tv_reminder_name.setText(reminderModel.name);
+
+                final TextView tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
+                tv_reminder_repeat_summary.setText(reminderModel.getRepeatSettingString());
+
+                final TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
+                tv_reminder_tone_summary.setText(reminderModel.getRingToneUriSummary(this));
+
+                final TextView tv_alarm_tone_is_enable = findViewById(R.id.tv_alarm_tone_is_enable);
+                tv_alarm_tone_is_enable.setText(reminderModel.isEnableTone ? "ON" : "OFF");
+                tv_alarm_tone_is_enable.setTextColor(reminderModel.isEnableTone ?
+                        getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
+
+                final TextView tv_gradually_increase_volume = findViewById(R.id.tv_gradually_increase_volume);
+                tv_gradually_increase_volume.setText(reminderModel.isIncreaseVolumeGradually() ? "ON" : "OFF");
+                tv_gradually_increase_volume.setTextColor(reminderModel.isIncreaseVolumeGradually() ?
+                        getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
+
+                final TextView tv_alarm_volume = findViewById(R.id.tv_alarm_volume);
+                tv_alarm_volume.setText(reminderModel.getAlarmVolumePercentage() == 0 ? "Default" : reminderModel.getAlarmVolumePercentage() + "%");
+
+                final TextView tv_reminder_vibrate = findViewById(R.id.tv_reminder_vibrate);
+                tv_reminder_vibrate.setText(reminderModel.isEnableVibration ? "ON" : "OFF");
+                tv_reminder_vibrate.setTextColor(reminderModel.isEnableVibration ?
+                        getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
+
+                tv_reminder_note.setText(reminderModel.note);
+
             } else {
                 ToastHelper.showLong(ActivityReminderView.this, "Reminder not found!");
                 finish();
@@ -146,9 +179,10 @@ public class ActivityReminderView extends AppCompatActivity {
                     .equalTo("id", id)
                     .findFirst();
             if (reminder != null) {
-                alarm_time = StringHelper.toTimeDate(reminder.time);
-                name = reminder.name;
-                note = reminder.note;
+                tv_reminder_time.setText(StringHelper.toTime(reminder.time));
+                tv_reminder_date.setText(StringHelper.toWeekdayDate(reminder.time));
+                tv_reminder_name.setText(reminder.name);
+                tv_reminder_note.setText(reminder.name);
             } else {
                 Toast.makeText(ActivityReminderView.this, "Reminder not found!", Toast.LENGTH_LONG).show();
                 finish();
@@ -160,17 +194,16 @@ public class ActivityReminderView extends AppCompatActivity {
                     .equalTo("id", id)
                     .findFirst();
             if (reminder != null) {
-                alarm_time = StringHelper.toTimeDate(reminder.time);
-                name = reminder.name;
-                note = reminder.note;
+                tv_reminder_time.setText(StringHelper.toTime(reminder.time));
+                tv_reminder_date.setText(StringHelper.toWeekdayDate(reminder.time));
+                tv_reminder_name.setText(reminder.name);
+                tv_reminder_note.setText(reminder.name);
             } else {
                 Toast.makeText(ActivityReminderView.this, "Reminder not found!", Toast.LENGTH_LONG).show();
                 finish();
             }
         }
 
-        ((TextView) findViewById(R.id.tv_reminder_time)).setText(alarm_time);
-        ((TextView) findViewById(R.id.tv_reminder_name)).setText(name);
-        ((TextView) findViewById(R.id.txt_reminder_note)).setText(note);
+
     }
 }

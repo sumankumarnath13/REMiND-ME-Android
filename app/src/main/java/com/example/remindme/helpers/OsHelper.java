@@ -99,4 +99,6 @@ public class OsHelper {
     public static int getVolumeFromPercentage(int maxVolume, int percentValue) {
         return (int) ((maxVolume / 100F) * percentValue);
     }
+
+
 }

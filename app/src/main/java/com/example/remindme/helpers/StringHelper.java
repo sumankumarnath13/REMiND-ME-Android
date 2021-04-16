@@ -15,7 +15,7 @@ public class StringHelper {
 
     public static String toTime(Date value) {
         if (value != null) {
-            return TIME_FORMAT.format(value);
+            return TIME_FORMAT.format(value).toUpperCase();
         } else {
             return "null";
         }
@@ -23,7 +23,7 @@ public class StringHelper {
 
     public static String toAlertTime(Date value) {
         if (value != null) {
-            return ALERT_TIME_FORMAT.format(value);
+            return ALERT_TIME_FORMAT.format(value).toUpperCase();
         } else {
             return "null";
         }
@@ -31,7 +31,7 @@ public class StringHelper {
 
     public static String toDate(Date value) {
         if (value != null) {
-            return DATE_FORMAT.format(value);
+            return DATE_FORMAT.format(value).toUpperCase();
         } else {
             return "null";
         }
@@ -39,7 +39,7 @@ public class StringHelper {
 
     public static String toWeekday(Date value) {
         if (value != null) {
-            return WEEKDAY_FORMAT.format(value);
+            return WEEKDAY_FORMAT.format(value).toUpperCase();
         } else {
             return "null";
         }
@@ -47,7 +47,7 @@ public class StringHelper {
 
     public static String toWeekdayDate(Date value) {
         if (value != null) {
-            return WEEKDAY_DATE_FORMAT.format(value);
+            return WEEKDAY_DATE_FORMAT.format(value).toUpperCase();
         } else {
             return "null";
         }
@@ -55,7 +55,7 @@ public class StringHelper {
 
     public static String toTimeDate(Date value) {
         if (value != null) {
-            return TIME_DATE_FORMAT.format(value);
+            return TIME_DATE_FORMAT.format(value).toUpperCase();
         } else {
             return "null";
         }
