@@ -37,21 +37,25 @@
             android:layout_width="137dp"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:text="@string/snooze_interval_m5" />
         <RadioButton android:id="@+id/rdo_reminder_snooze_m10"
             android:layout_width="137dp"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:text="@string/snooze_interval_m10" />
         <RadioButton android:id="@+id/rdo_reminder_snooze_m15"
             android:layout_width="137dp"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:text="@string/snooze_interval_m15" />
         <RadioButton android:id="@+id/rdo_reminder_snooze_m30"
             android:layout_width="137dp"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:text="@string/snooze_interval_m30" />
     </RadioGroup>
 
@@ -74,16 +78,19 @@
             android:layout_width="137dp"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:text="@string/snooze_repeat_r3" />
         <RadioButton android:id="@+id/rdo_reminder_snooze_r5"
             android:layout_width="137dp"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:text="@string/snooze_repeat_r5" />
         <RadioButton android:id="@+id/rdo_reminder_snooze_rc"
             android:layout_width="137dp"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_medium"
             android:text="@string/snooze_repeat_rc" />
     </RadioGroup>
 
