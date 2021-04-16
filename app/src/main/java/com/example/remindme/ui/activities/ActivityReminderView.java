@@ -136,7 +136,7 @@ public class ActivityReminderView extends AppCompatActivity {
                 name = reminderModel.name;
                 note = reminderModel.note;
             } else {
-                ToastHelper.toast(ActivityReminderView.this, "Reminder not found!");
+                ToastHelper.showLong(ActivityReminderView.this, "Reminder not found!");
                 finish();
             }
         } else if (from.equals("MISSED")) {

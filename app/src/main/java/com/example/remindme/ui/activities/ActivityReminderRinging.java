@@ -56,7 +56,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
 
             ReminderModel reminderModel = serviceBinder.getServingReminder();
             if (reminderModel == null) {
-                ToastHelper.toast(ActivityReminderRinging.this, "Serious flow trouble!");
+                ToastHelper.showLong(ActivityReminderRinging.this, "Serious flow trouble!");
                 finish();
                 return;
             }

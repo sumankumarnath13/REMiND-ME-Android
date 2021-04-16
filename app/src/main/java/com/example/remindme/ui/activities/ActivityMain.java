@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -96,7 +95,9 @@ public class ActivityMain extends AppCompatActivity {
         switch (item.getItemId()) {
             default:
             case R.id.action_settings:
-                Toast.makeText(ActivityMain.this, "Halua", Toast.LENGTH_SHORT).show();
+                Intent settings_intent = new Intent(this, ActivitySettings.class);
+                startActivity(settings_intent);
+                //Toast.makeText(ActivityMain.this, "Halua", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);

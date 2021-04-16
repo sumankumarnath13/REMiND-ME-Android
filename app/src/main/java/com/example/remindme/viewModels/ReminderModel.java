@@ -469,13 +469,13 @@ public class ReminderModel extends ViewModel {
         } catch (RealmMigrationNeededException r) {
             RealmConfiguration config = Realm.getDefaultConfiguration();
             if (config == null) {
-                ToastHelper.error(context, "Couldn't load required configurations for Remind Me! ");
+                ToastHelper.showError(context, "Couldn't load required configurations for Remind Me! ");
                 return false;
             }
             try {
                 Realm.deleteRealm(config);
             } catch (IllegalStateException e) {
-                ToastHelper.error(context, "Error in initializing the Remind Me! " + e.getMessage());
+                ToastHelper.showError(context, "Error in initializing the Remind Me! " + e.getMessage());
                 return false;
             }
         }
@@ -542,7 +542,7 @@ public class ReminderModel extends ViewModel {
         if (different <= 0) // Meaningless to set time in past. BUG ALERT: negative value means something is very wrong somewhere
         {
             if (isShowElapseTimeToast) {
-                ToastHelper.error(context, "Warning! discarding minus time value for alarm");
+                ToastHelper.showError(context, "Warning! discarding minus time value for alarm");
                 return;
             }
         }
@@ -597,9 +597,9 @@ public class ReminderModel extends ViewModel {
                 }
 
                 stringBuilder.append(" from now");
-                ToastHelper.toast(context, StringHelper.trimEnd(stringBuilder.toString(), ","));
+                ToastHelper.showLong(context, StringHelper.trimEnd(stringBuilder.toString(), ","));
             } else {
-                ToastHelper.toast(context, "Alarm is set");
+                ToastHelper.showLong(context, "Alarm is set");
             }
         }
     }
@@ -695,7 +695,7 @@ public class ReminderModel extends ViewModel {
 
         } else {
 
-            ToastHelper.toast(context, "Cannot save reminder. The time set is in past!");
+            ToastHelper.showLong(context, "Cannot save reminder. The time set is in past!");
             return false;
 
         }
@@ -1032,7 +1032,7 @@ public class ReminderModel extends ViewModel {
     public void dismissByApp(Context context, final Calendar currentTime) {
         Date nextTime = getNextScheduleTime(currentTime, originalTime);
         archiveToMissed();
-        ToastHelper.toast(context, "Dismissing to missed! " + getIntId());
+        ToastHelper.showLong(context, "Dismissing to missed! " + getIntId());
         if (nextTime == null) { // EOF situation
             archiveToFinished();
             deleteAndCancelAlert(context);
@@ -1087,21 +1087,21 @@ public class ReminderModel extends ViewModel {
                 }
 
                 if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
-                    ToastHelper.toast(context, "Dismissing from snooze! " + getIntId());
+                    ToastHelper.showLong(context, "Dismissing from snooze! " + getIntId());
                     if (isByUser) {
                         dismissByUser(context);
                     } else {
                         dismissByApp(context, Calendar.getInstance());
                     }
                 } else if (currentTime.getTime().after(nextSnoozeOffTime)) { // Snooze makes no sense if its in past!
-                    ToastHelper.toast(context, "Dismissing from snooze! " + getIntId());
+                    ToastHelper.showLong(context, "Dismissing from snooze! " + getIntId());
                     if (isByUser) {
                         dismissByUser(context);
                     } else {
                         dismissByApp(context, Calendar.getInstance());
                     }
                 } else {
-                    ToastHelper.toast(context, "Snoozing! " + getIntId());
+                    ToastHelper.showLong(context, "Snoozing! " + getIntId());
                     trySaveAndSetAlert(context, false, false);
                 }
             }
@@ -1146,7 +1146,7 @@ public class ReminderModel extends ViewModel {
                 if (nextTime == null) { // EOF situation. No next schedule possible
                     //archiveToFinished();
                     //deleteAndCancelAlert();
-                    ToastHelper.toast(context, "Alarm cannot be scheduled further. Please set time into future to enable.");
+                    ToastHelper.showLong(context, "Alarm cannot be scheduled further. Please set time into future to enable.");
                 } else { // Found next trigger point.
                     calculatedTime = nextTime; // Set next trigger time.
                     isEnabled = true;

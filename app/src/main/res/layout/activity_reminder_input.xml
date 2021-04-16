@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingHorizontal="@dimen/dp_16"
+    android:padding="@dimen/dp_16"
     tools:context=".ui.activities.ActivityReminderInput">
 
     <!-- Date and Time inputs at top -->
@@ -175,37 +175,37 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_16"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginBottom="@dimen/dp_16"-->
+            <!--                android:gravity="center_vertical"-->
+            <!--                android:orientation="horizontal">-->
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_reminder_dismiss"
-                    app:tint="@color/bg_danger" />
+            <!--                <ImageView-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:src="@drawable/ic_reminder_dismiss"-->
+            <!--                    app:tint="@color/bg_danger" />-->
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/dp_16"
-                    android:layout_marginLeft="@dimen/dp_16"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="@string/btn_disable"
-                    android:textSize="@dimen/font_size_medium"
-                    android:textStyle="bold" />
+            <!--                <TextView-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:layout_marginStart="@dimen/dp_16"-->
+            <!--                    android:layout_marginLeft="@dimen/dp_16"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:gravity="center_vertical"-->
+            <!--                    android:text="@string/btn_disable"-->
+            <!--                    android:textSize="@dimen/font_size_medium"-->
+            <!--                    android:textStyle="bold" />-->
 
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/sw_reminder_disable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end" />
+            <!--                <androidx.appcompat.widget.SwitchCompat-->
+            <!--                    android:id="@+id/sw_reminder_disable"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:layout_gravity="end" />-->
 
-            </LinearLayout>
+            <!--            </LinearLayout>-->
 
             <LinearLayout
                 android:id="@+id/mnu_reminder_repeat"

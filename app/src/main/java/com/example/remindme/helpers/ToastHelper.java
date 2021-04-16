@@ -4,12 +4,15 @@ import android.content.Context;
 import android.widget.Toast;
 
 public class ToastHelper {
-    public static void error(Context context, String message) {
+    public static void showError(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
-    public static void toast(Context context, String message) {
+    public static void showLong(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
+    public static void showShort(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
 }

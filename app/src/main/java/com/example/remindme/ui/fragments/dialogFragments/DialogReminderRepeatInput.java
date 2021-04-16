@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -24,6 +25,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
 import com.example.remindme.helpers.StringHelper;
+import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
 import java.util.Calendar;
@@ -103,7 +105,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
             @Override
             public void onClick(View v) {
                 model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.NONE);
-                setChanges();
+                refresh();
             }
         });
 
@@ -112,7 +114,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
             @Override
             public void onClick(View v) {
                 model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY);
-                setChanges();
+                refresh();
             }
         });
 
@@ -130,7 +132,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
             @Override
             public void onClick(View v) {
                 model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY);
-                setChanges();
+                refresh();
             }
         });
 
@@ -148,7 +150,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
             @Override
             public void onClick(View v) {
                 model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.WEEKLY);
-                setChanges();
+                refresh();
             }
         });
 
@@ -166,7 +168,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
             @Override
             public void onClick(View v) {
                 model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.MONTHLY);
-                setChanges();
+                refresh();
             }
         });
 
@@ -184,7 +186,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
             @Override
             public void onClick(View v) {
                 model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.YEARLY);
-                setChanges();
+                refresh();
             }
         });
 
@@ -198,18 +200,31 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         });
 
         sw_has_repeat_end = view.findViewById(R.id.sw_has_repeat_end);
-        sw_has_repeat_end.setOnClickListener(new View.OnClickListener() {
+        sw_has_repeat_end.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (sw_has_repeat_end.isChecked() && !model.isHasRepeatEnd()) { // Use a default repeat end to next month
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(model.getReminderTime());
-                    c.add(Calendar.MONTH, 1);
-                    model.setRepeatEndDate(c.getTime());
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isRefreshing) return;
+
+                if (isChecked) { // Use a default repeat end to next month
+
+                    if (model.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.NONE) {
+                        buttonView.setChecked(false);
+                        ToastHelper.showShort(view.getContext(), "Cannot enable repeat ending if its set to None.");
+                        return;
+                    }
+
+                    if (!model.isHasRepeatEnd()) {
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(model.getReminderTime());
+                        c.add(Calendar.MONTH, 6);
+                        model.setRepeatEndDate(c.getTime());
+                    }
+
                 }
 
-                model.setHasRepeatEnd(sw_has_repeat_end.isChecked());
-                setChanges();
+                model.setHasRepeatEnd(isChecked);
+                refresh();
             }
         });
 
@@ -238,7 +253,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
                                 alertTime.set(Calendar.MONTH, monthOfYear);
                                 alertTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                                 model.setRepeatEndDate(alertTime.getTime());
-                                setChanges();
+                                refresh();
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis()); // This will cause extra title on the top of the regular date picker
@@ -271,7 +286,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
                                 alertTime.set(Calendar.MINUTE, minute);
                                 alertTime.set(Calendar.SECOND, 0); // Setting second to 0 is important.
                                 model.setRepeatEndDate(alertTime.getTime());
-                                setChanges();
+                                refresh();
                             }
                         }, mHour, mMinute, false);
                 timePickerDialog.show();
@@ -281,12 +296,16 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         lv_repeat_end_date = view.findViewById(R.id.lv_repeat_end_date);
         lv_repeat_end_time = view.findViewById(R.id.lv_repeat_end_time);
 
-        setChanges();
+        refresh();
 
         return builder.create();
     }
 
-    private void setChanges() {
+
+    private boolean isRefreshing;
+
+    private void refresh() {
+        isRefreshing = true;
         // No radio group wont work for the given layout. So resetting programmatically is required.
 
         rdo_reminder_repeat_none.setChecked(false);
@@ -350,11 +369,12 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
             lv_repeat_end_time.setVisibility(View.GONE);
         }
 
+        isRefreshing = false;
     }
 
     public void setChanges(ReminderRepeatModel m) {
         model = m;
-        setChanges();
+        refresh();
     }
 
     public interface IRepeatInputDialogListener {

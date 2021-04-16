@@ -78,7 +78,7 @@ public class OsHelper {
         }
     }
 
-    public static void setAlarmVolume(AudioManager audioManager, int percentage) {
+    public static void setAlarmVolumeInPercentage(AudioManager audioManager, int percentage) {
         //int value = getVolumeFromPercentage(percentage);
         //Values must not exceed maximum or go below minimum:
         final int possibleMaxVolume = getMaxAlarmVolume(audioManager);

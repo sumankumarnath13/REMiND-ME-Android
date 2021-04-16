@@ -62,8 +62,8 @@ public class ReminderRepeatModel {
     public final List<Integer> customWeeks;
     public final List<Integer> customMonths;
 
-    private TimeUnits customTimeUnit = TimeUnits.MONTHS;
-    private int customTimeValue = 12;
+    private TimeUnits customTimeUnit = TimeUnits.DAYS;
+    private int customTimeValue = 3;
 
     public void setRepeatCustom(TimeUnits unit, int value) {
         customTimeUnit = unit;

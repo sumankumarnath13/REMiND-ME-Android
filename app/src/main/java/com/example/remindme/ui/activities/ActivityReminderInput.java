@@ -3,7 +3,6 @@ package com.example.remindme.ui.activities;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -116,7 +115,7 @@ public class ActivityReminderInput
                     ActivityHelper.setTitle(this, getResources().getString(R.string.edit_reminder_heading));
                 } else {
                     // Close the activity if intent was update bu no existing reminder found!
-                    ToastHelper.error(this, "Reminder not found!");
+                    ToastHelper.showError(this, "Reminder not found!");
                     finish();
                 }
             } else { // Advance the time 1 hour if intent is new
@@ -140,6 +139,7 @@ public class ActivityReminderInput
             @Override
             public void onClick(View v) {
                 ReminderRepeatModel repeatModel = reminderModel.getRepeatSettings();
+
                 if (sw_reminder_repeat.isChecked()) {
                     repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY); // Default
                 } else {
@@ -284,15 +284,15 @@ public class ActivityReminderInput
             }
         });
 
-        final SwitchCompat sw_reminder_disable = findViewById(R.id.sw_reminder_disable);
-        sw_reminder_disable.setChecked(!reminderModel.getIsEnabled());
-        sw_reminder_disable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reminderModel.trySetEnabled(getApplicationContext(), !sw_reminder_disable.isChecked());
-                sw_reminder_disable.setChecked(!reminderModel.getIsEnabled());
-            }
-        });
+//        final SwitchCompat sw_reminder_disable = findViewById(R.id.sw_reminder_disable);
+//        sw_reminder_disable.setChecked(!reminderModel.getIsEnabled());
+//        sw_reminder_disable.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                reminderModel.trySetEnabled(getApplicationContext(), !sw_reminder_disable.isChecked());
+//                sw_reminder_disable.setChecked(!reminderModel.getIsEnabled());
+//            }
+//        });
 
         final Button btn_reminder_save = findViewById(R.id.btn_reminder_save);
         btn_reminder_save.setOnClickListener(new View.OnClickListener() {
@@ -301,7 +301,7 @@ public class ActivityReminderInput
                 if (reminderModel.trySaveAndSetAlert(getApplicationContext(), reminderModel.getIsHasDifferentTimeCalculated(), true)) {
                     finish();
                 } else {
-                    ToastHelper.toast(ActivityReminderInput.this, "Time cannot be set in past!");
+                    ToastHelper.showLong(ActivityReminderInput.this, "Time cannot be set in past!");
                 }
             }
         });
@@ -336,7 +336,7 @@ public class ActivityReminderInput
             }
         });
 
-        final AudioManager audioManager = OsHelper.getAudioManager(ActivityReminderInput.this);
+        //final AudioManager audioManager = OsHelper.getAudioManager(ActivityReminderInput.this);
         seeker_alarm_volume = findViewById(R.id.seeker_alarm_volume);
         seeker_alarm_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -344,7 +344,7 @@ public class ActivityReminderInput
                 if (fromUser) {
                     if (progress < ReminderModel.MINIMUM_INPUT_VOLUME_PERCENTAGE)
                         seekBar.setProgress(ReminderModel.MINIMUM_INPUT_VOLUME_PERCENTAGE);
-                    OsHelper.setAlarmVolume(audioManager, seekBar.getProgress());
+                    //OsHelper.setAlarmVolumeInPercentage(audioManager, seekBar.getProgress());
                 }
             }
 
@@ -395,8 +395,7 @@ public class ActivityReminderInput
         sw_gradually_increase_volume.setChecked(reminderModel.isIncreaseVolumeGradually());
 
         if (reminderModel.getAlarmVolumePercentage() == 0) {
-            int x = OsHelper.getAlarmVolumeInPercentage(OsHelper.getAudioManager(this));
-            seeker_alarm_volume.setProgress(x);
+            seeker_alarm_volume.setProgress(OsHelper.getAlarmVolumeInPercentage(OsHelper.getAudioManager(this)));
         } else {
             seeker_alarm_volume.setProgress(reminderModel.getAlarmVolumePercentage());
         }

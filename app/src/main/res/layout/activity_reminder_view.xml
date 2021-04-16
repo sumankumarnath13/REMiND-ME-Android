@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:paddingHorizontal="13dp"
+    android:padding="@dimen/dp_16"
     tools:context=".ui.activities.ActivityReminderView">
 
     <!-- Header aligned to top -->

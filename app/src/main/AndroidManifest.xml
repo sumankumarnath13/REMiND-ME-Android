@@ -17,12 +17,13 @@
         android:roundIcon="@drawable/ic_reminder_time"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.activities.ActivitySettings"></activity>
 
         <receiver
             android:name=".controllers.AlertBroadcastReceiver"
+            android:directBootAware="true"
             android:enabled="true"
-            android:exported="true"
-            android:directBootAware="true">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
@@ -35,8 +36,8 @@
 
         <service
             android:name=".controllers.AlertService"
-            android:exported="false"
-            android:directBootAware="true" />
+            android:directBootAware="true"
+            android:exported="false" />
 
         <activity
             android:name=".ui.activities.ActivityReminderRinging"
@@ -50,8 +51,10 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>
