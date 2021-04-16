@@ -63,52 +63,57 @@
         android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content" />
 
-    <!--    SNOOZE HEADER -->
+    <!--    SNOOZE SUMMARY-->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/mnu_reminder_snooze"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_16"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/btn_snooze"
+            android:width="113dp"
             android:src="@drawable/ic_reminder_snooze"
-            app:tint="@color/bg_warning" />
+            app:tint="@color/bg_gray2" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginLeft="@dimen/dp_16"
-            android:text="@string/btn_snooze" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/text_gray2"
+                android:text="@string/btn_snooze"
+                android:textSize="@dimen/font_size_medium"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tv_reminder_next_snooze"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
-            android:textColor="@color/text_warning"
-            android:textSize="@dimen/font_size_large" />
+            <TextView
+                android:id="@+id/tv_reminder_snooze_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/text_gray1"
+                android:textSize="@dimen/font_size_small" />
 
+        </LinearLayout>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_reminder_snooze_summary"
+    <!--    REPEAT SUMMARY-->
+    <LinearLayout
+        android:id="@+id/mnu_reminder_repeat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_8"
-        android:textColor="@color/text_gray1"
-        android:textSize="@dimen/font_size_small" />
-
-
-    <!--    REPEAT HEADER -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_16"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -119,27 +124,36 @@
             android:src="@drawable/ic_reminder_repeat"
             app:tint="@color/bg_info" />
 
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginLeft="@dimen/dp_16"
-            android:text="@string/btn_repeat"
-            android:textSize="@dimen/font_size_medium"
-            android:textStyle="bold" />
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/text_gray2"
+                android:text="@string/btn_repeat"
+                android:textSize="@dimen/font_size_medium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_reminder_repeat_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/text_gray1"
+                android:textSize="@dimen/font_size_small" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <!--    REPEAT SUMMARY -->
-    <TextView
-        android:id="@+id/tv_reminder_repeat_summary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_gray1"
-        android:layout_marginBottom="@dimen/dp_8"
-        android:textSize="@dimen/font_size_small" />
-
-    <!--    REPEAT NOTE -->
+    <!--    NOTE -->
     <ScrollView
         android:layout_weight="1"
         android:layout_width="match_parent"
@@ -181,7 +195,7 @@
                 android:id="@+id/tv_reminder_tone_summary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_info"
+                android:textColor="@color/text_gray1"
                 android:textSize="@dimen/font_size_small" />
 
             <TextView
