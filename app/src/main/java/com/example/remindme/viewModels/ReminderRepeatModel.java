@@ -317,6 +317,48 @@ public class ReminderRepeatModel {
         return StringHelper.trimEnd(builder.toString(), ",");
     }
 
+    public String toShortString() {
+        StringBuilder builder = new StringBuilder();
+        switch (repeatOption) {
+            default:
+            case NONE:
+                builder.append("OFF");
+                break;
+            case HOURLY:
+                builder.append("Hourly");
+                break;
+            case HOURLY_CUSTOM:
+                builder.append("Hourly custom");
+                break;
+            case DAILY:
+                builder.append("Daily");
+                break;
+            case DAILY_CUSTOM:
+                builder.append("Daily custom");
+                break;
+            case WEEKLY:
+                builder.append("Weekly");
+                break;
+            case WEEKLY_CUSTOM:
+                builder.append("Weekly custom");
+                break;
+            case MONTHLY:
+                builder.append("Monthly");
+                break;
+            case MONTHLY_CUSTOM:
+                builder.append("Monthly custom");
+                break;
+            case YEARLY:
+                builder.append("Yearly");
+                break;
+            case OTHER:
+                builder.append("Other");
+                break;
+        }
+
+        return builder.toString();
+    }
+
     public static int transform(TimeUnits unit) {
         switch (unit) {
             default:

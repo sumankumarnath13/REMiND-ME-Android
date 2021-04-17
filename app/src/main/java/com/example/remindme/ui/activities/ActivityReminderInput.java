@@ -70,6 +70,7 @@ public class ActivityReminderInput
     private SwitchCompat sw_gradually_increase_volume;
     private LinearLayout lvc_diff_next_reminder_trigger;
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -89,12 +90,12 @@ public class ActivityReminderInput
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
             tv_reminder_name_summary.setText(spokenText);
-            reminderModel.name = spokenText;
+            reminderModel.setName(spokenText);
         } else if (requestCode == NOTE_SPEECH_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
             tv_reminder_note_summary.setText(spokenText);
-            reminderModel.note = spokenText;
+            reminderModel.setNote(spokenText);
         }
     }
 
@@ -134,6 +135,7 @@ public class ActivityReminderInput
         btn_reminder_date = findViewById(R.id.btn_reminder_date);
         btn_reminder_time = findViewById(R.id.btn_reminder_time);
         lvc_diff_next_reminder_trigger = findViewById(R.id.lvc_diff_next_reminder_trigger);
+
 
         sw_reminder_repeat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -377,6 +379,7 @@ public class ActivityReminderInput
         btn_reminder_time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
         btn_reminder_date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
 
+
         if (reminderModel.getIsHasDifferentTimeCalculated()) {
             lvc_diff_next_reminder_trigger.setVisibility(View.VISIBLE);
             tv_reminder_trigger_datetime.setText(StringHelper.toTimeDate(reminderModel.getCalculatedTime()));
@@ -385,8 +388,8 @@ public class ActivityReminderInput
             tv_reminder_trigger_datetime.setText("");
         }
 
-        tv_reminder_name_summary.setText(reminderModel.name);
-        tv_reminder_note_summary.setText(reminderModel.note);
+        tv_reminder_name_summary.setText(reminderModel.getName());
+        tv_reminder_note_summary.setText(reminderModel.getNote());
         tv_reminder_repeat_summary.setText(reminderModel.getRepeatSettingString());
         tv_reminder_snooze_summary.setText(reminderModel.getSnoozeModel().toString());
 
@@ -445,13 +448,13 @@ public class ActivityReminderInput
     @Override
     public String getReminderName() {
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.name;
+        return reminderModel.getName();
     }
 
     @Override
     public void setName(String name, boolean isEOF) {
         if (isEOF) {
-            reminderModel.name = name;
+            reminderModel.setName(name);
             refreshForm();
         }
     }
@@ -459,13 +462,13 @@ public class ActivityReminderInput
     @Override
     public String getReminderNote() {
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.note;
+        return reminderModel.getNote();
     }
 
     @Override
     public void setNote(String note, boolean isEOF) {
         if (isEOF) {
-            reminderModel.note = note;
+            reminderModel.setNote(note);
             refreshForm();
         }
     }

@@ -62,8 +62,14 @@ public class ActivityReminderRinging extends AppCompatActivity {
             }
 
             txt_reminder_alarm_time.setText(StringHelper.toAlertTime(reminderModel.getOriginalTime()));
-            ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.name);
-            ((TextView) findViewById(R.id.txt_reminder_note)).setText(reminderModel.note);
+            ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.getName());
+            ((TextView) findViewById(R.id.tv_reminder_note)).setText(reminderModel.getNote());
+
+            if (reminderModel.getSnoozeModel().isEnable) {
+                btnSnooze.setVisibility(View.VISIBLE);
+            } else {
+                btnSnooze.setVisibility(View.GONE);
+            }
 
             currentTimeTimer.start();
         }
@@ -135,6 +141,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
     private TextView tv_time_now;
     private TextView tv_reminder_ringing_title;
     private TextView txt_reminder_alarm_time;
+    private Button btnSnooze;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +163,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
             setTurnScreenOn(true);
         }
 
-        Button btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
+        final Button btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
         btnDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,7 +172,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
             }
         });
 
-        Button btnSnooze = findViewById(R.id.btn_reminder_ringing_snooze);
+        btnSnooze = findViewById(R.id.btn_reminder_ringing_snooze);
         btnSnooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -146,20 +146,16 @@ public class AlertService extends Service {
     public Notification getAlarmHeadsUp(ReminderModel model) {
         String timeStamp = StringHelper.toTime(model.getOriginalTime());
 
-        //ALERT_INTENT_SNOOZE_ALERT
-        PendingIntent snoozePendingIntent = PendingIntent
-                .getBroadcast(this, model.getIntId(), createNotificationActionBroadcastIntent(ReminderModel.ACTION_SNOOZE_ALARM), PendingIntent.FLAG_CANCEL_CURRENT);
-
         //ALERT_INTENT_DISMISS_ALERT
         PendingIntent dismissPendingIntent = PendingIntent
                 .getBroadcast(this, model.getIntId(), createNotificationActionBroadcastIntent(ReminderModel.ACTION_DISMISS_ALARM), PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, ReminderModel.ALARM_NOTIFICATION_CHANNEL_ID)
-                .addAction(R.drawable.ic_reminder_snooze, getString(R.string.btn_snooze), snoozePendingIntent)
+
                 .addAction(R.drawable.ic_reminder_dismiss, getString(R.string.btn_alarm_action_dismiss), dismissPendingIntent)
-                .setContentTitle(model.name)
+                .setContentTitle(model.getName())
                 .setContentText(timeStamp)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(model.note))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(model.getName()))
                 //.setSubText(note)
                 .setSmallIcon(R.drawable.ic_reminder_time)
                 .setOngoing(true)
@@ -167,6 +163,13 @@ public class AlertService extends Service {
                 .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
                 .setWhen(0)
                 .setCategory(NotificationCompat.CATEGORY_ALARM);
+
+        //ALERT_INTENT_SNOOZE_ALERT
+        if (model.getSnoozeModel().isEnable) {
+            final PendingIntent snoozePendingIntent = PendingIntent
+                    .getBroadcast(this, model.getIntId(), createNotificationActionBroadcastIntent(ReminderModel.ACTION_SNOOZE_ALARM), PendingIntent.FLAG_CANCEL_CURRENT);
+            builder.addAction(R.drawable.ic_reminder_snooze, getString(R.string.btn_snooze), snoozePendingIntent);
+        }
 
         builder.setContentIntent(PendingIntent
                 .getActivity(this, model.getIntId(), createAlarmActivityIntent(ReminderModel.ACTION_ALERT_NOTIFICATION_CONTENT), PendingIntent.FLAG_UPDATE_CURRENT));
@@ -268,7 +271,7 @@ public class AlertService extends Service {
             final ReminderModel newReminder = new ReminderModel();
             if (newReminder.tryReadFrom(intent)) {
                 newReminder.snooze(this.getApplicationContext(), false);
-                NotificationHelper.notify(this.getApplicationContext(), newReminder.getIntId(), "Missed alarm " + StringHelper.toTime(newReminder.getOriginalTime()), newReminder.name, newReminder.note);
+                NotificationHelper.notify(this.getApplicationContext(), newReminder.getIntId(), "Missed alarm " + StringHelper.toTime(newReminder.getOriginalTime()), newReminder.getName(), newReminder.getNote());
             }
             return START_NOT_STICKY;
         }

@@ -3,7 +3,10 @@ package com.example.remindme.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +20,9 @@ import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.ReminderModel;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -41,7 +47,7 @@ public class ActivityReminderView extends AppCompatActivity {
         tv_reminder_time = findViewById(R.id.tv_reminder_time);
         tv_reminder_date = findViewById(R.id.tv_reminder_date);
         tv_reminder_name = findViewById(R.id.tv_reminder_name);
-        tv_reminder_note = findViewById(R.id.txt_reminder_note);
+        tv_reminder_note = findViewById(R.id.tv_reminder_note);
 
         Intent i = getIntent();
         id = ReminderModel.getReminderId(i);
@@ -129,6 +135,11 @@ public class ActivityReminderView extends AppCompatActivity {
                 tv_reminder_time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
                 tv_reminder_date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
 
+                if (!StringHelper.isNullOrEmpty(reminderModel.getName())) {
+                    tv_reminder_name.setVisibility(View.VISIBLE);
+                    tv_reminder_name.setText(reminderModel.getName());
+                }
+
                 if (reminderModel.getNextSnoozeOffTime() != null) {
                     final TextView next_snooze = findViewById(R.id.tv_reminder_next_snooze);
                     next_snooze.setText(StringHelper.toTime(reminderModel.getNextSnoozeOffTime()));
@@ -140,7 +151,6 @@ public class ActivityReminderView extends AppCompatActivity {
                 final TextView tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
                 tv_reminder_snooze_summary.setText(reminderModel.getSnoozeModel().toString());
 
-                tv_reminder_name.setText(reminderModel.name);
 
                 final TextView tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
                 tv_reminder_repeat_summary.setText(reminderModel.getRepeatSettingString());
@@ -166,7 +176,49 @@ public class ActivityReminderView extends AppCompatActivity {
                 tv_reminder_vibrate.setTextColor(reminderModel.isEnableVibration ?
                         getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
 
-                tv_reminder_note.setText(reminderModel.note);
+                tv_reminder_note.setText(reminderModel.getNote());
+
+                final LinearLayout lv_missed_reminders = findViewById(R.id.lv_missed_reminders);
+
+                if (reminderModel.getLastMissedTime() != null) {
+                    lv_missed_reminders.setVisibility(View.VISIBLE);
+                    final TextView tv_reminder_last_missed_time = findViewById(R.id.tv_reminder_last_missed_time);
+                    tv_reminder_last_missed_time.setText(StringHelper.toTimeDate(reminderModel.getLastMissedTime()));
+                    tv_reminder_last_missed_time.setVisibility(View.GONE);
+
+                    if (reminderModel.getMissedTimes().size() > 1) {
+                        final Spinner spinner_reminder_missed_times = findViewById(R.id.spinner_reminder_missed_times);
+                        spinner_reminder_missed_times.setVisibility(View.VISIBLE);
+
+                        ArrayList<String> x = new ArrayList<>(0);
+                        for (int s = 0; s < reminderModel.getMissedTimes().size(); s++) {
+                            x.add(StringHelper.toTimeDate(reminderModel.getMissedTimes().get(s)));
+                        }
+
+                        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, x);
+                        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        //Setting the ArrayAdapter data on the Spinner
+                        spinner_reminder_missed_times.setAdapter(aa);
+                    } else {
+                        //DUMMY
+                        final Spinner spinner_reminder_missed_times = findViewById(R.id.spinner_reminder_missed_times);
+                        spinner_reminder_missed_times.setVisibility(View.VISIBLE);
+                        Calendar c = Calendar.getInstance();
+                        ArrayList<String> x = new ArrayList<>(0);
+                        for (int s = 0; s < 20; s++) {
+                            c.add(Calendar.MINUTE, 5);
+                            x.add(StringHelper.toTimeDate(c.getTime()));
+                        }
+
+                        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, x);
+                        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        //Setting the ArrayAdapter data on the Spinner
+                        spinner_reminder_missed_times.setAdapter(aa);
+                    }
+                }
+
+                //getLastMissedTime
+
 
             } else {
                 ToastHelper.showLong(ActivityReminderView.this, "Reminder not found!");

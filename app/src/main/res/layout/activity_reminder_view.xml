@@ -6,62 +6,106 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/dp_16"
+    android:gravity="center_horizontal"
     tools:context=".ui.activities.ActivityReminderView">
 
-    <!-- Header aligned to top -->
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/rv_reminder_container_header"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        android:layout_marginBottom="@dimen/dp_16"-->
-    <!--        android:gravity="center">-->
-
-    <!--        &lt;!&ndash;        <TextView&ndash;&gt;-->
-    <!--        &lt;!&ndash;            android:id="@+id/txt_reminder_display_title"&ndash;&gt;-->
-    <!--        &lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
-    <!--        &lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
-    <!--        &lt;!&ndash;            android:text="@string/view_reminder_heading"&ndash;&gt;-->
-    <!--        &lt;!&ndash;            android:textSize="@dimen/font_size_h1" />&ndash;&gt;-->
-
-    <!--    </LinearLayout>-->
-
-
-    <!--    TIME-->
-    <TextView
-        android:id="@+id/tv_reminder_time"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/text_gray1"
-        android:textSize="@dimen/font_size_banner" />
+        android:background="@drawable/border_bottom"
+        android:paddingBottom="@dimen/dp_8"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <!--    DATE-->
-    <TextView
-        android:id="@+id/tv_reminder_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/text_gray2"
-        android:textSize="@dimen/font_size_medium" />
 
-    <!--    NAME-->
-    <TextView
-        android:id="@+id/tv_reminder_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginVertical="@dimen/dp_8"
-        android:textColor="@color/text_white"
-        android:textSize="@dimen/font_size_large" />
+        <!-- Header aligned to top -->
+        <!--    <LinearLayout-->
+        <!--        android:id="@+id/rv_reminder_container_header"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:orientation="horizontal"-->
+        <!--        android:layout_marginBottom="@dimen/dp_16"-->
+        <!--        android:gravity="center">-->
 
-    <!--    ENABLE/DISABLE-->
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/sw_reminder_enabled"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginVertical="@dimen/dp_8" />
+        <!--        &lt;!&ndash;        <TextView&ndash;&gt;-->
+        <!--        &lt;!&ndash;            android:id="@+id/txt_reminder_display_title"&ndash;&gt;-->
+        <!--        &lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
+        <!--        &lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--        &lt;!&ndash;            android:text="@string/view_reminder_heading"&ndash;&gt;-->
+        <!--        &lt;!&ndash;            android:textSize="@dimen/font_size_h1" />&ndash;&gt;-->
+
+        <!--    </LinearLayout>-->
+
+
+        <!--    TIME-->
+        <TextView
+            android:id="@+id/tv_reminder_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_gray1"
+            android:textSize="@dimen/font_size_banner" />
+
+        <!--    DATE-->
+        <TextView
+            android:id="@+id/tv_reminder_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_gray2"
+            android:textSize="@dimen/font_size_medium" />
+
+        <!--    NAME-->
+        <TextView
+            android:id="@+id/tv_reminder_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/font_size_large" />
+
+        <!--    ENABLE/DISABLE-->
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_reminder_enabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_8" />
+
+        <!--    MISSED REMINDERS-->
+        <LinearLayout
+            android:id="@+id/lv_missed_reminders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_danger"
+                android:text="Missed on : "
+                android:textSize="@dimen/font_size_medium" />
+
+            <TextView
+                android:id="@+id/tv_reminder_last_missed_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size_medium"
+                android:textColor="@color/text_danger" />
+
+            <Spinner
+                android:id="@+id/spinner_reminder_missed_times"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:textSize="@dimen/font_size_medium"
+                android:textColor="@color/text_danger" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <!--    SNOOZE SUMMARY-->
     <LinearLayout
@@ -175,11 +219,10 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/dp_16"
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/txt_reminder_note"
+            android:id="@+id/tv_reminder_note"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:textColor="@color/text_gray2"
@@ -187,20 +230,21 @@
 
     </ScrollView>
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/border_vertical"
+        android:paddingVertical="@dimen/dp_3"
         android:orientation="horizontal">
 
         <ImageView
             android:layout_width="@dimen/dp_16"
             android:layout_height="@dimen/dp_16"
-            android:layout_gravity="center_vertical"
             android:paddingRight="@dimen/dp_3"
+            android:paddingEnd="@dimen/dp_3"
             android:src="@drawable/ic_reminder_sound"
-            app:tint="@color/bg_success" />
+            app:tint="@color/bg_warning" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -208,6 +252,7 @@
             android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginRight="@dimen/dp_8"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
@@ -220,7 +265,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=":"
+                android:text=" : "
                 android:textColor="@color/text_gray2"
                 android:textSize="@dimen/font_size_small" />
 
@@ -235,11 +280,10 @@
         <ImageView
             android:layout_width="@dimen/dp_16"
             android:layout_height="@dimen/dp_16"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/dp_3"
             android:layout_marginRight="@dimen/dp_3"
             android:src="@drawable/ic_sound_volume"
-            app:tint="@color/bg_info" />
+            app:tint="@color/bg_success" />
 
         <TextView
             android:id="@+id/tv_alarm_volume"
@@ -253,11 +297,10 @@
         <ImageView
             android:layout_width="@dimen/dp_16"
             android:layout_height="@dimen/dp_16"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/dp_3"
             android:layout_marginRight="@dimen/dp_3"
             android:src="@drawable/ic_sound_volume_auto"
-            app:tint="@color/bg_gray1" />
+            app:tint="@color/bg_danger" />
 
         <TextView
             android:id="@+id/tv_gradually_increase_volume"
@@ -271,11 +314,10 @@
             android:id="@+id/img_reminder_vibrate"
             android:layout_width="@dimen/dp_16"
             android:layout_height="@dimen/dp_16"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/dp_3"
             android:layout_marginRight="@dimen/dp_3"
             android:src="@drawable/ic_reminder_vibrate"
-            app:tint="@color/bg_warning" />
+            app:tint="@color/bg_danger" />
 
         <TextView
             android:id="@+id/tv_reminder_vibrate"
@@ -284,7 +326,6 @@
             android:textSize="@dimen/font_size_small" />
 
     </LinearLayout>
-
 
     <!-- Footer aligned to bottom -->
     <LinearLayout

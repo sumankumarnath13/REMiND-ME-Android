@@ -14,6 +14,8 @@ public class ActiveReminder extends RealmObject implements RealmModel {
     public String name;
     public String note;
     public Date time;
+    public Date lastMissedTime;
+    public RealmList<Date> missedTimes;
     public String selectedAlarmTone;
     public Date nextSnoozeTime;
     public boolean isEnableTone;

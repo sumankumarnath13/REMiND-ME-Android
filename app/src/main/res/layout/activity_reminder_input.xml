@@ -271,7 +271,7 @@
                     android:layout_height="wrap_content"
                     android:width="113dp"
                     android:src="@drawable/ic_reminder_snooze"
-                    app:tint="@color/bg_gray2" />
+                    app:tint="@color/bg_gray1" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -319,7 +319,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_reminder_sound"
-                    app:tint="@color/bg_success" />
+                    app:tint="@color/bg_warning" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -366,7 +366,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_reminder_vibrate"
-                    app:tint="@color/bg_warning" />
+                    app:tint="@color/bg_danger" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -395,9 +395,17 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_sound_volume"
+                    app:tint="@color/bg_success" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginLeft="@dimen/dp_16"
                     android:textColor="@color/text_gray2"
                     android:text="@string/alarm_volume_label"
                     android:textSize="@dimen/font_size_medium"
@@ -418,10 +426,18 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_sound_volume_auto"
+                    app:tint="@color/bg_danger" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginLeft="@dimen/dp_16"
                     android:textColor="@color/text_gray2"
                     android:text="@string/increase_volume_gradually_label"
                     android:textSize="@dimen/font_size_medium"

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -50,10 +49,15 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
         final TextView date = holder.linearLayout.findViewById(R.id.tv_reminder_date);
 
         final TextView name = holder.linearLayout.findViewById(R.id.tv_reminder_name);
-        //final TextView note = holder.linearLayout.findViewById(R.id.tv_reminder_truncated_note);
+        final TextView tv_reminder_repeat_short_summary = holder.linearLayout.findViewById(R.id.tv_reminder_repeat_short_summary);
         final SwitchCompat enabled = holder.linearLayout.findViewById(R.id.sw_reminder_enabled);
-        final ImageView img = holder.linearLayout.findViewById(R.id.img_snooze);
+        final LinearLayout lv_reminder_view_snooze = holder.linearLayout.findViewById(R.id.lv_reminder_view_snooze);
         final TextView next_snooze = holder.linearLayout.findViewById(R.id.tv_reminder_next_snooze);
+
+        final LinearLayout lv_reminder_last_missed_time = holder.linearLayout.findViewById(R.id.lv_reminder_last_missed_time);
+        final TextView tv_reminder_last_missed_time = holder.linearLayout.findViewById(R.id.tv_reminder_last_missed_time);
+
+
         final RealmObject reminder = _data.get(position);
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -103,34 +107,41 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
         if (reminderType == EnumReminderTypes.Active) {
             ReminderModel reminderModel = new ReminderModel();
             ReminderModel.transformToModel((ActiveReminder) reminder, reminderModel);
+
             time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
             date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
-            if (reminderModel.getNextSnoozeOffTime() != null) {
-                next_snooze.setText(StringHelper.toTime(reminderModel.getNextSnoozeOffTime()));
-                img.setVisibility(View.VISIBLE);
-            } else {
-                img.setVisibility(View.GONE);
-            }
             enabled.setChecked(reminderModel.getIsEnabled());
 
-            if (StringHelper.isNullOrEmpty(reminderModel.name)) {
+            tv_reminder_repeat_short_summary.setText(reminderModel.getRepeatSettingShortString());
+
+            if (reminderModel.getNextSnoozeOffTime() != null) {
+                lv_reminder_view_snooze.setVisibility(View.VISIBLE);
+                next_snooze.setText(StringHelper.toTime(reminderModel.getNextSnoozeOffTime()));
+            } else {
+                lv_reminder_view_snooze.setVisibility(View.GONE);
+            }
+
+            if (reminderModel.getLastMissedTime() != null) {
+                lv_reminder_last_missed_time.setVisibility(View.VISIBLE);
+                tv_reminder_last_missed_time.setText(StringHelper.toTimeDate(reminderModel.getLastMissedTime()));
+            } else {
+                lv_reminder_last_missed_time.setVisibility(View.GONE);
+            }
+
+            if (StringHelper.isNullOrEmpty(reminderModel.getName())) {
                 name.setVisibility(View.GONE);
             } else {
-                name.setText(reminderModel.name);
+                name.setText(reminderModel.getName());
                 name.setVisibility(View.VISIBLE);
             }
 
-//            if (StringHelper.isNullOrEmpty(reminderModel.note)) {
-//                note.setVisibility(View.GONE);
-//            } else {
-//                note.setText(reminderModel.note);
-//                note.setVisibility(View.VISIBLE);
-//            }
 
         } else if (holder.reminderType == EnumReminderTypes.Missed) {
             final MissedReminder missedReminder = (MissedReminder) reminder;
-            time.setText(StringHelper.toTime(missedReminder.time));
+
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_danger));
+
+            time.setText(StringHelper.toTime(missedReminder.time));
             date.setText(StringHelper.toWeekdayDate(missedReminder.time));
             enabled.setVisibility(View.GONE);
 
@@ -141,16 +152,12 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 name.setVisibility(View.VISIBLE);
             }
 
-//            if (StringHelper.isNullOrEmpty(missedReminder.note)) {
-//                note.setVisibility(View.GONE);
-//            } else {
-//                note.setText(missedReminder.note);
-//                note.setVisibility(View.VISIBLE);
-//            }
         } else {
             final DismissedReminder dismissedReminder = (DismissedReminder) reminder;
-            time.setText(StringHelper.toTime(dismissedReminder.time));
+
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_gray2));
+
+            time.setText(StringHelper.toTime(dismissedReminder.time));
             date.setText(StringHelper.toWeekdayDate(dismissedReminder.time));
             enabled.setVisibility(View.GONE);
 
@@ -160,13 +167,6 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 name.setText(dismissedReminder.name);
                 name.setVisibility(View.VISIBLE);
             }
-
-//            if (StringHelper.isNullOrEmpty(dismissedReminder.note)) {
-//                note.setVisibility(View.GONE);
-//            } else {
-//                note.setText(dismissedReminder.note);
-//                note.setVisibility(View.VISIBLE);
-//            }
         }
     }
 

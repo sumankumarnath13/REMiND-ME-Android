@@ -66,7 +66,7 @@ public class DialogReminderNoteInput extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.dialog_reminder_input_note, null);
 
-        txt_reminder_note = view.findViewById(R.id.txt_reminder_note);
+        txt_reminder_note = view.findViewById(R.id.tv_reminder_note);
         tv_reminder_note_limit_msg = view.findViewById(R.id.tv_reminder_note_limit_msg);
 
         txt_reminder_note.setText(note);

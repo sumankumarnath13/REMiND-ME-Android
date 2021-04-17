@@ -34,6 +34,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmList;
 import io.realm.exceptions.RealmMigrationNeededException;
 
 public class ReminderModel extends ViewModel {
@@ -117,6 +118,11 @@ public class ReminderModel extends ViewModel {
     }
 
     private Date nextSnoozeOffTime = null;
+
+    public Date getNextSnoozeOffTime() {
+        return nextSnoozeOffTime;
+    }
+
     private ReminderRepeatModel repeatValueChangeBuffer;
 
     private Date originalTime;
@@ -160,12 +166,20 @@ public class ReminderModel extends ViewModel {
         return calculatedTime;
     }
 
-    public Date getNextSnoozeOffTime() {
-        return nextSnoozeOffTime;
-    }
-
     public boolean getIsHasDifferentTimeCalculated() {
         return calculatedTime != null && !calculatedTime.equals(originalTime);
+    }
+
+    private Date lastMissedTime;
+
+    public Date getLastMissedTime() {
+        return lastMissedTime;
+    }
+
+    private RealmList<Date> missedTimes = new RealmList<>();
+
+    public List<Date> getMissedTimes() {
+        return missedTimes;
     }
 
     private boolean increaseVolumeGradually;
@@ -178,8 +192,26 @@ public class ReminderModel extends ViewModel {
         increaseVolumeGradually = value;
     }
 
-    public String name;
-    public String note;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String value) {
+        name = value;
+    }
+
+    private String note;
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String value) {
+        note = value;
+    }
+
     private Uri ringToneUri = null;
 
     public Uri getRingToneUri() {
@@ -202,8 +234,8 @@ public class ReminderModel extends ViewModel {
     }
 
     public boolean isEnableTone = true;
-    public boolean isEnableVibration = true;
 
+    public boolean isEnableVibration = true;
 
     //region Private Static Functions
     private static void transformToData(ReminderModel from, ActiveReminder to) {
@@ -212,6 +244,16 @@ public class ReminderModel extends ViewModel {
         to.name = from.name;
         to.note = from.note;
         to.time = from.calculatedTime == null ? from.originalTime : from.calculatedTime;
+
+        to.lastMissedTime = from.lastMissedTime;
+
+        if (to.missedTimes == null) {
+            to.missedTimes = new RealmList<>();
+        } else {
+            to.missedTimes.clear();
+        }
+
+        to.missedTimes.addAll(from.missedTimes);
 
         if (from.ringToneUri != null) {
             to.selectedAlarmTone = from.ringToneUri.toString();
@@ -357,6 +399,11 @@ public class ReminderModel extends ViewModel {
         to.name = from.name;
         to.note = from.note;
         to.originalTime = from.time;
+
+        to.lastMissedTime = from.lastMissedTime;
+
+        to.missedTimes.clear();
+        to.missedTimes.addAll(from.missedTimes);
 
         if (from.selectedAlarmTone != null) {
             to.ringToneUri = Uri.parse(from.selectedAlarmTone);
@@ -626,20 +673,9 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    private void archiveToMissed() {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-            @ParametersAreNonnullByDefault
-            @Override
-            public void execute(Realm realm) {
-                MissedReminder to = new MissedReminder();
-                to.id = id;
-                to.time = originalTime;
-                to.name = name;
-                to.note = note;
-                realm.insertOrUpdate(to);
-            }
-        });
+    private void addToMissed() {
+        missedTimes.add(originalTime);
+        lastMissedTime = originalTime;
     }
 
     private void archiveToFinished() {
@@ -714,14 +750,12 @@ public class ReminderModel extends ViewModel {
 
             return true;
 
-
         } else {
 
             ToastHelper.showLong(context, "Cannot save reminder. The time set is in past!");
             return false;
 
         }
-
 
 //        if (!isOriginalTimeChanged) {
 //            Date _time = getAlarmTime();
@@ -782,7 +816,6 @@ public class ReminderModel extends ViewModel {
 //
 //            return true;
 //        }
-
 
     }
 
@@ -1053,79 +1086,84 @@ public class ReminderModel extends ViewModel {
 
     public void dismissByApp(Context context, final Calendar currentTime) {
         Date nextTime = getNextScheduleTime(currentTime, originalTime);
-        archiveToMissed();
-        ToastHelper.showLong(context, "Dismissing to missed! " + getIntId());
+
         if (nextTime == null) { // EOF situation
+            ToastHelper.showLong(context, "Dismissing to finished! " + getIntId());
             archiveToFinished();
             deleteAndCancelAlert(context);
         } else {
+            ToastHelper.showLong(context, "Dismissing to missed! " + getIntId());
+            addToMissed();
             calculatedTime = nextTime; // Set next trigger time.
             trySaveAndSetAlert(context, true, false); // Save changes. // Set alarm for next trigger time.
         }
     }
 
     public void snooze(Context context, boolean isByUser) {
+        if (!snoozeModel.isEnable) {
+            return;
+        }
+
         Date _time = getAlarmTime();
 
-        if (snoozeModel.isEnable) {
-            Calendar currentTime = Calendar.getInstance();
-            if (currentTime.getTime().after(_time)) { // Set snooze only if current time is past alarm time or previous snooze time.
-                nextSnoozeOffTime = null; // RESET
-                Calendar nextSnoozeOff = Calendar.getInstance();
-                nextSnoozeOff.setTime(_time);
-                switch (snoozeModel.intervalOption) {
-                    default:
-                    case M5:
-                        nextSnoozeOff.add(Calendar.MINUTE, 5);
-                        break;
-                    case M10:
-                        nextSnoozeOff.add(Calendar.MINUTE, 10);
-                        break;
-                    case M15:
-                        nextSnoozeOff.add(Calendar.MINUTE, 15);
-                        break;
-                    case M30:
-                        nextSnoozeOff.add(Calendar.MINUTE, 30);
-                        break;
-                }
-                switch (snoozeModel.countOptions) {
-                    default:
-                    case R3:
-                        if (snoozeModel.count < 3) {
-                            snoozeModel.count++;
-                            nextSnoozeOffTime = nextSnoozeOff.getTime();
-                        }
-                        break;
-                    case R5:
-                        if (snoozeModel.count < 5) {
-                            snoozeModel.count++;
-                            nextSnoozeOffTime = nextSnoozeOff.getTime();
-                        }
-                        break;
-                    case RC:
+        Calendar currentTime = Calendar.getInstance();
+
+        if (currentTime.getTime().after(_time)) { // Set snooze only if current time is past alarm time or previous snooze time.
+            nextSnoozeOffTime = null; // RESET
+            Calendar nextSnoozeOff = Calendar.getInstance();
+            nextSnoozeOff.setTime(_time);
+            switch (snoozeModel.intervalOption) {
+                default:
+                case M5:
+                    nextSnoozeOff.add(Calendar.MINUTE, 5);
+                    break;
+                case M10:
+                    nextSnoozeOff.add(Calendar.MINUTE, 10);
+                    break;
+                case M15:
+                    nextSnoozeOff.add(Calendar.MINUTE, 15);
+                    break;
+                case M30:
+                    nextSnoozeOff.add(Calendar.MINUTE, 30);
+                    break;
+            }
+            switch (snoozeModel.countOptions) {
+                default:
+                case R3:
+                    if (snoozeModel.count < 3) {
                         snoozeModel.count++;
                         nextSnoozeOffTime = nextSnoozeOff.getTime();
-                        break;
-                }
+                    }
+                    break;
+                case R5:
+                    if (snoozeModel.count < 5) {
+                        snoozeModel.count++;
+                        nextSnoozeOffTime = nextSnoozeOff.getTime();
+                    }
+                    break;
+                case RC:
+                    snoozeModel.count++;
+                    nextSnoozeOffTime = nextSnoozeOff.getTime();
+                    break;
+            }
 
-                if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
-                    ToastHelper.showLong(context, "Dismissing from snooze! " + getIntId());
-                    if (isByUser) {
-                        dismissByUser(context);
-                    } else {
-                        dismissByApp(context, Calendar.getInstance());
-                    }
-                } else if (currentTime.getTime().after(nextSnoozeOffTime)) { // Snooze makes no sense if its in past!
-                    ToastHelper.showLong(context, "Dismissing from snooze! " + getIntId());
-                    if (isByUser) {
-                        dismissByUser(context);
-                    } else {
-                        dismissByApp(context, Calendar.getInstance());
-                    }
+            if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
+                ToastHelper.showLong(context, "Dismissing from snooze! " + getIntId());
+                if (isByUser) {
+                    dismissByUser(context);
                 } else {
-                    ToastHelper.showLong(context, "Snoozing! " + getIntId());
-                    trySaveAndSetAlert(context, false, false);
+                    dismissByApp(context, Calendar.getInstance());
                 }
+            } else if (currentTime.getTime().after(nextSnoozeOffTime)) { // Snooze makes no sense if its in past!
+                ToastHelper.showLong(context, "Dismissing from snooze! " + getIntId());
+                if (isByUser) {
+                    dismissByUser(context);
+                } else {
+                    dismissByApp(context, Calendar.getInstance());
+                }
+            } else {
+                ToastHelper.showLong(context, "Snoozing! " + getIntId());
+                trySaveAndSetAlert(context, false, false);
             }
         }
     }
@@ -1321,6 +1359,10 @@ public class ReminderModel extends ViewModel {
 
     public String getRepeatSettingString() {
         return repeatModel.toString();
+    }
+
+    public String getRepeatSettingShortString() {
+        return repeatModel.toShortString();
     }
 
     public void deleteAndCancelAlert(Context context) {
