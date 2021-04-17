@@ -588,9 +588,9 @@ public class ReminderModel extends ViewModel {
         calendar.setTime(atTime);
 
         if (OsHelper.isMarshmallowOrLater()) {
-            OsHelper.getAlarmManager(context).setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), getAlarmManagerAlarmPendingIntent(context, true));
+            OsHelper.getAlarmManager(context).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), getAlarmManagerAlarmPendingIntent(context, true));
         } else {
-            OsHelper.getAlarmManager(context).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), getAlarmManagerAlarmPendingIntent(context, true));
+            OsHelper.getAlarmManager(context).setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), getAlarmManagerAlarmPendingIntent(context, true));
         }
 
         if (isShowElapseTimeToast) {

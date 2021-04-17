@@ -194,12 +194,13 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="T:"
-            android:textColor="@color/text_gray2"
-            android:textSize="@dimen/font_size_small" />
+        <ImageView
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_16"
+            android:layout_gravity="center_vertical"
+            android:paddingRight="@dimen/dp_3"
+            android:src="@drawable/ic_reminder_sound"
+            app:tint="@color/bg_success" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -228,14 +229,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small" />
+
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="V:"
-            android:textColor="@color/text_gray2"
-            android:textSize="@dimen/font_size_small" />
+        <ImageView
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_16"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/dp_3"
+            android:layout_marginRight="@dimen/dp_3"
+            android:src="@drawable/ic_sound_volume"
+            app:tint="@color/bg_info" />
 
         <TextView
             android:id="@+id/tv_alarm_volume"
@@ -243,15 +247,17 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginRight="@dimen/dp_8"
-            android:textColor="@color/text_gray1"
+            android:textColor="@color/bg_gray1"
             android:textSize="@dimen/font_size_small" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="AV:"
-            android:textColor="@color/text_gray2"
-            android:textSize="@dimen/font_size_small" />
+        <ImageView
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_16"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/dp_3"
+            android:layout_marginRight="@dimen/dp_3"
+            android:src="@drawable/ic_sound_volume_auto"
+            app:tint="@color/bg_gray1" />
 
         <TextView
             android:id="@+id/tv_gradually_increase_volume"
@@ -261,12 +267,15 @@
             android:layout_marginRight="@dimen/dp_8"
             android:textSize="@dimen/font_size_small" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="VB:"
-            android:textColor="@color/text_gray2"
-            android:textSize="@dimen/font_size_small" />
+        <ImageView
+            android:id="@+id/img_reminder_vibrate"
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_16"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/dp_3"
+            android:layout_marginRight="@dimen/dp_3"
+            android:src="@drawable/ic_reminder_vibrate"
+            app:tint="@color/bg_warning" />
 
         <TextView
             android:id="@+id/tv_reminder_vibrate"

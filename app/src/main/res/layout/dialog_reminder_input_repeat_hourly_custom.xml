@@ -22,6 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Morning"
+                android:padding="@dimen/dp_8"
                 android:textColor="@color/text_success"
                 android:textSize="@dimen/font_size_large" />
 
@@ -29,84 +30,84 @@
                 android:id="@+id/chk_daily_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_success"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_success"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_success"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_success"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_success"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_success"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_success"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_success"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_success"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_success"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_success"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_success"
                 android:textColor="@color/text_gray1" />
 
         </LinearLayout>
@@ -122,6 +123,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Night"
+                android:padding="@dimen/dp_8"
                 android:textColor="@color/text_danger"
                 android:textSize="@dimen/font_size_large" />
 
@@ -129,84 +131,84 @@
                 android:id="@+id/chk_daily_17"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_danger"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_danger"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_19"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_danger"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_danger"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_21"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_danger"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_22"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_danger"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_23"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_danger"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_danger"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_danger"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_danger"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_danger"
                 android:textColor="@color/text_gray1" />
 
             <CheckBox
                 android:id="@+id/chk_daily_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_gray1"
+                android:buttonTint="@color/bg_danger"
                 android:textColor="@color/text_gray1" />
 
         </LinearLayout>
