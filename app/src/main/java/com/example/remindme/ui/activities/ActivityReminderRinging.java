@@ -176,7 +176,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
         btnSnooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                serviceBinder.snooze();
+                serviceBinder.snoozeByUser();
                 finish();
             }
         });

@@ -116,7 +116,7 @@
                     android:id="@+id/tv_reminder_last_missed_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_danger"
+                    android:textColor="@color/bg_danger"
                     android:textSize="@dimen/font_size_small" />
 
             </LinearLayout>

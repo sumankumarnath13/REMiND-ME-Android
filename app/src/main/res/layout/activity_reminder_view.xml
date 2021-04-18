@@ -13,30 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border_bottom"
-        android:paddingBottom="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_3"
         android:layout_marginBottom="@dimen/dp_8"
         android:gravity="center_horizontal"
         android:orientation="vertical">
-
-
-        <!-- Header aligned to top -->
-        <!--    <LinearLayout-->
-        <!--        android:id="@+id/rv_reminder_container_header"-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:orientation="horizontal"-->
-        <!--        android:layout_marginBottom="@dimen/dp_16"-->
-        <!--        android:gravity="center">-->
-
-        <!--        &lt;!&ndash;        <TextView&ndash;&gt;-->
-        <!--        &lt;!&ndash;            android:id="@+id/txt_reminder_display_title"&ndash;&gt;-->
-        <!--        &lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
-        <!--        &lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
-        <!--        &lt;!&ndash;            android:text="@string/view_reminder_heading"&ndash;&gt;-->
-        <!--        &lt;!&ndash;            android:textSize="@dimen/font_size_h1" />&ndash;&gt;-->
-
-        <!--    </LinearLayout>-->
-
 
         <!--    TIME-->
         <TextView
@@ -83,7 +63,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_danger"
+                android:textColor="@color/bg_danger"
                 android:text="Missed on : "
                 android:textSize="@dimen/font_size_medium" />
 
@@ -92,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_medium"
-                android:textColor="@color/text_danger" />
+                android:textColor="@color/bg_danger" />
 
             <Spinner
                 android:id="@+id/spinner_reminder_missed_times"
@@ -100,8 +80,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:textSize="@dimen/font_size_medium"
-                android:textColor="@color/text_danger" />
-
+                android:foregroundTint="@color/text_danger" />
 
         </LinearLayout>
 
@@ -236,7 +215,8 @@
         android:gravity="center_vertical"
         android:background="@drawable/border_vertical"
         android:paddingVertical="@dimen/dp_3"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <!-- TONE DETAILS LAYOUT -->
         <LinearLayout
@@ -336,7 +316,6 @@
                 android:textSize="@dimen/font_size_small" />
 
         </LinearLayout>
-
 
     </LinearLayout>
 

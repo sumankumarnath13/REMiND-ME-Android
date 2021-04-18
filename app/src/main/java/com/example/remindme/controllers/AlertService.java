@@ -52,7 +52,7 @@ public class AlertService extends Service {
 
             switch (intent.getAction()) {
                 case ReminderModel.ACTION_SNOOZE_ALARM:
-                    snooze();
+                    snoozeByUser();
                     break;
                 case ReminderModel.ACTION_DISMISS_ALARM:
                     dismiss();
@@ -70,7 +70,7 @@ public class AlertService extends Service {
 
         @Override
         public void onFinish() {
-            snooze();
+            snoozeByApp();
         }
     };
 
@@ -207,10 +207,19 @@ public class AlertService extends Service {
         return servingReminder;
     }
 
-    public void snooze() {
+    public void snoozeByUser() {
         if (!isChanged && isBusy) {
             isChanged = true;
-            servingReminder.snooze(this.getApplicationContext(), true);
+            servingReminder.snoozeByUser(this.getApplicationContext());
+            broadcastCloseAlarmActivity();
+            stopService();
+        }
+    }
+
+    public void snoozeByApp() {
+        if (!isChanged && isBusy) {
+            isChanged = true;
+            servingReminder.snoozeByApp(this.getApplicationContext());
             broadcastCloseAlarmActivity();
             stopService();
         }
@@ -270,7 +279,7 @@ public class AlertService extends Service {
             // snooze concurrent calls if already serving
             final ReminderModel newReminder = new ReminderModel();
             if (newReminder.tryReadFrom(intent)) {
-                newReminder.snooze(this.getApplicationContext(), false);
+                newReminder.snoozeByApp(this.getApplicationContext());
                 NotificationHelper.notify(this.getApplicationContext(), newReminder.getIntId(), "Missed alarm " + StringHelper.toTime(newReminder.getOriginalTime()), newReminder.getName(), newReminder.getNote());
             }
             return START_NOT_STICKY;
@@ -326,7 +335,7 @@ public class AlertService extends Service {
 
         if (!isChanged & isBusy) {
             // Snooze the reminder if no action was taken.
-            servingReminder.snooze(this.getApplicationContext(), false);
+            servingReminder.snoozeByApp(this.getApplicationContext());
         }
 
         isBusy = false;

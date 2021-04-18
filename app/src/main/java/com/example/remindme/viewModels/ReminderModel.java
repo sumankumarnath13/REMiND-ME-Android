@@ -689,11 +689,6 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    private void addToMissed() {
-        missedTimes.add(originalTime);
-        lastMissedTime = originalTime;
-    }
-
     private void archiveToFinished() {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
@@ -772,66 +767,6 @@ public class ReminderModel extends ViewModel {
             return false;
 
         }
-
-//        if (!isOriginalTimeChanged) {
-//            Date _time = getAlarmTime();
-//            if (_time.after(Calendar.getInstance().getTime())) {
-//
-//                if (id == null) { // First save
-//                    UUID uuid = UUID.randomUUID();
-//                    id = uuid.toString();
-//                    intId = (int) uuid.getMostSignificantBits();
-//                } else { // Update
-//                    cancelAlarm(context);
-//                }
-//
-//                final ActiveReminder reminder = new ActiveReminder();
-//                ReminderModel.transformToData(this, reminder);
-//                Realm realm = Realm.getDefaultInstance();
-//                realm.executeTransaction(new Realm.Transaction() {
-//                    @ParametersAreNonnullByDefault
-//                    @Override
-//                    public void execute(Realm realm) {
-//                        realm.insertOrUpdate(reminder);
-//                    }
-//                });
-//
-//                if (isEnable) {
-//                    setAlarm(context, _time, isShowElapseTimeToast);
-//                }
-//
-//                return true;
-//
-//            } else {
-//                ToastHelper.toast(context, "Cannot save reminder. The time set is in past!");
-//                return false;
-//            }
-//        } else {
-//            if (id == null) { // First save
-//                UUID uuid = UUID.randomUUID();
-//                id = uuid.toString();
-//                intId = (int) uuid.getMostSignificantBits();
-//            } else { // Update
-//                cancelAlarm(context);
-//            }
-//
-//            final ActiveReminder reminder = new ActiveReminder();
-//            ReminderModel.transformToData(this, reminder);
-//            Realm realm = Realm.getDefaultInstance();
-//            realm.executeTransaction(new Realm.Transaction() {
-//                @ParametersAreNonnullByDefault
-//                @Override
-//                public void execute(Realm realm) {
-//                    realm.insertOrUpdate(reminder);
-//                }
-//            });
-//
-//            if (isEnable) {
-//                setAlarm(context, _time, isShowElapseTimeToast);
-//            }
-//
-//            return true;
-//        }
 
     }
 
@@ -1089,33 +1024,61 @@ public class ReminderModel extends ViewModel {
     }
 
     public void dismissByUser(Context context) {
+
         Date nextTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
+
         if (nextTime == null) { // EOF situation
+
             archiveToFinished();
+
             deleteAndCancelAlert(context);
+
         } else {
+
             calculatedTime = nextTime; // Set next trigger time.
+
             //String net = UtilsDateTime.toTimeDateString(time);
             trySaveAndSetAlert(context, true, false); // Save changes. // Set alarm for next trigger time.
+
         }
     }
 
     public void dismissByApp(Context context, final Calendar currentTime) {
+
         Date nextTime = getNextScheduleTime(currentTime, originalTime);
 
         if (nextTime == null) { // EOF situation
+
             ToastHelper.showLong(context, "Dismissing to finished! " + getIntId());
+
             archiveToFinished();
+
             deleteAndCancelAlert(context);
+
         } else {
+
             ToastHelper.showLong(context, "Dismissing to missed! " + getIntId());
-            addToMissed();
+
+            missedTimes.add(originalTime);
+
+            lastMissedTime = originalTime;
+
             calculatedTime = nextTime; // Set next trigger time.
+
             trySaveAndSetAlert(context, true, false); // Save changes. // Set alarm for next trigger time.
+
         }
     }
 
-    public void snooze(Context context, boolean isByUser) {
+    public void snoozeByUser(Context context) {
+        snooze(context, true);
+    }
+
+    public void snoozeByApp(Context context) {
+        snooze(context, false);
+    }
+
+    private void snooze(Context context, boolean isByUser) {
         if (!snoozeModel.isEnable) { // If snooze isn't enable then dismiss it
             if (isByUser) {
                 dismissByUser(context);

@@ -16,8 +16,8 @@ public class AlertServiceBinder extends Binder {
         return service.getServingReminder();
     }
 
-    public void snooze() {
-        service.snooze();
+    public void snoozeByUser() {
+        service.snoozeByUser();
     }
 
     public void dismiss() {

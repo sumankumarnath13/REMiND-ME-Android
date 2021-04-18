@@ -55,10 +55,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/bg_info"
+                        android:layout_marginEnd="@dimen/dp_8"
+                        android:layout_marginRight="@dimen/dp_8"
                         android:layout_marginBottom="@dimen/dp_8"
                         android:gravity="center_horizontal"
                         android:orientation="vertical"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -77,20 +79,22 @@
                             <TextView
                                 android:id="@+id/tv_reminder_trigger_time"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="@color/text_white"
                                 android:textSize="@dimen/font_size_extra_large"
                                 android:textStyle="bold"
                                 android:layout_marginEnd="@dimen/dp_8"
-                                android:layout_marginRight="@dimen/dp_8" />
+                                android:layout_marginRight="@dimen/dp_8"
+                                android:text="damba" />
 
                             <TextView
                                 android:id="@+id/tv_reminder_trigger_date"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="@color/text_gray1"
                                 android:textSize="@dimen/font_size_large"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:text="humba" />
 
                         </LinearLayout>
 
