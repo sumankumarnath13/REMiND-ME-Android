@@ -157,7 +157,7 @@ public class AlertService extends Service {
                 .setContentText(timeStamp)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(model.getName()))
                 //.setSubText(note)
-                .setSmallIcon(R.drawable.ic_reminder_time)
+                .setSmallIcon(R.drawable.ic_brand)
                 .setOngoing(true)
                 .setAutoCancel(false)
                 .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
@@ -190,10 +190,10 @@ public class AlertService extends Service {
                 ringingController = new RingingController(this, servingReminder.getRingToneUri());
             }
 
-            if (servingReminder.isEnableTone) {
+            if (servingReminder.isEnableTone()) {
                 ringingController.startTone(servingReminder.isIncreaseVolumeGradually(), servingReminder.getAlarmVolumePercentage());
             }
-            if (servingReminder.isEnableVibration) {
+            if (servingReminder.isEnableVibration()) {
                 ringingController.startVibrating();
             }
         }

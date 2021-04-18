@@ -156,24 +156,34 @@ public class ActivityReminderView extends AppCompatActivity {
                 tv_reminder_repeat_summary.setText(reminderModel.getRepeatSettingString());
 
                 final TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
-                tv_reminder_tone_summary.setText(reminderModel.getRingToneUriSummary(this));
+                final TextView tv_alarm_tone_is_off = findViewById(R.id.tv_alarm_tone_is_off);
+                final LinearLayout lv_alarm_tone_is_on = findViewById(R.id.lv_alarm_tone_is_on);
 
-                final TextView tv_alarm_tone_is_enable = findViewById(R.id.tv_alarm_tone_is_enable);
-                tv_alarm_tone_is_enable.setText(reminderModel.isEnableTone ? "ON" : "OFF");
-                tv_alarm_tone_is_enable.setTextColor(reminderModel.isEnableTone ?
-                        getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
+                if (reminderModel.isEnableTone()) {
+                    tv_alarm_tone_is_off.setVisibility(View.GONE);
+                    tv_reminder_tone_summary.setVisibility(View.VISIBLE);
+                    lv_alarm_tone_is_on.setVisibility(View.VISIBLE);
 
-                final TextView tv_gradually_increase_volume = findViewById(R.id.tv_gradually_increase_volume);
-                tv_gradually_increase_volume.setText(reminderModel.isIncreaseVolumeGradually() ? "ON" : "OFF");
-                tv_gradually_increase_volume.setTextColor(reminderModel.isIncreaseVolumeGradually() ?
-                        getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
+                    tv_reminder_tone_summary.setText(reminderModel.getRingToneUriSummary(this));
 
-                final TextView tv_alarm_volume = findViewById(R.id.tv_alarm_volume);
-                tv_alarm_volume.setText(reminderModel.getAlarmVolumePercentage() == 0 ? "Default" : reminderModel.getAlarmVolumePercentage() + "%");
+                    final TextView tv_alarm_volume = findViewById(R.id.tv_alarm_volume);
+                    tv_alarm_volume.setText(reminderModel.getAlarmVolumePercentage() == 0 ?
+                            "Default" : reminderModel.getAlarmVolumePercentage() + "%");
+
+                    final TextView tv_gradually_increase_volume = findViewById(R.id.tv_gradually_increase_volume);
+                    tv_gradually_increase_volume.setText(reminderModel.isIncreaseVolumeGradually() ? "ON" : "OFF");
+                    tv_gradually_increase_volume.setTextColor(reminderModel.isIncreaseVolumeGradually() ?
+                            getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
+
+                } else {
+                    lv_alarm_tone_is_on.setVisibility(View.GONE);
+                    tv_reminder_tone_summary.setVisibility(View.GONE);
+                    tv_alarm_tone_is_off.setVisibility(View.VISIBLE);
+                }
 
                 final TextView tv_reminder_vibrate = findViewById(R.id.tv_reminder_vibrate);
-                tv_reminder_vibrate.setText(reminderModel.isEnableVibration ? "ON" : "OFF");
-                tv_reminder_vibrate.setTextColor(reminderModel.isEnableVibration ?
+                tv_reminder_vibrate.setText(reminderModel.isEnableVibration() ? "ON" : "OFF");
+                tv_reminder_vibrate.setTextColor(reminderModel.isEnableVibration() ?
                         getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
 
                 tv_reminder_note.setText(reminderModel.getNote());
@@ -186,35 +196,49 @@ public class ActivityReminderView extends AppCompatActivity {
                     tv_reminder_last_missed_time.setText(StringHelper.toTimeDate(reminderModel.getLastMissedTime()));
                     tv_reminder_last_missed_time.setVisibility(View.GONE);
 
-                    if (reminderModel.getMissedTimes().size() > 1) {
-                        final Spinner spinner_reminder_missed_times = findViewById(R.id.spinner_reminder_missed_times);
-                        spinner_reminder_missed_times.setVisibility(View.VISIBLE);
+//                    if (reminderModel.getMissedTimes().size() > 1) {
+//                        final Spinner spinner_reminder_missed_times = findViewById(R.id.spinner_reminder_missed_times);
+//                        spinner_reminder_missed_times.setVisibility(View.VISIBLE);
+//
+//                        ArrayList<String> x = new ArrayList<>(0);
+//                        for (int s = 0; s < reminderModel.getMissedTimes().size(); s++) {
+//                            x.add(StringHelper.toTimeDate(reminderModel.getMissedTimes().get(s)));
+//                        }
+//
+//                        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, x);
+//                        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                        //Setting the ArrayAdapter data on the Spinner
+//                        spinner_reminder_missed_times.setAdapter(aa);
+//                    }
 
-                        ArrayList<String> x = new ArrayList<>(0);
-                        for (int s = 0; s < reminderModel.getMissedTimes().size(); s++) {
-                            x.add(StringHelper.toTimeDate(reminderModel.getMissedTimes().get(s)));
-                        }
+                    final Spinner spinner_reminder_missed_times = findViewById(R.id.spinner_reminder_missed_times);
+                    spinner_reminder_missed_times.setVisibility(View.VISIBLE);
 
-                        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, x);
-                        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        //Setting the ArrayAdapter data on the Spinner
-                        spinner_reminder_missed_times.setAdapter(aa);
-                    } else {
-                        //DUMMY
-                        final Spinner spinner_reminder_missed_times = findViewById(R.id.spinner_reminder_missed_times);
-                        spinner_reminder_missed_times.setVisibility(View.VISIBLE);
-                        Calendar c = Calendar.getInstance();
-                        ArrayList<String> x = new ArrayList<>(0);
-                        for (int s = 0; s < 20; s++) {
-                            c.add(Calendar.MINUTE, 5);
-                            x.add(StringHelper.toTimeDate(c.getTime()));
-                        }
-
-                        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, x);
-                        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        //Setting the ArrayAdapter data on the Spinner
-                        spinner_reminder_missed_times.setAdapter(aa);
+                    ArrayList<String> x = new ArrayList<>(0);
+                    for (int s = 0; s < reminderModel.getMissedTimes().size(); s++) {
+                        x.add(StringHelper.toTimeDate(reminderModel.getMissedTimes().get(s)));
                     }
+
+                    ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, x);
+                    aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    //Setting the ArrayAdapter data on the Spinner
+                    spinner_reminder_missed_times.setAdapter(aa);
+
+                } else {
+                    //DUMMY
+                    final Spinner spinner_reminder_missed_times = findViewById(R.id.spinner_reminder_missed_times);
+                    spinner_reminder_missed_times.setVisibility(View.VISIBLE);
+                    Calendar c = Calendar.getInstance();
+                    ArrayList<String> x = new ArrayList<>(0);
+                    for (int s = 0; s < 20; s++) {
+                        c.add(Calendar.MINUTE, 5);
+                        x.add(StringHelper.toTimeDate(c.getTime()));
+                    }
+
+                    ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, x);
+                    aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    //Setting the ArrayAdapter data on the Spinner
+                    spinner_reminder_missed_times.setAdapter(aa);
                 }
 
                 //getLastMissedTime
@@ -255,7 +279,5 @@ public class ActivityReminderView extends AppCompatActivity {
                 finish();
             }
         }
-
-
     }
 }

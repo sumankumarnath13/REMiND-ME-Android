@@ -233,9 +233,25 @@ public class ReminderModel extends ViewModel {
         ringToneUri = value;
     }
 
-    public boolean isEnableTone = true;
+    private boolean isEnableTone = true;
 
-    public boolean isEnableVibration = true;
+    public boolean isEnableTone() {
+        return isEnableTone;
+    }
+
+    public void setEnableTone(boolean value) {
+        isEnableTone = value;
+    }
+
+    private boolean isEnableVibration = true;
+
+    public boolean isEnableVibration() {
+        return isEnableVibration;
+    }
+
+    public void setEnableVibration(boolean value) {
+        isEnableVibration = value;
+    }
 
     //region Private Static Functions
     private static void transformToData(ReminderModel from, ActiveReminder to) {
@@ -1100,7 +1116,12 @@ public class ReminderModel extends ViewModel {
     }
 
     public void snooze(Context context, boolean isByUser) {
-        if (!snoozeModel.isEnable) {
+        if (!snoozeModel.isEnable) { // If snooze isn't enable then dismiss it
+            if (isByUser) {
+                dismissByUser(context);
+            } else {
+                dismissByApp(context, Calendar.getInstance());
+            }
             return;
         }
 

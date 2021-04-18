@@ -13,7 +13,6 @@ import com.example.remindme.helpers.ToastHelper;
 
 public class ActivitySettings extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

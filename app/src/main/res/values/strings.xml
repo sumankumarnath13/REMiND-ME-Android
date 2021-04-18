@@ -12,8 +12,8 @@
     <string name="tab_text_2">Missed</string>
     <string name="tab_text_3">Finished</string>
 
-    <string name="hint_reminder_name">Write something here …</string>
-    <string name="hint_reminder_note">Write something here …</string>
+    <string name="hint_reminder_name">Give a name …</string>
+    <string name="hint_reminder_note">Extra notes …</string>
     <string name="btn_save">Save</string>
     <string name="btn_time">Set Time</string>
     <string name="btn_date">Set Date</string>

@@ -301,7 +301,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         return builder.create();
     }
 
-
     private boolean isRefreshing;
 
     private void refresh() {
