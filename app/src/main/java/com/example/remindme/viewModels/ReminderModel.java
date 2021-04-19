@@ -1035,9 +1035,12 @@ public class ReminderModel extends ViewModel {
 
         } else {
 
+            //User's dismiss will erase missed alert history:
+            lastMissedTime = null;
+            missedTimes.clear();
+
             calculatedTime = nextTime; // Set next trigger time.
 
-            //String net = UtilsDateTime.toTimeDateString(time);
             trySaveAndSetAlert(context, true, false); // Save changes. // Set alarm for next trigger time.
 
         }
@@ -1089,7 +1092,6 @@ public class ReminderModel extends ViewModel {
         }
 
         Date _time = getAlarmTime();
-
         Calendar currentTime = Calendar.getInstance();
 
         if (currentTime.getTime().after(_time)) { // Set snooze only if current time is past alarm time or previous snooze time.

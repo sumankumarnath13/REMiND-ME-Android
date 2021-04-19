@@ -9,7 +9,8 @@ public class StringHelper {
     public static final SimpleDateFormat ALERT_TIME_FORMAT = new SimpleDateFormat("h:mm a");
     public static final SimpleDateFormat WEEKDAY_FORMAT = new SimpleDateFormat("EEE");
     public static final SimpleDateFormat WEEKDAY_DATE_FORMAT = new SimpleDateFormat("EEE dd MMM yy");
-    public static final SimpleDateFormat TIME_DATE_FORMAT = new SimpleDateFormat("hh:mm a - EEE dd MMM yy");
+    public static final SimpleDateFormat TIME_DATE_FORMAT = new SimpleDateFormat("hh:mm a - dd MMM yy");
+    public static final SimpleDateFormat TIME_WEEKDAY_DATE_FORMAT = new SimpleDateFormat("hh:mm a - EEE dd MMM yy");
     //public static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("hh:mm:ss a - dd MMM yy");
     //public static final SimpleDateFormat uniqueDateTimeFormat = new SimpleDateFormat("yyMMddHHmm");
 
@@ -48,6 +49,14 @@ public class StringHelper {
     public static String toWeekdayDate(Date value) {
         if (value != null) {
             return WEEKDAY_DATE_FORMAT.format(value).toUpperCase();
+        } else {
+            return "null";
+        }
+    }
+
+    public static String toTimeWeekdayDate(Date value) {
+        if (value != null) {
+            return TIME_WEEKDAY_DATE_FORMAT.format(value).toUpperCase();
         } else {
             return "null";
         }

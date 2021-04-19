@@ -9,6 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <EditText
@@ -18,7 +19,7 @@
             android:layout_weight="1"
             android:inputType="text"
             android:autofillHints="@string/hint_reminder_name"
-            android:backgroundTint="@color/text_success"
+            android:backgroundTint="@color/bg_success"
             android:hint="@string/hint_reminder_name" />
 
         <ImageView

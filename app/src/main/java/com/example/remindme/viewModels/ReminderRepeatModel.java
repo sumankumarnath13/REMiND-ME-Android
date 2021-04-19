@@ -311,7 +311,7 @@ public class ReminderRepeatModel {
         }
 
         if (isHasRepeatEnd()) {
-            builder.append(" till ").append(StringHelper.toTimeDate(getRepeatEndDate()));
+            builder.append(" till ").append(StringHelper.toTimeWeekdayDate(getRepeatEndDate()));
         }
 
         return StringHelper.trimEnd(builder.toString(), ",");

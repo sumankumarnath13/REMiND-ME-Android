@@ -53,7 +53,7 @@ public class ActivityHelper {
         //This is the end of fixed Title and dynamic position begins:
         if (title != null) {
             spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_gray2)), finalTitle.length() - title.length(), finalTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannable.setSpan(new RelativeSizeSpan(1.5f), finalTitle.length() - activityTitle.length(), finalTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new RelativeSizeSpan(1.0f), finalTitle.length() - activityTitle.length(), finalTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             //spannable.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE), finalTitle.length() - title.length(), finalTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             //spannable.setSpan(new UnderlineSpan(), finalTitle.length() - activityTitle.length(), finalTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }

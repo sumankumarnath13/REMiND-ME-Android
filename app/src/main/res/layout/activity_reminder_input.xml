@@ -6,15 +6,14 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:padding="@dimen/dp_16"
+    android:paddingHorizontal="@dimen/dp_16"
     tools:context=".ui.activities.ActivityReminderInput">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:gravity="center_vertical">
 
         <!-- Scrollable Content below header and above footer -->
         <ScrollView
@@ -474,6 +473,7 @@
 
     </LinearLayout>
 
+
     <!-- Footer aligned to bottom -->
     <LinearLayout
         android:id="@+id/rv_footer"
@@ -490,7 +490,7 @@
             android:drawableStart="@drawable/ic_reminder_check"
             android:drawableLeft="@drawable/ic_reminder_check"
             android:drawablePadding="@dimen/dp_3"
-            android:drawableTint="@color/text_success"
+            android:drawableTint="@color/bg_success"
             android:text="@string/btn_save" />
 
     </LinearLayout>

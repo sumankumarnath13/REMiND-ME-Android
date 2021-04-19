@@ -41,7 +41,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -61,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_gray2"
-                android:textSize="@dimen/font_size_small" />
+                android:textSize="@dimen/font_size_extra_small" />
 
         </LinearLayout>
 
@@ -94,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_warning"
-                    android:textSize="@dimen/font_size_small" />
+                    android:textSize="@dimen/font_size_extra_small" />
 
             </LinearLayout>
 
@@ -109,15 +110,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_danger"
-                    android:text="Missed on : "
-                    android:textSize="@dimen/font_size_small" />
+                    android:text="Missed : "
+                    android:textSize="@dimen/font_size_extra_small" />
 
                 <TextView
                     android:id="@+id/tv_reminder_last_missed_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/bg_danger"
-                    android:textSize="@dimen/font_size_small" />
+                    android:textColor="@color/text_gray2"
+                    android:textSize="@dimen/font_size_extra_small" />
 
             </LinearLayout>
 

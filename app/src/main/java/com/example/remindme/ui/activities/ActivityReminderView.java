@@ -3,13 +3,14 @@ package com.example.remindme.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
@@ -20,8 +21,6 @@ import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.ReminderModel;
-
-import java.util.ArrayList;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -36,12 +35,28 @@ public class ActivityReminderView extends AppCompatActivity {
     private TextView tv_reminder_date;
     private TextView tv_reminder_name;
     private TextView tv_reminder_note;
+    private static final String MISSED_ALERT_UI_STATE = "STATE";
+    private boolean isMissedAlertsVisible;
+    private ImageView btn_expand_missed_alerts;
+    private LinearLayout lv_reminder_details;
+    private ScrollView sv_missed_alerts;
+    private TextView tv_missed_alerts;
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean(MISSED_ALERT_UI_STATE, isMissedAlertsVisible);
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_view);
         ActivityHelper.setTitle(this, getResources().getString(R.string.view_reminder_heading));
+
+        if (savedInstanceState != null) {
+            isMissedAlertsVisible = savedInstanceState.getBoolean(MISSED_ALERT_UI_STATE, false);
+        }
 
         tv_reminder_time = findViewById(R.id.tv_reminder_time);
         tv_reminder_date = findViewById(R.id.tv_reminder_date);
@@ -109,12 +124,41 @@ public class ActivityReminderView extends AppCompatActivity {
                 if (reminderModel.tryReadFrom(getIntent())) {
                     enabled.setChecked(reminderModel.trySetEnabled(getApplicationContext(), enabled.isChecked()));
                     if (enabled.isChecked()) {
-                        ((TextView) findViewById(R.id.tv_reminder_time)).setText(StringHelper.toTimeDate(reminderModel.getOriginalTime()));
+                        ((TextView) findViewById(R.id.tv_reminder_time)).setText(StringHelper.toTimeWeekdayDate(reminderModel.getOriginalTime()));
                     }
                     reminderModel.trySaveAndSetAlert(getApplicationContext(), true, true);
                 }
             }
         });
+
+        lv_reminder_details = findViewById(R.id.lv_reminder_details);
+        sv_missed_alerts = findViewById(R.id.sv_missed_alerts);
+        tv_missed_alerts = findViewById(R.id.tv_missed_alerts);
+
+        btn_expand_missed_alerts = findViewById(R.id.btn_expand_missed_alerts);
+        btn_expand_missed_alerts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isMissedAlertsVisible = !isMissedAlertsVisible;
+                refresh();
+            }
+        });
+
+        refresh();
+    }
+
+    private void refresh() {
+        if (isMissedAlertsVisible) {
+            btn_expand_missed_alerts.setImageResource(R.drawable.ic_expand_up);
+            btn_expand_missed_alerts.setColorFilter(getResources().getColor(R.color.bg_danger), android.graphics.PorterDuff.Mode.SRC_IN);
+            lv_reminder_details.setVisibility(View.GONE);
+            sv_missed_alerts.setVisibility(View.VISIBLE);
+        } else {
+            btn_expand_missed_alerts.setImageResource(R.drawable.ic_expand_down);
+            btn_expand_missed_alerts.setColorFilter(getResources().getColor(R.color.bg_success), android.graphics.PorterDuff.Mode.SRC_IN);
+            sv_missed_alerts.setVisibility(View.GONE);
+            lv_reminder_details.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -188,28 +232,47 @@ public class ActivityReminderView extends AppCompatActivity {
 
                 tv_reminder_note.setText(reminderModel.getNote());
 
-                final LinearLayout lv_missed_reminders = findViewById(R.id.lv_missed_reminders);
+                final LinearLayout lv_missed_reminders = findViewById(R.id.lv_last_missed_alert);
 
                 if (reminderModel.getLastMissedTime() != null) {
 
                     lv_missed_reminders.setVisibility(View.VISIBLE);
                     final TextView tv_reminder_last_missed_time = findViewById(R.id.tv_reminder_last_missed_time);
-                    //tv_reminder_last_missed_time.setText(StringHelper.toTimeDate(reminderModel.getLastMissedTime()));
-                    tv_reminder_last_missed_time.setVisibility(View.GONE);
+                    tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(reminderModel.getLastMissedTime()));
 
-                    if (reminderModel.getMissedTimes().size() > 0) {
-                        final Spinner spinner_reminder_missed_times = findViewById(R.id.spinner_reminder_missed_times);
-                        spinner_reminder_missed_times.setVisibility(View.VISIBLE);
+                    if (reminderModel.getMissedTimes().size() > 1) {
+                        btn_expand_missed_alerts.setVisibility(View.VISIBLE);
 
-                        ArrayList<String> x = new ArrayList<>(0);
-                        for (int s = 0; s < reminderModel.getMissedTimes().size(); s++) {
-                            x.add(StringHelper.toTimeDate(reminderModel.getMissedTimes().get(s)));
+                        StringBuilder builder = new StringBuilder();
+                        for (int s = 0; s < reminderModel.getMissedTimes().size(); s++) { // Skip last one as that would ve visible as last missed one anyway
+
+                            int index = s + 1;
+
+                            if (index == reminderModel.getMissedTimes().size()) {
+                                builder.append("Last  miss on  ");
+                            } else {
+                                builder.append(index);
+                                switch (index) {
+                                    default:
+                                        builder.append("th  miss on  ");
+                                        break;
+                                    case 1:
+                                        builder.append("st  miss on  ");
+                                        break;
+                                    case 2:
+                                        builder.append("nd  miss on  ");
+                                        break;
+                                    case 3:
+                                        builder.append("rd  miss on  ");
+                                        break;
+                                }
+                            }
+
+                            builder.append(StringHelper.toTimeWeekdayDate(reminderModel.getMissedTimes().get(s)));
+                            builder.append("\n");
                         }
 
-                        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, x);
-                        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        //Setting the ArrayAdapter data on the Spinner
-                        spinner_reminder_missed_times.setAdapter(aa);
+                        tv_missed_alerts.setText(builder.toString());
                     }
                 }
             } else {
