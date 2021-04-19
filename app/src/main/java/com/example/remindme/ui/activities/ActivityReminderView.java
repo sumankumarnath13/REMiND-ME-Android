@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +38,7 @@ public class ActivityReminderView extends AppCompatActivity {
     private boolean isMissedAlertsVisible;
     private ImageView btn_expand_missed_alerts;
     private LinearLayout lv_reminder_details;
-    private ScrollView sv_missed_alerts;
+    //private ScrollView sv_missed_alerts;
     private TextView tv_missed_alerts;
 
     @Override
@@ -132,7 +131,7 @@ public class ActivityReminderView extends AppCompatActivity {
         });
 
         lv_reminder_details = findViewById(R.id.lv_reminder_details);
-        sv_missed_alerts = findViewById(R.id.sv_missed_alerts);
+        //sv_missed_alerts = findViewById(R.id.sv_missed_alerts);
         tv_missed_alerts = findViewById(R.id.tv_missed_alerts);
 
         btn_expand_missed_alerts = findViewById(R.id.btn_expand_missed_alerts);
@@ -152,11 +151,11 @@ public class ActivityReminderView extends AppCompatActivity {
             btn_expand_missed_alerts.setImageResource(R.drawable.ic_expand_up);
             btn_expand_missed_alerts.setColorFilter(getResources().getColor(R.color.bg_danger), android.graphics.PorterDuff.Mode.SRC_IN);
             lv_reminder_details.setVisibility(View.GONE);
-            sv_missed_alerts.setVisibility(View.VISIBLE);
+            tv_missed_alerts.setVisibility(View.VISIBLE);
         } else {
             btn_expand_missed_alerts.setImageResource(R.drawable.ic_expand_down);
             btn_expand_missed_alerts.setColorFilter(getResources().getColor(R.color.bg_success), android.graphics.PorterDuff.Mode.SRC_IN);
-            sv_missed_alerts.setVisibility(View.GONE);
+            tv_missed_alerts.setVisibility(View.GONE);
             lv_reminder_details.setVisibility(View.VISIBLE);
         }
     }
