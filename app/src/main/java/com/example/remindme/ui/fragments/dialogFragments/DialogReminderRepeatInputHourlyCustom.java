@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
+import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 
 import java.util.Calendar;
@@ -99,31 +100,62 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
         c.setTime(model.getReminderTime());
         final int min = c.get(Calendar.MINUTE);
 
-        chk_daily_5.setText("5:" + min + " am");
-        chk_daily_6.setText("6:" + min + " am");
-        chk_daily_7.setText("7:" + min + " am");
-        chk_daily_8.setText("8:" + min + " am");
-        chk_daily_9.setText("9:" + min + " am");
-        chk_daily_10.setText("10:" + min + " am");
-        chk_daily_11.setText("11:" + min + " am");
-        chk_daily_12.setText("12:" + min + " pm");
-        chk_daily_13.setText("1:" + min + " pm");
-        chk_daily_14.setText("2:" + min + " pm");
-        chk_daily_15.setText("3:" + min + " pm");
-        chk_daily_16.setText("4:" + min + " pm");
+        if (AppSettingsHelper.getInstance().isUse24hourTime()) {
 
-        chk_daily_17.setText("5:" + min + " pm");
-        chk_daily_18.setText("6:" + min + " pm");
-        chk_daily_19.setText("7:" + min + " pm");
-        chk_daily_20.setText("8:" + min + " pm");
-        chk_daily_21.setText("9:" + min + " pm");
-        chk_daily_22.setText("10:" + min + " pm");
-        chk_daily_23.setText("11:" + min + " pm");
-        chk_daily_0.setText("12:" + min + " am");
-        chk_daily_1.setText("1:" + min + " am");
-        chk_daily_2.setText("2:" + min + " am");
-        chk_daily_3.setText("3:" + min + " am");
-        chk_daily_4.setText("4:" + min + " am");
+            chk_daily_0.setText("0:" + min);
+            chk_daily_1.setText("1:" + min);
+            chk_daily_2.setText("2:" + min);
+            chk_daily_3.setText("3:" + min);
+            chk_daily_4.setText("4:" + min);
+            chk_daily_5.setText("5:" + min);
+            chk_daily_6.setText("6:" + min);
+            chk_daily_7.setText("7:" + min);
+            chk_daily_8.setText("8:" + min);
+            chk_daily_9.setText("9:" + min);
+            chk_daily_10.setText("10:" + min);
+            chk_daily_11.setText("11:" + min);
+            chk_daily_12.setText("12:" + min);
+            chk_daily_13.setText("13:" + min);
+            chk_daily_14.setText("14:" + min);
+            chk_daily_15.setText("15:" + min);
+            chk_daily_16.setText("16:" + min);
+            chk_daily_17.setText("17:" + min);
+            chk_daily_18.setText("18:" + min);
+            chk_daily_19.setText("19:" + min);
+            chk_daily_20.setText("20:" + min);
+            chk_daily_21.setText("21:" + min);
+            chk_daily_22.setText("22:" + min);
+            chk_daily_23.setText("23:" + min);
+
+        } else {
+
+            chk_daily_5.setText("5:" + min + " am");
+            chk_daily_6.setText("6:" + min + " am");
+            chk_daily_7.setText("7:" + min + " am");
+            chk_daily_8.setText("8:" + min + " am");
+            chk_daily_9.setText("9:" + min + " am");
+            chk_daily_10.setText("10:" + min + " am");
+            chk_daily_11.setText("11:" + min + " am");
+            chk_daily_12.setText("12:" + min + " pm");
+            chk_daily_13.setText("1:" + min + " pm");
+            chk_daily_14.setText("2:" + min + " pm");
+            chk_daily_15.setText("3:" + min + " pm");
+            chk_daily_16.setText("4:" + min + " pm");
+
+            chk_daily_17.setText("5:" + min + " pm");
+            chk_daily_18.setText("6:" + min + " pm");
+            chk_daily_19.setText("7:" + min + " pm");
+            chk_daily_20.setText("8:" + min + " pm");
+            chk_daily_21.setText("9:" + min + " pm");
+            chk_daily_22.setText("10:" + min + " pm");
+            chk_daily_23.setText("11:" + min + " pm");
+            chk_daily_0.setText("12:" + min + " am");
+            chk_daily_1.setText("1:" + min + " am");
+            chk_daily_2.setText("2:" + min + " am");
+            chk_daily_3.setText("3:" + min + " am");
+            chk_daily_4.setText("4:" + min + " am");
+
+        }
 
         for (int i = 0; i < model.customHours.size(); i++) {
             int value = model.customHours.get(i);

@@ -51,13 +51,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingVertical="@dimen/dp_16">
+                android:orientation="horizontal">
 
-                <TextView
+                <Button
+                    android:id="@+id/btn_send_feedback"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textAlignment="textStart"
+                    android:gravity="start|center"
                     android:text="Send feedback"
                     android:textColor="@color/text_warning"
                     android:textSize="@dimen/font_size_medium" />
@@ -68,13 +70,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingVertical="@dimen/dp_16">
+                android:orientation="horizontal">
 
-                <TextView
+                <Button
+                    android:id="@+id/btn_view_faq"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textAlignment="textStart"
+                    android:gravity="start|center"
                     android:text="FAQ (User's guide)"
                     android:textColor="@color/text_info"
                     android:textSize="@dimen/font_size_medium" />
@@ -85,13 +89,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingVertical="@dimen/dp_16">
+                android:orientation="horizontal">
 
-                <TextView
+                <Button
+                    android:id="@+id/btn_view_license"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textAlignment="textStart"
+                    android:gravity="start|center"
                     android:text="License Info"
                     android:textColor="@color/text_gray2"
                     android:textSize="@dimen/font_size_medium" />
@@ -103,13 +109,15 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_vertical"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingVertical="@dimen/dp_16">
+                android:orientation="horizontal">
 
-                <TextView
+                <Button
+                    android:id="@+id/btn_share_app"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textAlignment="textStart"
+                    android:gravity="start|center"
                     android:text="Tell a friend about this App"
                     android:textColor="@color/text_success"
                     android:textSize="@dimen/font_size_medium" />

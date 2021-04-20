@@ -9,6 +9,10 @@ import android.os.Vibrator;
 
 public class OsHelper {
 
+    public static boolean isKitkatOrLater() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+    }
+
     public static boolean isLollipopOrLater() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }

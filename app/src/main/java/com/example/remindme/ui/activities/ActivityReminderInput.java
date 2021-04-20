@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.R;
 import com.example.remindme.helpers.ActivityHelper;
+import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
@@ -232,7 +233,7 @@ public class ActivityReminderInput
                                 reminderModel.setOriginalTime(alertTime.getTime());
                                 refreshForm();
                             }
-                        }, mHour, mMinute, false);
+                        }, mHour, mMinute, AppSettingsHelper.getInstance().isUse24hourTime());
                 timePickerDialog.show();
             }
         });
