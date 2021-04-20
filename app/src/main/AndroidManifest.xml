@@ -17,6 +17,7 @@
         android:roundIcon="@drawable/ic_brand"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.activities.ActivityAboutApp"></activity>
         <activity android:name=".ui.activities.ActivitySettings" />
 
         <receiver
@@ -51,6 +52,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

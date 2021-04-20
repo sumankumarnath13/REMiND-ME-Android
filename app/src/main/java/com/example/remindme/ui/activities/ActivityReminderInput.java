@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -55,7 +56,7 @@ public class ActivityReminderInput
     private static final int NAME_SPEECH_REQUEST_CODE = 119;
     private static final int NOTE_SPEECH_REQUEST_CODE = 113;
     private static final int RINGTONE_DIALOG_REQ_CODE = 117;
-    private static final String MORE_INPUT = "MORE_INPUT";
+    private static final String MORE_INPUT_UI_STATE = "MORE_INPUT";
 
     private ReminderModel reminderModel = null;
 
@@ -78,6 +79,7 @@ public class ActivityReminderInput
     private SwitchCompat sw_reminder_vibrate;
     private LinearLayout lv_reminder_extra_inputs;
     private ImageView btn_reminder_extra_inputs;
+    private ScrollView sv_container;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -109,7 +111,7 @@ public class ActivityReminderInput
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean(MORE_INPUT, isExtraInputsVisible);
+        outState.putBoolean(MORE_INPUT_UI_STATE, isExtraInputsVisible);
 
         super.onSaveInstanceState(outState);
     }
@@ -120,7 +122,7 @@ public class ActivityReminderInput
         setContentView(R.layout.activity_reminder_input);
 
         if (savedInstanceState != null) {
-            isExtraInputsVisible = savedInstanceState.getBoolean(MORE_INPUT, false);
+            isExtraInputsVisible = savedInstanceState.getBoolean(MORE_INPUT_UI_STATE, false);
         }
 
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
@@ -165,7 +167,7 @@ public class ActivityReminderInput
                 if (sw_reminder_repeat.isChecked()) {
                     repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY); // Default
                 } else {
-                    repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.NONE);
+                    repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.OFF);
                 }
 
                 if (reminderModel.trySetRepeatSettingChanges()) {
@@ -386,15 +388,12 @@ public class ActivityReminderInput
         btn_reminder_extra_inputs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!isExtraInputsVisible) {
-                    isExtraInputsVisible = true;
-                    btn_reminder_extra_inputs.setVisibility(View.GONE);
-                }
-
+                isExtraInputsVisible = !isExtraInputsVisible;
                 refreshForm();
             }
         });
+
+        sv_container = findViewById(R.id.sv_container);
 
         refreshForm();
     }
@@ -431,7 +430,7 @@ public class ActivityReminderInput
         tv_reminder_snooze_summary.setText(reminderModel.getSnoozeModel().toString());
 
         sw_reminder_snooze.setChecked(reminderModel.getSnoozeModel().isEnable);
-        sw_reminder_repeat.setChecked(reminderModel.getRepeatOption() != ReminderRepeatModel.ReminderRepeatOptions.NONE);
+        sw_reminder_repeat.setChecked(reminderModel.getRepeatOption() != ReminderRepeatModel.ReminderRepeatOptions.OFF);
 
         sw_reminder_tone.setChecked(reminderModel.isEnableTone());
         sw_reminder_vibrate.setChecked(reminderModel.isEnableVibration());
@@ -459,10 +458,20 @@ public class ActivityReminderInput
         tv_reminder_tone_summary.setText(reminderModel.getRingToneUriSummary(this));
 
         if (isExtraInputsVisible) {
-            //btn_reminder_extra_inputs.setText("Hide");
+            btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_up);
+            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(R.color.bg_danger), android.graphics.PorterDuff.Mode.SRC_IN);
+
             lv_reminder_extra_inputs.setVisibility(View.VISIBLE);
+            sv_container.post(new Runnable() {
+                @Override
+                public void run() {
+                    sv_container.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            });
         } else {
-            //btn_reminder_extra_inputs.setText("Show more");
+            btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_down);
+            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(R.color.bg_success), android.graphics.PorterDuff.Mode.SRC_IN);
+
             lv_reminder_extra_inputs.setVisibility(View.GONE);
         }
 

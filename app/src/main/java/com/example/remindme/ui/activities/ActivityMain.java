@@ -97,9 +97,14 @@ public class ActivityMain extends AppCompatActivity {
             case R.id.action_settings:
                 Intent settings_intent = new Intent(this, ActivitySettings.class);
                 startActivity(settings_intent);
-                //Toast.makeText(ActivityMain.this, "Halua", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.action_about_app:
+                Intent aboutAppIntent = new Intent(this, ActivityAboutApp.class);
+                startActivity(aboutAppIntent);
                 break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }

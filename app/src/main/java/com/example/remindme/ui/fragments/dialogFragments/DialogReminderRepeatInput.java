@@ -35,7 +35,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
     private ReminderRepeatModel model;
     private boolean isCancel;
 
-    private RadioButton rdo_reminder_repeat_none;
+    private RadioButton rdo_reminder_repeat_off;
     private RadioButton rdo_reminder_repeat_hourly;
     private RadioButton rdo_reminder_repeat_hourly_custom;
     private RadioButton rdo_reminder_repeat_daily;
@@ -100,11 +100,11 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
                     }
                 });
 
-        rdo_reminder_repeat_none = view.findViewById(R.id.rdo_reminder_repeat_none);
-        rdo_reminder_repeat_none.setOnClickListener(new RadioButton.OnClickListener() {
+        rdo_reminder_repeat_off = view.findViewById(R.id.rdo_reminder_repeat_off);
+        rdo_reminder_repeat_off.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.NONE);
+                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.OFF);
                 refresh();
             }
         });
@@ -208,7 +208,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
 
                 if (isChecked) { // Use a default repeat end to next month
 
-                    if (model.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.NONE) {
+                    if (model.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.OFF) {
                         buttonView.setChecked(false);
                         ToastHelper.showShort(view.getContext(), "Cannot enable repeat ending if its set to None.");
                         return;
@@ -307,7 +307,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         isRefreshing = true;
         // No radio group wont work for the given layout. So resetting programmatically is required.
 
-        rdo_reminder_repeat_none.setChecked(false);
+        rdo_reminder_repeat_off.setChecked(false);
         rdo_reminder_repeat_hourly.setChecked(false);
         rdo_reminder_repeat_hourly_custom.setChecked(false);
         rdo_reminder_repeat_daily.setChecked(false);
@@ -321,8 +321,8 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
 
         switch (model.getRepeatOption()) {
             default:
-            case NONE:
-                rdo_reminder_repeat_none.setChecked(true);
+            case OFF:
+                rdo_reminder_repeat_off.setChecked(true);
                 break;
             case HOURLY:
                 rdo_reminder_repeat_hourly.setChecked(true);

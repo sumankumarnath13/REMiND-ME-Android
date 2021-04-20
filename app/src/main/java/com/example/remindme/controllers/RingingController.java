@@ -69,6 +69,7 @@ public class RingingController {
         isIncreaseVolume = isGraduallyIncreaseVolume;
 
         if (audioManager != null && playingRingtone != null) {
+
             playingRingtone.setStreamType(AudioManager.STREAM_ALARM);
             if (OsHelper.isOreoOrLater()) {
                 AudioAttributes audioAttributes = new AudioAttributes.Builder()
@@ -82,40 +83,41 @@ public class RingingController {
                     audioFocusGrantStatus = audioManager.requestAudioFocus(audioFocusRequest);
                     isAudioFocusRequested = true;
                 }
+
             } else {
+
                 audioFocusGrantStatus = audioManager.requestAudioFocus(audioFocusChangeListener,
                         AudioManager.STREAM_ALARM, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
                 isAudioFocusRequested = true;
+
             }
 
             if (isAudioFocusRequested && audioFocusGrantStatus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                if (alarmVolumePercentage > 0) {
-                    deviceVolumeIndex = OsHelper.getAlarmVolume(audioManager);
-                    final int possibleMaxVolume = OsHelper.getMaxAlarmVolume(audioManager);
-                    final int possibleMinVolume = OsHelper.getMinAlarmVolume(audioManager);
 
-                    alarmVolumeIndex = Math.max(Math.min(OsHelper.getVolumeFromPercentage(possibleMaxVolume, alarmVolumePercentage), possibleMaxVolume), possibleMinVolume);
-                    isOriginalVolumeAltered = true;
+                if (alarmVolumePercentage == 0) {
+                    alarmVolumePercentage = OsHelper.getAlarmVolumeInPercentage(audioManager);
+                }
 
-                    if (isIncreaseVolume) {
+                deviceVolumeIndex = OsHelper.getAlarmVolume(audioManager);
+                final int possibleMaxVolume = OsHelper.getMaxAlarmVolume(audioManager);
+                final int possibleMinVolume = OsHelper.getMinAlarmVolume(audioManager);
 
-                        ringingVolumeIndex = Math.max(possibleMinVolume, Math.min(1, possibleMaxVolume));
+                alarmVolumeIndex = Math.max(Math.min(OsHelper.getVolumeFromPercentage(possibleMaxVolume, alarmVolumePercentage), possibleMaxVolume), possibleMinVolume);
+                isOriginalVolumeAltered = true;
 
-                        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, ringingVolumeIndex, 0);
-                        playingRingtone.play();
-                        isRinging = true;
+                if (isIncreaseVolume) {
 
-                        volumeUpTimer.start();
+                    ringingVolumeIndex = Math.max(possibleMinVolume, Math.min(1, possibleMaxVolume));
 
-                    } else {
+                    audioManager.setStreamVolume(AudioManager.STREAM_ALARM, ringingVolumeIndex, 0);
+                    playingRingtone.play();
+                    isRinging = true;
 
-                        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, alarmVolumeIndex, 0);
-                        playingRingtone.play();
-                        isRinging = true;
+                    volumeUpTimer.start();
 
-                    }
                 } else {
 
+                    audioManager.setStreamVolume(AudioManager.STREAM_ALARM, alarmVolumeIndex, 0);
                     playingRingtone.play();
                     isRinging = true;
 

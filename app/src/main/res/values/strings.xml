@@ -21,7 +21,7 @@
     <string name="btn_note">Note</string>
     <string name="btn_repeat">Repeat</string>
 
-    <string name="repeat_none">No Repeat</string>
+    <string name="repeat_off">OFF</string>
     <string name="repeat_hourly">Hourly</string>
     <string name="repeat_hourly_custom">Hourly Custom</string>
     <string name="repeat_daily">Daily</string>
@@ -90,6 +90,6 @@
     <string name="search_bar_hint">Search</string>
     <string name="mnu_settings_label">Settings</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="settings_heading">Settings</string>
+    <string name="settings_heading">SETTING</string>
+    <string name="activityAboutAppTitle">ABOUT APP</string>
 </resources>

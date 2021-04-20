@@ -26,5 +26,10 @@
         android:title="@string/mnu_settings_label"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_about_app"
+        android:title="@string/activityAboutAppTitle"
+        app:showAsAction="never" />
+
 
 </menu>

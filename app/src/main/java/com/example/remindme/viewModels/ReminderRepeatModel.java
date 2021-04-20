@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ReminderRepeatModel {
     public enum ReminderRepeatOptions {
-        NONE,
+        OFF,
         HOURLY,
         HOURLY_CUSTOM,
         DAILY,
@@ -38,7 +38,7 @@ public class ReminderRepeatModel {
 
     public void setRepeatOption(ReminderRepeatOptions value) {
         repeatOption = value;
-        if (repeatOption == ReminderRepeatOptions.NONE) {
+        if (repeatOption == ReminderRepeatOptions.OFF) {
             setHasRepeatEnd(false);
         }
     }
@@ -100,7 +100,7 @@ public class ReminderRepeatModel {
 
     private boolean isRepeatEndValid() {
 
-        if (getRepeatOption() == ReminderRepeatOptions.NONE) {
+        if (getRepeatOption() == ReminderRepeatOptions.OFF) {
             return false;
         }
 
@@ -127,7 +127,7 @@ public class ReminderRepeatModel {
     }
 
     public ReminderRepeatModel() {
-        repeatOption = ReminderRepeatOptions.NONE;
+        repeatOption = ReminderRepeatOptions.OFF;
         customHours = new ArrayList<>();
         customDays = new ArrayList<>();
         customWeeks = new ArrayList<>();
@@ -140,7 +140,7 @@ public class ReminderRepeatModel {
         StringBuilder builder = new StringBuilder();
         switch (repeatOption) {
             default:
-            case NONE:
+            case OFF:
                 builder.append("OFF");
                 break;
             case HOURLY:
@@ -321,7 +321,7 @@ public class ReminderRepeatModel {
         StringBuilder builder = new StringBuilder();
         switch (repeatOption) {
             default:
-            case NONE:
+            case OFF:
                 builder.append("OFF");
                 break;
             case HOURLY:

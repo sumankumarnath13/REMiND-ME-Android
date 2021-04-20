@@ -289,7 +289,7 @@ public class ReminderModel extends ViewModel {
 
         switch (from.repeatModel.getRepeatOption()) {
             default:
-            case NONE:
+            case OFF:
                 to.repeatOption = 0;
                 break;
             case HOURLY:
@@ -440,7 +440,7 @@ public class ReminderModel extends ViewModel {
         switch (from.repeatOption) {
             default:
             case 0:
-                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.NONE);
+                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.OFF);
                 break;
             case 1:
                 to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY);

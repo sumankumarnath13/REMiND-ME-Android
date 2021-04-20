@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:paddingHorizontal="@dimen/dp_16"
     tools:context=".ui.activities.ActivityReminderInput">
 
     <LinearLayout
@@ -24,6 +23,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_16"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
@@ -54,8 +54,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/bg_info"
-                        android:layout_marginEnd="@dimen/dp_8"
-                        android:layout_marginRight="@dimen/dp_8"
                         android:layout_marginBottom="@dimen/dp_8"
                         android:gravity="center_horizontal"
                         android:orientation="vertical"
@@ -106,8 +104,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dp_8"
-                    android:layout_marginRight="@dimen/dp_8"
+                    android:background="@drawable/border_bottom"
+                    android:paddingBottom="@dimen/dp_16"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -160,7 +158,7 @@
                         android:id="@+id/mnu_reminder_note"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_16"
+                        android:layout_marginBottom="@dimen/dp_8"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -204,22 +202,20 @@
                         android:id="@+id/mnu_reminder_repeat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_8"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:width="113dp"
                             android:src="@drawable/ic_reminder_repeat"
                             app:tint="@color/bg_info" />
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dp_16"
-                            android:layout_marginLeft="@dimen/dp_16"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginLeft="@dimen/dp_8"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
@@ -249,221 +245,217 @@
 
                     </LinearLayout>
 
-                    <!-- EXTRA INPUTS -->
+                </LinearLayout>
+
+                <!-- EXTRA EXPAND BUTTON -->
+                <ImageView
+                    android:id="@+id/btn_reminder_extra_inputs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_expand_down"
+                    app:tint="@color/bg_success" />
+
+                <!-- EXTRA INPUTS -->
+                <LinearLayout
+                    android:id="@+id/lv_reminder_extra_inputs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+                    <!--            SNOOZE-->
                     <LinearLayout
-                        android:id="@+id/lv_reminder_extra_inputs"
+                        android:id="@+id/mnu_reminder_snooze"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-                        <!--            SNOOZE-->
-                        <LinearLayout
-                            android:id="@+id/mnu_reminder_snooze"
-                            android:layout_width="match_parent"
+                        android:layout_marginBottom="@dimen/dp_16"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/dp_16"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:src="@drawable/ic_reminder_snooze"
+                            app:tint="@color/bg_gray1" />
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:width="113dp"
-                                android:src="@drawable/ic_reminder_snooze"
-                                app:tint="@color/bg_gray1" />
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/dp_16"
-                                android:layout_marginLeft="@dimen/dp_16"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:text="@string/btn_snooze"
-                                    android:textColor="@color/text_gray2"
-                                    android:textSize="@dimen/font_size_medium"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:id="@+id/tv_reminder_snooze_summary"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:textColor="@color/text_gray1"
-                                    android:textSize="@dimen/font_size_small" />
-
-                            </LinearLayout>
-
-                            <androidx.appcompat.widget.SwitchCompat
-                                android:id="@+id/sw_reminder_snooze"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent" />
-
-                        </LinearLayout>
-
-                        <!--            TONE-->
                         <LinearLayout
-                            android:id="@+id/mnu_reminder_tone"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/dp_16"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:src="@drawable/ic_reminder_sound"
-                                app:tint="@color/bg_warning" />
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/dp_16"
-                                android:layout_marginLeft="@dimen/dp_16"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:text="@string/btn_alarm_sound"
-                                    android:textColor="@color/text_gray2"
-                                    android:textSize="@dimen/font_size_medium"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:id="@+id/tv_reminder_tone_summary"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:textColor="@color/text_gray1"
-                                    android:textSize="@dimen/font_size_small" />
-
-                            </LinearLayout>
-
-                            <androidx.appcompat.widget.SwitchCompat
-                                android:id="@+id/sw_reminder_tone"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent" />
-
-                        </LinearLayout>
-
-                        <!--            VOLUME-->
-                        <LinearLayout
-                            android:id="@+id/alarm_volume_inputs_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/dp_16"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:src="@drawable/ic_sound_volume"
-                                app:tint="@color/bg_success" />
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginLeft="@dimen/dp_8"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/dp_16"
-                                android:layout_marginLeft="@dimen/dp_16"
-                                android:text="@string/alarm_volume_label"
-                                android:textColor="@color/text_gray2"
-                                android:textSize="@dimen/font_size_medium"
-                                android:textStyle="bold" />
-
-                            <SeekBar
-                                android:id="@+id/seeker_alarm_volume"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
-
-                        </LinearLayout>
-
-                        <!--            AUTO VOLUME-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/dp_16"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:src="@drawable/ic_sound_volume_auto"
-                                app:tint="@color/bg_danger" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginStart="@dimen/dp_16"
-                                android:layout_marginLeft="@dimen/dp_16"
-                                android:layout_weight="1"
-                                android:text="@string/increase_volume_gradually_label"
-                                android:textColor="@color/text_gray2"
-                                android:textSize="@dimen/font_size_medium"
-                                android:textStyle="bold" />
-
-                            <androidx.appcompat.widget.SwitchCompat
-                                android:id="@+id/sw_gradually_increase_volume"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                        </LinearLayout>
-
-                        <!--            VIBRATE-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/dp_16"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:src="@drawable/ic_reminder_vibrate"
-                                app:tint="@color/bg_danger" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginStart="@dimen/dp_16"
-                                android:layout_marginLeft="@dimen/dp_16"
-                                android:layout_weight="1"
                                 android:gravity="center_vertical"
-                                android:text="@string/btn_vibration"
+                                android:text="@string/btn_snooze"
                                 android:textColor="@color/text_gray2"
                                 android:textSize="@dimen/font_size_medium"
                                 android:textStyle="bold" />
 
-                            <androidx.appcompat.widget.SwitchCompat
-                                android:id="@+id/sw_reminder_vibrate"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent" />
+                            <TextView
+                                android:id="@+id/tv_reminder_snooze_summary"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/text_gray1"
+                                android:textSize="@dimen/font_size_small" />
 
                         </LinearLayout>
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/sw_reminder_snooze"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent" />
 
                     </LinearLayout>
 
-                    <!-- EXTRA EXPAND BUTTON -->
-                    <ImageView
-                        android:id="@+id/btn_reminder_extra_inputs"
-                        android:background="@drawable/border_bottom"
-                        android:paddingBottom="@dimen/dp_1"
+                    <!--            TONE-->
+                    <LinearLayout
+                        android:id="@+id/mnu_reminder_tone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_expand_down"
-                        app:tint="@color/bg_success" />
+                        android:layout_marginBottom="@dimen/dp_16"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_reminder_sound"
+                            app:tint="@color/bg_warning" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginLeft="@dimen/dp_8"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:text="@string/btn_alarm_sound"
+                                android:textColor="@color/text_gray2"
+                                android:textSize="@dimen/font_size_medium"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_reminder_tone_summary"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/text_gray1"
+                                android:textSize="@dimen/font_size_small" />
+
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/sw_reminder_tone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
+
+                    <!--            VOLUME-->
+                    <LinearLayout
+                        android:id="@+id/alarm_volume_inputs_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_16"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_sound_volume"
+                            app:tint="@color/bg_success" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginLeft="@dimen/dp_8"
+                            android:text="@string/alarm_volume_label"
+                            android:textColor="@color/text_gray2"
+                            android:textSize="@dimen/font_size_medium"
+                            android:textStyle="bold" />
+
+                        <SeekBar
+                            android:id="@+id/seeker_alarm_volume"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                    </LinearLayout>
+
+                    <!--            AUTO VOLUME-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_16"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_sound_volume_auto"
+                            app:tint="@color/bg_danger" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginLeft="@dimen/dp_8"
+                            android:layout_weight="1"
+                            android:text="@string/increase_volume_gradually_label"
+                            android:textColor="@color/text_gray2"
+                            android:textSize="@dimen/font_size_medium"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/sw_gradually_increase_volume"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                    <!--            VIBRATE-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_reminder_vibrate"
+                            app:tint="@color/bg_danger" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginLeft="@dimen/dp_8"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:text="@string/btn_vibration"
+                            android:textColor="@color/text_gray2"
+                            android:textSize="@dimen/font_size_medium"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/sw_reminder_vibrate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

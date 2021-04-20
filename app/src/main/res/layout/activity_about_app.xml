@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".ui.activities.ActivitySettings">
+    tools:context=".ui.activities.ActivityAboutApp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,26 +54,13 @@
                 android:orientation="horizontal"
                 android:paddingVertical="@dimen/dp_16">
 
-                <!--        <ImageView-->
-                <!--            android:layout_width="wrap_content"-->
-                <!--            android:layout_height="match_parent"-->
-                <!--            android:layout_marginRight="@dimen/dp_8"-->
-                <!--            android:layout_marginEnd="@dimen/dp_8"-->
-                <!--            android:src="@drawable/ic_sound_volume"-->
-                <!--            app:tint="@color/bg_success" />-->
-
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="System alarm volume"
-                    android:textColor="@color/text_gray1"
-                    android:textSize="@dimen/font_size_medium" />
-
-                <SeekBar
-                    android:id="@+id/seeker_alarm_stream_volume"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:text="Send feedback"
+                    android:textColor="@color/text_warning"
+                    android:textSize="@dimen/font_size_medium" />
 
             </LinearLayout>
 
@@ -84,25 +71,13 @@
                 android:orientation="horizontal"
                 android:paddingVertical="@dimen/dp_16">
 
-                <!--        <ImageView-->
-                <!--            android:layout_width="wrap_content"-->
-                <!--            android:layout_height="match_parent"-->
-                <!--            android:layout_marginRight="@dimen/dp_8"-->
-                <!--            android:layout_marginEnd="@dimen/dp_8"-->
-                <!--            android:src="@drawable/ic_reminder_dismiss"-->
-                <!--            app:tint="@color/bg_danger" />-->
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Disable all reminders"
-                    android:textColor="@color/text_gray1"
+                    android:text="FAQ (User's guide)"
+                    android:textColor="@color/text_info"
                     android:textSize="@dimen/font_size_medium" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -113,25 +88,31 @@
                 android:orientation="horizontal"
                 android:paddingVertical="@dimen/dp_16">
 
-                <!--        <ImageView-->
-                <!--            android:layout_width="wrap_content"-->
-                <!--            android:layout_height="match_parent"-->
-                <!--            android:layout_marginRight="@dimen/dp_8"-->
-                <!--            android:layout_marginEnd="@dimen/dp_8"-->
-                <!--            android:src="@drawable/ic_reminder_dismiss"-->
-                <!--            app:tint="@color/bg_danger" />-->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="License Info"
+                    android:textColor="@color/text_gray2"
+                    android:textSize="@dimen/font_size_medium" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_vertical"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingVertical="@dimen/dp_16">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Use 24 hour format"
-                    android:textColor="@color/text_gray1"
+                    android:text="Tell a friend about this App"
+                    android:textColor="@color/text_success"
                     android:textSize="@dimen/font_size_medium" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
