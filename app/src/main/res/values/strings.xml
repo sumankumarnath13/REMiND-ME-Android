@@ -88,8 +88,7 @@
     <string name="alarm_volume_label">Alarm volume</string>
     <string name="repeat_other">Other</string>
     <string name="search_bar_hint">Search</string>
-    <string name="mnu_settings_label">Settings</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="settings_heading">SETTING</string>
+    <string name="activitySettingsTitle">SETTING</string>
     <string name="activityAboutAppTitle">ABOUT APP</string>
 </resources>

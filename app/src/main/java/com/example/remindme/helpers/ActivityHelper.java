@@ -13,7 +13,8 @@ import com.example.remindme.R;
 
 public class ActivityHelper {
     public static void setTitle(AppCompatActivity activity, String activityTitle) {
-        String divider = " \u2026 ";
+        //String divider = " \u2026 ";
+        String divider = "   >   ";
         String title = null;
         String finalTitle;
         if (activityTitle != null && activityTitle.length() > 0) {

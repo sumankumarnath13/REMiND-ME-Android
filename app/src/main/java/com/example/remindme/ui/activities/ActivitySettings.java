@@ -17,7 +17,7 @@ public class ActivitySettings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        ActivityHelper.setTitle(this, getResources().getString(R.string.settings_heading));
+        ActivityHelper.setTitle(this, getResources().getString(R.string.activitySettingsTitle));
 
         final AudioManager audioManager = OsHelper.getAudioManager(this);
         final SeekBar seeker_alarm_stream_volume = findViewById(R.id.seeker_alarm_stream_volume);

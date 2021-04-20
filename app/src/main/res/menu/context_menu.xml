@@ -23,7 +23,7 @@
 
     <item
         android:id="@+id/action_settings"
-        android:title="@string/mnu_settings_label"
+        android:title="@string/activitySettingsTitle"
         app:showAsAction="never" />
 
     <item
