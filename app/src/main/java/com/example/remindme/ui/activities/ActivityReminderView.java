@@ -86,28 +86,22 @@ public class ActivityReminderView extends AppCompatActivity {
 
             final String id = ReminderModel.getReminderId(intent);
 
-            Realm r = Realm.getDefaultInstance();
+            final Realm r = Realm.getDefaultInstance();
 
-            r.executeTransaction(new Realm.Transaction() {
-                @Override
-                @ParametersAreNonnullByDefault
-                public void execute(Realm realm) {
-                    RealmResults<DismissedReminder> results = realm.where(DismissedReminder.class)
-                            .equalTo("id", id).findAll();
+            RealmResults<DismissedReminder> results = r.where(DismissedReminder.class)
+                    .equalTo("id", id).findAll();
 
-                    if (results.size() == 0) {
+            if (results.size() == 0) {
 
-                        ToastHelper.showLong(ActivityReminderView.this, "Reminder not found");
+                ToastHelper.showLong(ActivityReminderView.this, "Reminder not found");
 
-                        finish();
+                finish();
 
-                    } else {
+            } else {
 
-                        dismissedReminder = results.get(0);
+                dismissedReminder = results.get(0);
 
-                    }
-                }
-            });
+            }
         }
 
         tv_reminder_time = findViewById(R.id.tv_reminder_time);
@@ -119,13 +113,39 @@ public class ActivityReminderView extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (activeReminder != null) {
+
                     activeReminder.deleteAndCancelAlert(getApplicationContext());
+
                     finish();
+
                 } else if (dismissedReminder != null) {
-                    dismissedReminder.deleteFromRealm();
+
+                    final Realm realm = Realm.getDefaultInstance();
+
+                    final RealmResults<DismissedReminder> results = realm.where(DismissedReminder.class).equalTo("id", dismissedReminder.id).findAll();
+
+                    if (results.size() == 0) {
+
+                        ToastHelper.showLong(ActivityReminderView.this, "Reminder not found");
+
+                    } else {
+
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @ParametersAreNonnullByDefault
+                            @Override
+                            public void execute(Realm realm) {
+                                results.deleteAllFromRealm();
+                            }
+                        });
+
+                    }
+
                     finish();
+
                 }
+
             }
         });
 
