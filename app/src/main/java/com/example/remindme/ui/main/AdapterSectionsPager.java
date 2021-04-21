@@ -22,6 +22,7 @@ public class AdapterSectionsPager extends FragmentPagerAdapter {
             R.string.tab_text_1,
             R.string.tab_text_3
     };
+
     private final Context mContext;
 
     public AdapterSectionsPager(Context context, FragmentManager fm) {

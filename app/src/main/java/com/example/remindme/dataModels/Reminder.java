@@ -5,11 +5,14 @@ import java.util.Date;
 import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.RealmObject;
+import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
 
-public class ActiveReminder extends RealmObject implements RealmModel {
+public class Reminder extends RealmObject implements RealmModel {
     @PrimaryKey
     public String id;
+    @Index
+    public boolean expired;
     public int alarmIntentId;
     public String name;
     public String note;

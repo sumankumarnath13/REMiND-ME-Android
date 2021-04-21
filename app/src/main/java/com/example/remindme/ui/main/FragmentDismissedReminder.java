@@ -50,7 +50,7 @@ public class FragmentDismissedReminder extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_dismissed_reminder, container, false);
+        final View view = inflater.inflate(R.layout.fragment_dismissed_reminder, container, false);
 
         // Inflate the layout for this fragment
         recyclerView = view.findViewById(R.id.recycler_reminders);
@@ -69,7 +69,7 @@ public class FragmentDismissedReminder extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(ReminderModel.getDismissedReminders(null), EnumReminderTypes.Dismissed);
+        final RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(ReminderModel.getDismissedReminders(null));
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -88,7 +88,7 @@ public class FragmentDismissedReminder extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(ReminderModel.getDismissedReminders(newText), EnumReminderTypes.Dismissed);
+                RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(ReminderModel.getDismissedReminders(newText));
                 recyclerView.setAdapter(mAdapter);
                 return true;
             }

@@ -8,12 +8,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.remindme.R;
-import com.example.remindme.dataModels.ActiveReminder;
+import com.example.remindme.dataModels.Reminder;
 import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
@@ -61,7 +62,7 @@ public class ActivitySettings extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settingsHelper.setDisableAllReminders(isChecked);
-                List<ActiveReminder> list = ReminderModel.getActiveReminders(null);
+                List<Reminder> list = ReminderModel.getActiveReminders(null);
                 if (isChecked) {
                     for (int i = 0; i < list.size(); i++) {
                         ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
@@ -71,9 +72,8 @@ public class ActivitySettings extends AppCompatActivity {
                     for (int i = 0; i < list.size(); i++) {
                         ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
                         if (reminderModel.isEnabled()) {
-                            if (reminderModel.trySetEnabled(ActivitySettings.this, true)) {
-                                reminderModel.trySaveAndSetAlert(ActivitySettings.this, true, false);
-                            }
+                            reminderModel.trySetEnabled(ActivitySettings.this, true);
+                            reminderModel.trySaveAndSetAlert(ActivitySettings.this, true, false);
                         }
                     }
                 }
@@ -98,5 +98,17 @@ public class ActivitySettings extends AppCompatActivity {
                 startActivity(faqIntent);
             }
         });
+
+        final TextView tv_active_reminder_count = findViewById(R.id.tv_active_reminder_count);
+
+        int x = ReminderModel.getActiveReminders(null).size();
+
+        tv_active_reminder_count.setText(Integer.toString(x));
+
+        final TextView tv_expired_reminder_count = findViewById(R.id.tv_expired_reminder_count);
+
+        int y = ReminderModel.getDismissedReminders(null).size();
+
+        tv_expired_reminder_count.setText(Integer.toString(y));
     }
 }

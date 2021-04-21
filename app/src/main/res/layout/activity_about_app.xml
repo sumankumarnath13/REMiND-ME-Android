@@ -1,129 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
     tools:context=".ui.activities.ActivityAboutApp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/border_bottom"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingVertical="@dimen/dp_16">
+        android:layout_marginHorizontal="@dimen/dp_16"
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="@dimen/dp_139"
-            android:layout_height="@dimen/dp_139"
-            android:src="@drawable/ic_brand" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Version"
-            android:textColor="@color/text_dim"
-            android:textSize="@dimen/font_size_small" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1.1.1"
-            android:textColor="@color/text_soothing"
-            android:textSize="@dimen/font_size_large" />
-
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/dp_16"
-            android:orientation="vertical">
+            android:background="@drawable/border_bottom"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/dp_16">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="@dimen/dp_139"
+                android:layout_height="@dimen/dp_139"
+                android:src="@drawable/ic_brand" />
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:text="Version"
+                android:textColor="@color/text_dim"
+                android:textSize="@dimen/font_size_small" />
 
-                <Button
-                    android:id="@+id/btn_send_feedback"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAlignment="textStart"
-                    android:gravity="start|center"
-                    android:text="Send feedback"
-                    android:textColor="@color/text_warning"
-                    android:textSize="@dimen/font_size_medium" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btn_view_faq"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAlignment="textStart"
-                    android:gravity="start|center"
-                    android:text="FAQ (User's guide)"
-                    android:textColor="@color/text_info"
-                    android:textSize="@dimen/font_size_medium" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btn_view_license"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAlignment="textStart"
-                    android:gravity="start|center"
-                    android:text="License Info"
-                    android:textColor="@color/text_dim"
-                    android:textSize="@dimen/font_size_medium" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_vertical"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btn_share_app"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAlignment="textStart"
-                    android:gravity="start|center"
-                    android:text="Tell a friend about this App"
-                    android:textColor="@color/text_success"
-                    android:textSize="@dimen/font_size_medium" />
-
-            </LinearLayout>
+                android:text="1.1.1"
+                android:textColor="@color/text_soothing"
+                android:textSize="@dimen/font_size_large" />
 
         </LinearLayout>
 
-    </ScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-</LinearLayout>
+            <Button
+                android:id="@+id/btn_send_feedback"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start|center"
+                android:text="Send feedback"
+                android:textAlignment="textStart"
+                android:textColor="@color/text_warning"
+                android:textSize="@dimen/font_size_medium" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_view_faq"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start|center"
+                android:text="FAQ (User's guide)"
+                android:textAlignment="textStart"
+                android:textColor="@color/text_info"
+                android:textSize="@dimen/font_size_medium" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_view_license"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start|center"
+                android:text="License Info"
+                android:textAlignment="textStart"
+                android:textColor="@color/text_dim"
+                android:textSize="@dimen/font_size_medium" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_share_app"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start|center"
+                android:text="Tell a friend about this App"
+                android:textAlignment="textStart"
+                android:textColor="@color/text_success"
+                android:textSize="@dimen/font_size_medium" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

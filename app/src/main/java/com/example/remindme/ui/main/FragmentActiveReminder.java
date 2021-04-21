@@ -50,7 +50,7 @@ public class FragmentActiveReminder extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_active_reminder, container, false);
+        final View view = inflater.inflate(R.layout.fragment_active_reminder, container, false);
 
         // Inflate the layout for this fragment
         recyclerView = view.findViewById(R.id.recycler_reminders);
@@ -98,7 +98,7 @@ public class FragmentActiveReminder extends Fragment {
     }
 
     public void search(String input) {
-        RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(ReminderModel.getActiveReminders(input), EnumReminderTypes.Active);
+        final RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(ReminderModel.getActiveReminders(input));
         recyclerView.setAdapter(mAdapter);
     }
 }

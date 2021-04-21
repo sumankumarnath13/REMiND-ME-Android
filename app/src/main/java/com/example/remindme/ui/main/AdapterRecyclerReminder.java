@@ -14,8 +14,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.remindme.R;
-import com.example.remindme.dataModels.ActiveReminder;
-import com.example.remindme.dataModels.DismissedReminder;
+import com.example.remindme.dataModels.Reminder;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
@@ -24,16 +23,13 @@ import com.example.remindme.viewModels.ReminderModel;
 
 import java.util.List;
 
-import io.realm.RealmObject;
 
 public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecyclerReminder.ReminderHolder> {
 
-    private final List<? extends RealmObject> _data;
-    private final EnumReminderTypes reminderType;
+    private final List<Reminder> _data;
 
-    public AdapterRecyclerReminder(List<? extends RealmObject> data, EnumReminderTypes type) {
+    public AdapterRecyclerReminder(List<Reminder> data) {
         this._data = data;
-        this.reminderType = type;
     }
 
     @NonNull
@@ -42,7 +38,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
         LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.layout_recycler_reminder_item, parent, false);
 
-        return new ReminderHolder(v, reminderType);
+        return new ReminderHolder(v);
     }
 
     @Override
@@ -59,7 +55,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
         final LinearLayout lv_reminder_last_missed_time = holder.linearLayout.findViewById(R.id.lv_reminder_last_missed_time);
         final TextView tv_reminder_last_missed_time = holder.linearLayout.findViewById(R.id.tv_reminder_last_missed_time);
-        final RealmObject reminder = _data.get(position);
+        final Reminder reminder = _data.get(position);
 
 
         if (reminder == null) {
@@ -73,21 +69,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 if (context == null) return;
 
                 final Intent intent = new Intent(context, ActivityReminderView.class);
-
-                if (reminderType == EnumReminderTypes.Active) {
-
-                    final ActiveReminder activeReminder = (ActiveReminder) reminder;
-                    intent.putExtra(ReminderModel.REMINDER_ID_INTENT, activeReminder.id);
-                    intent.putExtra(ReminderModel.INTENT_ATTR_FROM, ReminderModel.INTENT_ATTR_FROM_ACTIVE);
-
-                } else {
-
-                    final DismissedReminder dismissedReminder = (DismissedReminder) reminder;
-                    intent.putExtra(ReminderModel.REMINDER_ID_INTENT, dismissedReminder.id);
-                    intent.putExtra(ReminderModel.INTENT_ATTR_FROM, ReminderModel.INTENT_ATTR_FROM_DISMISSED);
-
-                }
-
+                intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminder.id);
                 context.startActivity(intent);
             }
         });
@@ -104,17 +86,16 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                     return;
                 }
 
-                ReminderModel reminderModel = ReminderModel.getInstance((ActiveReminder) reminder);
+                ReminderModel reminderModel = ReminderModel.getInstance(reminder);
 
                 final Context context = buttonView.getContext();
 
                 if (reminderModel.trySetEnabled(context, isChecked)) {
-                    if (reminderModel.trySaveAndSetAlert(context, true, true)) {
-                        buttonView.setChecked(isChecked);
-                        if (isChecked) {
-                            time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
-                            date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
-                        }
+                    reminderModel.trySaveAndSetAlert(context, true, true);
+                    buttonView.setChecked(isChecked);
+                    if (isChecked) {
+                        time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
+                        date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
                     }
                 }
             }
@@ -123,53 +104,38 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
         isRefreshing = true;
 
-        if (reminderType == EnumReminderTypes.Active) {
-            ReminderModel reminderModel = ReminderModel.getInstance((ActiveReminder) reminder);
+        final ReminderModel reminderModel = ReminderModel.getInstance(reminder);
 
-            time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
-            date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
-            enabled.setChecked(reminderModel.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
+        time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
+        date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
+        tv_reminder_repeat_short_summary.setText(reminderModel.getRepeatSettingShortString());
 
-            tv_reminder_repeat_short_summary.setText(reminderModel.getRepeatSettingShortString());
-
-            if (reminderModel.getNextSnoozeOffTime() != null) {
-                lv_reminder_view_snooze.setVisibility(View.VISIBLE);
-                next_snooze.setText(StringHelper.toTime(reminderModel.getNextSnoozeOffTime()));
-            } else {
-                lv_reminder_view_snooze.setVisibility(View.GONE);
-
-                if (reminderModel.getLastMissedTime() != null) {
-                    lv_reminder_last_missed_time.setVisibility(View.VISIBLE);
-                    tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(reminderModel.getLastMissedTime()));
-                } else {
-                    lv_reminder_last_missed_time.setVisibility(View.GONE);
-                }
-
-            }
-
-            if (StringHelper.isNullOrEmpty(reminderModel.getName())) {
-                name.setVisibility(View.GONE);
-            } else {
-                name.setText(reminderModel.getName());
-                name.setVisibility(View.VISIBLE);
-            }
-
-
+        if (StringHelper.isNullOrEmpty(reminderModel.getName())) {
+            name.setVisibility(View.GONE);
         } else {
-            final DismissedReminder dismissedReminder = (DismissedReminder) reminder;
+            name.setText(reminderModel.getName());
+            name.setVisibility(View.VISIBLE);
+        }
 
+        if (reminderModel.getLastMissedTime() != null) {
+            lv_reminder_last_missed_time.setVisibility(View.VISIBLE);
+            tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(reminderModel.getLastMissedTime()));
+        } else {
+            lv_reminder_last_missed_time.setVisibility(View.GONE);
+        }
+
+        if (reminderModel.getNextSnoozeOffTime() != null) {
+            lv_reminder_view_snooze.setVisibility(View.VISIBLE);
+            next_snooze.setText(StringHelper.toTime(reminderModel.getNextSnoozeOffTime()));
+        } else {
+            lv_reminder_view_snooze.setVisibility(View.GONE);
+        }
+
+        if (reminderModel.isExpired()) {
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_dim));
-
-            time.setText(StringHelper.toTime(dismissedReminder.time));
-            date.setText(StringHelper.toWeekdayDate(dismissedReminder.time));
             enabled.setVisibility(View.GONE);
-
-            if (StringHelper.isNullOrEmpty(dismissedReminder.name)) {
-                name.setVisibility(View.GONE);
-            } else {
-                name.setText(dismissedReminder.name);
-                name.setVisibility(View.VISIBLE);
-            }
+        } else {
+            enabled.setChecked(reminderModel.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
         }
 
         isRefreshing = false;
@@ -186,12 +152,12 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
     public static class ReminderHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public final LinearLayout linearLayout;
-        public final EnumReminderTypes reminderType;
+        //public final EnumReminderTypes reminderType;
 
-        public ReminderHolder(LinearLayout v, EnumReminderTypes t) {
+        public ReminderHolder(LinearLayout v) {
             super(v);
             linearLayout = v;
-            reminderType = t;
+            //reminderType = t;
         }
     }
 }

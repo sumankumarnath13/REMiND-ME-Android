@@ -52,8 +52,6 @@ public class ActivityReminderInput
         DialogReminderRepeatInput.IRepeatInputDialogListener,
         DialogReminderSnoozeInput.ISnoozeInputDialogListener {
 
-    private static final String INTENT_FROM = "FROM";
-    private static final String FLAG_REMINDER_TYPE_ACTIVE = "ACTIVE";
     private static final int NAME_SPEECH_REQUEST_CODE = 119;
     private static final int NOTE_SPEECH_REQUEST_CODE = 113;
     private static final int RINGTONE_DIALOG_REQ_CODE = 117;
@@ -128,21 +126,14 @@ public class ActivityReminderInput
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
 
         if (reminderModel.isNew()) { // First time creating the activity
-            //Check intents
-            final String reminderType = getIntent().getStringExtra(INTENT_FROM);
-            // Open if intent is update
-            if (FLAG_REMINDER_TYPE_ACTIVE.equals(reminderType)) {
-                if (reminderModel.setInstance(getIntent())) {
-                    // Everything looks good so far. Set the title as Update
-                    ActivityHelper.setTitle(this, getResources().getString(R.string.edit_reminder_heading));
-                } else {
-                    // Close the activity if intent was update bu no existing reminder found!
-                    ToastHelper.showError(this, "Reminder not found!");
-                    finish();
-                }
-            } else { // Advance the time 1 hour if intent is new
+
+            if (reminderModel.setInstance(getIntent())) {
+                // Everything looks good so far. Set the title as Update
+                ActivityHelper.setTitle(this, getResources().getString(R.string.edit_reminder_heading));
+            } else {
                 ActivityHelper.setTitle(this, getResources().getString(R.string.new_reminder_heading));
             }
+
         }
 
         tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
@@ -228,7 +219,6 @@ public class ActivityReminderInput
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                 alertTime.set(Calendar.MINUTE, minute);
-                                alertTime.set(Calendar.SECOND, 0); // Setting second to 0 is important.
                                 reminderModel.setOriginalTime(alertTime.getTime());
                                 refreshForm();
                             }
@@ -322,11 +312,12 @@ public class ActivityReminderInput
         btn_reminder_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (reminderModel.trySaveAndSetAlert(getApplicationContext(), reminderModel.isHasDifferentTimeCalculated(), true)) {
-                    finish();
+                if (reminderModel.getAlertTime().after(Calendar.getInstance().getTime())) {
+                    reminderModel.trySaveAndSetAlert(getApplicationContext(), reminderModel.isHasDifferentTimeCalculated(), true);
                 } else {
-                    ToastHelper.showLong(ActivityReminderInput.this, "Time cannot be set in past!");
+                    ToastHelper.showShort(ActivityReminderInput.this, "Cannot save reminder in past");
                 }
+                finish();
             }
         });
 

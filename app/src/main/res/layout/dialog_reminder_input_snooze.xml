@@ -16,7 +16,7 @@
             android:textColor="@color/text_soothing"
             android:textSize="@dimen/font_size_large"
             android:layout_marginBottom="@dimen/dp_16"
-            android:text="@string/snooze_heading"></androidx.appcompat.widget.SwitchCompat>
+            android:text="@string/snooze_heading" />
 
     <TextView
         android:layout_width="match_parent"

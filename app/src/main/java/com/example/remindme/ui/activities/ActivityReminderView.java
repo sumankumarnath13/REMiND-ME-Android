@@ -14,17 +14,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.remindme.R;
-import com.example.remindme.dataModels.DismissedReminder;
 import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class ActivityReminderView extends AppCompatActivity {
     private static final String MISSED_ALERT_UI_STATE = "STATE";
@@ -39,7 +34,6 @@ public class ActivityReminderView extends AppCompatActivity {
     private TextView tv_missed_alerts;
     private SwitchCompat enabled;
     private ReminderModel activeReminder;
-    private DismissedReminder dismissedReminder;
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -64,44 +58,12 @@ public class ActivityReminderView extends AppCompatActivity {
             return;
         }
 
-        final String from = intent.getStringExtra(ReminderModel.INTENT_ATTR_FROM);
+        activeReminder = ReminderModel.getInstance(getIntent());
 
-        if (StringHelper.isNullOrEmpty(from)) {
+        if (activeReminder == null) {
             ToastHelper.showLong(ActivityReminderView.this, "Reminder not found");
             finish();
             return;
-        }
-
-        if (ReminderModel.INTENT_ATTR_FROM_ACTIVE.equals(from)) {
-
-            activeReminder = ReminderModel.getInstance(getIntent());
-
-            if (activeReminder == null) {
-                ToastHelper.showLong(ActivityReminderView.this, "Reminder not found");
-                finish();
-                return;
-            }
-
-        } else {
-
-            final String id = ReminderModel.getReminderId(intent);
-
-            final Realm r = Realm.getDefaultInstance();
-
-            RealmResults<DismissedReminder> results = r.where(DismissedReminder.class)
-                    .equalTo("id", id).findAll();
-
-            if (results.size() == 0) {
-
-                ToastHelper.showLong(ActivityReminderView.this, "Reminder not found");
-
-                finish();
-
-            } else {
-
-                dismissedReminder = results.get(0);
-
-            }
         }
 
         tv_reminder_time = findViewById(R.id.tv_reminder_time);
@@ -113,39 +75,8 @@ public class ActivityReminderView extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (activeReminder != null) {
-
-                    activeReminder.deleteAndCancelAlert(getApplicationContext());
-
-                    finish();
-
-                } else if (dismissedReminder != null) {
-
-                    final Realm realm = Realm.getDefaultInstance();
-
-                    final RealmResults<DismissedReminder> results = realm.where(DismissedReminder.class).equalTo("id", dismissedReminder.id).findAll();
-
-                    if (results.size() == 0) {
-
-                        ToastHelper.showLong(ActivityReminderView.this, "Reminder not found");
-
-                    } else {
-
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @ParametersAreNonnullByDefault
-                            @Override
-                            public void execute(Realm realm) {
-                                results.deleteAllFromRealm();
-                            }
-                        });
-
-                    }
-
-                    finish();
-
-                }
-
+                activeReminder.deleteAndCancelAlert(getApplicationContext());
+                finish();
             }
         });
 
@@ -154,19 +85,9 @@ public class ActivityReminderView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent input_i = new Intent(getApplicationContext(), ActivityReminderInput.class);
-                input_i.putExtra(ReminderModel.INTENT_ATTR_FROM, from);
-
-                if (activeReminder != null) {
-                    ReminderModel.setReminderId(input_i, activeReminder.getId());
-                    startActivity(input_i);
-                    finish();
-
-                } else if (dismissedReminder != null) {
-                    ReminderModel.setReminderId(input_i, dismissedReminder.id);
-                    startActivity(input_i);
-                    finish();
-
-                }
+                ReminderModel.setReminderId(input_i, activeReminder.getId());
+                startActivity(input_i);
+                finish();
             }
         });
 
@@ -176,12 +97,11 @@ public class ActivityReminderView extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isRefreshing) return;
 
-                if (activeReminder != null) {
+                if (activeReminder != null && !activeReminder.isExpired()) {
 
                     if (AppSettingsHelper.getInstance().isDisableAllReminders()) { // Ignore if its blocked globally
 
                         buttonView.setChecked(false);
-
                         ToastHelper.showShort(buttonView.getContext(), "All reminders are disabled in settings");
 
                     } else {
@@ -214,8 +134,6 @@ public class ActivityReminderView extends AppCompatActivity {
 
         isRefreshing = true;
 
-        enabled.setVisibility(View.GONE);
-
         if (activeReminder != null) {
 
             tv_reminder_time.setText(StringHelper.toTime(activeReminder.getOriginalTime()));
@@ -231,8 +149,12 @@ public class ActivityReminderView extends AppCompatActivity {
                 next_snooze.setText(StringHelper.toTime(activeReminder.getNextSnoozeOffTime()));
             }
 
-            enabled.setVisibility(View.VISIBLE);
-            enabled.setChecked(activeReminder.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
+            if (activeReminder.isExpired()) {
+                enabled.setVisibility(View.GONE);
+            } else {
+                enabled.setVisibility(View.VISIBLE);
+                enabled.setChecked(activeReminder.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
+            }
 
             final TextView tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
             tv_reminder_snooze_summary.setText(activeReminder.getSnoozeModel().toString());
@@ -332,11 +254,6 @@ public class ActivityReminderView extends AppCompatActivity {
                 lv_reminder_details.setVisibility(View.VISIBLE);
             }
 
-        } else if (dismissedReminder != null) {
-            tv_reminder_time.setText(StringHelper.toTime(dismissedReminder.time));
-            tv_reminder_date.setText(StringHelper.toWeekdayDate(dismissedReminder.time));
-            tv_reminder_name.setText(dismissedReminder.name);
-            tv_reminder_note.setText(dismissedReminder.note);
         }
 
         isRefreshing = false;
