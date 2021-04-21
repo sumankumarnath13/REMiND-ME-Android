@@ -1,14 +1,15 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="android:windowBackground">@color/bg_black
+        <!--    <style name="AppTheme" parent="Theme.AppCompat.Light">-->
+        <item name="android:windowBackground">@color/theme_background
         </item> <!-- Changes background color -->
         <item name="android:buttonStyle">@style/commonButtonStyle</item>
         <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
         <item name="colorAccent">@color/bg_info</item> <!-- Set button colors etc -->
-        <item name="colorPrimaryDark">@color/bg_black
+        <item name="colorPrimaryDark">@color/theme_background
         </item> <!-- Changes background color or app bar and title -->
-        <item name="colorPrimary">@color/bg_black
+        <item name="colorPrimary">@color/theme_background
         </item> <!-- Changes background color or app bar and title -->
         <item name="android:textCursorDrawable">@null
         </item> <!-- Make edit text cursor color neutral to accent color -->
@@ -22,30 +23,42 @@
     <!--</style>-->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+
     <style name="commonButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/text_gray1</item>
-        <item name="android:background">@color/bg_black</item>
+        <item name="android:textColor">@color/text_soothing</item>
+        <item name="android:background">@color/theme_background</item>
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="android:windowBackground">@color/bg_gray3</item> <!-- Changes background color -->
-        <item name="android:textColorPrimary">@color/text_gray1</item> <!-- Change title text color -->
-        <item name="colorAccent">@color/text_gray1</item> <!-- Changes OK/Cancel button color -->
+        <item name="android:windowBackground">@color/border_color
+        </item> <!-- Changes background color -->
+        <item name="android:textColorPrimary">@color/text_soothing
+        </item> <!-- Change title text color -->
+        <item name="colorAccent">@color/text_soothing</item> <!-- Changes OK/Cancel button color -->
     </style>
+
     <style name="TimePickerDialog" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowBackground">@color/bg_gray3</item> <!-- Changes background color -->
-        <item name="colorControlActivated">@color/text_success</item> <!-- Change selection/cursor color -->
-        <item name="colorControlNormal">@color/bg_gray2</item> <!-- Change clock mode change button tint-->
+        <item name="android:windowBackground">@color/border_color
+        </item> <!-- Changes background color -->
+        <item name="colorControlActivated">@color/text_success
+        </item> <!-- Change selection/cursor color -->
+        <item name="colorControlNormal">@color/controlBackground
+        </item> <!-- Change clock mode change button tint-->
         <item name="tint">@color/bg_warning</item> <!-- Change mode switch color for time picker-->
-        <item name="buttonTint">@color/bg_warning</item><!-- Change mode switch color for time picker in some devices -->
-        <item name="colorAccent">@color/text_gray1</item> <!-- Change OK/Cancel button color -->
+        <item name="buttonTint">@color/bg_warning
+        </item><!-- Change mode switch color for time picker in some devices -->
+        <item name="colorAccent">@color/text_soothing</item> <!-- Change OK/Cancel button color -->
     </style>
+
     <style name="DatePickerDialog" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowBackground">@color/bg_gray3</item> <!-- Changes background color -->
-        <item name="colorControlActivated">@color/text_success</item> <!-- Change selection/cursor color -->
-        <item name="colorAccent">@color/text_gray1</item> <!-- Change OK/Cancel button color -->
+        <item name="android:windowBackground">@color/border_color
+        </item> <!-- Changes background color -->
+        <item name="colorControlActivated">@color/text_success
+        </item> <!-- Change selection/cursor color -->
+        <item name="colorAccent">@color/text_soothing</item> <!-- Change OK/Cancel button color -->
     </style>
 </resources>

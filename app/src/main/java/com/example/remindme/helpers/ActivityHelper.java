@@ -35,7 +35,7 @@ public class ActivityHelper {
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_info)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
         char_pos++;
-        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_gray1)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_soothing)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
         char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_warning)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -48,19 +48,28 @@ public class ActivityHelper {
         char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_success)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
-        char_pos++;
+        //char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_danger)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         //This is the end of fixed Title and dynamic position begins:
         if (title != null) {
-            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_gray2)), finalTitle.length() - title.length(), finalTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_dim)), finalTitle.length() - title.length(), finalTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(new RelativeSizeSpan(1.0f), finalTitle.length() - activityTitle.length(), finalTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             //spannable.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE), finalTitle.length() - title.length(), finalTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             //spannable.setSpan(new UnderlineSpan(), finalTitle.length() - activityTitle.length(), finalTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
 
-        ActionBar bar = activity.getSupportActionBar();
+        final ActionBar bar = activity.getSupportActionBar();
+//        final View view = bar.getCustomView();
+//        if (view != null) {
+//            final TextView tv_toolbar_app_title = bar.getCustomView().findViewById(R.id.tv_toolbar_app_title);
+//            tv_toolbar_app_title.setText("OLA HOLA");
+//
+//            final TextView tv_toolbar_activity_title = bar.getCustomView().findViewById(R.id.tv_toolbar_activity_title);
+//            tv_toolbar_activity_title.setText("HOLA OLA");
+//        }
+
         if (bar != null) {
             bar.setTitle(spannable);
         }

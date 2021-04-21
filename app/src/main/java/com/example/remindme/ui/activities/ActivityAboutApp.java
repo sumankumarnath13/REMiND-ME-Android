@@ -23,14 +23,12 @@ public class ActivityAboutApp extends AppCompatActivity {
         btn_send_feedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent email = new Intent(Intent.ACTION_SENDTO);
+                final Intent email = new Intent(Intent.ACTION_SENDTO);
                 email.putExtra(Intent.EXTRA_SUBJECT, "Habla");
                 email.putExtra(Intent.EXTRA_TEXT, "Kebla");
-                //email.setDataAndType(Uri.parse("mailto:sknath25@gmail.com"), "message/rfc822");
                 email.setData(Uri.parse("mailto:sknath25@gmail.com")); // or just "mailto:" for blank
-                //need this to prompts email client only
                 email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
-                startActivity(Intent.createChooser(email, "Choose an Email client :"));
+                startActivity(Intent.createChooser(email, null));
             }
         });
 
@@ -38,9 +36,8 @@ public class ActivityAboutApp extends AppCompatActivity {
         btn_view_faq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent faqIntent = new Intent(ActivityAboutApp.this, ActivityWebView.class);
-                faqIntent.setAction("FAQ");
-                faqIntent.putExtra(ActivityWebView.URL, "https://www.google.co.in");
+                final Intent faqIntent = new Intent(Intent.ACTION_VIEW);
+                faqIntent.setData(Uri.parse("https://www.google.co.in"));
                 startActivity(faqIntent);
             }
         });
@@ -49,9 +46,8 @@ public class ActivityAboutApp extends AppCompatActivity {
         btn_view_license.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent licenseIntent = new Intent(ActivityAboutApp.this, ActivityWebView.class);
-                licenseIntent.setAction("LICENSE");
-                licenseIntent.putExtra(ActivityWebView.URL, "https://www.google.co.in");
+                final Intent licenseIntent = new Intent(Intent.ACTION_VIEW);
+                licenseIntent.setData(Uri.parse("https://www.google.co.in"));
                 startActivity(licenseIntent);
             }
         });
@@ -60,7 +56,7 @@ public class ActivityAboutApp extends AppCompatActivity {
         btn_share_app.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent sendIntent = new Intent();
+                final Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, "DING DONG friends ");
                 sendIntent.setType("text/plain");

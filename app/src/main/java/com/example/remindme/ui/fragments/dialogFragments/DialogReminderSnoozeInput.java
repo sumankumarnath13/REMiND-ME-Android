@@ -71,18 +71,18 @@ public class DialogReminderSnoozeInput extends DialogFragment {
                         rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
                         rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
                         rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
-                        rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_gray1));
+                        rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_soothing));
                         rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
                         rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
                         rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
                     } else {
-                        rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
-                        rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
-                        rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
-                        rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
-                        rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
-                        rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
-                        rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
+                        rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+                        rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+                        rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+                        rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+                        rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+                        rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+                        rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
                     }
                 }
             }
@@ -95,18 +95,18 @@ public class DialogReminderSnoozeInput extends DialogFragment {
                 rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
                 rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
                 rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
-                rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_gray1));
+                rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_soothing));
                 rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
                 rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
                 rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
             } else {
-                rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
-                rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
-                rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
-                rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
-                rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
-                rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
-                rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.bg_gray2));
+                rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+                rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+                rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+                rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+                rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+                rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+                rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
             }
         }
 
@@ -164,7 +164,7 @@ public class DialogReminderSnoozeInput extends DialogFragment {
                             model.countOptions = ReminderSnoozeModel.SnoozeCountOptions.RC;
                         }
 
-                        listener.commitChanges(model);
+                        listener.commitSnoozeChanges();
                     }
                 })
                 .setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
@@ -178,7 +178,7 @@ public class DialogReminderSnoozeInput extends DialogFragment {
     }
 
     public interface ISnoozeInputDialogListener {
-        void commitChanges(ReminderSnoozeModel model);
+        void commitSnoozeChanges();
 
         ReminderSnoozeModel getSnoozeModel();
     }

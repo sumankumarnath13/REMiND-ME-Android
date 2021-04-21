@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Remind Me</string>
-    <string name="app_label">R E M i N D \u0020 M E</string>
+    <string name="app_name">Ding Dong</string>
+    <string name="app_label">D I N G \u0020 D O N G </string>
 
     <string name="dialog_positive">OK</string>
     <string name="dialog_negative">Cancel</string>
@@ -14,14 +14,14 @@
 
     <string name="hint_reminder_name">Give a name …</string>
     <string name="hint_reminder_note">Extra notes …</string>
-    <string name="btn_save">Save</string>
+    <string name="btn_save">Set</string>
     <string name="btn_time">Set Time</string>
     <string name="btn_date">Set Date</string>
     <string name="btn_name">Name</string>
     <string name="btn_note">Note</string>
     <string name="btn_repeat">Repeat</string>
 
-    <string name="repeat_off">OFF</string>
+    <string name="repeat_off">Off</string>
     <string name="repeat_hourly">Hourly</string>
     <string name="repeat_hourly_custom">Hourly Custom</string>
     <string name="repeat_daily">Daily</string>
@@ -79,16 +79,16 @@
 
     <string name="snooze_repeat_heading">Repeat</string>
 
-    <string name="new_reminder_heading">NEW</string>
-    <string name="view_reminder_heading">VIEW</string>
-    <string name="edit_reminder_heading">UPDATE</string>
-    <string name="reminder_alert_heading">DING DONG</string>
+    <string name="new_reminder_heading">New</string>
+    <string name="view_reminder_heading">View</string>
+    <string name="edit_reminder_heading">Update</string>
+    <string name="reminder_alert_heading">Ding Dong</string>
     <string name="heading_calculated_alarm_time">First alert will raise on</string>
     <string name="increase_volume_gradually_label">Auto increase volume</string>
     <string name="alarm_volume_label">Alarm volume</string>
     <string name="repeat_other">Other</string>
     <string name="search_bar_hint">Search</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="activitySettingsTitle">SETTING</string>
-    <string name="activityAboutAppTitle">ABOUT APP</string>
+    <string name="activitySettingsTitle">Settings</string>
+    <string name="activityAboutAppTitle">About App</string>
 </resources>

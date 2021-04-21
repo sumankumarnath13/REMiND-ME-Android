@@ -50,6 +50,7 @@ public class AppSettingsHelper {
         update();
     }
 
+
     private void update() {
         final AppSetting setting = new AppSetting();
         setting.id = ID;

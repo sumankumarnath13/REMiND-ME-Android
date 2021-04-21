@@ -23,17 +23,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Version"
-            android:textColor="@color/text_gray2"
-            android:textSize="@dimen/font_size_small"
-            android:textStyle="bold" />
+            android:textColor="@color/text_dim"
+            android:textSize="@dimen/font_size_small" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1.1.1"
-            android:textColor="@color/text_gray1"
-            android:textSize="@dimen/font_size_large"
-            android:textStyle="bold" />
+            android:textColor="@color/text_soothing"
+            android:textSize="@dimen/font_size_large" />
 
     </LinearLayout>
 
@@ -66,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="System alarm volume"
-                    android:textColor="@color/text_gray1"
+                    android:textColor="@color/text_soothing"
                     android:textSize="@dimen/font_size_medium" />
 
                 <SeekBar
@@ -88,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Disable all reminders"
-                    android:textColor="@color/text_gray1"
+                    android:textColor="@color/text_soothing"
                     android:textSize="@dimen/font_size_medium" />
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -110,13 +108,30 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Use 24 hour format"
-                    android:textColor="@color/text_gray1"
+                    android:textColor="@color/text_soothing"
                     android:textSize="@dimen/font_size_medium" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sw_use_24_hour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_os_setup_faqs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:text="Reminder not working?"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/text_danger" />
 
             </LinearLayout>
 

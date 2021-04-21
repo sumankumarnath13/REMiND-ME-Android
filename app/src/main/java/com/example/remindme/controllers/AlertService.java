@@ -254,7 +254,6 @@ public class AlertService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        servingReminder = new ReminderModel();
         notificationManager = NotificationManagerCompat.from(this);
 
         if (!isInternalBroadcastReceiverRegistered) {
@@ -277,15 +276,16 @@ public class AlertService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (isBusy) {
             // snooze concurrent calls if already serving
-            final ReminderModel newReminder = new ReminderModel();
-            if (newReminder.tryReadFrom(intent)) {
+            final ReminderModel newReminder = ReminderModel.getInstance(intent);
+            if (newReminder != null) {
                 newReminder.snoozeByApp(this.getApplicationContext());
                 NotificationHelper.notify(this.getApplicationContext(), newReminder.getIntId(), "Missed alarm " + StringHelper.toTime(newReminder.getOriginalTime()), newReminder.getName(), newReminder.getNote());
             }
             return START_NOT_STICKY;
         }
 
-        if (!servingReminder.tryReadFrom(intent)) {
+        servingReminder = ReminderModel.getInstance(intent);
+        if (servingReminder == null) {
             // Reminder not found!
             stopService();
             return START_NOT_STICKY;

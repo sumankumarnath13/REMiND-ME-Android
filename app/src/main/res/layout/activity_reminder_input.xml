@@ -46,7 +46,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/btn_date"
-                        android:textColor="@color/text_gray2"
+                        android:textColor="@color/text_dim"
                         android:textSize="@dimen/font_size_medium" />
 
                     <LinearLayout
@@ -77,21 +77,18 @@
                                 android:id="@+id/tv_reminder_trigger_time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_white"
+                                android:textColor="@color/text_bright"
                                 android:textSize="@dimen/font_size_extra_large"
                                 android:textStyle="bold"
                                 android:layout_marginEnd="@dimen/dp_8"
-                                android:layout_marginRight="@dimen/dp_8"
-                                android:text="damba" />
+                                android:layout_marginRight="@dimen/dp_8" />
 
                             <TextView
                                 android:id="@+id/tv_reminder_trigger_date"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_gray1"
-                                android:textSize="@dimen/font_size_large"
-                                android:textStyle="bold"
-                                android:text="humba" />
+                                android:textColor="@color/text_soothing"
+                                android:textSize="@dimen/font_size_large" />
 
                         </LinearLayout>
 
@@ -139,7 +136,7 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/hint_reminder_name"
                                 android:gravity="center_vertical"
-                                android:textColor="@color/text_gray1"
+                                android:textColor="@color/text_soothing"
                                 android:textSize="@dimen/font_size_medium" />
 
                         </LinearLayout>
@@ -183,7 +180,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
                                 android:hint="@string/hint_reminder_note"
-                                android:textColor="@color/text_gray1"
+                                android:textColor="@color/text_soothing"
                                 android:textSize="@dimen/font_size_small" />
 
                         </LinearLayout>
@@ -224,16 +221,15 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
                                 android:text="@string/btn_repeat"
-                                android:textColor="@color/text_gray2"
-                                android:textSize="@dimen/font_size_medium"
-                                android:textStyle="bold" />
+                                android:textColor="@color/text_dim"
+                                android:textSize="@dimen/font_size_medium" />
 
                             <TextView
                                 android:id="@+id/tv_reminder_repeat_summary"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:textColor="@color/text_gray1"
+                                android:textColor="@color/text_soothing"
                                 android:textSize="@dimen/font_size_small" />
 
                         </LinearLayout>
@@ -261,7 +257,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
                     <!--            SNOOZE-->
                     <LinearLayout
                         android:id="@+id/mnu_reminder_snooze"
@@ -275,7 +271,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_reminder_snooze"
-                            app:tint="@color/bg_gray1" />
+                            app:tint="@color/bg_soothing" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -290,16 +286,15 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
                                 android:text="@string/btn_snooze"
-                                android:textColor="@color/text_gray2"
-                                android:textSize="@dimen/font_size_medium"
-                                android:textStyle="bold" />
+                                android:textColor="@color/text_dim"
+                                android:textSize="@dimen/font_size_medium" />
 
                             <TextView
                                 android:id="@+id/tv_reminder_snooze_summary"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:textColor="@color/text_gray1"
+                                android:textColor="@color/text_soothing"
                                 android:textSize="@dimen/font_size_small" />
 
                         </LinearLayout>
@@ -339,16 +334,15 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
                                 android:text="@string/btn_alarm_sound"
-                                android:textColor="@color/text_gray2"
-                                android:textSize="@dimen/font_size_medium"
-                                android:textStyle="bold" />
+                                android:textColor="@color/text_dim"
+                                android:textSize="@dimen/font_size_medium" />
 
                             <TextView
                                 android:id="@+id/tv_reminder_tone_summary"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:textColor="@color/text_gray1"
+                                android:textColor="@color/text_soothing"
                                 android:textSize="@dimen/font_size_small" />
 
                         </LinearLayout>
@@ -381,9 +375,8 @@
                             android:layout_marginStart="@dimen/dp_8"
                             android:layout_marginLeft="@dimen/dp_8"
                             android:text="@string/alarm_volume_label"
-                            android:textColor="@color/text_gray2"
-                            android:textSize="@dimen/font_size_medium"
-                            android:textStyle="bold" />
+                            android:textColor="@color/text_dim"
+                            android:textSize="@dimen/font_size_medium" />
 
                         <SeekBar
                             android:id="@+id/seeker_alarm_volume"
@@ -414,9 +407,8 @@
                             android:layout_marginLeft="@dimen/dp_8"
                             android:layout_weight="1"
                             android:text="@string/increase_volume_gradually_label"
-                            android:textColor="@color/text_gray2"
-                            android:textSize="@dimen/font_size_medium"
-                            android:textStyle="bold" />
+                            android:textColor="@color/text_dim"
+                            android:textSize="@dimen/font_size_medium" />
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/sw_gradually_increase_volume"
@@ -446,9 +438,8 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical"
                             android:text="@string/btn_vibration"
-                            android:textColor="@color/text_gray2"
-                            android:textSize="@dimen/font_size_medium"
-                            android:textStyle="bold" />
+                            android:textColor="@color/text_dim"
+                            android:textSize="@dimen/font_size_medium" />
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/sw_reminder_vibrate"
@@ -477,12 +468,12 @@
             android:id="@+id/btn_reminder_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_16"
-            android:layout_marginRight="@dimen/dp_16"
             android:drawableStart="@drawable/ic_reminder_check"
             android:drawableLeft="@drawable/ic_reminder_check"
             android:drawablePadding="@dimen/dp_3"
             android:drawableTint="@color/bg_success"
+            android:textAlignment="textStart"
+            android:gravity="start|center"
             android:text="@string/btn_save" />
 
     </LinearLayout>

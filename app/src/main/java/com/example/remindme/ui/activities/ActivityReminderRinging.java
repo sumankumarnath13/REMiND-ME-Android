@@ -81,7 +81,7 @@ public class ActivityReminderRinging extends AppCompatActivity {
         }
     };
 
-    private final int[] colors = new int[]{R.color.text_success, R.color.text_info, R.color.text_warning, R.color.text_danger, R.color.text_gray1};
+    private final int[] colors = new int[]{R.color.text_success, R.color.text_info, R.color.text_warning, R.color.text_danger, R.color.text_soothing};
     private int colorIndex = 0;
     private final CountDownTimer currentTimeTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
         @Override

@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.remindme.dataModels.ActiveReminder;
 import com.example.remindme.dataModels.DismissedReminder;
-import com.example.remindme.dataModels.MissedReminder;
+import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.NotificationHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
@@ -61,6 +61,8 @@ public class ReminderModel extends ViewModel {
     public static final String ACTION_CLOSE_ALARM_ACTIVITY = "com.example.remindme.CLOSE.ALARM.ACTIVITY";
 
     public static final String INTENT_ATTR_FROM = "FROM";
+    public static final String INTENT_ATTR_FROM_ACTIVE = "ACTIVE";
+    public static final String INTENT_ATTR_FROM_DISMISSED = "DISMISSED";
     public static final String ALARM_NOTIFICATION_CHANNEL_ID = "z_0EdcKpGP";
     public static final String ALARM_NOTIFICATION_CHANNEL_NAME = "Alarm notifications";
 
@@ -74,6 +76,169 @@ public class ReminderModel extends ViewModel {
     private static Class<? extends BroadcastReceiver> externalBroadcastReceiverClass;
 
     private int alarmVolumePercentage;
+
+    public void setInstance(ActiveReminder from) {
+        id = from.id;
+        intId = from.alarmIntentId;
+        name = from.name;
+        note = from.note;
+        originalTime = from.time;
+
+        lastMissedTime = from.lastMissedTime;
+
+        missedTimes.clear();
+        missedTimes.addAll(from.missedTimes);
+
+        if (from.selectedAlarmTone != null) {
+            ringToneUri = Uri.parse(from.selectedAlarmTone);
+        }
+        isEnableTone = from.isEnableTone;
+        enabled = from.enabled;
+        isEnableVibration = from.vibrate;
+
+        increaseVolumeGradually = from.increaseVolumeGradually;
+        alarmVolumePercentage = from.alarmVolume;
+
+        repeatModel.setReminderTime(from.time);
+        repeatModel.customHours.clear();
+        repeatModel.customDays.clear();
+        repeatModel.customWeeks.clear();
+        repeatModel.customMonths.clear();
+
+        switch (from.repeatOption) {
+            default:
+            case 0:
+                repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.OFF);
+                break;
+            case 1:
+                repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY);
+                break;
+            case 11:
+                repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM);
+                repeatModel.customHours.addAll(from.repeatHours);
+                break;
+            case 2:
+                repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY);
+                break;
+            case 21:
+                repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM);
+                repeatModel.customDays.addAll(from.repeatDays);
+                break;
+            case 3:
+                repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.WEEKLY);
+                break;
+            case 31:
+                repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM);
+                repeatModel.customWeeks.addAll(from.repeatWeeks);
+                break;
+            case 4:
+                repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.MONTHLY);
+                break;
+            case 41:
+                repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM);
+                repeatModel.customMonths.addAll(from.repeatMonths);
+                break;
+            case 5:
+                repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.YEARLY);
+                break;
+            case 6:
+                repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.OTHER);
+                repeatModel.setRepeatCustom(from.customTimeUnit, from.customTimeValue);
+                break;
+        }
+        repeatModel.setRepeatEndDate(from.repeatEndDate);
+        repeatModel.setHasRepeatEnd(from.hasRepeatEnd);
+
+        snoozeModel.isEnable = from.snoozeEnabled;
+        nextSnoozeOffTime = from.nextSnoozeTime;
+        snoozeModel.count = from.snoozeCount;
+
+        if (from.snoozeEnabled) {
+
+            switch (from.snoozeLength) {
+                default:
+                case 3:
+                    snoozeModel.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R3;
+                    break;
+                case 5:
+                    snoozeModel.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R5;
+                    break;
+                case -1:
+                    snoozeModel.countOptions = ReminderSnoozeModel.SnoozeCountOptions.RC;
+                    break;
+            }
+
+            switch (from.snoozeInterval) {
+                default:
+                case 5:
+                    snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M5;
+                    break;
+                case 10:
+                    snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M10;
+                    break;
+                case 15:
+                    snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M15;
+                    break;
+                case 30:
+                    snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M30;
+                    break;
+            }
+        }
+    }
+
+    public boolean setInstance(Intent intent) {
+        if (intent == null) {
+            return false;
+        }
+
+        String reminderId = intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT);
+
+        if (reminderId == null || reminderId.isEmpty()) {
+            return false;
+        } else {
+
+            Realm realm = Realm.getDefaultInstance();
+            ActiveReminder reminderData = realm.where(ActiveReminder.class).equalTo("id", reminderId).findFirst();
+            if (reminderData == null) {
+                return false;
+            } else {
+                setInstance(reminderData);
+                return true;
+            }
+        }
+    }
+
+    public static ReminderModel getInstance(ActiveReminder from) {
+        ReminderModel to = new ReminderModel();
+        to.setInstance(from);
+        return to;
+    }
+
+    public static ReminderModel getInstance(Intent intent) {
+
+        if (intent == null) {
+            return null;
+        }
+
+        String reminderId = intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT);
+
+        if (reminderId == null || reminderId.isEmpty()) {
+            return null;
+        } else {
+            return getInstance(reminderId);
+        }
+
+    }
+
+    public static ReminderModel getInstance(String reminderId) {
+        Realm realm = Realm.getDefaultInstance();
+        ActiveReminder reminderData = realm.where(ActiveReminder.class).equalTo("id", reminderId).findFirst();
+        if (reminderData == null) {
+            return null;
+        } else {
+            return getInstance(reminderData);
+        }
+    }
 
     public int getAlarmVolumePercentage() {
         return alarmVolumePercentage;
@@ -103,10 +268,10 @@ public class ReminderModel extends ViewModel {
         return intId;
     }
 
-    private boolean isEnabled = true;
+    private boolean enabled = true;
 
-    public boolean getIsEnabled() {
-        return isEnabled;
+    public boolean isEnabled() {
+        return enabled;
     }
 
     private final ReminderRepeatModel repeatModel;
@@ -166,7 +331,7 @@ public class ReminderModel extends ViewModel {
         return calculatedTime;
     }
 
-    public boolean getIsHasDifferentTimeCalculated() {
+    public boolean isHasDifferentTimeCalculated() {
         return calculatedTime != null && !calculatedTime.equals(originalTime);
     }
 
@@ -176,7 +341,7 @@ public class ReminderModel extends ViewModel {
         return lastMissedTime;
     }
 
-    private RealmList<Date> missedTimes = new RealmList<>();
+    private final RealmList<Date> missedTimes = new RealmList<>();
 
     public List<Date> getMissedTimes() {
         return missedTimes;
@@ -276,8 +441,8 @@ public class ReminderModel extends ViewModel {
         }
 
         to.isEnableTone = from.isEnableTone;
-        to.isEnable = from.isEnabled;
-        to.isVibrate = from.isEnableVibration;
+        to.enabled = from.enabled;
+        to.vibrate = from.isEnableVibration;
 
         to.increaseVolumeGradually = from.increaseVolumeGradually;
         to.alarmVolume = from.alarmVolumePercentage;
@@ -330,10 +495,10 @@ public class ReminderModel extends ViewModel {
                 break;
         }
 
-        to.isHasRepeatEnd = from.repeatModel.isHasRepeatEnd();
+        to.hasRepeatEnd = from.repeatModel.isHasRepeatEnd();
         to.repeatEndDate = from.repeatModel.getRepeatEndDate();
 
-        to.isSnoozeEnable = from.snoozeModel.isEnable;
+        to.snoozeEnabled = from.snoozeModel.isEnable;
         to.nextSnoozeTime = from.nextSnoozeOffTime;
         to.snoozeCount = from.snoozeModel.count;
 
@@ -383,9 +548,8 @@ public class ReminderModel extends ViewModel {
         boolean isNewAlertFound = false;
         for (int i = 0; i < reminders.size(); i++) {
             final ActiveReminder r = reminders.get(i);
-            final ReminderModel reminderModel = new ReminderModel();
-            transformToModel(r, reminderModel);
-            if (reminderModel.getIsEnabled()) {
+            final ReminderModel reminderModel = ReminderModel.getInstance(r);
+            if (reminderModel.isEnabled()) {
                 if (calendar.getTime().after(reminderModel.getAlarmTime()) && isDeviceRebooted) {
                     // App getting killed after a while. But Broadcast receiver recreating app which leads to rescheduling.
                     // And for the logic below it getting dismissed before it could be snoozed from alerts.
@@ -406,115 +570,6 @@ public class ReminderModel extends ViewModel {
         }
         if (isNewAlertFound) {
             NotificationHelper.notifySummary(context, "Rescheduling reminders", null, null);
-        }
-    }
-
-    public static void transformToModel(ActiveReminder from, ReminderModel to) {
-        to.id = from.id;
-        to.intId = from.alarmIntentId;
-        to.name = from.name;
-        to.note = from.note;
-        to.originalTime = from.time;
-
-        to.lastMissedTime = from.lastMissedTime;
-
-        to.missedTimes.clear();
-        to.missedTimes.addAll(from.missedTimes);
-
-        if (from.selectedAlarmTone != null) {
-            to.ringToneUri = Uri.parse(from.selectedAlarmTone);
-        }
-        to.isEnableTone = from.isEnableTone;
-        to.isEnabled = from.isEnable;
-        to.isEnableVibration = from.isVibrate;
-
-        to.increaseVolumeGradually = from.increaseVolumeGradually;
-        to.alarmVolumePercentage = from.alarmVolume;
-
-        to.repeatModel.setReminderTime(from.time);
-        to.repeatModel.customHours.clear();
-        to.repeatModel.customDays.clear();
-        to.repeatModel.customWeeks.clear();
-        to.repeatModel.customMonths.clear();
-
-        switch (from.repeatOption) {
-            default:
-            case 0:
-                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.OFF);
-                break;
-            case 1:
-                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY);
-                break;
-            case 11:
-                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM);
-                to.repeatModel.customHours.addAll(from.repeatHours);
-                break;
-            case 2:
-                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY);
-                break;
-            case 21:
-                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM);
-                to.repeatModel.customDays.addAll(from.repeatDays);
-                break;
-            case 3:
-                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.WEEKLY);
-                break;
-            case 31:
-                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM);
-                to.repeatModel.customWeeks.addAll(from.repeatWeeks);
-                break;
-            case 4:
-                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.MONTHLY);
-                break;
-            case 41:
-                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM);
-                to.repeatModel.customMonths.addAll(from.repeatMonths);
-                break;
-            case 5:
-                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.YEARLY);
-                break;
-            case 6:
-                to.repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.OTHER);
-                to.repeatModel.setRepeatCustom(from.customTimeUnit, from.customTimeValue);
-                break;
-        }
-        to.repeatModel.setRepeatEndDate(from.repeatEndDate);
-        to.repeatModel.setHasRepeatEnd(from.isHasRepeatEnd);
-
-        to.snoozeModel.isEnable = from.isSnoozeEnable;
-        to.nextSnoozeOffTime = from.nextSnoozeTime;
-        to.snoozeModel.count = from.snoozeCount;
-
-        if (from.isSnoozeEnable) {
-
-            switch (from.snoozeLength) {
-                default:
-                case 3:
-                    to.snoozeModel.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R3;
-                    break;
-                case 5:
-                    to.snoozeModel.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R5;
-                    break;
-                case -1:
-                    to.snoozeModel.countOptions = ReminderSnoozeModel.SnoozeCountOptions.RC;
-                    break;
-            }
-
-            switch (from.snoozeInterval) {
-                default:
-                case 5:
-                    to.snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M5;
-                    break;
-                case 10:
-                    to.snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M10;
-                    break;
-                case 15:
-                    to.snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M15;
-                    break;
-                case 30:
-                    to.snoozeModel.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M30;
-                    break;
-            }
         }
     }
 
@@ -579,15 +634,6 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    public static List<MissedReminder> getMissedReminders(String name) {
-        Realm realm = Realm.getDefaultInstance();
-        if (name != null && !name.isEmpty()) {
-            return realm.where(MissedReminder.class).beginsWith("name", name).findAll();
-        } else {
-            return realm.where(MissedReminder.class).findAll();
-        }
-    }
-
     public static List<DismissedReminder> getDismissedReminders(String name) {
         Realm realm = Realm.getDefaultInstance();
         if (name != null && !name.isEmpty()) {
@@ -616,7 +662,7 @@ public class ReminderModel extends ViewModel {
     }
 
     private void setAlarm(Context context, Date atTime, boolean isShowElapseTimeToast) {
-        if (!isEnabled) {
+        if (!enabled) {
             return;
         }
 
@@ -624,8 +670,7 @@ public class ReminderModel extends ViewModel {
 
         long different = atTime.getTime() - calendar.getTime().getTime();
 
-        if (different <= 0) // Meaningless to set time in past. BUG ALERT: negative value means something is very wrong somewhere
-        {
+        if (different <= 0) { // Meaningless to set time in past. BUG ALERT: negative value means something is very wrong somewhere
             if (isShowElapseTimeToast) {
                 ToastHelper.showError(context, "Warning! discarding minus time value for alarm");
                 return;
@@ -708,7 +753,7 @@ public class ReminderModel extends ViewModel {
     private Date getAlarmTime() {
         final Date _time;
 
-        if (getIsHasDifferentTimeCalculated()) {
+        if (isHasDifferentTimeCalculated()) {
             _time = calculatedTime;
         } else if (nextSnoozeOffTime == null) {
             _time = originalTime;
@@ -755,7 +800,7 @@ public class ReminderModel extends ViewModel {
 
             saveToDb();
 
-            if (isEnabled) {
+            if (enabled) {
                 setAlarm(context, getAlarmTime(), isShowElapseTimeToast);
             }
 
@@ -1154,35 +1199,9 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    public boolean tryReadFrom(Intent intent) {
-        if (intent == null) {
-            return false;
-        }
-
-        String reminderId = intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT);
-
-        if (reminderId == null || reminderId.isEmpty()) {
-            return false;
-        } else {
-            return tryReadFrom(reminderId);
-        }
-
-    }
-
-    public boolean tryReadFrom(String reminderId) {
-        Realm realm = Realm.getDefaultInstance();
-        ActiveReminder reminderData = realm.where(ActiveReminder.class).equalTo("id", reminderId).findFirst();
-        if (reminderData == null) {
-            return false;
-        } else {
-            transformToModel(reminderData, this);
-            return true;
-        }
-    }
-
     public boolean trySetEnabled(Context context, boolean value) {
         //isEnable = value;
-        if (value) {
+        if (value && !AppSettingsHelper.getInstance().isDisableAllReminders()) {
             //Date buffer = time;
             Calendar currentTime = Calendar.getInstance();
 
@@ -1195,16 +1214,17 @@ public class ReminderModel extends ViewModel {
                     ToastHelper.showLong(context, "Alarm cannot be scheduled further. Please set time into future to enable.");
                 } else { // Found next trigger point.
                     calculatedTime = nextTime; // Set next trigger time.
-                    isEnabled = true;
+                    enabled = true;
                 }
             } else {
-                isEnabled = true;
+                enabled = true;
             }
         } else {
-            isEnabled = false;
+            cancelAlarm(context);
+            enabled = false;
         }
 
-        return isEnabled;
+        return enabled;
     }
 
     public ReminderRepeatModel.ReminderRepeatOptions getRepeatOption() {
@@ -1366,4 +1386,7 @@ public class ReminderModel extends ViewModel {
         }
     }
 
+    public String getId() {
+        return id;
+    }
 }

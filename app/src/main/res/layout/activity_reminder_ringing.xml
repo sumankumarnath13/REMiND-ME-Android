@@ -32,7 +32,7 @@
             android:textAlignment="center"
             android:layout_marginBottom="@dimen/dp_8"
             android:textSize="@dimen/font_size_medium"
-            android:textColor="@color/text_gray2" />
+            android:textColor="@color/text_dim" />
 
         <TextView
             android:id="@+id/tv_reminder_ringing_title"
@@ -52,7 +52,7 @@
             android:textAlignment="center"
             android:layout_marginBottom="@dimen/dp_8"
             android:textSize="@dimen/font_size_extra_large"
-            android:textColor="@color/text_gray1" />
+            android:textColor="@color/text_soothing" />
 
         <TextView
             android:id="@+id/tv_reminder_name"
@@ -62,7 +62,7 @@
             android:textAlignment="center"
             android:textSize="@dimen/font_size_large"
             android:layout_marginVertical="@dimen/dp_8"
-            android:textColor="@color/text_white" />
+            android:textColor="@color/text_bright" />
 
         <TextView
             android:id="@+id/tv_reminder_note"
@@ -92,6 +92,8 @@
             android:drawablePadding="@dimen/dp_3"
             android:drawableTint="@color/text_danger"
             android:text="@string/btn_alarm_action_dismiss"
+            android:textAlignment="textStart"
+            android:gravity="start|center"
             tools:ignore="ButtonStyle" />
 
         <Button
@@ -104,8 +106,8 @@
             android:drawablePadding="@dimen/dp_3"
             android:drawableTint="@color/text_warning"
             android:text="@string/reminder_snooze_menu_caption"
-            android:layout_marginEnd="@dimen/dp_8"
-            android:layout_marginRight="@dimen/dp_8"
+            android:textAlignment="textStart"
+            android:gravity="start|center"
             tools:ignore="ButtonStyle" />
 
     </LinearLayout>

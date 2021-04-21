@@ -108,11 +108,8 @@ public class ReminderRepeatModel {
             return false;
         }
 
-        if (repeatEndDate.compareTo(reminderTime) <= 0) { // End date cannot be same or less than reminder date
-            return false;
-        }
-
-        return true;
+        // End date cannot be same or less than reminder date
+        return repeatEndDate.compareTo(reminderTime) > 0;
     }
 
     private Date repeatEndDate;

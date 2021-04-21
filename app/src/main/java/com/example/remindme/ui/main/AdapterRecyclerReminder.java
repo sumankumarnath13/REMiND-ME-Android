@@ -1,9 +1,11 @@
 package com.example.remindme.ui.main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.remindme.R;
 import com.example.remindme.dataModels.ActiveReminder;
 import com.example.remindme.dataModels.DismissedReminder;
+import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
+import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.ui.activities.ActivityReminderView;
 import com.example.remindme.viewModels.ReminderModel;
 
@@ -55,55 +59,76 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
         final LinearLayout lv_reminder_last_missed_time = holder.linearLayout.findViewById(R.id.lv_reminder_last_missed_time);
         final TextView tv_reminder_last_missed_time = holder.linearLayout.findViewById(R.id.tv_reminder_last_missed_time);
-
-
         final RealmObject reminder = _data.get(position);
+
+
+        if (reminder == null) {
+            return;
+        }
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final Context context = view.getContext();
+                if (context == null) return;
 
-                Intent intent = new Intent(holder.linearLayout.getContext(), ActivityReminderView.class);
+                final Intent intent = new Intent(context, ActivityReminderView.class);
 
                 if (reminderType == EnumReminderTypes.Active) {
 
                     final ActiveReminder activeReminder = (ActiveReminder) reminder;
-                    ReminderModel.setReminderId(intent, activeReminder.id);
-                    intent.putExtra(ReminderModel.INTENT_ATTR_FROM, "ACTIVE");
+                    intent.putExtra(ReminderModel.REMINDER_ID_INTENT, activeReminder.id);
+                    intent.putExtra(ReminderModel.INTENT_ATTR_FROM, ReminderModel.INTENT_ATTR_FROM_ACTIVE);
 
                 } else {
 
                     final DismissedReminder dismissedReminder = (DismissedReminder) reminder;
-                    ReminderModel.setReminderId(intent, dismissedReminder.id);
-                    intent.putExtra(ReminderModel.INTENT_ATTR_FROM, "DISMISSED");
+                    intent.putExtra(ReminderModel.REMINDER_ID_INTENT, dismissedReminder.id);
+                    intent.putExtra(ReminderModel.INTENT_ATTR_FROM, ReminderModel.INTENT_ATTR_FROM_DISMISSED);
 
                 }
 
-                holder.linearLayout.getContext().startActivity(intent);
+                context.startActivity(intent);
             }
         });
 
-        enabled.setOnClickListener(new View.OnClickListener() {
+        enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                ReminderModel reminderModel = new ReminderModel();
-                ReminderModel.transformToModel((ActiveReminder) reminder, reminderModel);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                enabled.setChecked(reminderModel.trySetEnabled(holder.linearLayout.getContext().getApplicationContext(), enabled.isChecked()));
-                if (enabled.isChecked()) {
-                    time.setText(StringHelper.toTimeWeekdayDate(reminderModel.getOriginalTime()));
+                if (isRefreshing) return;
+
+                if (AppSettingsHelper.getInstance().isDisableAllReminders()) {
+                    buttonView.setChecked(false);
+                    ToastHelper.showShort(buttonView.getContext(), "All reminders are disabled in settings");
+                    return;
                 }
-                reminderModel.trySaveAndSetAlert(holder.linearLayout.getContext().getApplicationContext(), true, true);
+
+                ReminderModel reminderModel = ReminderModel.getInstance((ActiveReminder) reminder);
+
+                final Context context = buttonView.getContext();
+
+                if (reminderModel.trySetEnabled(context, isChecked)) {
+                    if (reminderModel.trySaveAndSetAlert(context, true, true)) {
+                        buttonView.setChecked(isChecked);
+                        if (isChecked) {
+                            time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
+                            date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
+                        }
+                    }
+                }
             }
         });
+
+
+        isRefreshing = true;
 
         if (reminderType == EnumReminderTypes.Active) {
-            ReminderModel reminderModel = new ReminderModel();
-            ReminderModel.transformToModel((ActiveReminder) reminder, reminderModel);
+            ReminderModel reminderModel = ReminderModel.getInstance((ActiveReminder) reminder);
 
             time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
             date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
-            enabled.setChecked(reminderModel.getIsEnabled());
+            enabled.setChecked(reminderModel.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
 
             tv_reminder_repeat_short_summary.setText(reminderModel.getRepeatSettingShortString());
 
@@ -133,7 +158,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
         } else {
             final DismissedReminder dismissedReminder = (DismissedReminder) reminder;
 
-            time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_gray2));
+            time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_dim));
 
             time.setText(StringHelper.toTime(dismissedReminder.time));
             date.setText(StringHelper.toWeekdayDate(dismissedReminder.time));
@@ -146,7 +171,12 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 name.setVisibility(View.VISIBLE);
             }
         }
+
+        isRefreshing = false;
+
     }
+
+    private boolean isRefreshing;
 
     @Override
     public int getItemCount() {

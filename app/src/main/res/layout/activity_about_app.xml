@@ -23,17 +23,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Version"
-            android:textColor="@color/text_gray2"
-            android:textSize="@dimen/font_size_small"
-            android:textStyle="bold" />
+            android:textColor="@color/text_dim"
+            android:textSize="@dimen/font_size_small" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1.1.1"
-            android:textColor="@color/text_gray1"
-            android:textSize="@dimen/font_size_large"
-            android:textStyle="bold" />
+            android:textColor="@color/text_soothing"
+            android:textSize="@dimen/font_size_large" />
 
     </LinearLayout>
 
@@ -99,7 +97,7 @@
                     android:textAlignment="textStart"
                     android:gravity="start|center"
                     android:text="License Info"
-                    android:textColor="@color/text_gray2"
+                    android:textColor="@color/text_dim"
                     android:textSize="@dimen/font_size_medium" />
 
             </LinearLayout>

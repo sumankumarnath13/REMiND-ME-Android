@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class StringHelper {
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yy");
+    //public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yy");
 
     public static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm a");
     public static final SimpleDateFormat TIME_FORMAT_24 = new SimpleDateFormat("HH:mm");
@@ -43,13 +43,13 @@ public class StringHelper {
         }
     }
 
-    public static String toDate(Date value) {
-        if (value != null) {
-            return DATE_FORMAT.format(value).toUpperCase();
-        } else {
-            return "null";
-        }
-    }
+//    public static String toDate(Date value) {
+//        if (value != null) {
+//            return DATE_FORMAT.format(value).toUpperCase();
+//        } else {
+//            return "null";
+//        }
+//    }
 
     public static String toWeekday(Date value) {
         if (value != null) {

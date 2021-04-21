@@ -1,7 +1,11 @@
 package com.example.remindme.ui.activities;
 
+import android.content.Intent;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
@@ -9,10 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.remindme.R;
+import com.example.remindme.dataModels.ActiveReminder;
 import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.ToastHelper;
+import com.example.remindme.viewModels.ReminderModel;
+
+import java.util.List;
 
 public class ActivitySettings extends AppCompatActivity {
 
@@ -53,9 +61,24 @@ public class ActivitySettings extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settingsHelper.setDisableAllReminders(isChecked);
+                List<ActiveReminder> list = ReminderModel.getActiveReminders(null);
+                if (isChecked) {
+                    for (int i = 0; i < list.size(); i++) {
+                        ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
+                        reminderModel.trySetEnabled(ActivitySettings.this, false);
+                    }
+                } else {
+                    for (int i = 0; i < list.size(); i++) {
+                        ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
+                        if (reminderModel.isEnabled()) {
+                            if (reminderModel.trySetEnabled(ActivitySettings.this, true)) {
+                                reminderModel.trySaveAndSetAlert(ActivitySettings.this, true, false);
+                            }
+                        }
+                    }
+                }
             }
         });
-
 
         final SwitchCompat sw_use_24_hour = findViewById(R.id.sw_use_24_hour);
         sw_use_24_hour.setChecked(settingsHelper.isUse24hourTime());
@@ -65,6 +88,15 @@ public class ActivitySettings extends AppCompatActivity {
                 settingsHelper.setUse24hourTime(isChecked);
             }
         });
-    }
 
+        final Button btn_os_setup_faqs = findViewById(R.id.btn_os_setup_faqs);
+        btn_os_setup_faqs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent faqIntent = new Intent(Intent.ACTION_VIEW);
+                faqIntent.setData(Uri.parse("https://www.google.co.in"));
+                startActivity(faqIntent);
+            }
+        });
+    }
 }

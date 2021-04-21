@@ -113,7 +113,6 @@ public class ActivityReminderInput
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(MORE_INPUT_UI_STATE, isExtraInputsVisible);
-
         super.onSaveInstanceState(outState);
     }
 
@@ -133,7 +132,7 @@ public class ActivityReminderInput
             final String reminderType = getIntent().getStringExtra(INTENT_FROM);
             // Open if intent is update
             if (FLAG_REMINDER_TYPE_ACTIVE.equals(reminderType)) {
-                if (reminderModel.tryReadFrom(getIntent())) {
+                if (reminderModel.setInstance(getIntent())) {
                     // Everything looks good so far. Set the title as Update
                     ActivityHelper.setTitle(this, getResources().getString(R.string.edit_reminder_heading));
                 } else {
@@ -323,7 +322,7 @@ public class ActivityReminderInput
         btn_reminder_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (reminderModel.trySaveAndSetAlert(getApplicationContext(), reminderModel.getIsHasDifferentTimeCalculated(), true)) {
+                if (reminderModel.trySaveAndSetAlert(getApplicationContext(), reminderModel.isHasDifferentTimeCalculated(), true)) {
                     finish();
                 } else {
                     ToastHelper.showLong(ActivityReminderInput.this, "Time cannot be set in past!");
@@ -417,7 +416,7 @@ public class ActivityReminderInput
         btn_reminder_time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
         btn_reminder_date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
 
-        if (reminderModel.getIsHasDifferentTimeCalculated()) {
+        if (reminderModel.isHasDifferentTimeCalculated()) {
             lvc_diff_next_reminder_trigger.setVisibility(View.VISIBLE);
             tv_reminder_trigger_time.setText(StringHelper.toTime(reminderModel.getCalculatedTime()));
             tv_reminder_trigger_date.setText(StringHelper.toWeekdayDate(reminderModel.getCalculatedTime()));
@@ -496,25 +495,21 @@ public class ActivityReminderInput
     }
 
     @Override
-    public void commitChanges(ReminderRepeatModel repeatModel) {
-//        if (reminderModel == null) {
-//            reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-//        }
-
+    public void commitChanges() {
         if (reminderModel.trySetRepeatSettingChanges()) {
             refreshForm();
         }
     }
 
     @Override
-    public ReminderSnoozeModel getSnoozeModel() {
-        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.getSnoozeModel();
+    public void commitSnoozeChanges() {
+        refreshForm();
     }
 
     @Override
-    public void commitChanges(ReminderSnoozeModel model) {
-        refreshForm();
+    public ReminderSnoozeModel getSnoozeModel() {
+        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
+        return reminderModel.getSnoozeModel();
     }
 
     @Override

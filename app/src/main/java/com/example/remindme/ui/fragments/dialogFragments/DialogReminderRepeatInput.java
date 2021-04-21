@@ -90,7 +90,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
                 .setPositiveButton(R.string.dialog_positive, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.commitChanges(model);
+                        listener.commitChanges();
                     }
                 })
                 .setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
@@ -378,7 +378,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
 
     public interface IRepeatInputDialogListener {
 
-        void commitChanges(ReminderRepeatModel repeatModel);
+        void commitChanges();
 
         void discardChanges();
 
