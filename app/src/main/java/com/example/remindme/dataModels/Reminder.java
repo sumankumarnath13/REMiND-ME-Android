@@ -27,6 +27,7 @@ public class Reminder extends RealmObject implements RealmModel {
     public int vibrationPattern;
     public boolean increaseVolumeGradually;
     public int alarmVolume;
+    public int ringDurationInMin;
 
     public int repeatOption;
     public RealmList<Integer> repeatHours = new RealmList<>();

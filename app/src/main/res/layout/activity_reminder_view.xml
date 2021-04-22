@@ -325,8 +325,7 @@
                     android:layout_height="@dimen/dp_16"
                     android:layout_marginEnd="@dimen/dp_3"
                     android:layout_marginRight="@dimen/dp_3"
-                    android:src="@drawable/ic_sound_volume_auto"
-                    app:tint="@color/bg_danger" />
+                    android:src="@drawable/ic_sound_volume_auto" />
 
                 <TextView
                     android:id="@+id/tv_gradually_increase_volume"

@@ -2,6 +2,8 @@ package com.example.remindme.helpers;
 
 import com.example.remindme.dataModels.AppSetting;
 
+import java.util.Calendar;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import io.realm.Realm;
@@ -16,6 +18,7 @@ public class AppSettingsHelper {
         if (setting != null) {
             use24hourTime = setting.use24hourTime;
             disableAllReminders = setting.disableAllReminders;
+            firstDayOfWeek = setting.firstDayOfWeek;
         }
     }
 
@@ -50,12 +53,23 @@ public class AppSettingsHelper {
         update();
     }
 
+    private int firstDayOfWeek = Calendar.SUNDAY;
+
+    public int getFirstDayOfWeek() {
+        return firstDayOfWeek;
+    }
+
+    public void setFirstDayOfWeek(int value) {
+        firstDayOfWeek = value;
+        update();
+    }
 
     private void update() {
         final AppSetting setting = new AppSetting();
         setting.id = ID;
         setting.disableAllReminders = disableAllReminders;
         setting.use24hourTime = use24hourTime;
+        setting.firstDayOfWeek = firstDayOfWeek;
 
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {

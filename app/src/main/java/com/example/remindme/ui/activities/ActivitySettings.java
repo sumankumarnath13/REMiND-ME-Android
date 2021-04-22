@@ -5,9 +5,12 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,21 +20,23 @@ import com.example.remindme.R;
 import com.example.remindme.dataModels.Reminder;
 import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.AppSettingsHelper;
+import com.example.remindme.helpers.DeviceHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
+import java.util.Calendar;
 import java.util.List;
 
-public class ActivitySettings extends AppCompatActivity {
+public class ActivitySettings extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
+    final AppSettingsHelper settingsHelper = AppSettingsHelper.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ActivityHelper.setTitle(this, getResources().getString(R.string.activitySettingsTitle));
-
-        final AppSettingsHelper settingsHelper = AppSettingsHelper.getInstance();
 
         final AudioManager audioManager = OsHelper.getAudioManager(this);
         final SeekBar seeker_alarm_stream_volume = findViewById(R.id.seeker_alarm_stream_volume);
@@ -101,14 +106,60 @@ public class ActivitySettings extends AppCompatActivity {
 
         final TextView tv_active_reminder_count = findViewById(R.id.tv_active_reminder_count);
 
-        int x = ReminderModel.getActiveReminders(null).size();
-
-        tv_active_reminder_count.setText(Integer.toString(x));
+        tv_active_reminder_count.setText(String.valueOf(ReminderModel.getActiveReminders(null).size()));
 
         final TextView tv_expired_reminder_count = findViewById(R.id.tv_expired_reminder_count);
 
-        int y = ReminderModel.getDismissedReminders(null).size();
+        tv_expired_reminder_count.setText(String.valueOf(ReminderModel.getDismissedReminders(null).size()));
 
-        tv_expired_reminder_count.setText(Integer.toString(y));
+        final Spinner first_day_of_week_spinner = findViewById(R.id.first_day_of_week_spinner);
+        first_day_of_week_spinner.setOnItemSelectedListener(this);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.first_day_of_week_options, R.layout.spinner_item_layout);
+        // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
+        first_day_of_week_spinner.setAdapter(adapter);
+        switch (settingsHelper.getFirstDayOfWeek()) {
+            default:
+            case Calendar.SUNDAY:
+                first_day_of_week_spinner.setSelection(0);
+                break;
+            case Calendar.MONDAY:
+                first_day_of_week_spinner.setSelection(1);
+                break;
+            case Calendar.SATURDAY:
+                first_day_of_week_spinner.setSelection(2);
+                break;
+        }
+
+        final TextView tv_brand = findViewById(R.id.tv_brand);
+        tv_brand.setText(DeviceHelper.getInstance().getBrand());
+        final TextView tv_model = findViewById(R.id.tv_model);
+        tv_model.setText(DeviceHelper.getInstance().getModel());
+
+        final TextView tv_os_signature = findViewById(R.id.tv_os_signature);
+        tv_os_signature.setText(DeviceHelper.getInstance().getOperatingSystemSignature());
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (position) {
+            default:
+            case 0:
+                settingsHelper.setFirstDayOfWeek(Calendar.SUNDAY);
+                break;
+
+            case 1:
+                settingsHelper.setFirstDayOfWeek(Calendar.MONDAY);
+                break;
+
+            case 2:
+                settingsHelper.setFirstDayOfWeek(Calendar.SATURDAY);
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

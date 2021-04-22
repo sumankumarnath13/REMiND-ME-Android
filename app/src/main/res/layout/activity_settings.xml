@@ -14,56 +14,82 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_bottom"
-            android:gravity="bottom"
-            android:orientation="horizontal"
-            android:paddingVertical="@dimen/dp_16">
+            android:layout_marginBottom="@dimen/dp_8"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                android:layout_marginRight="@dimen/dp_8"
+                android:layout_marginEnd="@dimen/dp_8"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="@dimen/dp_139"
-                    android:layout_height="@dimen/dp_139"
-                    android:src="@drawable/ic_brand" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Brand"
+                    android:textColor="@color/text_dim" />
+
+                <TextView
+                    android:id="@+id/tv_brand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_soothing" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Version"
-                    android:textColor="@color/text_dim"
-                    android:textSize="@dimen/font_size_small" />
+                    android:text="Model"
+                    android:textColor="@color/text_dim" />
 
                 <TextView
+                    android:id="@+id/tv_model"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1.1.1"
-                    android:textColor="@color/text_soothing"
-                    android:textSize="@dimen/font_size_large" />
+                    android:textColor="@color/text_soothing" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:layout_width="@dimen/dp_05"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:background="@color/border_color" />
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dp_8"
                 android:layout_weight="1"
+                android:gravity="end"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/dp_16"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_os_signature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_info" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total active reminder : "
+                        android:layout_marginEnd="@dimen/dp_8"
+                        android:layout_marginRight="@dimen/dp_8"
+                        android:text="Total active reminders"
                         android:textColor="@color/text_dim" />
 
                     <TextView
@@ -72,20 +98,20 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_success" />
 
-
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/dp_16"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total active reminder : "
+                        android:layout_marginEnd="@dimen/dp_8"
+                        android:layout_marginRight="@dimen/dp_8"
+                        android:text="Total finished reminders"
                         android:textColor="@color/text_dim" />
 
                     <TextView
@@ -94,10 +120,28 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_danger" />
 
-
                 </LinearLayout>
 
             </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:background="@drawable/border_vertical"
+            android:paddingVertical="@dimen/dp_05"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_os_setup_faqs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|center"
+                android:text="Reminder not working?"
+                android:textAlignment="textStart"
+                android:textColor="@color/text_danger" />
 
         </LinearLayout>
 
@@ -172,14 +216,18 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_os_setup_faqs"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="start|center"
-                android:text="Reminder not working?"
-                android:textAlignment="textStart"
-                android:textColor="@color/text_danger" />
+                android:layout_weight="1"
+                android:text="First day of week"
+                android:textColor="@color/text_soothing"
+                android:textSize="@dimen/font_size_medium" />
+
+            <Spinner
+                android:id="@+id/first_day_of_week_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

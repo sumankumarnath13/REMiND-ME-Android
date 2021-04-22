@@ -68,7 +68,7 @@
     <string name="snooze_repeat_r3">3 Times</string>
     <string name="snooze_repeat_r5">5 Times</string>
     <string name="snooze_repeat_rc">Continuously</string>
-    <string name="add_new_reminder">Add New Reminder</string>
+    <string name="add_new_reminder">Set New Reminder</string>
     <string name="reminder_snooze_menu_caption">Snooze</string>
     <string name="btn_alarm_action_dismiss">Dismiss</string>
 
@@ -86,4 +86,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="activitySettingsTitle">Settings</string>
     <string name="activityAboutAppTitle">About App</string>
+    <array name="first_day_of_week_options">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Saturday</item>
+    </array>
 </resources>

@@ -201,6 +201,10 @@ public class ActivityReminderInput
                 datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
                 datePickerDialog.setTitle(null); // This line will try to solve the issue above
                 datePickerDialog.show();
+
+                if (OsHelper.isLollipopOrLater()) {
+                    datePickerDialog.getDatePicker().setFirstDayOfWeek(AppSettingsHelper.getInstance().getFirstDayOfWeek());
+                }
             }
         });
 
@@ -314,10 +318,10 @@ public class ActivityReminderInput
             public void onClick(View view) {
                 if (reminderModel.getAlertTime().after(Calendar.getInstance().getTime())) {
                     reminderModel.trySaveAndSetAlert(getApplicationContext(), reminderModel.isHasDifferentTimeCalculated(), true);
+                    finish();
                 } else {
                     ToastHelper.showShort(ActivityReminderInput.this, "Cannot save reminder in past");
                 }
-                finish();
             }
         });
 

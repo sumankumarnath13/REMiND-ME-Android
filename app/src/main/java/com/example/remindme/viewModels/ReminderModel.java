@@ -38,6 +38,12 @@ import io.realm.exceptions.RealmMigrationNeededException;
 
 public class ReminderModel extends ViewModel {
 
+    public enum AlarmRingDurations {
+        ONE_MINUTE,
+        TWO_MINUTE,
+        THREE_MINUTE,
+    }
+
     public static final String DEFAULT_NOTIFICATION_GROUP_KEY = "ÆjËèúÒ+·_²";
     private static final String DEFAULT_NOTIFICATION_GROUP_NAME = "Default notification group";
     public static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "RxLwKNdHEL";
@@ -92,6 +98,19 @@ public class ReminderModel extends ViewModel {
 
         increaseVolumeGradually = from.increaseVolumeGradually;
         alarmVolumePercentage = from.alarmVolume;
+
+        switch (from.ringDurationInMin) {
+            default:
+            case 1:
+                ringDuration = AlarmRingDurations.ONE_MINUTE;
+                break;
+            case 2:
+                ringDuration = AlarmRingDurations.TWO_MINUTE;
+                break;
+            case 3:
+                ringDuration = AlarmRingDurations.THREE_MINUTE;
+                break;
+        }
 
         repeatModel.setReminderTime(from.time);
         repeatModel.customHours.clear();
@@ -240,6 +259,16 @@ public class ReminderModel extends ViewModel {
 
     public void setAlarmVolumePercentage(int value) {
         alarmVolumePercentage = Math.min(Math.max(value, 0), 100);
+    }
+
+    private AlarmRingDurations ringDuration = AlarmRingDurations.ONE_MINUTE;
+
+    public AlarmRingDurations getAlarmRingDuration() {
+        return ringDuration;
+    }
+
+    public void setAlarmRingDuration(AlarmRingDurations value) {
+        ringDuration = value;
     }
 
     private String id;
@@ -441,6 +470,19 @@ public class ReminderModel extends ViewModel {
         to.increaseVolumeGradually = from.increaseVolumeGradually;
         to.alarmVolume = from.alarmVolumePercentage;
 
+        switch (from.ringDuration) {
+            default:
+            case ONE_MINUTE:
+                to.ringDurationInMin = 1;
+                break;
+            case TWO_MINUTE:
+                to.ringDurationInMin = 2;
+                break;
+            case THREE_MINUTE:
+                to.ringDurationInMin = 3;
+                break;
+        }
+
         to.repeatHours.clear();
         to.repeatDays.clear();
         to.repeatWeeks.clear();
@@ -533,6 +575,10 @@ public class ReminderModel extends ViewModel {
     }
 
     public static void reScheduleAllActive(Context context, boolean isDeviceRebooted) {
+
+        if (AppSettingsHelper.getInstance().isDisableAllReminders())
+            return; // Ignore if all reminders are disabled from settings
+
         final Calendar calendar = Calendar.getInstance();
         List<Reminder> reminders = getActiveReminders(null);
         boolean isNewAlertFound = false;
@@ -1069,7 +1115,7 @@ public class ReminderModel extends ViewModel {
 
         if (nextTime == null) { // EOF situation
 
-            ToastHelper.showLong(context, "Dismissing to finished! " + getIntId());
+            //ToastHelper.showLong(context, "Dismissing to finished! " + getIntId());
 
             archiveToFinished();
 
@@ -1077,7 +1123,7 @@ public class ReminderModel extends ViewModel {
 
         } else {
 
-            ToastHelper.showLong(context, "Dismissing to missed! " + getIntId());
+            //ToastHelper.showLong(context, "Dismissing to missed! " + getIntId());
 
             missedTimes.add(originalTime);
 

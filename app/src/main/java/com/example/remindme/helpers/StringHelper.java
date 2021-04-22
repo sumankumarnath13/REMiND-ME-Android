@@ -2,21 +2,20 @@ package com.example.remindme.helpers;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class StringHelper {
-    //public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yy");
+    public static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+    public static final SimpleDateFormat TIME_FORMAT_24 = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
 
-    public static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm a");
-    public static final SimpleDateFormat TIME_FORMAT_24 = new SimpleDateFormat("HH:mm");
+    public static final SimpleDateFormat ALERT_TIME_FORMAT = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
+    public static final SimpleDateFormat ALERT_TIME_FORMAT_24 = new SimpleDateFormat("H:mm", Locale.ENGLISH);
 
-    public static final SimpleDateFormat ALERT_TIME_FORMAT = new SimpleDateFormat("h:mm a");
-    public static final SimpleDateFormat ALERT_TIME_FORMAT_24 = new SimpleDateFormat("H:mm");
+    public static final SimpleDateFormat TIME_WEEKDAY_DATE_FORMAT = new SimpleDateFormat("hh:mm a - EEE dd MMM yy", Locale.ENGLISH);
+    public static final SimpleDateFormat TIME_WEEKDAY_DATE_FORMAT_24 = new SimpleDateFormat("HH:mm - EEE dd MMM yy", Locale.ENGLISH);
 
-    public static final SimpleDateFormat TIME_WEEKDAY_DATE_FORMAT = new SimpleDateFormat("hh:mm a - EEE dd MMM yy");
-    public static final SimpleDateFormat TIME_WEEKDAY_DATE_FORMAT_24 = new SimpleDateFormat("HH:mm - EEE dd MMM yy");
-
-    public static final SimpleDateFormat WEEKDAY_FORMAT = new SimpleDateFormat("EEE");
-    public static final SimpleDateFormat WEEKDAY_DATE_FORMAT = new SimpleDateFormat("EEE dd MMM yy");
+    public static final SimpleDateFormat WEEKDAY_FORMAT = new SimpleDateFormat("EEE", Locale.ENGLISH);
+    public static final SimpleDateFormat WEEKDAY_DATE_FORMAT = new SimpleDateFormat("EEE dd MMM yy", Locale.ENGLISH);
 
 
     public static String toTime(Date value) {
@@ -42,14 +41,6 @@ public class StringHelper {
             return "null";
         }
     }
-
-//    public static String toDate(Date value) {
-//        if (value != null) {
-//            return DATE_FORMAT.format(value).toUpperCase();
-//        } else {
-//            return "null";
-//        }
-//    }
 
     public static String toWeekday(Date value) {
         if (value != null) {
