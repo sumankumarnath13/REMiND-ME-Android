@@ -45,6 +45,19 @@ public class ActivityReminderRinging extends AppCompatActivity {
         }
     };
 
+    private boolean isScreenOffReceiverRegistered = false;
+    private final BroadcastReceiver screenOffReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
+                if (serviceBinder != null && mServiceBound) {
+                    serviceBinder.snoozeByUser();
+                    finish();
+                }
+            }
+        }
+    };
+
     private boolean mServiceBound = false;
     private AlertServiceBinder serviceBinder;
     private final ServiceConnection mConnection = new ServiceConnection() {
@@ -108,18 +121,38 @@ public class ActivityReminderRinging extends AppCompatActivity {
     };
 
     private void registerReceiver() {
+
         if (!isReceiverRegistered) {
             IntentFilter filter = new IntentFilter();
             filter.addAction(ReminderModel.ACTION_CLOSE_ALARM_ACTIVITY);
             registerReceiver(receiver, filter);
             isReceiverRegistered = true;
         }
+
+        if (!isScreenOffReceiverRegistered) {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(Intent.ACTION_SCREEN_OFF);
+            registerReceiver(screenOffReceiver, filter);
+            isScreenOffReceiverRegistered = true;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        unbindAlarmService();
+        unRegisterReceiver();
+        super.onDestroy();
     }
 
     private void unRegisterReceiver() {
         if (isReceiverRegistered) {
             unregisterReceiver(receiver);
             isReceiverRegistered = false;
+        }
+
+        if (isScreenOffReceiverRegistered) {
+            unregisterReceiver(screenOffReceiver);
+            isScreenOffReceiverRegistered = false;
         }
     }
 
@@ -167,7 +200,9 @@ public class ActivityReminderRinging extends AppCompatActivity {
         btnDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                serviceBinder.dismiss();
+                if (serviceBinder != null && mServiceBound) {
+                    serviceBinder.dismiss();
+                }
                 finish();
             }
         });
@@ -176,7 +211,9 @@ public class ActivityReminderRinging extends AppCompatActivity {
         btnSnooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                serviceBinder.snoozeByUser();
+                if (serviceBinder != null && mServiceBound) {
+                    serviceBinder.snoozeByUser();
+                }
                 finish();
             }
         });
@@ -184,22 +221,27 @@ public class ActivityReminderRinging extends AppCompatActivity {
         tv_time_now = findViewById(R.id.tv_time_now);
         tv_reminder_ringing_title = findViewById(R.id.tv_reminder_ringing_title);
         txt_reminder_alarm_time = findViewById(R.id.txt_reminder_alarm_time);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        //registerReceiver();
+
         bindAlarmService();
         registerReceiver();
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+//        bindAlarmService();
+//        registerReceiver();
+    }
+
+    @Override
     protected void onPause() {
-        if (serviceBinder != null && mServiceBound) {
-            serviceBinder.setActivityOpen(false);
-        }
-        unbindAlarmService();
-        unRegisterReceiver();
+//        if (serviceBinder != null && mServiceBound) {
+//            serviceBinder.setActivityOpen(false);
+//        }
+//        unbindAlarmService();
+//        unRegisterReceiver();
         super.onPause();
     }
 
@@ -207,4 +249,5 @@ public class ActivityReminderRinging extends AppCompatActivity {
     public void onBackPressed() {
         //super.onBackPressed(); // Disables back button
     }
+
 }

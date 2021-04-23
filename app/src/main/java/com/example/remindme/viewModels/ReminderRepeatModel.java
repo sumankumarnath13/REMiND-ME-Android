@@ -2,6 +2,7 @@ package com.example.remindme.viewModels;
 
 import androidx.annotation.NonNull;
 
+import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 
 import java.util.ArrayList;
@@ -153,14 +154,10 @@ public class ReminderRepeatModel {
                     }
                     final int min = c.get(Calendar.MINUTE);
 
-                    if (h == 0) {
-                        builder.append("12:").append(min).append(" am, ");
-                    } else if (h == 12) {
-                        builder.append("12:").append(min).append(" pm, ");
-                    } else if (h < 12) {
-                        builder.append(h).append(":").append(min).append(" am, ");
+                    if (AppSettingsHelper.getInstance().isUse24hourTime()) {
+                        builder.append(StringHelper.get24(h, min)).append(", ");
                     } else {
-                        builder.append(h - 11).append(":").append(min).append(" pm, ");
+                        builder.append(StringHelper.get12(h, min)).append(", ");
                     }
                 }
                 builder.append("of every day");

@@ -11,7 +11,6 @@ import android.os.CountDownTimer;
 import android.os.Vibrator;
 
 import com.example.remindme.helpers.OsHelper;
-import com.example.remindme.viewModels.ReminderModel;
 
 public class RingingController {
     private static final int volumeIncreaseInterval = 3000;
@@ -124,21 +123,20 @@ public class RingingController {
                 }
             }
         }
-
-        startVibrating();
-
     }
 
-    public void startVibrating() {
+    public void startVibrating(long[] pattern) {
         if (vibrator != null) {
+
             if (OsHelper.isLollipopOrLater()) {
-                vibrator.vibrate(ReminderModel.VIBRATE_PATTERN, 0, new AudioAttributes.Builder()
+                vibrator.vibrate(pattern, 0, new AudioAttributes.Builder()
                         .setUsage(AudioAttributes.USAGE_ALARM)
                         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                         .build());
             } else {
-                vibrator.vibrate(ReminderModel.VIBRATE_PATTERN, 0);
+                vibrator.vibrate(pattern, 0);
             }
+
             isVibrating = true;
         }
     }

@@ -114,7 +114,7 @@ public class ActivitySettings extends AppCompatActivity implements AdapterView.O
 
         final Spinner first_day_of_week_spinner = findViewById(R.id.first_day_of_week_spinner);
         first_day_of_week_spinner.setOnItemSelectedListener(this);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.first_day_of_week_options, R.layout.spinner_item_layout);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.first_day_of_week_options, R.layout.support_simple_spinner_dropdown_item);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         first_day_of_week_spinner.setAdapter(adapter);
         switch (settingsHelper.getFirstDayOfWeek()) {

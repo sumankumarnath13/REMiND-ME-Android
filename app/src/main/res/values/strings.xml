@@ -54,7 +54,7 @@
     <string name="repeat_monthly_custom_nov">November</string>
     <string name="repeat_monthly_custom_dec">December</string>
 
-    <string name="btn_vibration">Vibration</string>
+    <string name="btn_vibrate">Vibrate</string>
     <string name="btn_alarm_sound">Alarm tone</string>
     <string name="btn_snooze">Snooze</string>
 
@@ -90,5 +90,17 @@
         <item>Sunday</item>
         <item>Monday</item>
         <item>Saturday</item>
+    </array>
+    <array name="ring_durations">
+        <item>1 minute</item>
+        <item>2 minute</item>
+        <item>3 minute</item>
+    </array>
+    <array name="vibration_patterns">
+        <item>Basic</item>
+        <item>Heart Break</item>
+        <item>Ticktock</item>
+        <item>Waltz</item>
+        <item>Zig Zig Zig</item>
     </array>
 </resources>

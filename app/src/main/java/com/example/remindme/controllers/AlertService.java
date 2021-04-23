@@ -61,18 +61,7 @@ public class AlertService extends Service {
         }
     };
 
-    private final long INTERVAL = 1000L;
-    private final CountDownTimer timer = new CountDownTimer(ReminderModel.RING_DURATION, INTERVAL) {
-        @Override
-        public void onTick(long millisUntilFinished) {
-
-        }
-
-        @Override
-        public void onFinish() {
-            snoozeByApp();
-        }
-    };
+    private CountDownTimer timer;
 
     private final class PhoneStateChangeListener extends PhoneStateListener {
 
@@ -193,9 +182,11 @@ public class AlertService extends Service {
             if (servingReminder.isEnableTone()) {
                 ringingController.startTone(servingReminder.isIncreaseVolumeGradually(), servingReminder.getAlarmVolumePercentage());
             }
+
             if (servingReminder.isEnableVibration()) {
-                ringingController.startVibrating();
+                ringingController.startVibrating(ReminderModel.toVibrateFrequency(servingReminder.getVibratePattern()));
             }
+
         }
     }
 
@@ -318,13 +309,45 @@ public class AlertService extends Service {
 
         }
 
-        timer.start();
+        int duration;
+        switch (servingReminder.getAlarmRingDuration()) {
+            default:
+            case ONE_MINUTE:
+                duration = 1000 * 60;
+                break;
+
+            case TWO_MINUTE:
+                duration = 1000 * 60 * 2;
+                break;
+
+            case THREE_MINUTE:
+                duration = 1000 * 60 * 3;
+                break;
+        }
+
+        final long INTERVAL = 1000L;
+        timer = new CountDownTimer(duration, INTERVAL) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                snoozeByApp();
+            }
+        }.start();
+
         return START_NOT_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        timer.cancel();
+
+        if (timer != null) {
+            timer.cancel();
+        }
+
         telephonyManager.listen(phoneStateChangeListener, PhoneStateListener.LISTEN_NONE);
         stopRinging();
 

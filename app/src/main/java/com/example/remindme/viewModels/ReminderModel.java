@@ -44,14 +44,26 @@ public class ReminderModel extends ViewModel {
         THREE_MINUTE,
     }
 
+    public enum VibratePatterns {
+        LONG,
+        HEART_BREAK,
+        TICKTOCK,
+        WALTZ,
+        ZIG_ZIG_ZIG
+    }
+
     public static final String DEFAULT_NOTIFICATION_GROUP_KEY = "ÆjËèúÒ+·_²";
     private static final String DEFAULT_NOTIFICATION_GROUP_NAME = "Default notification group";
     public static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "RxLwKNdHEL";
     private static final String DEFAULT_NOTIFICATION_CHANNEL_NAME = "Other notifications";
 
     public static final int MINIMUM_INPUT_VOLUME_PERCENTAGE = 10;
-    public static final int RING_DURATION = 1000 * 60;
-    public static final long[] VIBRATE_PATTERN = {500, 500};
+    public static final int MAX_RING_DURATION = 1000 * 60 * toAlarmRingDuration(AlarmRingDurations.THREE_MINUTE) + 1000; // 1 sec extra if it takes some more time to close and clean everything.
+    private static final long[] VIBRATE_PATTERN_BASIC = {500, 500};
+    private static final long[] VIBRATE_PATTERN_HEART_BREAK = {500, 500, 117};
+    private static final long[] VIBRATE_PATTERN_TICKTOCK = {500, 300, 411};
+    private static final long[] VIBRATE_PATTERN_WALTZ = {500, 500, 300, 300, 300, 117};
+    private static final long[] VIBRATE_PATTERN_ZIG_ZIG_ZIG = {500, 300, 300, 300};
     public static final int ALARM_NOTIFICATION_ID = 117;
     public static final String ACTION_SNOOZE_ALARM = "com.example.remindme.SNOOZE.ALARM";
     public static final String ACTION_DISMISS_ALARM = "com.example.remindme.DISMISS.ALARM";
@@ -76,7 +88,7 @@ public class ReminderModel extends ViewModel {
 
     private int alarmVolumePercentage;
 
-    public void setInstance(Reminder from) {
+    private void setInstance(Reminder from) {
         id = from.id;
         expired = from.expired;
         intId = from.alarmIntentId;
@@ -98,19 +110,8 @@ public class ReminderModel extends ViewModel {
 
         increaseVolumeGradually = from.increaseVolumeGradually;
         alarmVolumePercentage = from.alarmVolume;
-
-        switch (from.ringDurationInMin) {
-            default:
-            case 1:
-                ringDuration = AlarmRingDurations.ONE_MINUTE;
-                break;
-            case 2:
-                ringDuration = AlarmRingDurations.TWO_MINUTE;
-                break;
-            case 3:
-                ringDuration = AlarmRingDurations.THREE_MINUTE;
-                break;
-        }
+        ringDuration = toAlarmRingDuration(from.ringDurationInMin);
+        vibratePattern = toVibratePattern(from.vibratePattern);
 
         repeatModel.setReminderTime(from.time);
         repeatModel.customHours.clear();
@@ -199,27 +200,27 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    public boolean setInstance(Intent intent) {
-        if (intent == null) {
-            return false;
-        }
-
-        String reminderId = intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT);
-
-        if (reminderId == null || reminderId.isEmpty()) {
-            return false;
-        } else {
-
-            Realm realm = Realm.getDefaultInstance();
-            Reminder reminderData = realm.where(Reminder.class).equalTo("id", reminderId).findFirst();
-            if (reminderData == null) {
-                return false;
-            } else {
-                setInstance(reminderData);
-                return true;
-            }
-        }
-    }
+//    public boolean setInstance(Intent intent) {
+//        if (intent == null) {
+//            return false;
+//        }
+//
+//        String reminderId = intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT);
+//
+//        if (reminderId == null || reminderId.isEmpty()) {
+//            return false;
+//        } else {
+//
+//            Realm realm = Realm.getDefaultInstance();
+//            Reminder reminderData = realm.where(Reminder.class).equalTo("id", reminderId).findFirst();
+//            if (reminderData == null) {
+//                return false;
+//            } else {
+//                setInstance(reminderData);
+//                return true;
+//            }
+//        }
+//    }
 
     public static ReminderModel getInstance(Reminder from) {
         ReminderModel to = new ReminderModel();
@@ -261,15 +262,100 @@ public class ReminderModel extends ViewModel {
         alarmVolumePercentage = Math.min(Math.max(value, 0), 100);
     }
 
+
     private AlarmRingDurations ringDuration = AlarmRingDurations.ONE_MINUTE;
 
     public AlarmRingDurations getAlarmRingDuration() {
         return ringDuration;
     }
 
+    public static AlarmRingDurations toAlarmRingDuration(int minute) {
+        switch (minute) {
+            default:
+            case 0:
+                return AlarmRingDurations.ONE_MINUTE;
+            case 1:
+                return AlarmRingDurations.TWO_MINUTE;
+            case 2:
+                return AlarmRingDurations.THREE_MINUTE;
+        }
+    }
+
+    public static int toAlarmRingDuration(AlarmRingDurations duration) {
+        switch (duration) {
+            default:
+            case ONE_MINUTE:
+                return 0;
+            case TWO_MINUTE:
+                return 1;
+            case THREE_MINUTE:
+                return 2;
+        }
+    }
+
     public void setAlarmRingDuration(AlarmRingDurations value) {
         ringDuration = value;
     }
+
+
+    private VibratePatterns vibratePattern = VibratePatterns.LONG;
+
+    public VibratePatterns getVibratePattern() {
+        return vibratePattern;
+    }
+
+    public static VibratePatterns toVibratePattern(int value) {
+        switch (value) {
+            default:
+            case 0:
+                return VibratePatterns.LONG;
+            case 1:
+                return VibratePatterns.HEART_BREAK;
+            case 2:
+                return VibratePatterns.TICKTOCK;
+            case 3:
+                return VibratePatterns.WALTZ;
+            case 4:
+                return VibratePatterns.ZIG_ZIG_ZIG;
+        }
+    }
+
+    public static int toVibratePattern(VibratePatterns pattern) {
+        switch (pattern) {
+            default:
+            case LONG:
+                return 0;
+            case HEART_BREAK:
+                return 1;
+            case TICKTOCK:
+                return 2;
+            case WALTZ:
+                return 3;
+            case ZIG_ZIG_ZIG:
+                return 4;
+        }
+    }
+
+    public static long[] toVibrateFrequency(VibratePatterns pattern) {
+        switch (pattern) {
+            default:
+            case LONG:
+                return VIBRATE_PATTERN_BASIC;
+            case HEART_BREAK:
+                return VIBRATE_PATTERN_HEART_BREAK;
+            case TICKTOCK:
+                return VIBRATE_PATTERN_TICKTOCK;
+            case WALTZ:
+                return VIBRATE_PATTERN_WALTZ;
+            case ZIG_ZIG_ZIG:
+                return VIBRATE_PATTERN_ZIG_ZIG_ZIG;
+        }
+    }
+
+    public void setVibratePattern(VibratePatterns value) {
+        vibratePattern = value;
+    }
+
 
     private String id;
 
@@ -469,19 +555,8 @@ public class ReminderModel extends ViewModel {
 
         to.increaseVolumeGradually = from.increaseVolumeGradually;
         to.alarmVolume = from.alarmVolumePercentage;
-
-        switch (from.ringDuration) {
-            default:
-            case ONE_MINUTE:
-                to.ringDurationInMin = 1;
-                break;
-            case TWO_MINUTE:
-                to.ringDurationInMin = 2;
-                break;
-            case THREE_MINUTE:
-                to.ringDurationInMin = 3;
-                break;
-        }
+        to.ringDurationInMin = toAlarmRingDuration(from.ringDuration);
+        to.vibratePattern = toVibratePattern(from.vibratePattern);
 
         to.repeatHours.clear();
         to.repeatDays.clear();
@@ -1277,8 +1352,8 @@ public class ReminderModel extends ViewModel {
                 this.repeatModel.setRepeatOption(repeatValueChangeBuffer.getRepeatOption());
                 repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
                 repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
-
-                calculatedTime = null;
+                calculatedTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
+                //calculatedTime = null;
                 discardRepeatSettingChanges();
                 return true;
             case HOURLY_CUSTOM:

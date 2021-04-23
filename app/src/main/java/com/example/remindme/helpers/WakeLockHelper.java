@@ -6,7 +6,7 @@ import android.os.PowerManager;
 import com.example.remindme.viewModels.ReminderModel;
 
 public class WakeLockHelper {
-    private static final String WAKE_TAG = "reMindMe::p58DBS2fay";
+    private static final String WAKE_TAG = "dingDong::p58DBS2fay";
     private static PowerManager.WakeLock wakeLock;
 
     public static void acquire(Context context) {
@@ -16,7 +16,7 @@ public class WakeLockHelper {
 
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_TAG);
-        wakeLock.acquire(ReminderModel.RING_DURATION);
+        wakeLock.acquire(ReminderModel.MAX_RING_DURATION);
     }
 
     public static void release() {

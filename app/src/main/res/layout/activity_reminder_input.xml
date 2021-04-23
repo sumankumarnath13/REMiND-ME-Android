@@ -198,6 +198,7 @@
                         android:id="@+id/mnu_reminder_repeat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_16"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -262,7 +263,6 @@
                         android:id="@+id/mnu_reminder_snooze"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_16"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -310,7 +310,7 @@
                         android:id="@+id/mnu_reminder_tone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_16"
+                        android:layout_marginTop="@dimen/dp_32"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -358,7 +358,7 @@
                         android:id="@+id/alarm_volume_inputs_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_32"
+                        android:layout_marginTop="@dimen/dp_32"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -389,7 +389,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_32"
+                        android:layout_marginTop="@dimen/dp_32"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -415,17 +415,19 @@
 
                     </LinearLayout>
 
-                    <!--            VIBRATE-->
+
+                    <!--            Ring Duration-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_32"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ic_reminder_vibrate"
+                            android:src="@drawable/ic_sound_volume"
                             app:tint="@color/bg_danger" />
 
                         <TextView
@@ -435,9 +437,55 @@
                             android:layout_marginLeft="@dimen/dp_8"
                             android:layout_weight="1"
                             android:gravity="center_vertical"
-                            android:text="@string/btn_vibration"
+                            android:text="Ring duration"
                             android:textColor="@color/text_dim"
                             android:textSize="@dimen/font_size_medium" />
+
+                        <Spinner
+                            android:id="@+id/ring_duration_spinner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+
+                    </LinearLayout>
+
+                    <!--            VIBRATE-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="@dimen/dp_32"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_reminder_vibrate"
+                            app:tint="@color/bg_danger" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginLeft="@dimen/dp_8"
+                            android:gravity="center_vertical"
+                            android:text="@string/btn_vibrate"
+                            android:textColor="@color/text_dim"
+                            android:textSize="@dimen/font_size_medium" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/dp_16"
+                            android:gravity="end"
+                            android:layout_weight="1">
+
+                            <Spinner
+                                android:id="@+id/vibrate_pattern_spinner"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                        </LinearLayout>
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/sw_reminder_vibrate"

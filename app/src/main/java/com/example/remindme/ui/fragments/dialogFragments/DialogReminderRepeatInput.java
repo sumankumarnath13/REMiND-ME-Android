@@ -114,6 +114,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
             @Override
             public void onClick(View v) {
                 model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY);
+                //listener.commitChanges();
                 refresh();
             }
         });

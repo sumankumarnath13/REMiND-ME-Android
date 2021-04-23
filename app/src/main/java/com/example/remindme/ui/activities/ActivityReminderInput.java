@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -17,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -39,6 +42,7 @@ import com.example.remindme.ui.fragments.dialogFragments.DialogReminderSnoozeInp
 import com.example.remindme.viewModels.ReminderModel;
 import com.example.remindme.viewModels.ReminderRepeatModel;
 import com.example.remindme.viewModels.ReminderSnoozeModel;
+import com.example.remindme.viewModels.ReminderViewModelFactory;
 
 import java.util.Calendar;
 import java.util.List;
@@ -47,6 +51,7 @@ public class ActivityReminderInput
         extends
         AppCompatActivity
         implements
+        AdapterView.OnItemSelectedListener,
         DialogReminderNameInput.INameInputDialogListener,
         DialogReminderNoteInput.INoteInputDialogListener,
         DialogReminderRepeatInput.IRepeatInputDialogListener,
@@ -56,6 +61,7 @@ public class ActivityReminderInput
     private static final int NOTE_SPEECH_REQUEST_CODE = 113;
     private static final int RINGTONE_DIALOG_REQ_CODE = 117;
     private static final String MORE_INPUT_UI_STATE = "MORE_INPUT";
+
 
     private ReminderModel reminderModel = null;
 
@@ -79,6 +85,8 @@ public class ActivityReminderInput
     private LinearLayout lv_reminder_extra_inputs;
     private ImageView btn_reminder_extra_inputs;
     private ScrollView sv_container;
+    private Spinner ring_duration_spinner;
+    private Spinner vibrate_pattern_spinner;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -123,17 +131,12 @@ public class ActivityReminderInput
             isExtraInputsVisible = savedInstanceState.getBoolean(MORE_INPUT_UI_STATE, false);
         }
 
-        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
+        reminderModel = new ViewModelProvider(this, new ReminderViewModelFactory(getIntent())).get(ReminderModel.class);
 
         if (reminderModel.isNew()) { // First time creating the activity
-
-            if (reminderModel.setInstance(getIntent())) {
-                // Everything looks good so far. Set the title as Update
-                ActivityHelper.setTitle(this, getResources().getString(R.string.edit_reminder_heading));
-            } else {
-                ActivityHelper.setTitle(this, getResources().getString(R.string.new_reminder_heading));
-            }
-
+            ActivityHelper.setTitle(this, getResources().getString(R.string.new_reminder_heading));
+        } else {
+            ActivityHelper.setTitle(this, getResources().getString(R.string.edit_reminder_heading));
         }
 
         tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
@@ -390,6 +393,18 @@ public class ActivityReminderInput
 
         sv_container = findViewById(R.id.sv_container);
 
+        ring_duration_spinner = findViewById(R.id.ring_duration_spinner);
+        ring_duration_spinner.setOnItemSelectedListener(this);
+        ArrayAdapter<CharSequence> ring_duration_adapter = ArrayAdapter.createFromResource(this, R.array.ring_durations, R.layout.support_simple_spinner_dropdown_item);
+        // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
+        ring_duration_spinner.setAdapter(ring_duration_adapter);
+
+        vibrate_pattern_spinner = findViewById(R.id.vibrate_pattern_spinner);
+        vibrate_pattern_spinner.setOnItemSelectedListener(this);
+        ArrayAdapter<CharSequence> vibrate_pattern_adapter = ArrayAdapter.createFromResource(this, R.array.vibration_patterns, R.layout.support_simple_spinner_dropdown_item);
+        // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
+        vibrate_pattern_spinner.setAdapter(vibrate_pattern_adapter);
+
         refreshForm();
     }
 
@@ -428,7 +443,6 @@ public class ActivityReminderInput
         sw_reminder_repeat.setChecked(reminderModel.getRepeatOption() != ReminderRepeatModel.ReminderRepeatOptions.OFF);
 
         sw_reminder_tone.setChecked(reminderModel.isEnableTone());
-        sw_reminder_vibrate.setChecked(reminderModel.isEnableVibration());
 
         if (reminderModel.isEnableTone()) {
             sw_gradually_increase_volume.setEnabled(true);
@@ -443,14 +457,21 @@ public class ActivityReminderInput
                 seeker_alarm_volume.setProgress(reminderModel.getAlarmVolumePercentage());
             }
 
+            ring_duration_spinner.setEnabled(true);
+            ring_duration_spinner.setSelection(ReminderModel.toAlarmRingDuration(reminderModel.getAlarmRingDuration()));
+
         } else {
             sw_gradually_increase_volume.setEnabled(false);
             sw_gradually_increase_volume.setChecked(false);
             seeker_alarm_volume.setEnabled(false);
             tv_reminder_tone_summary.setEnabled(false);
+            ring_duration_spinner.setEnabled(false);
         }
-
         tv_reminder_tone_summary.setText(reminderModel.getRingToneUriSummary(this));
+
+        sw_reminder_vibrate.setChecked(reminderModel.isEnableVibration());
+        vibrate_pattern_spinner.setSelection(ReminderModel.toVibratePattern(reminderModel.getVibratePattern()));
+        vibrate_pattern_spinner.setEnabled(reminderModel.isEnableVibration());
 
         if (isExtraInputsVisible) {
             btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_up);
@@ -535,4 +556,19 @@ public class ActivityReminderInput
         }
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        if (parent.getId() == R.id.ring_duration_spinner) {
+            reminderModel.setAlarmRingDuration(ReminderModel.toAlarmRingDuration(position));
+        } else if (parent.getId() == R.id.vibrate_pattern_spinner) {
+            reminderModel.setVibratePattern(ReminderModel.toVibratePattern(position));
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

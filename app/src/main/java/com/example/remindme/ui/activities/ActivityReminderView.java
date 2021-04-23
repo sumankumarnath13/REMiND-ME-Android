@@ -34,6 +34,7 @@ public class ActivityReminderView extends AppCompatActivity {
     private TextView tv_missed_alerts;
     private SwitchCompat enabled;
     private ReminderModel activeReminder;
+    private TextView tv_expired;
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -125,6 +126,8 @@ public class ActivityReminderView extends AppCompatActivity {
             }
         });
 
+        tv_expired = findViewById(R.id.tv_expired);
+
         refresh();
     }
 
@@ -151,7 +154,9 @@ public class ActivityReminderView extends AppCompatActivity {
 
             if (activeReminder.isExpired()) {
                 enabled.setVisibility(View.GONE);
+                tv_expired.setVisibility(View.VISIBLE);
             } else {
+                tv_expired.setVisibility(View.GONE);
                 enabled.setVisibility(View.VISIBLE);
                 enabled.setChecked(activeReminder.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
             }
