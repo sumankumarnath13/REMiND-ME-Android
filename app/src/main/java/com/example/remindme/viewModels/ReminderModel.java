@@ -46,7 +46,7 @@ public class ReminderModel extends ViewModel {
 
     public enum VibratePatterns {
         LONG,
-        HEART_BREAK,
+        HEARTBEAT,
         TICKTOCK,
         WALTZ,
         ZIG_ZIG_ZIG
@@ -310,7 +310,7 @@ public class ReminderModel extends ViewModel {
             case 0:
                 return VibratePatterns.LONG;
             case 1:
-                return VibratePatterns.HEART_BREAK;
+                return VibratePatterns.HEARTBEAT;
             case 2:
                 return VibratePatterns.TICKTOCK;
             case 3:
@@ -325,7 +325,7 @@ public class ReminderModel extends ViewModel {
             default:
             case LONG:
                 return 0;
-            case HEART_BREAK:
+            case HEARTBEAT:
                 return 1;
             case TICKTOCK:
                 return 2;
@@ -341,7 +341,7 @@ public class ReminderModel extends ViewModel {
             default:
             case LONG:
                 return VIBRATE_PATTERN_BASIC;
-            case HEART_BREAK:
+            case HEARTBEAT:
                 return VIBRATE_PATTERN_HEART_BREAK;
             case TICKTOCK:
                 return VIBRATE_PATTERN_TICKTOCK;

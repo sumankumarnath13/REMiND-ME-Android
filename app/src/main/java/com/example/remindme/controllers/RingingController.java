@@ -141,6 +141,22 @@ public class RingingController {
         }
     }
 
+    public void vibrateOnce(long[] pattern) {
+        if (vibrator != null) {
+
+            if (OsHelper.isLollipopOrLater()) {
+                vibrator.vibrate(pattern, -1, new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build());
+            } else {
+                vibrator.vibrate(pattern, -1);
+            }
+
+            isVibrating = true;
+        }
+    }
+
     public void stopRinging() {
         if (isRinging) {
 

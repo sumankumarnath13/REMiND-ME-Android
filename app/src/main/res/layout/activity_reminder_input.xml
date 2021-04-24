@@ -310,7 +310,7 @@
                         android:id="@+id/mnu_reminder_tone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_32"
+                        android:layout_marginTop="@dimen/dp_16"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -358,7 +358,7 @@
                         android:id="@+id/alarm_volume_inputs_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_32"
+                        android:layout_marginTop="@dimen/dp_16"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -389,7 +389,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_32"
+                        android:layout_marginTop="@dimen/dp_16"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -420,7 +420,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_32"
+                        android:layout_marginTop="@dimen/dp_16"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -454,7 +454,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:layout_marginTop="@dimen/dp_32"
+                        android:layout_marginTop="@dimen/dp_16"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -476,7 +476,6 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/dp_16"
                             android:gravity="end"
                             android:layout_weight="1">
 

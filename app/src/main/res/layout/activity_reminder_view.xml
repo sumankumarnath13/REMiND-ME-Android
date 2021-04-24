@@ -67,17 +67,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="expired"
-                    android:visibility="gone"
-                    android:textColor="@color/bg_danger" />
+                    android:textColor="@color/bg_danger"
+                    android:visibility="gone" />
 
                 <!--    LAST MISSED ALERT -->
                 <LinearLayout
                     android:id="@+id/lv_last_missed_alert"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/dp_8"
                     android:visibility="gone">
 
                     <TextView
@@ -138,17 +138,9 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_reminder_snooze"
-                        app:tint="@color/controlBackground" />
-
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dp_8"
-                        android:layout_marginLeft="@dimen/dp_8"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -199,17 +191,9 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_reminder_repeat"
-                        app:tint="@color/bg_info" />
-
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dp_8"
-                        android:layout_marginLeft="@dimen/dp_8"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -233,13 +217,14 @@
 
                 </LinearLayout>
 
-                <!--    NOTE -->
-                <!--                <ScrollView-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content">-->
-
-                <!--                   -->
-                <!--                </ScrollView>-->
+                <!--    NOTE SUMMARY-->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="Note"
+                    android:textColor="@color/text_dim"
+                    android:textSize="@dimen/font_size_medium" />
 
                 <TextView
                     android:id="@+id/tv_reminder_note"
@@ -247,7 +232,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_dim"
                     android:textSize="@dimen/font_size_small" />
-
 
             </LinearLayout>
 
@@ -267,81 +251,48 @@
             android:background="@drawable/border_vertical"
             android:baselineAligned="false"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
             android:paddingHorizontal="@dimen/dp_8"
-            android:paddingVertical="@dimen/dp_3">
+            android:paddingVertical="@dimen/dp_3"
+            android:orientation="horizontal">
 
             <!-- TONE DETAILS LAYOUT -->
-            <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tone : "
+                android:textColor="@color/text_dim"
+                android:textSize="@dimen/font_size_extra_small" />
+
+            <TextView
+                android:id="@+id/tv_reminder_tone_summary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:textColor="@color/text_soothing"
+                android:textSize="@dimen/font_size_extra_small" />
 
-                <ImageView
-                    android:layout_width="@dimen/dp_16"
-                    android:layout_height="@dimen/dp_16"
-                    android:layout_marginEnd="@dimen/dp_3"
-                    android:layout_marginRight="@dimen/dp_3"
-                    android:src="@drawable/ic_reminder_sound"
-                    app:tint="@color/bg_warning" />
-
-                <TextView
-                    android:id="@+id/tv_alarm_tone_is_off"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="OFF"
-                    android:textColor="@color/text_danger"
-                    android:textSize="@dimen/font_size_small" />
-
-                <TextView
-                    android:id="@+id/tv_reminder_tone_summary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_soothing"
-                    android:textSize="@dimen/font_size_small" />
-
-            </LinearLayout>
             <!-- TONE EXTRA DETAILS LAYOUT -->
             <LinearLayout
                 android:id="@+id/lv_alarm_tone_is_on"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_marginStart="@dimen/dp_8"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:gravity="center_vertical">
 
-                <ImageView
-                    android:layout_width="@dimen/dp_16"
-                    android:layout_height="@dimen/dp_16"
-                    android:layout_marginEnd="@dimen/dp_3"
-                    android:layout_marginRight="@dimen/dp_3"
-                    android:src="@drawable/ic_sound_volume"
-                    app:tint="@color/bg_success" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vol : "
+                    android:textColor="@color/text_dim"
+                    android:textSize="@dimen/font_size_extra_small" />
 
                 <TextView
                     android:id="@+id/tv_alarm_volume"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dp_8"
-                    android:layout_marginRight="@dimen/dp_8"
-                    android:textColor="@color/text_soothing"
-                    android:textSize="@dimen/font_size_small" />
-
-                <ImageView
-                    android:layout_width="@dimen/dp_16"
-                    android:layout_height="@dimen/dp_16"
-                    android:layout_marginEnd="@dimen/dp_3"
-                    android:layout_marginRight="@dimen/dp_3"
-                    android:src="@drawable/ic_sound_volume_auto" />
-
-                <TextView
-                    android:id="@+id/tv_gradually_increase_volume"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dp_8"
-                    android:layout_marginRight="@dimen/dp_8"
-                    android:textSize="@dimen/font_size_small" />
+                    android:textColor="@color/text_success"
+                    android:textSize="@dimen/font_size_extra_small" />
 
             </LinearLayout>
 
@@ -349,23 +300,23 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_8"
+                android:layout_marginLeft="@dimen/dp_8"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/img_reminder_vibrate"
-                    android:layout_width="@dimen/dp_16"
-                    android:layout_height="@dimen/dp_16"
-                    android:layout_marginEnd="@dimen/dp_3"
-                    android:layout_marginRight="@dimen/dp_3"
-                    android:src="@drawable/ic_reminder_vibrate"
-                    app:tint="@color/bg_danger" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vibrate : "
+                    android:textSize="@dimen/font_size_extra_small"
+                    android:textColor="@color/text_dim" />
 
                 <TextView
                     android:id="@+id/tv_reminder_vibrate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/font_size_small" />
+                    android:textSize="@dimen/font_size_extra_small" />
 
             </LinearLayout>
 

@@ -20,6 +20,8 @@ import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
+import java.util.Locale;
+
 
 public class ActivityReminderView extends AppCompatActivity {
     private static final String MISSED_ALERT_UI_STATE = "STATE";
@@ -168,36 +170,45 @@ public class ActivityReminderView extends AppCompatActivity {
             tv_reminder_repeat_summary.setText(activeReminder.getRepeatSettingString());
 
             final TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
-            final TextView tv_alarm_tone_is_off = findViewById(R.id.tv_alarm_tone_is_off);
             final LinearLayout lv_alarm_tone_is_on = findViewById(R.id.lv_alarm_tone_is_on);
 
             if (activeReminder.isEnableTone()) {
 
-                tv_alarm_tone_is_off.setVisibility(View.GONE);
-                tv_reminder_tone_summary.setVisibility(View.VISIBLE);
                 lv_alarm_tone_is_on.setVisibility(View.VISIBLE);
-
                 tv_reminder_tone_summary.setText(activeReminder.getRingToneUriSummary(this));
 
                 final TextView tv_alarm_volume = findViewById(R.id.tv_alarm_volume);
-                tv_alarm_volume.setText(activeReminder.getAlarmVolumePercentage() == 0 ?
-                        "Default" : activeReminder.getAlarmVolumePercentage() + "%");
 
-                final TextView tv_gradually_increase_volume = findViewById(R.id.tv_gradually_increase_volume);
-                tv_gradually_increase_volume.setText(activeReminder.isIncreaseVolumeGradually() ? "ON" : "OFF");
-                tv_gradually_increase_volume.setTextColor(activeReminder.isIncreaseVolumeGradually() ?
-                        getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
+                if (activeReminder.isIncreaseVolumeGradually()) {
+
+                    tv_alarm_volume.setText(String.format(Locale.ENGLISH, "%d%% to %s",
+                            ReminderModel.MINIMUM_INPUT_VOLUME_PERCENTAGE,
+                            activeReminder.getAlarmVolumePercentage() == 0 ?
+                                    "default" : activeReminder.getAlarmVolumePercentage() + "%"
+                    ));
+
+                } else {
+
+                    tv_alarm_volume.setText(String.format(Locale.ENGLISH, "%s",
+                            activeReminder.getAlarmVolumePercentage() == 0 ?
+                                    "default" : activeReminder.getAlarmVolumePercentage() + "%")
+                    );
+                }
 
             } else {
-
-                lv_alarm_tone_is_on.setVisibility(View.GONE);
                 tv_reminder_tone_summary.setVisibility(View.GONE);
-                tv_alarm_tone_is_off.setVisibility(View.VISIBLE);
-
             }
+            tv_reminder_tone_summary.setTextColor(activeReminder.isEnableTone() ?
+                    getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
 
             final TextView tv_reminder_vibrate = findViewById(R.id.tv_reminder_vibrate);
-            tv_reminder_vibrate.setText(activeReminder.isEnableVibration() ? "ON" : "OFF");
+
+            if (activeReminder.isEnableVibration()) {
+                tv_reminder_vibrate.setText(getResources().getStringArray(R.array.vibration_patterns)[ReminderModel.toVibratePattern(activeReminder.getVibratePattern())]);
+            } else {
+                tv_reminder_vibrate.setText("OFF");
+            }
+
             tv_reminder_vibrate.setTextColor(activeReminder.isEnableVibration() ?
                     getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
 

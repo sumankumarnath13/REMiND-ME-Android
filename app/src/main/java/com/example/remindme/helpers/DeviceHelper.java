@@ -27,6 +27,15 @@ public class DeviceHelper {
     }
 
     public String getOperatingSystemSignature() {
-        return String.format(Locale.ENGLISH, "%s %s (%d)", "Android", Build.VERSION.RELEASE, Build.VERSION.SDK_INT);
+        return String.format(Locale.ENGLISH, "Android %s (%d)", Build.VERSION.RELEASE, Build.VERSION.SDK_INT);
     }
+
+    public String getOperatingSystemUpdateSignature() {
+        if (OsHelper.isMarshmallowOrLater()) {
+            return String.format(Locale.ENGLISH, "Update-%s-%s", Build.VERSION.SECURITY_PATCH, Build.VERSION.INCREMENTAL);
+        } else {
+            return String.format(Locale.ENGLISH, "Update-%s", Build.VERSION.INCREMENTAL);
+        }
+    }
+
 }

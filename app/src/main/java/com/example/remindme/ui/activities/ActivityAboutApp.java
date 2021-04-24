@@ -10,6 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.remindme.R;
 import com.example.remindme.helpers.ActivityHelper;
+import com.example.remindme.helpers.DeviceHelper;
+import com.example.remindme.helpers.StringHelper;
+
+import java.util.Calendar;
 
 public class ActivityAboutApp extends AppCompatActivity {
 
@@ -23,10 +27,18 @@ public class ActivityAboutApp extends AppCompatActivity {
         btn_send_feedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                final String subject = String.format("App feedback - %s", StringHelper.toWeekdayDate(Calendar.getInstance().getTime()));
+                final String emailText = String.format("Brand : %s\nModel : %s\nSystem : %s\nUpdates : %s\n---\n",
+                        DeviceHelper.getInstance().getBrand(),
+                        DeviceHelper.getInstance().getModel(),
+                        DeviceHelper.getInstance().getOperatingSystemSignature(),
+                        DeviceHelper.getInstance().getOperatingSystemUpdateSignature());
+
                 final Intent email = new Intent(Intent.ACTION_SENDTO);
-                email.putExtra(Intent.EXTRA_SUBJECT, "Habla");
-                email.putExtra(Intent.EXTRA_TEXT, "Kebla");
                 email.setData(Uri.parse("mailto:sknath25@gmail.com")); // or just "mailto:" for blank
+                email.putExtra(Intent.EXTRA_SUBJECT, subject);
+                email.putExtra(Intent.EXTRA_TEXT, emailText);
                 email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
                 startActivity(Intent.createChooser(email, null));
             }

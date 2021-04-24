@@ -138,6 +138,9 @@ public class ActivitySettings extends AppCompatActivity implements AdapterView.O
         final TextView tv_os_signature = findViewById(R.id.tv_os_signature);
         tv_os_signature.setText(DeviceHelper.getInstance().getOperatingSystemSignature());
 
+        final TextView tv_os_update_signature = findViewById(R.id.tv_os_update_signature);
+        tv_os_update_signature.setText(DeviceHelper.getInstance().getOperatingSystemUpdateSignature());
+
     }
 
     @Override
