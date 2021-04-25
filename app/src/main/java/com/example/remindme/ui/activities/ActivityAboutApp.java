@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.remindme.R;
 import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.DeviceHelper;
@@ -15,7 +13,7 @@ import com.example.remindme.helpers.StringHelper;
 
 import java.util.Calendar;
 
-public class ActivityAboutApp extends AppCompatActivity {
+public class ActivityAboutApp extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

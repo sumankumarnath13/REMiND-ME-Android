@@ -8,15 +8,6 @@
     android:paddingHorizontal="@dimen/dp_16"
     tools:context=".ui.activities.ActivityReminderRinging">
 
-    <!-- Header aligned to top -->
-    <!--    <RelativeLayout-->
-    <!--        android:id="@+id/reminder_ringing_header"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:gravity="center"-->
-    <!--        android:layout_marginBottom="@dimen/dp_16">-->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -32,7 +23,7 @@
             android:textAlignment="center"
             android:layout_marginBottom="@dimen/dp_8"
             android:textSize="@dimen/font_size_medium"
-            android:textColor="@color/text_dim" />
+            android:textColor="?attr/dimText" />
 
         <TextView
             android:id="@+id/tv_reminder_ringing_title"
@@ -52,7 +43,7 @@
             android:textAlignment="center"
             android:layout_marginBottom="@dimen/dp_8"
             android:textSize="@dimen/font_size_extra_large"
-            android:textColor="@color/text_soothing" />
+            android:textColor="?attr/soothingText" />
 
         <TextView
             android:id="@+id/tv_reminder_name"
@@ -62,7 +53,7 @@
             android:textAlignment="center"
             android:textSize="@dimen/font_size_large"
             android:layout_marginVertical="@dimen/dp_8"
-            android:textColor="@color/text_bright" />
+            android:textColor="?attr/brightText" />
 
         <TextView
             android:id="@+id/tv_reminder_note"
@@ -92,9 +83,9 @@
             android:drawablePadding="@dimen/dp_3"
             android:drawableTint="@color/text_danger"
             android:text="@string/btn_alarm_action_dismiss"
+            android:textSize="@dimen/font_size_medium"
             android:textAlignment="textStart"
-            android:gravity="start|center"
-            tools:ignore="ButtonStyle" />
+            android:gravity="start|center" />
 
         <Button
             android:id="@+id/btn_reminder_ringing_snooze"
@@ -106,9 +97,9 @@
             android:drawablePadding="@dimen/dp_3"
             android:drawableTint="@color/text_warning"
             android:text="@string/reminder_snooze_menu_caption"
+            android:textSize="@dimen/font_size_medium"
             android:textAlignment="textStart"
-            android:gravity="start|center"
-            tools:ignore="ButtonStyle" />
+            android:gravity="start|center" />
 
     </LinearLayout>
 

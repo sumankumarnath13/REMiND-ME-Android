@@ -25,7 +25,6 @@ import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -50,7 +49,7 @@ import java.util.List;
 
 public class ActivityReminderInput
         extends
-        AppCompatActivity
+        BaseActivity
         implements
         AdapterView.OnItemSelectedListener,
         DialogReminderNameInput.INameInputDialogListener,
@@ -64,8 +63,7 @@ public class ActivityReminderInput
     private static final String MORE_INPUT_UI_STATE = "MORE_INPUT";
 
     private boolean isExtraInputsVisible;
-    private boolean isExtraInputsShownOnce;
-    private boolean isRefreshing;
+    private boolean isUserInteracted;
     private ReminderModel reminderModel = null;
     private RingingController ringingController;
 
@@ -127,9 +125,17 @@ public class ActivityReminderInput
     }
 
     @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        isUserInteracted = true;
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_input);
+
+        isUserInteracted = false;
 
         if (savedInstanceState != null) {
             isExtraInputsVisible = savedInstanceState.getBoolean(MORE_INPUT_UI_STATE, false);
@@ -191,7 +197,8 @@ public class ActivityReminderInput
                 mYear = alertTime.get(Calendar.YEAR);
                 mMonth = alertTime.get(Calendar.MONTH);
                 mDay = alertTime.get(Calendar.DAY_OF_MONTH);
-                final DatePickerDialog datePickerDialog = new DatePickerDialog(ActivityReminderInput.this, R.style.DatePickerDialog,
+                final DatePickerDialog datePickerDialog = new DatePickerDialog(ActivityReminderInput.this,
+                        AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT ? R.style.DatePickerDialogLight : R.style.DatePickerDialogBlack,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year,
@@ -223,7 +230,8 @@ public class ActivityReminderInput
                 final int mHour, mMinute;
                 mHour = alertTime.get(Calendar.HOUR_OF_DAY);
                 mMinute = alertTime.get(Calendar.MINUTE);
-                final TimePickerDialog timePickerDialog = new TimePickerDialog(ActivityReminderInput.this, R.style.TimePickerDialog,
+                final TimePickerDialog timePickerDialog = new TimePickerDialog(ActivityReminderInput.this,
+                        AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT ? R.style.TimePickerDialogLight : R.style.TimePickerDialogBlack,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -295,7 +303,7 @@ public class ActivityReminderInput
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if (isRefreshing) return;
+                if (!isUserInteracted) return;
 
                 reminderModel.setEnableTone(isChecked);
 
@@ -309,7 +317,7 @@ public class ActivityReminderInput
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if (isRefreshing) return;
+                if (!isUserInteracted) return;
 
                 reminderModel.setEnableVibration(isChecked);
 
@@ -391,6 +399,7 @@ public class ActivityReminderInput
             public void onClick(View v) {
 
                 isExtraInputsVisible = !isExtraInputsVisible;
+                isUserInteracted = false; // This is very important. Because its just making a layout visible and is no real interaction.
                 setExtraInputs();
 
             }
@@ -399,48 +408,22 @@ public class ActivityReminderInput
         sv_container = findViewById(R.id.sv_container);
 
         ring_duration_spinner = findViewById(R.id.ring_duration_spinner);
-        ring_duration_spinner.setOnItemSelectedListener(this);
         ArrayAdapter<CharSequence> ring_duration_adapter = ArrayAdapter.createFromResource(this, R.array.ring_durations, R.layout.support_simple_spinner_dropdown_item);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         ring_duration_spinner.setAdapter(ring_duration_adapter);
+        ring_duration_spinner.setOnItemSelectedListener(this);
 
         vibrate_pattern_spinner = findViewById(R.id.vibrate_pattern_spinner);
-        vibrate_pattern_spinner.setOnItemSelectedListener(this);
         ArrayAdapter<CharSequence> vibrate_pattern_adapter = ArrayAdapter.createFromResource(this, R.array.vibration_patterns, R.layout.support_simple_spinner_dropdown_item);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         vibrate_pattern_spinner.setAdapter(vibrate_pattern_adapter);
+        vibrate_pattern_spinner.setOnItemSelectedListener(this);
 
         refreshForm();
 
     }
 
-    private void setExtraInputs() {
-
-        if (isExtraInputsVisible) {
-
-            btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_up);
-            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(R.color.bg_danger), android.graphics.PorterDuff.Mode.SRC_IN);
-
-            lv_reminder_extra_inputs.setVisibility(View.VISIBLE);
-            sv_container.post(new Runnable() {
-                @Override
-                public void run() {
-                    sv_container.fullScroll(ScrollView.FOCUS_DOWN);
-                }
-            });
-
-        } else {
-
-            btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_down);
-            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(R.color.bg_success), android.graphics.PorterDuff.Mode.SRC_IN);
-            lv_reminder_extra_inputs.setVisibility(View.GONE);
-
-        }
-    }
-
     private void refreshForm() {
-
-        isRefreshing = true;
 
         if (reminderModel.getOriginalTime() == null) {
             // User has not entered any value yet! Set a default time to start.
@@ -501,8 +484,30 @@ public class ActivityReminderInput
         vibrate_pattern_spinner.setEnabled(reminderModel.isEnableVibration());
 
         setExtraInputs();
+    }
 
-        isRefreshing = false;
+    private void setExtraInputs() {
+
+        if (isExtraInputsVisible) {
+
+            btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_up);
+            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(R.color.bg_danger), android.graphics.PorterDuff.Mode.SRC_IN);
+
+            lv_reminder_extra_inputs.setVisibility(View.VISIBLE);
+            sv_container.post(new Runnable() {
+                @Override
+                public void run() {
+                    sv_container.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            });
+
+        } else {
+
+            btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_down);
+            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(R.color.bg_success), android.graphics.PorterDuff.Mode.SRC_IN);
+            lv_reminder_extra_inputs.setVisibility(View.GONE);
+
+        }
     }
 
     @Override
@@ -580,6 +585,10 @@ public class ActivityReminderInput
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+        if (!isUserInteracted) {
+            return;
+        }
+
         if (parent.getId() == R.id.ring_duration_spinner) {
 
             reminderModel.setAlarmRingDuration(ReminderModel.toAlarmRingDuration(position));
@@ -588,20 +597,13 @@ public class ActivityReminderInput
 
             reminderModel.setVibratePattern(ReminderModel.toVibratePattern(position));
 
-            if (!isExtraInputsShownOnce) {
+            if (ringingController == null) {
 
-                isExtraInputsShownOnce = true;
+                ringingController = new RingingController(this, reminderModel.getRingToneUri());
 
-            } else {
-
-                if (ringingController == null) {
-
-                    ringingController = new RingingController(this, reminderModel.getRingToneUri());
-
-                }
-
-                ringingController.vibrateOnce(ReminderModel.toVibrateFrequency(reminderModel.getVibratePattern()));
             }
+
+            ringingController.vibrateOnce(ReminderModel.toVibrateFrequency(reminderModel.getVibratePattern()));
         }
 
     }

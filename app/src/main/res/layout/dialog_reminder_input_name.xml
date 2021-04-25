@@ -34,6 +34,6 @@
         android:id="@+id/tv_reminder_name_limit_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_dim" />
+        android:textColor="?attr/dimText" />
 
 </LinearLayout>

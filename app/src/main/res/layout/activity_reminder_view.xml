@@ -35,7 +35,7 @@
                     android:id="@+id/tv_reminder_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_soothing"
+                    android:textColor="?attr/soothingText"
                     android:textSize="@dimen/font_size_banner" />
 
                 <!--    DATE-->
@@ -43,7 +43,7 @@
                     android:id="@+id/tv_reminder_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_dim"
+                    android:textColor="?attr/dimText"
                     android:textSize="@dimen/font_size_medium" />
 
                 <!--    NAME-->
@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_8"
-                    android:textColor="@color/text_bright"
+                    android:textColor="?attr/brightText"
                     android:textSize="@dimen/font_size_large"
                     android:visibility="gone" />
 
@@ -67,7 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="expired"
-                    android:textColor="@color/bg_danger"
+                    android:textColor="@color/text_danger"
                     android:visibility="gone" />
 
                 <!--    LAST MISSED ALERT -->
@@ -92,7 +92,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="@color/text_dim"
+                        android:textColor="?attr/dimText"
                         android:textSize="@dimen/font_size_small" />
 
                     <ImageView
@@ -112,12 +112,10 @@
                 android:id="@+id/tv_missed_alerts"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginEnd="@dimen/dp_8"
-                android:layout_marginRight="@dimen/dp_8"
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textAlignment="textEnd"
-                android:textColor="@color/text_dim"
+                android:textColor="?attr/dimText"
                 android:textSize="@dimen/font_size_small"
                 android:visibility="visible" />
 
@@ -145,7 +143,7 @@
                         android:orientation="vertical">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
@@ -157,16 +155,31 @@
                                 android:layout_marginRight="@dimen/dp_8"
                                 android:gravity="center_vertical"
                                 android:text="@string/btn_snooze"
-                                android:textColor="@color/text_dim"
+                                android:textColor="?attr/dimText"
                                 android:textSize="@dimen/font_size_medium" />
 
                             <TextView
                                 android:id="@+id/tv_reminder_next_snooze"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:textColor="?attr/dimText"
+                                android:textSize="@dimen/font_size_medium" />
+
+                            <Button
+                                android:id="@+id/btn_reminder_ringing_dismiss"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:textColor="@color/text_warning"
-                                android:textSize="@dimen/font_size_medium" />
+                                android:layout_marginStart="@dimen/dp_8"
+                                android:layout_marginLeft="@dimen/dp_8"
+                                android:drawableStart="@drawable/ic_reminder_dismiss"
+                                android:drawableLeft="@drawable/ic_reminder_dismiss"
+                                android:drawablePadding="@dimen/dp_3"
+                                android:drawableTint="@color/text_danger"
+                                android:text="@string/btn_alarm_action_dismiss"
+                                android:textAlignment="textStart"
+                                android:gravity="start|center" />
 
                         </LinearLayout>
 
@@ -175,7 +188,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:textColor="@color/text_soothing"
+                            android:textColor="?attr/soothingText"
                             android:textSize="@dimen/font_size_small" />
 
                     </LinearLayout>
@@ -202,7 +215,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:text="@string/btn_repeat"
-                            android:textColor="@color/text_dim"
+                            android:textColor="?attr/dimText"
                             android:textSize="@dimen/font_size_medium" />
 
                         <TextView
@@ -210,7 +223,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:textColor="@color/text_soothing"
+                            android:textColor="?attr/soothingText"
                             android:textSize="@dimen/font_size_small" />
 
                     </LinearLayout>
@@ -223,14 +236,14 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:text="Note"
-                    android:textColor="@color/text_dim"
+                    android:textColor="?attr/dimText"
                     android:textSize="@dimen/font_size_medium" />
 
                 <TextView
                     android:id="@+id/tv_reminder_note"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_dim"
+                    android:textColor="?attr/dimText"
                     android:textSize="@dimen/font_size_small" />
 
             </LinearLayout>
@@ -260,7 +273,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tone : "
-                android:textColor="@color/text_dim"
+                android:textColor="?attr/dimText"
                 android:textSize="@dimen/font_size_extra_small" />
 
             <TextView
@@ -268,7 +281,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/text_soothing"
+                android:textColor="?attr/soothingText"
                 android:textSize="@dimen/font_size_extra_small" />
 
             <!-- TONE EXTRA DETAILS LAYOUT -->
@@ -284,14 +297,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Vol : "
-                    android:textColor="@color/text_dim"
+                    android:textColor="?attr/dimText"
                     android:textSize="@dimen/font_size_extra_small" />
 
                 <TextView
                     android:id="@+id/tv_alarm_volume"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_success"
+                    android:textColor="?attr/dimText"
                     android:textSize="@dimen/font_size_extra_small" />
 
             </LinearLayout>
@@ -310,7 +323,7 @@
                     android:layout_height="wrap_content"
                     android:text="Vibrate : "
                     android:textSize="@dimen/font_size_extra_small"
-                    android:textColor="@color/text_dim" />
+                    android:textColor="?attr/dimText" />
 
                 <TextView
                     android:id="@+id/tv_reminder_vibrate"
@@ -340,8 +353,8 @@
                 android:drawableTint="@color/bg_danger"
                 android:gravity="start|center"
                 android:text="@string/btn_delete"
-                android:textAlignment="textStart"
-                tools:ignore="ButtonStyle" />
+                android:textSize="@dimen/font_size_medium"
+                android:textAlignment="textStart" />
 
             <Button
                 android:id="@+id/btn_reminder_edit"
@@ -354,8 +367,8 @@
                 android:drawableTint="@color/bg_warning"
                 android:gravity="start|center"
                 android:text="@string/btn_edit"
-                android:textAlignment="textStart"
-                tools:ignore="ButtonStyle" />
+                android:textSize="@dimen/font_size_medium"
+                android:textAlignment="textStart" />
 
         </LinearLayout>
 

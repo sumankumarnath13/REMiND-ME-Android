@@ -1166,21 +1166,13 @@ public class ReminderModel extends ViewModel {
         Date nextTime = getNextScheduleTime(Calendar.getInstance(), originalTime);
 
         if (nextTime == null) { // EOF situation
-
             archiveToFinished();
-
-            //deleteAndCancelAlert(context);
-
         } else {
-
             //User's dismiss will erase missed alert history:
             lastMissedTime = null;
             missedTimes.clear();
-
             calculatedTime = nextTime; // Set next trigger time.
-
             trySaveAndSetAlert(context, true, false); // Save changes. // Set alarm for next trigger time.
-
         }
     }
 
@@ -1233,7 +1225,6 @@ public class ReminderModel extends ViewModel {
         Calendar currentTime = Calendar.getInstance();
 
         if (currentTime.getTime().after(_time)) { // Set snooze only if current time is past alarm time or previous snooze time.
-            nextSnoozeOffTime = null; // RESET
             Calendar nextSnoozeOff = Calendar.getInstance();
             nextSnoozeOff.setTime(_time);
             switch (snoozeModel.intervalOption) {
@@ -1289,6 +1280,15 @@ public class ReminderModel extends ViewModel {
                 ToastHelper.showLong(context, "Snoozing! " + getIntId());
                 trySaveAndSetAlert(context, false, false);
             }
+        } else { // Else dismiss the alarm
+            cancelAlarm(context);
+            nextSnoozeOffTime = null;
+            ToastHelper.showLong(context, "Dismissing from snooze! " + getIntId());
+            if (isByUser) {
+                dismissByUser(context);
+            } else {
+                dismissByApp(context, Calendar.getInstance());
+            }
         }
     }
 
@@ -1306,19 +1306,21 @@ public class ReminderModel extends ViewModel {
                     //deleteAndCancelAlert();
                     enabled = false;
                     ToastHelper.showLong(context, "Alarm cannot be scheduled further. Please set time into future to enable.");
+                    return false;
                 } else { // Found next trigger point.
                     calculatedTime = nextTime; // Set next trigger time.
                     enabled = true;
+                    return true;
                 }
             } else {
                 enabled = true;
+                return true;
             }
         } else {
             cancelAlarm(context);
             enabled = false;
+            return true;
         }
-
-        return enabled;
     }
 
     public ReminderRepeatModel.ReminderRepeatOptions getRepeatOption() {

@@ -10,6 +10,11 @@ import io.realm.Realm;
 
 public class AppSettingsHelper {
 
+    public enum Themes {
+        BLACK,
+        LIGHT
+    }
+
     private static final String ID = "ID";
 
     private AppSettingsHelper() {
@@ -19,6 +24,16 @@ public class AppSettingsHelper {
             use24hourTime = setting.use24hourTime;
             disableAllReminders = setting.disableAllReminders;
             firstDayOfWeek = setting.firstDayOfWeek;
+
+            switch (setting.theme) {
+                default:
+                    theme = Themes.BLACK;
+                    break;
+
+                case 1:
+                    theme = Themes.LIGHT;
+                    break;
+            }
         }
     }
 
@@ -64,12 +79,37 @@ public class AppSettingsHelper {
         update();
     }
 
+    private Themes theme = Themes.BLACK;
+
+    public Themes getTheme() {
+        return theme;
+    }
+
+    public void setTheme(Themes value) {
+        theme = value;
+        update();
+    }
+
+    public void applyTheme() {
+
+    }
+
     private void update() {
         final AppSetting setting = new AppSetting();
         setting.id = ID;
         setting.disableAllReminders = disableAllReminders;
         setting.use24hourTime = use24hourTime;
         setting.firstDayOfWeek = firstDayOfWeek;
+
+        switch (theme) {
+            default:
+                setting.theme = 0;
+                break;
+
+            case LIGHT:
+                setting.theme = 1;
+                break;
+        }
 
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {

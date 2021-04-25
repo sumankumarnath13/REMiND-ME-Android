@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/dp_16"
+        android:layout_margin="@dimen/dp_16"
         android:orientation="vertical">
 
 
@@ -29,14 +29,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Version"
-                android:textColor="@color/text_dim"
+                android:textColor="?attr/dimText"
                 android:textSize="@dimen/font_size_small" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.1.1"
-                android:textColor="@color/text_soothing"
+                android:textColor="?attr/soothingText"
                 android:textSize="@dimen/font_size_large" />
 
         </LinearLayout>
@@ -93,7 +93,7 @@
                 android:gravity="start|center"
                 android:text="License Info"
                 android:textAlignment="textStart"
-                android:textColor="@color/text_dim"
+                android:textColor="?attr/dimText"
                 android:textSize="@dimen/font_size_medium" />
 
         </LinearLayout>

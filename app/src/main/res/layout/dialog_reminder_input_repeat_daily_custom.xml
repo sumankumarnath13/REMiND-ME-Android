@@ -15,7 +15,7 @@
             android:id="@+id/chk_daily_sun"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_soothing"
+            android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_sun" />
@@ -24,7 +24,7 @@
             android:id="@+id/chk_daily_mon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_soothing"
+            android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_mon" />
@@ -33,7 +33,7 @@
             android:id="@+id/chk_daily_tue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_soothing"
+            android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_tue" />
@@ -42,7 +42,7 @@
             android:id="@+id/chk_daily_wed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_soothing"
+            android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_wed" />
@@ -51,7 +51,7 @@
             android:id="@+id/chk_daily_thu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_soothing"
+            android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_thu" />
@@ -60,7 +60,7 @@
             android:id="@+id/chk_daily_fri"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_soothing"
+            android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_fri" />
@@ -69,7 +69,7 @@
             android:id="@+id/chk_daily_sat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_soothing"
+            android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
             android:buttonTint="@color/bg_info"
             android:text="@string/repeat_daily_custom_sat" />

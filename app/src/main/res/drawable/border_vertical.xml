@@ -4,7 +4,7 @@
         <shape android:shape="rectangle">
             <stroke
                 android:width="@dimen/dp_05"
-                android:color="@color/border_color" />
+                android:color="?attr/borderColor" />
         </shape>
     </item>
     <item
@@ -13,7 +13,7 @@
         <shape android:shape="rectangle">
             <stroke
                 android:width="@dimen/dp_05"
-                android:color="@color/theme_background" />
+                android:color="?attr/themeBackground" />
         </shape>
     </item>
 </layer-list>

@@ -1,11 +1,7 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <!--    <style name="AppTheme" parent="Theme.AppCompat.Light">-->
-        <item name="android:windowBackground">@color/theme_background
-        </item> <!-- Changes background color -->
-        <item name="android:buttonStyle">@style/commonButtonStyle</item>
-        <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
+    <style name="BlackTheme" parent="Theme.AppCompat.DayNight">
+        <item name="android:windowBackground">@color/theme_background</item>
         <item name="colorAccent">@color/bg_info</item> <!-- Set button colors etc -->
         <item name="colorPrimaryDark">@color/theme_background
         </item> <!-- Changes background color or app bar and title -->
@@ -14,36 +10,81 @@
         <item name="android:textCursorDrawable">@null
         </item> <!-- Make edit text cursor color neutral to accent color -->
 
-        <!--<item name="android:editTextPreferenceStyle">@style/commonEditTextStyle</item>-->
-    </style>
-    <!--<style name="commonEditTextStyle" parent="Widget.AppCompat.EditText">-->
-    <!--    <item name="colorAccent">@color/bg_black</item>-->
-    <!--    <item name="android:textColor">@color/text_white</item>-->
-    <!--    <item name="android:textColorHint">@color/text_light_black2</item>-->
-    <!--</style>-->
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark"/>
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
-    <style name="commonButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="themeBackground">@color/theme_background</item>
+        <item name="borderColor">@color/border_color</item>
+        <item name="brightText">@color/text_bright</item>
+        <item name="dimText">@color/text_dim</item>
+        <item name="soothingText">@color/text_soothing</item>
+
+
+        <item name="android:buttonStyle">@style/commonButtonStyle</item>
+        <item name="android:alertDialogTheme">@style/BlackDialog</item>
+    </style>
+
+    <style name="LightTheme" parent="Theme.AppCompat.Light">
+        <item name="android:windowBackground">@color/theme_background_light</item>
+        <item name="colorAccent">@color/bg_info</item> <!-- Set button colors etc -->
+        <item name="colorPrimaryDark">@color/text_soothing_light
+        </item> <!-- Changes background color or app bar and title -->
+        <item name="colorPrimary">@color/theme_background_light
+        </item> <!-- Changes background color or app bar and title -->
+        <item name="android:textCursorDrawable">@null
+        </item> <!-- Make edit text cursor color neutral to accent color -->
+
+        <item name="themeBackground">@color/theme_background_light</item>
+        <item name="borderColor">@color/border_color_light</item>
+        <item name="brightText">@color/text_bright_light</item>
+        <item name="dimText">@color/text_dim_light</item>
+        <item name="soothingText">@color/text_soothing_light</item>
+
+
+        <item name="android:buttonStyle">@style/commonButtonStyle_light</item>
+        <item name="android:alertDialogTheme">@style/LightDialog</item>
+    </style>
+
+
+    <style name="commonButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:textColor">@color/text_soothing</item>
         <item name="android:background">@color/theme_background</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="commonButtonStyle_light" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/text_soothing_light</item>
+        <item name="android:background">@color/theme_background_light</item>
+    </style>
+
+    <style name="BlackTheme.NoActionBar" parent="BlackTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="android:windowBackground">@color/border_color
+    <style name="LightTheme.NoActionBar" parent="LightTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <style name="BlackDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@color/theme_background
         </item> <!-- Changes background color -->
         <item name="android:textColorPrimary">@color/text_soothing
         </item> <!-- Change title text color -->
-        <item name="colorAccent">@color/text_soothing</item> <!-- Changes OK/Cancel button color -->
+        <item name="colorAccent">@color/text_bright</item> <!-- Changes OK/Cancel button color -->
     </style>
 
-    <style name="TimePickerDialog" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowBackground">@color/border_color
+    <style name="LightDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@color/theme_background_light
+        </item> <!-- Changes background color -->
+        <item name="android:textColorPrimary">@color/text_soothing_light
+        </item> <!-- Change title text color -->
+        <item name="colorAccent">@color/text_bright_light
+        </item> <!-- Changes OK/Cancel button color -->
+    </style>
+
+
+    <style name="TimePickerDialogBlack" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@color/theme_background
         </item> <!-- Changes background color -->
         <item name="colorControlActivated">@color/text_success
         </item> <!-- Change selection/cursor color -->
@@ -55,11 +96,36 @@
         <item name="colorAccent">@color/text_soothing</item> <!-- Change OK/Cancel button color -->
     </style>
 
-    <style name="DatePickerDialog" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowBackground">@color/border_color
+    <style name="TimePickerDialogLight" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@color/theme_background_light
+        </item> <!-- Changes background color -->
+        <item name="controlBackground">@color/theme_background_light</item>
+        <item name="colorControlActivated">@color/text_success
+        </item> <!-- Change selection/cursor color -->
+        <item name="colorControlNormal">@color/controlBackground_light
+        </item> <!-- Change clock mode change button tint-->
+        <item name="tint">@color/bg_warning</item> <!-- Change mode switch color for time picker-->
+        <item name="buttonTint">@color/bg_warning
+        </item><!-- Change mode switch color for time picker in some devices -->
+        <item name="colorAccent">@color/text_soothing_light
+        </item> <!-- Change OK/Cancel button color -->
+    </style>
+
+    <style name="DatePickerDialogBlack" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@color/theme_background
         </item> <!-- Changes background color -->
         <item name="colorControlActivated">@color/text_success
         </item> <!-- Change selection/cursor color -->
         <item name="colorAccent">@color/text_soothing</item> <!-- Change OK/Cancel button color -->
     </style>
+
+    <style name="DatePickerDialogLight" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@color/theme_background_light
+        </item> <!-- Changes background color -->
+        <item name="colorControlActivated">@color/text_success
+        </item> <!-- Change selection/cursor color -->
+        <item name="colorAccent">@color/text_soothing_light
+        </item> <!-- Change OK/Cancel button color -->
+    </style>
+
 </resources>

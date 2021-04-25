@@ -13,7 +13,6 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.remindme.R;
@@ -28,15 +27,32 @@ import com.example.remindme.viewModels.ReminderModel;
 import java.util.Calendar;
 import java.util.List;
 
-public class ActivitySettings extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class ActivitySettings extends BaseActivity implements AdapterView.OnItemSelectedListener {
 
     final AppSettingsHelper settingsHelper = AppSettingsHelper.getInstance();
+    public static final String THEME_CHANGE_INTENT_ACTION = "THEME_CHANGE_INTENT_ACTION";
+
+    private boolean isUserInteracted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ActivityHelper.setTitle(this, getResources().getString(R.string.activitySettingsTitle));
+
+        isUserInteracted = false;
+
+        final TextView tv_brand = findViewById(R.id.tv_brand);
+        tv_brand.setText(DeviceHelper.getInstance().getBrand());
+        final TextView tv_model = findViewById(R.id.tv_model);
+        tv_model.setText(DeviceHelper.getInstance().getModel());
+
+        final TextView tv_os_signature = findViewById(R.id.tv_os_signature);
+        tv_os_signature.setText(DeviceHelper.getInstance().getOperatingSystemSignature());
+
+        final TextView tv_os_update_signature = findViewById(R.id.tv_os_update_signature);
+        tv_os_update_signature.setText(DeviceHelper.getInstance().getOperatingSystemUpdateSignature());
+
 
         final AudioManager audioManager = OsHelper.getAudioManager(this);
         final SeekBar seeker_alarm_stream_volume = findViewById(R.id.seeker_alarm_stream_volume);
@@ -113,7 +129,6 @@ public class ActivitySettings extends AppCompatActivity implements AdapterView.O
         tv_expired_reminder_count.setText(String.valueOf(ReminderModel.getDismissedReminders(null).size()));
 
         final Spinner first_day_of_week_spinner = findViewById(R.id.first_day_of_week_spinner);
-        first_day_of_week_spinner.setOnItemSelectedListener(this);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.first_day_of_week_options, R.layout.support_simple_spinner_dropdown_item);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         first_day_of_week_spinner.setAdapter(adapter);
@@ -129,36 +144,76 @@ public class ActivitySettings extends AppCompatActivity implements AdapterView.O
                 first_day_of_week_spinner.setSelection(2);
                 break;
         }
+        first_day_of_week_spinner.setOnItemSelectedListener(this);
 
-        final TextView tv_brand = findViewById(R.id.tv_brand);
-        tv_brand.setText(DeviceHelper.getInstance().getBrand());
-        final TextView tv_model = findViewById(R.id.tv_model);
-        tv_model.setText(DeviceHelper.getInstance().getModel());
+        final Spinner theme_spinner = findViewById(R.id.theme_spinner);
+        ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.themes, R.layout.support_simple_spinner_dropdown_item);
+        // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
+        theme_spinner.setAdapter(theme_spinner_adapter);
+        switch (settingsHelper.getTheme()) {
+            default:
+                theme_spinner.setSelection(0);
+                break;
+            case LIGHT:
+                theme_spinner.setSelection(1);
+                break;
+        }
+        theme_spinner.setOnItemSelectedListener(this);
+    }
 
-        final TextView tv_os_signature = findViewById(R.id.tv_os_signature);
-        tv_os_signature.setText(DeviceHelper.getInstance().getOperatingSystemSignature());
-
-        final TextView tv_os_update_signature = findViewById(R.id.tv_os_update_signature);
-        tv_os_update_signature.setText(DeviceHelper.getInstance().getOperatingSystemUpdateSignature());
-
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        isUserInteracted = true;
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (position) {
-            default:
-            case 0:
-                settingsHelper.setFirstDayOfWeek(Calendar.SUNDAY);
-                break;
 
-            case 1:
-                settingsHelper.setFirstDayOfWeek(Calendar.MONDAY);
-                break;
-
-            case 2:
-                settingsHelper.setFirstDayOfWeek(Calendar.SATURDAY);
-                break;
+        if (!isUserInteracted) {
+            return;
         }
+
+        if (parent.getId() == R.id.first_day_of_week_spinner) {
+            switch (position) {
+                default:
+                case 0:
+                    settingsHelper.setFirstDayOfWeek(Calendar.SUNDAY);
+                    break;
+
+                case 1:
+                    settingsHelper.setFirstDayOfWeek(Calendar.MONDAY);
+                    break;
+
+                case 2:
+                    settingsHelper.setFirstDayOfWeek(Calendar.SATURDAY);
+                    break;
+            }
+        } else {
+
+
+            switch (position) {
+                default:
+                    if (isUserInteracted) {
+                        settingsHelper.setTheme(AppSettingsHelper.Themes.BLACK);
+                        final Intent sendThemeChanged = new Intent(THEME_CHANGE_INTENT_ACTION);
+                        sendBroadcast(sendThemeChanged);
+                        recreate();
+                    }
+                    break;
+
+                case 1:
+                    if (isUserInteracted) {
+                        settingsHelper.setTheme(AppSettingsHelper.Themes.LIGHT);
+                        final Intent sendThemeChanged = new Intent(THEME_CHANGE_INTENT_ACTION);
+                        sendBroadcast(sendThemeChanged);
+                        recreate();
+                    }
+                    break;
+
+            }
+        }
+
     }
 
     @Override

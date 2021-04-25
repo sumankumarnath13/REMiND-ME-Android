@@ -103,4 +103,8 @@
         <item>Waltz</item>
         <item>Zig Zig Zig</item>
     </array>
+    <array name="themes">
+        <item>Black</item>
+        <item>Light</item>
+    </array>
 </resources>

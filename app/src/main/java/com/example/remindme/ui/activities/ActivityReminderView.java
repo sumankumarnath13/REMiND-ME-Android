@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.remindme.R;
@@ -23,10 +22,10 @@ import com.example.remindme.viewModels.ReminderModel;
 import java.util.Locale;
 
 
-public class ActivityReminderView extends AppCompatActivity {
+public class ActivityReminderView extends BaseActivity {
     private static final String MISSED_ALERT_UI_STATE = "STATE";
     private boolean isMissedAlertsVisible;
-
+    private boolean isUserInteracted;
     private TextView tv_reminder_time;
     private TextView tv_reminder_date;
     private TextView tv_reminder_name;
@@ -37,6 +36,7 @@ public class ActivityReminderView extends AppCompatActivity {
     private SwitchCompat enabled;
     private ReminderModel activeReminder;
     private TextView tv_expired;
+    private TextView next_snooze;
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -45,10 +45,18 @@ public class ActivityReminderView extends AppCompatActivity {
     }
 
     @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        isUserInteracted = true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_view);
         ActivityHelper.setTitle(this, getResources().getString(R.string.view_reminder_heading));
+
+        isUserInteracted = false;
 
         if (savedInstanceState != null) {
             isMissedAlertsVisible = savedInstanceState.getBoolean(MISSED_ALERT_UI_STATE, false);
@@ -98,7 +106,7 @@ public class ActivityReminderView extends AppCompatActivity {
         enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isRefreshing) return;
+                if (!isUserInteracted) return;
 
                 if (activeReminder != null && !activeReminder.isExpired()) {
 
@@ -111,9 +119,21 @@ public class ActivityReminderView extends AppCompatActivity {
 
                         if (activeReminder.trySetEnabled(getApplicationContext(), isChecked)) {
                             activeReminder.trySaveAndSetAlert(ActivityReminderView.this, true, true);
+                        } else {
+                            buttonView.setChecked(false);
                         }
                     }
                 }
+            }
+        });
+
+        next_snooze = findViewById(R.id.tv_reminder_next_snooze);
+        btn_reminder_ringing_dismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
+        btn_reminder_ringing_dismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activeReminder.snoozeByUser(ActivityReminderView.this);
+                refresh();
             }
         });
 
@@ -124,6 +144,7 @@ public class ActivityReminderView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 isMissedAlertsVisible = !isMissedAlertsVisible;
+                isUserInteracted = false; // This is very important. Because its just making a layout visible and is no real interaction.
                 refresh();
             }
         });
@@ -133,11 +154,9 @@ public class ActivityReminderView extends AppCompatActivity {
         refresh();
     }
 
-    private boolean isRefreshing;
+    private Button btn_reminder_ringing_dismiss;
 
     private void refresh() {
-
-        isRefreshing = true;
 
         if (activeReminder != null) {
 
@@ -150,8 +169,11 @@ public class ActivityReminderView extends AppCompatActivity {
             }
 
             if (activeReminder.getNextSnoozeOffTime() != null) {
-                final TextView next_snooze = findViewById(R.id.tv_reminder_next_snooze);
                 next_snooze.setText(StringHelper.toTime(activeReminder.getNextSnoozeOffTime()));
+                btn_reminder_ringing_dismiss.setVisibility(View.VISIBLE);
+            } else {
+                next_snooze.setText("");
+                btn_reminder_ringing_dismiss.setVisibility(View.GONE);
             }
 
             if (activeReminder.isExpired()) {
@@ -165,6 +187,7 @@ public class ActivityReminderView extends AppCompatActivity {
 
             final TextView tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
             tv_reminder_snooze_summary.setText(activeReminder.getSnoozeModel().toString());
+
 
             final TextView tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
             tv_reminder_repeat_summary.setText(activeReminder.getRepeatSettingString());
@@ -196,10 +219,12 @@ public class ActivityReminderView extends AppCompatActivity {
                 }
 
             } else {
-                tv_reminder_tone_summary.setVisibility(View.GONE);
+                lv_alarm_tone_is_on.setVisibility(View.GONE);
+                tv_reminder_tone_summary.setText("OFF");
             }
+
             tv_reminder_tone_summary.setTextColor(activeReminder.isEnableTone() ?
-                    getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
+                    getResources().getColor(R.color.text_dim) : getResources().getColor(R.color.text_danger));
 
             final TextView tv_reminder_vibrate = findViewById(R.id.tv_reminder_vibrate);
 
@@ -210,7 +235,7 @@ public class ActivityReminderView extends AppCompatActivity {
             }
 
             tv_reminder_vibrate.setTextColor(activeReminder.isEnableVibration() ?
-                    getResources().getColor(R.color.text_success) : getResources().getColor(R.color.text_danger));
+                    getResources().getColor(R.color.text_dim) : getResources().getColor(R.color.text_danger));
 
             tv_reminder_note.setText(activeReminder.getNote());
 
@@ -272,6 +297,5 @@ public class ActivityReminderView extends AppCompatActivity {
 
         }
 
-        isRefreshing = false;
     }
 }

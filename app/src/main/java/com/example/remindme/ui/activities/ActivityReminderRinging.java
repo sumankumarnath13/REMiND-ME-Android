@@ -18,8 +18,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.remindme.R;
 import com.example.remindme.controllers.AlertService;
 import com.example.remindme.controllers.AlertServiceBinder;
@@ -31,7 +29,7 @@ import com.example.remindme.viewModels.ReminderModel;
 
 import java.util.Date;
 
-public class ActivityReminderRinging extends AppCompatActivity {
+public class ActivityReminderRinging extends BaseActivity {
 
     private boolean isReceiverRegistered = false;
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -221,8 +219,6 @@ public class ActivityReminderRinging extends AppCompatActivity {
         tv_time_now = findViewById(R.id.tv_time_now);
         tv_reminder_ringing_title = findViewById(R.id.tv_reminder_ringing_title);
         txt_reminder_alarm_time = findViewById(R.id.txt_reminder_alarm_time);
-
-        //registerReceiver();
 
         bindAlarmService();
         registerReceiver();
