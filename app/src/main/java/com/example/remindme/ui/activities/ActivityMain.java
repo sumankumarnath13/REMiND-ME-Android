@@ -34,13 +34,10 @@ public class ActivityMain extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        switch (AppSettingsHelper.getInstance().getTheme()) {
-            default:
-                setTheme(R.style.BlackTheme_NoActionBar);
-                break;
-            case LIGHT:
-                setTheme(R.style.LightTheme_NoActionBar);
-                break;
+        if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
+            setTheme(R.style.LightTheme_NoActionBar);
+        } else {
+            setTheme(R.style.BlackTheme_NoActionBar);
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

@@ -225,23 +225,6 @@ public class ActivityReminderRinging extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-//        bindAlarmService();
-//        registerReceiver();
-    }
-
-    @Override
-    protected void onPause() {
-//        if (serviceBinder != null && mServiceBound) {
-//            serviceBinder.setActivityOpen(false);
-//        }
-//        unbindAlarmService();
-//        unRegisterReceiver();
-        super.onPause();
-    }
-
-    @Override
     public void onBackPressed() {
         //super.onBackPressed(); // Disables back button
     }

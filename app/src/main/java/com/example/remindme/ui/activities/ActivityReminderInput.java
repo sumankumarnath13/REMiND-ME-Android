@@ -337,7 +337,7 @@ public class ActivityReminderInput
                     // the method "reminderModel.isHasDifferentTimeCalculated()" will ensure that time has not been changed than what was given.
                     // And changes were made on other areas.
                     // Otherwise it needs to clear snooze details.
-                    reminderModel.trySaveAndSetAlert(getApplicationContext(), reminderModel.isOriginalTimeChanged(), true);
+                    reminderModel.saveAndSetAlert(getApplicationContext(), true);
                     finish();
                 } else {
                     ToastHelper.showShort(ActivityReminderInput.this, "Cannot save reminder in past");
@@ -473,7 +473,7 @@ public class ActivityReminderInput
             }
 
             ring_duration_spinner.setEnabled(true);
-            ring_duration_spinner.setSelection(ReminderModel.toAlarmRingDuration(reminderModel.getAlarmRingDuration()));
+            ring_duration_spinner.setSelection(ReminderModel.convertToAlarmRingDuration(reminderModel.getAlarmRingDuration()));
 
         } else {
             sw_gradually_increase_volume.setEnabled(false);
@@ -486,7 +486,7 @@ public class ActivityReminderInput
         tv_reminder_tone_summary.setText(reminderModel.getRingToneUriSummary(this));
 
         sw_reminder_vibrate.setChecked(reminderModel.isEnableVibration());
-        vibrate_pattern_spinner.setSelection(ReminderModel.toVibratePattern(reminderModel.getVibratePattern()));
+        vibrate_pattern_spinner.setSelection(ReminderModel.convertToVibratePattern(reminderModel.getVibratePattern()));
         vibrate_pattern_spinner.setEnabled(reminderModel.isEnableVibration());
 
         setExtraInputs();
@@ -597,11 +597,11 @@ public class ActivityReminderInput
 
         if (parent.getId() == R.id.ring_duration_spinner) {
 
-            reminderModel.setAlarmRingDuration(ReminderModel.toAlarmRingDuration(position));
+            reminderModel.setAlarmRingDuration(ReminderModel.convertToAlarmRingDuration(position));
 
         } else if (parent.getId() == R.id.vibrate_pattern_spinner) {
 
-            reminderModel.setVibratePattern(ReminderModel.toVibratePattern(position));
+            reminderModel.setVibratePattern(ReminderModel.convertToVibratePattern(position));
 
             if (ringingController == null) {
 
@@ -609,7 +609,7 @@ public class ActivityReminderInput
 
             }
 
-            ringingController.vibrateOnce(ReminderModel.toVibrateFrequency(reminderModel.getVibratePattern()));
+            ringingController.vibrateOnce(ReminderModel.convertToVibrateFrequency(reminderModel.getVibratePattern()));
         }
 
     }

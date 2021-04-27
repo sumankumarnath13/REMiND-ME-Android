@@ -93,8 +93,9 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
                     for (int i = 0; i < list.size(); i++) {
                         ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
                         if (reminderModel.isEnabled()) {
-                            reminderModel.trySetEnabled(ActivitySettings.this, true);
-                            reminderModel.trySaveAndSetAlert(ActivitySettings.this, true, false);
+                            if (reminderModel.trySetEnabled(ActivitySettings.this, true)) {
+                                reminderModel.saveAndSetAlert(ActivitySettings.this, false);
+                            }
                         }
                     }
                 }
@@ -150,13 +151,10 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
         ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.themes, R.layout.support_simple_spinner_dropdown_item);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         theme_spinner.setAdapter(theme_spinner_adapter);
-        switch (settingsHelper.getTheme()) {
-            default:
-                theme_spinner.setSelection(0);
-                break;
-            case LIGHT:
-                theme_spinner.setSelection(1);
-                break;
+        if (settingsHelper.getTheme() == AppSettingsHelper.Themes.LIGHT) {
+            theme_spinner.setSelection(1);
+        } else {
+            theme_spinner.setSelection(0);
         }
         theme_spinner.setOnItemSelectedListener(this);
     }

@@ -98,7 +98,7 @@ public class ActivityReminderView extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent input_i = new Intent(getApplicationContext(), ActivityReminderInput.class);
-                ReminderModel.setReminderId(input_i, activeReminder.getId());
+                ReminderModel.setReminderIdInIntent(input_i, activeReminder.getId());
                 startActivity(input_i);
                 finish();
             }
@@ -120,7 +120,7 @@ public class ActivityReminderView extends BaseActivity {
                     } else {
 
                         if (activeReminder.trySetEnabled(getApplicationContext(), isChecked)) {
-                            activeReminder.trySaveAndSetAlert(ActivityReminderView.this, true, true);
+                            activeReminder.saveAndSetAlert(ActivityReminderView.this, true);
                         } else {
                             buttonView.setChecked(false);
                         }
@@ -238,7 +238,7 @@ public class ActivityReminderView extends BaseActivity {
             final TextView tv_reminder_vibrate = findViewById(R.id.tv_reminder_vibrate);
 
             if (activeReminder.isEnableVibration()) {
-                tv_reminder_vibrate.setText(getResources().getStringArray(R.array.vibration_patterns)[ReminderModel.toVibratePattern(activeReminder.getVibratePattern())]);
+                tv_reminder_vibrate.setText(getResources().getStringArray(R.array.vibration_patterns)[ReminderModel.convertToVibratePattern(activeReminder.getVibratePattern())]);
             } else {
                 tv_reminder_vibrate.setText("OFF");
             }

@@ -184,7 +184,7 @@ public class AlertService extends Service {
             }
 
             if (servingReminder.isEnableVibration()) {
-                ringingController.startVibrating(ReminderModel.toVibrateFrequency(servingReminder.getVibratePattern()));
+                ringingController.startVibrating(ReminderModel.convertToVibrateFrequency(servingReminder.getVibratePattern()));
             }
 
         }

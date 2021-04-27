@@ -51,14 +51,18 @@
     </style>
 
     <style name="commonButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:background">@drawable/btn_rounded</item>
+        <item name="android:minHeight">@dimen/dp_8
+        </item> <!-- Android apply default mid height of buttons making it much larger that needed. This is to override that issue -->
+        <item name="android:background">@drawable/bg_rounded</item>
         <item name="android:padding">@dimen/dp_8</item>
         <item name="colorAccent">@color/accent_color</item>
         <item name="android:textSize">@dimen/font_size_small</item>
     </style>
 
     <style name="commonButtonStyleLight" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:background">@drawable/btn_rounded</item>
+        <item name="android:minHeight">@dimen/dp_8
+        </item> <!-- Android apply default mid height of buttons making it much larger that needed. This is to override that issue -->
+        <item name="android:background">@drawable/bg_rounded</item>
         <item name="android:padding">@dimen/dp_8</item>
         <item name="colorAccent">@color/accent_color_light</item>
         <item name="android:textSize">@dimen/font_size_small</item>
@@ -66,7 +70,7 @@
 
 
     <style name="imageButtonStyle" parent="Widget.AppCompat.ImageButton">
-        <item name="android:background">@drawable/btn_rounded</item>
+        <item name="android:background">@drawable/bg_rounded</item>
         <item name="android:scaleType">center</item>
     </style>
 
@@ -86,7 +90,7 @@
         <item name="android:windowBackground">@color/bg_dialog
         </item> <!-- Changes background color -->
         <item name="android:textColorPrimary">@color/text_soothing</item>
-        <item name="colorAccent">@color/bg_info</item>
+        <item name="colorAccent">@color/accent_color</item>
         <item name="colorPrimary">@color/bg_danger</item>
         <item name="colorPrimaryDark">@color/bg_success</item>
 
@@ -96,7 +100,7 @@
         <item name="android:windowBackground">@color/theme_background_light
         </item> <!-- Changes background color -->
         <item name="android:textColorPrimary">@color/text_soothing_light</item>
-        <item name="colorAccent">@color/bg_info</item>
+        <item name="colorAccent">@color/accent_color_light</item>
         <item name="colorPrimary">@color/bg_danger</item>
         <item name="colorPrimaryDark">@color/bg_success</item>
     </style>

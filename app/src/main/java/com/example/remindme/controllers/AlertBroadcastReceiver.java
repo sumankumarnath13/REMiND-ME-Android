@@ -35,7 +35,7 @@ public class AlertBroadcastReceiver extends BroadcastReceiver {
             case ReminderModel.ACTION_RECEIVE_ALARM:
                 NotificationHelper.notify(context, 990, "received", "DING DONG", null);
                 WakeLockHelper.acquire(context.getApplicationContext());
-                Intent startService = new Intent(context, AlertService.class).putExtra(ReminderModel.REMINDER_ID_INTENT, ReminderModel.getReminderId(intent));
+                Intent startService = new Intent(context, AlertService.class).putExtra(ReminderModel.REMINDER_ID_INTENT, ReminderModel.getReminderIdFromIntent(intent));
                 if (OsHelper.isOreoOrLater()) {
                     context.startForegroundService(startService);
                 } else {

@@ -31,9 +31,9 @@ public class RingingController {
     private final AudioManager.OnAudioFocusChangeListener audioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
         public void onAudioFocusChange(int focusChange) {
-            if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-
-            }
+//            if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+//
+//            }
         }
     };
 

@@ -11,13 +11,10 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        switch (AppSettingsHelper.getInstance().getTheme()) {
-            default:
-                setTheme(R.style.BlackTheme);
-                break;
-            case LIGHT:
-                setTheme(R.style.LightTheme);
-                break;
+        if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
+            setTheme(R.style.LightTheme);
+        } else {
+            setTheme(R.style.BlackTheme);
         }
         super.onCreate(savedInstanceState);
     }

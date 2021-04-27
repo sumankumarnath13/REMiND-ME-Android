@@ -29,6 +29,7 @@ public class ReminderRepeatModel {
         DAYS,
         WEEKS,
         MONTHS,
+        YEARS,
     }
 
     private ReminderRepeatOptions repeatOption;
@@ -362,6 +363,8 @@ public class ReminderRepeatModel {
                 return 1;
             case MONTHS:
                 return 2;
+            case YEARS:
+                return 3;
         }
     }
 
@@ -374,6 +377,8 @@ public class ReminderRepeatModel {
                 return TimeUnits.WEEKS;
             case 2:
                 return TimeUnits.MONTHS;
+            case 3:
+                return TimeUnits.YEARS;
         }
     }
 
@@ -386,6 +391,8 @@ public class ReminderRepeatModel {
                 return 156;
             case MONTHS:
                 return 36;
+            case YEARS:
+                return 3;
         }
     }
 }

@@ -91,7 +91,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 final Context context = buttonView.getContext();
 
                 if (reminderModel.trySetEnabled(context, isChecked)) {
-                    reminderModel.trySaveAndSetAlert(context, true, true);
+                    reminderModel.saveAndSetAlert(context, true);
                     buttonView.setChecked(isChecked);
                     if (isChecked) {
                         time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
@@ -132,7 +132,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
         }
 
         if (reminderModel.isExpired()) {
-            time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_dim));
+            time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_danger));
             enabled.setVisibility(View.GONE);
         } else {
             enabled.setChecked(reminderModel.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());

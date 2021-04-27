@@ -25,14 +25,10 @@ public class AppSettingsHelper {
             disableAllReminders = setting.disableAllReminders;
             firstDayOfWeek = setting.firstDayOfWeek;
 
-            switch (setting.theme) {
-                default:
-                    theme = Themes.BLACK;
-                    break;
-
-                case 1:
-                    theme = Themes.LIGHT;
-                    break;
+            if (setting.theme == 1) {
+                theme = Themes.LIGHT;
+            } else {
+                theme = Themes.BLACK;
             }
         }
     }
@@ -88,10 +84,6 @@ public class AppSettingsHelper {
     public void setTheme(Themes value) {
         theme = value;
         update();
-    }
-
-    public void applyTheme() {
-
     }
 
     private void update() {

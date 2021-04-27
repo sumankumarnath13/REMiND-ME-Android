@@ -36,6 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="?attr/brightText"
+                    android:layout_marginBottom="@dimen/dp_16"
                     android:textSize="@dimen/font_size_banner" />
 
                 <!--    DATE-->
@@ -51,7 +52,7 @@
                     android:id="@+id/tv_reminder_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_8"
+                    android:layout_marginTop="@dimen/dp_16"
                     android:textColor="?attr/brightText"
                     android:textSize="@dimen/font_size_large"
                     android:visibility="gone" />
@@ -60,12 +61,14 @@
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sw_reminder_enabled"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_16" />
 
                 <TextView
                     android:id="@+id/tv_expired"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_16"
                     android:text="expired"
                     android:textColor="@color/text_danger"
                     android:visibility="gone" />
@@ -75,7 +78,7 @@
                     android:id="@+id/lv_last_missed_alert"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginTop="@dimen/dp_16"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:visibility="gone">

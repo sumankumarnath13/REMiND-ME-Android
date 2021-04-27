@@ -69,7 +69,7 @@ public class DialogReminderRepeatInputCustom extends DialogFragment {
         final NumberPicker value_picker = view.findViewById(R.id.value_picker);
         value_picker.setMinValue(1);
 
-        final String[] units = new String[]{"Days", "Weeks", "Months"};
+        final String[] units = new String[]{"Days", "Weeks", "Months", "Years"};
         final NumberPicker unit_picker = view.findViewById(R.id.unit_picker);
         unit_picker.setMinValue(0);
         unit_picker.setMaxValue(units.length - 1);
