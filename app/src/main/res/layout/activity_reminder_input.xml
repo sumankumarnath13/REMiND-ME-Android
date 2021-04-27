@@ -32,12 +32,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/dp_16"
                     android:orientation="vertical">
 
                     <Button
                         android:id="@+id/btn_reminder_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:textColor="?attr/brightText"
                         android:text="@string/btn_time"
                         android:textSize="@dimen/font_size_banner" />
 
@@ -45,6 +48,8 @@
                         android:id="@+id/btn_reminder_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:textColor="?attr/soothingText"
                         android:text="@string/btn_date"
                         android:textSize="@dimen/font_size_medium" />
 
@@ -53,7 +58,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/bg_info"
-                        android:layout_marginBottom="@dimen/dp_16"
                         android:gravity="center_horizontal"
                         android:orientation="vertical"
                         android:visibility="visible">
@@ -202,7 +206,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
                                 android:text="@string/btn_repeat"
-                                android:textColor="?attr/dimText"
+                                android:textColor="?attr/soothingText"
                                 android:textSize="@dimen/font_size_medium" />
 
                             <TextView
@@ -210,7 +214,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:textColor="?attr/soothingText"
+                                android:textColor="?attr/dimText"
                                 android:textSize="@dimen/font_size_small" />
 
                         </LinearLayout>
@@ -250,8 +254,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_reminder_snooze"
-                            app:tint="@color/bg_soothing" />
+                            android:src="@drawable/ic_reminder_snooze" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -266,7 +269,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
                                 android:text="@string/btn_snooze"
-                                android:textColor="?attr/dimText"
+                                android:textColor="?attr/soothingText"
                                 android:textSize="@dimen/font_size_medium" />
 
                             <TextView
@@ -274,7 +277,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:textColor="?attr/soothingText"
+                                android:textColor="?attr/dimText"
                                 android:textSize="@dimen/font_size_small" />
 
                         </LinearLayout>
@@ -298,8 +301,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ic_reminder_sound"
-                            app:tint="@color/bg_warning" />
+                            android:src="@drawable/ic_reminder_sound" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -314,7 +316,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
                                 android:text="@string/btn_alarm_sound"
-                                android:textColor="?attr/dimText"
+                                android:textColor="?attr/soothingText"
                                 android:textSize="@dimen/font_size_medium" />
 
                             <TextView
@@ -322,7 +324,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:textColor="?attr/soothingText"
+                                android:textColor="?attr/dimText"
                                 android:textSize="@dimen/font_size_small" />
 
                         </LinearLayout>
@@ -346,8 +348,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ic_sound_volume"
-                            app:tint="@color/bg_success" />
+                            android:src="@drawable/ic_sound_volume" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -355,7 +356,7 @@
                             android:layout_marginStart="@dimen/dp_8"
                             android:layout_marginLeft="@dimen/dp_8"
                             android:text="@string/alarm_volume_label"
-                            android:textColor="?attr/dimText"
+                            android:textColor="?attr/soothingText"
                             android:textSize="@dimen/font_size_medium" />
 
                         <SeekBar
@@ -386,7 +387,7 @@
                             android:layout_marginLeft="@dimen/dp_8"
                             android:layout_weight="1"
                             android:text="@string/increase_volume_gradually_label"
-                            android:textColor="?attr/dimText"
+                            android:textColor="?attr/soothingText"
                             android:textSize="@dimen/font_size_medium" />
 
                         <androidx.appcompat.widget.SwitchCompat
@@ -408,8 +409,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ic_sound_volume"
-                            app:tint="@color/bg_danger" />
+                            android:src="@drawable/ic_ring_duration" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -419,7 +419,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical"
                             android:text="Ring duration"
-                            android:textColor="?attr/dimText"
+                            android:textColor="?attr/soothingText"
                             android:textSize="@dimen/font_size_medium" />
 
                         <Spinner
@@ -441,8 +441,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ic_reminder_vibrate"
-                            app:tint="@color/bg_danger" />
+                            android:src="@drawable/ic_reminder_vibrate" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -451,7 +450,7 @@
                             android:layout_marginLeft="@dimen/dp_8"
                             android:gravity="center_vertical"
                             android:text="@string/btn_vibrate"
-                            android:textColor="?attr/dimText"
+                            android:textColor="?attr/soothingText"
                             android:textSize="@dimen/font_size_medium" />
 
                         <LinearLayout
@@ -488,6 +487,7 @@
         android:id="@+id/rv_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/dp_16"
         android:gravity="center_horizontal">
 
         <Button
@@ -498,9 +498,7 @@
             android:drawableLeft="@drawable/ic_reminder_check"
             android:drawablePadding="@dimen/dp_3"
             android:drawableTint="@color/bg_success"
-            android:textAlignment="textStart"
             android:gravity="start|center"
-            android:textSize="@dimen/font_size_medium"
             android:text="@string/btn_save" />
 
     </LinearLayout>

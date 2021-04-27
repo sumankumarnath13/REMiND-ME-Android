@@ -3,15 +3,32 @@
     <item>
         <shape android:shape="rectangle">
             <stroke
-                android:width="@dimen/dp_05"
+                android:width="@dimen/dp_1"
                 android:color="?attr/borderColor" />
         </shape>
     </item>
-    <item android:bottom="@dimen/dp_05">
+    <item android:bottom="@dimen/dp_1">
         <shape android:shape="rectangle">
             <stroke
-                android:width="@dimen/dp_05"
+                android:width="@dimen/dp_1"
                 android:color="?attr/themeBackground" />
+            <solid android:color="?attr/themeBackground" />
         </shape>
     </item>
 </layer-list>
+
+    <!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >-->
+    <!--    <item-->
+    <!--        android:bottom="1dp"-->
+    <!--        android:left="-2dp"-->
+    <!--        android:right="-2dp"-->
+    <!--        android:top="-2dp">-->
+    <!--        <shape android:shape="rectangle" >-->
+    <!--            <stroke-->
+    <!--                android:width="@dimen/dp_05"-->
+    <!--                android:color="?attr/borderColor" />-->
+    <!--            <solid android:color="?attr/themeBackground" />-->
+    <!--        </shape>-->
+    <!--    </item>-->
+
+    <!--</layer-list>-->

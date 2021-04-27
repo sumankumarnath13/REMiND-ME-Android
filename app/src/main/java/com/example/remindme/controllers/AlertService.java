@@ -191,7 +191,9 @@ public class AlertService extends Service {
     }
 
     private void stopRinging() {
-        ringingController.stopRinging();
+        if (ringingController != null) {
+            ringingController.stopRinging();
+        }
     }
 
     public ReminderModel getServingReminder() {

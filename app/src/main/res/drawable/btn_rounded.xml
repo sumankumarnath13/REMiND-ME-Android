@@ -1,11 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--<shape xmlns:android="http://schemas.android.com/apk/res/android">-->
+<!--    <corners android:radius="@dimen/dp_8" />-->
+<!--    <solid android:color="?attr/themeBackground" />-->
+<!--    <stroke-->
+<!--        android:width="@dimen/dp_05"-->
+<!--        android:color="@color/bg_info" />-->
+<!--</shape>-->
 
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:radius="@dimen/dp_16" />
-    <solid android:color="@color/controlBackground" />
-    <stroke
-        android:width="4dp"
-        android:color="@color/bg_danger" />
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:targetApi="lollipop"
+    android:color="?attr/accentColor">
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/themeBackground" />
+            <corners android:radius="@dimen/dp_32" />
+        </shape>
+    </item>
 
-</shape>
+    <!--    <item android:id="@android:id/background">-->
+    <!--        <shape android:shape="rectangle">-->
+    <!--            <solid android:color="?attr/themeBackground" />-->
+    <!--            <corners android:radius="@dimen/dp_16" />-->
+    <!--        </shape>-->
+    <!--    </item>-->
+
+    <item>
+        <shape android:shape="rectangle">
+            <stroke
+                android:width="@dimen/dp_1"
+                android:color="?attr/accentColor" />
+            <corners android:radius="@dimen/dp_32" />
+        </shape>
+    </item>
+
+</ripple>

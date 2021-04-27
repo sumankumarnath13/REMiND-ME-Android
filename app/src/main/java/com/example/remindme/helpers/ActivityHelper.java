@@ -24,28 +24,35 @@ public class ActivityHelper {
             finalTitle = activity.getResources().getString(R.string.app_label);
         }
 
+
         Spannable spannable = new SpannableString(finalTitle);
         int char_pos = 0;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_success)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
-        char_pos++;
+        //char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_warning)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
-        char_pos++;
+        //char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_info)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
+        //char_pos++;
+
+        if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
+            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_dim_light)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } else {
+            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_dim)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
         char_pos++;
-        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_soothing)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        char_pos++;
-        char_pos++;
+        //char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_warning)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
-        char_pos++;
+        //char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_danger)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
         char_pos++;
-        char_pos++;
-        char_pos++;
+//        char_pos++;
+//        char_pos++;
         spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_success)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
         //char_pos++;

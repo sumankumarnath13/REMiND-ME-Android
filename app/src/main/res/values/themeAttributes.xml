@@ -3,6 +3,7 @@
     <attr name="themeBackground" format="reference" />
     <attr name="borderColor" format="reference" />
     <attr name="brightText" format="reference" />
+    <attr name="accentColor" format="reference" />
     <attr name="dimText" format="reference" />
     <attr name="soothingText" format="reference" />
 </resources>

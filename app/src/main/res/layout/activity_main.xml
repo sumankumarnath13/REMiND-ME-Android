@@ -24,9 +24,9 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
-            app:tabRippleColor="@color/text_info"
+            app:tabRippleColor="?attr/accentColor"
             app:tabSelectedTextColor="@color/text_warning"
-            app:tabIndicatorColor="@color/text_info"
+            app:tabIndicatorColor="?attr/accentColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -50,6 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:padding="@dimen/dp_16"
         android:gravity="center" >
 
         <Button
@@ -59,7 +60,6 @@
             android:drawableLeft="@drawable/ic_brand"
             android:drawableStart="@drawable/ic_brand"
             android:drawablePadding="@dimen/dp_3"
-            android:textSize="@dimen/font_size_medium"
             android:text="@string/add_new_reminder" />
 
     </RelativeLayout>

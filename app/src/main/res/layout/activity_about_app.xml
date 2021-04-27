@@ -11,14 +11,11 @@
         android:layout_margin="@dimen/dp_16"
         android:orientation="vertical">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_bottom"
             android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingVertical="@dimen/dp_16">
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="@dimen/dp_139"
@@ -44,6 +41,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -52,11 +50,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="start|center"
                 android:text="Send feedback"
-                android:textAlignment="textStart"
-                android:textColor="@color/text_warning"
-                android:textSize="@dimen/font_size_medium" />
+                android:textColor="@color/text_warning" />
 
         </LinearLayout>
 
@@ -64,6 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/dp_16"
             android:orientation="horizontal">
 
             <Button
@@ -71,11 +67,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="start|center"
                 android:text="FAQ (User's guide)"
-                android:textAlignment="textStart"
-                android:textColor="@color/text_info"
-                android:textSize="@dimen/font_size_medium" />
+                android:textColor="@color/text_info" />
 
         </LinearLayout>
 
@@ -83,6 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/dp_16"
             android:orientation="horizontal">
 
             <Button
@@ -90,18 +84,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="start|center"
                 android:text="License Info"
-                android:textAlignment="textStart"
-                android:textColor="?attr/dimText"
-                android:textSize="@dimen/font_size_medium" />
+                android:textColor="?attr/dimText" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_vertical"
+            android:layout_marginTop="@dimen/dp_16"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -110,11 +101,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="start|center"
                 android:text="Tell a friend about this App"
-                android:textAlignment="textStart"
-                android:textColor="@color/text_success"
-                android:textSize="@dimen/font_size_medium" />
+                android:textColor="@color/text_success" />
 
         </LinearLayout>
 

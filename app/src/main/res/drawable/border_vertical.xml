@@ -3,17 +3,18 @@
     <item>
         <shape android:shape="rectangle">
             <stroke
-                android:width="@dimen/dp_05"
+                android:width="@dimen/dp_1"
                 android:color="?attr/borderColor" />
         </shape>
     </item>
     <item
-        android:bottom="@dimen/dp_05"
-        android:top="@dimen/dp_05">
+        android:bottom="@dimen/dp_1"
+        android:top="@dimen/dp_1">
         <shape android:shape="rectangle">
             <stroke
-                android:width="@dimen/dp_05"
+                android:width="@dimen/dp_1"
                 android:color="?attr/themeBackground" />
+            <solid android:color="?attr/themeBackground" />
         </shape>
     </item>
 </layer-list>

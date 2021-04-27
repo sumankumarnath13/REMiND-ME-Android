@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:paddingHorizontal="@dimen/dp_16"
     tools:context=".ui.activities.ActivityReminderRinging">
 
     <LinearLayout
@@ -13,6 +12,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:orientation="vertical"
+        android:layout_margin="@dimen/dp_16"
         android:layout_weight="1">
 
         <TextView
@@ -70,6 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:padding="@dimen/dp_16"
         android:gravity="center_horizontal">
 
         <Button
@@ -81,25 +82,17 @@
             android:drawableStart="@drawable/ic_reminder_dismiss"
             android:drawableLeft="@drawable/ic_reminder_dismiss"
             android:drawablePadding="@dimen/dp_3"
-            android:drawableTint="@color/text_danger"
-            android:text="@string/btn_alarm_action_dismiss"
-            android:textSize="@dimen/font_size_medium"
-            android:textAlignment="textStart"
-            android:gravity="start|center" />
+            android:text="@string/btn_alarm_action_dismiss" />
 
         <Button
             android:id="@+id/btn_reminder_ringing_snooze"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             android:drawableStart="@drawable/ic_reminder_snooze"
             android:drawableLeft="@drawable/ic_reminder_snooze"
             android:drawablePadding="@dimen/dp_3"
-            android:drawableTint="@color/text_warning"
-            android:text="@string/reminder_snooze_menu_caption"
-            android:textSize="@dimen/font_size_medium"
-            android:textAlignment="textStart"
-            android:gravity="start|center" />
+            android:text="@string/reminder_snooze_menu_caption" />
 
     </LinearLayout>
 

@@ -331,7 +331,7 @@ public class ActivityReminderInput
             @Override
             public void onClick(View view) {
                 if (reminderModel.getAlertTime().after(Calendar.getInstance().getTime())) {
-                    reminderModel.trySaveAndSetAlert(getApplicationContext(), reminderModel.isHasDifferentTimeCalculated(), true);
+                    reminderModel.trySaveAndSetAlert(getApplicationContext(), true, true);
                     finish();
                 } else {
                     ToastHelper.showShort(ActivityReminderInput.this, "Cannot save reminder in past");

@@ -117,18 +117,18 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             name.setVisibility(View.VISIBLE);
         }
 
-        if (reminderModel.getLastMissedTime() != null) {
-            lv_reminder_last_missed_time.setVisibility(View.VISIBLE);
-            tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(reminderModel.getLastMissedTime()));
-        } else {
-            lv_reminder_last_missed_time.setVisibility(View.GONE);
-        }
-
         if (reminderModel.getNextSnoozeOffTime() != null) {
             lv_reminder_view_snooze.setVisibility(View.VISIBLE);
             next_snooze.setText(StringHelper.toTime(reminderModel.getNextSnoozeOffTime()));
         } else {
             lv_reminder_view_snooze.setVisibility(View.GONE);
+
+            if (reminderModel.getLastMissedTime() != null) {
+                lv_reminder_last_missed_time.setVisibility(View.VISIBLE);
+                tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(reminderModel.getLastMissedTime()));
+            } else {
+                lv_reminder_last_missed_time.setVisibility(View.GONE);
+            }
         }
 
         if (reminderModel.isExpired()) {

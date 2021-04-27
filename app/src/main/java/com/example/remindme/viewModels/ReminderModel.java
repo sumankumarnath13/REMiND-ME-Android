@@ -200,28 +200,6 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-//    public boolean setInstance(Intent intent) {
-//        if (intent == null) {
-//            return false;
-//        }
-//
-//        String reminderId = intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT);
-//
-//        if (reminderId == null || reminderId.isEmpty()) {
-//            return false;
-//        } else {
-//
-//            Realm realm = Realm.getDefaultInstance();
-//            Reminder reminderData = realm.where(Reminder.class).equalTo("id", reminderId).findFirst();
-//            if (reminderData == null) {
-//                return false;
-//            } else {
-//                setInstance(reminderData);
-//                return true;
-//            }
-//        }
-//    }
-
     public static ReminderModel getInstance(Reminder from) {
         ReminderModel to = new ReminderModel();
         to.setInstance(from);

@@ -7,7 +7,7 @@
         android:fillColor="@color/bg_warning"
         android:pathData="M12.03,6.3l-0.06,0l-1.02,2.89l2.1,0z" />
     <path
-        android:fillColor="@color/bg_soothing"
+        android:fillColor="@color/bg_info"
         android:pathData="M3,17h2v5h-2z" />
     <path
         android:fillColor="@color/bg_warning"

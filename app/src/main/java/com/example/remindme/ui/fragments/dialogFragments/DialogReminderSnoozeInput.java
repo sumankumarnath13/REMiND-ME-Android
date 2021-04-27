@@ -17,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
+import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.viewModels.ReminderSnoozeModel;
 
@@ -71,18 +72,29 @@ public class DialogReminderSnoozeInput extends DialogFragment {
                         rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
                         rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
                         rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
-                        rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_soothing));
+                        rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_danger));
                         rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
                         rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
                         rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
                     } else {
-                        rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
-                        rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
-                        rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
-                        rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
-                        rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
-                        rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
-                        rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+
+                        if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
+                            rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                            rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                            rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                            rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                            rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                            rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                            rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                        } else {
+                            rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                            rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                            rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                            rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                            rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                            rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                            rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                        }
                     }
                 }
             }
@@ -95,18 +107,31 @@ public class DialogReminderSnoozeInput extends DialogFragment {
                 rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
                 rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
                 rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
-                rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_soothing));
+                rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.bg_danger));
                 rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
                 rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
                 rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
             } else {
-                rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
-                rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
-                rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
-                rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
-                rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
-                rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
-                rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.controlBackground));
+
+                if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
+                    rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                    rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                    rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                    rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                    rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                    rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                    rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+
+                } else {
+                    rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                    rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                    rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                    rdo_reminder_snooze_m30.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                    rdo_reminder_snooze_r3.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                    rdo_reminder_snooze_r5.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                    rdo_reminder_snooze_rc.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+
+                }
             }
         }
 

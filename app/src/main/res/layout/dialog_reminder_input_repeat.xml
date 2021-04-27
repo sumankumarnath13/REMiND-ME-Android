@@ -20,6 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/bg_success"
+                android:textColor="?attr/soothingText"
                 android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_off" />
 
@@ -34,6 +35,7 @@
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/bg_warning"
+                    android:textColor="?attr/soothingText"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_hourly" />
 
@@ -41,6 +43,7 @@
                     android:id="@+id/rdo_reminder_repeat_hourly_custom"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/soothingText"
                     android:layout_weight="1"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_hourly_custom" />
@@ -56,6 +59,7 @@
                     android:id="@+id/rdo_reminder_repeat_daily"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/soothingText"
                     android:buttonTint="@color/bg_info"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_daily" />
@@ -64,6 +68,7 @@
                     android:id="@+id/rdo_reminder_repeat_daily_custom"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/soothingText"
                     android:layout_weight="1"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_daily_custom" />
@@ -79,6 +84,7 @@
                     android:id="@+id/rdo_reminder_repeat_weekly"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/soothingText"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_weekly" />
 
@@ -86,6 +92,7 @@
                     android:id="@+id/rdo_reminder_repeat_weekly_custom"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/soothingText"
                     android:layout_weight="1"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_weekly_custom" />
@@ -101,6 +108,7 @@
                     android:id="@+id/rdo_reminder_repeat_monthly"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/soothingText"
                     android:buttonTint="@color/bg_warning"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_monthly" />
@@ -109,6 +117,7 @@
                     android:id="@+id/rdo_reminder_repeat_monthly_custom"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/soothingText"
                     android:layout_weight="1"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_monthly_custom" />
@@ -118,6 +127,7 @@
                 android:id="@+id/rdo_reminder_repeat_yearly"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/soothingText"
                 android:buttonTint="@color/bg_danger"
                 android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_yearly" />
@@ -126,6 +136,7 @@
                 android:id="@+id/rdo_reminder_repeat_other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/soothingText"
                 android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_other" />
 
@@ -133,9 +144,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginHorizontal="@dimen/dp_8"
-            android:background="@color/controlBackground" />
+            android:layout_height="@dimen/dp_1"
+            android:background="?attr/borderColor" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -165,14 +175,15 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/dp_8"
                 android:layout_marginEnd="@dimen/dp_8"
+                android:textColor="?attr/soothingText"
                 android:text="End Time " />
 
             <TextView
                 android:id="@+id/tv_end_time_value"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="@dimen/font_size_medium"
-                android:textColor="@color/text_warning" />
+                android:textSize="@dimen/font_size_large"
+                android:textColor="?attr/brightText" />
 
         </LinearLayout>
 
@@ -189,13 +200,15 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/dp_8"
                 android:layout_marginEnd="@dimen/dp_8"
+                android:textColor="?attr/soothingText"
                 android:text="End Date " />
 
             <TextView
                 android:id="@+id/tv_end_date_value"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="@dimen/font_size_medium" />
+                android:textSize="@dimen/font_size_medium"
+                android:textColor="?attr/dimText" />
 
         </LinearLayout>
 
