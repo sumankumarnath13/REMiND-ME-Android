@@ -157,6 +157,7 @@
                 android:id="@+id/sw_has_repeat_end"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:text="Has Repeat end"
                 android:textColor="?attr/soothingText"
                 android:textSize="@dimen/font_size_medium" />
 

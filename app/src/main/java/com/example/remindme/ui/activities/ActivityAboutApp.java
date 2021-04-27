@@ -66,13 +66,9 @@ public class ActivityAboutApp extends BaseActivity {
         btn_share_app.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "DING DONG friends ");
-                sendIntent.setType("text/plain");
-                Intent shareIntent = Intent.createChooser(sendIntent, null);
-                startActivity(shareIntent);
+                ActivityHelper.shareText(ActivityAboutApp.this, "DING DONG Friends");
             }
         });
     }
+
 }

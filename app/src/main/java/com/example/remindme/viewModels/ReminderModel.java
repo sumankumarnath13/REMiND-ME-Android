@@ -379,11 +379,25 @@ public class ReminderModel extends ViewModel {
 
     private Date originalTime;
 
+    private boolean originalTimeChanged;
+
+    public boolean isOriginalTimeChanged() {
+        return originalTimeChanged;
+    }
+
     public void setOriginalTime(Date userTime) {
+
+        if (userTime == null) return;
+
         Calendar userTimeCl = Calendar.getInstance();
         userTimeCl.setTime(userTime);
         userTimeCl.set(Calendar.SECOND, 0);
         userTimeCl.set(Calendar.MILLISECOND, 0);
+
+        if (originalTime != null && !originalTime.equals(userTimeCl.getTime())) {
+            originalTimeChanged = true;
+        }
+
         originalTime = userTimeCl.getTime();
         //isOriginalTimeChanged = true;
         repeatModel.setReminderTime(userTimeCl); //Repeat model has complex calculations for which it needs a reference to the original time.

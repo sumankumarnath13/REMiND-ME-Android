@@ -57,8 +57,8 @@
             android:id="@+id/btn_main_new_reminder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_brand"
-            android:drawableStart="@drawable/ic_brand"
+            android:drawableLeft="@drawable/ic_add"
+            android:drawableStart="@drawable/ic_add"
             android:drawablePadding="@dimen/dp_3"
             android:text="@string/add_new_reminder" />
 

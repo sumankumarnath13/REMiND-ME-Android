@@ -57,7 +57,7 @@
                         android:id="@+id/lvc_diff_next_reminder_trigger"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/bg_info"
+                        android:background="?attr/accentColor"
                         android:gravity="center_horizontal"
                         android:orientation="vertical"
                         android:visibility="visible">

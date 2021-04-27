@@ -230,6 +230,7 @@ public class ActivityReminderInput
                 final int mHour, mMinute;
                 mHour = alertTime.get(Calendar.HOUR_OF_DAY);
                 mMinute = alertTime.get(Calendar.MINUTE);
+
                 final TimePickerDialog timePickerDialog = new TimePickerDialog(ActivityReminderInput.this,
                         AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT ? R.style.TimePickerDialogLight : R.style.TimePickerDialogBlack,
                         new TimePickerDialog.OnTimeSetListener() {
@@ -242,8 +243,10 @@ public class ActivityReminderInput
                             }
                         }, mHour, mMinute, AppSettingsHelper.getInstance().isUse24hourTime());
                 timePickerDialog.show();
+                //timePickerDialog.;
             }
         });
+
 
         final LinearLayout mnu_reminder_name = findViewById(R.id.mnu_reminder_name);
         mnu_reminder_name.setOnClickListener(new View.OnClickListener() {
@@ -331,7 +334,10 @@ public class ActivityReminderInput
             @Override
             public void onClick(View view) {
                 if (reminderModel.getAlertTime().after(Calendar.getInstance().getTime())) {
-                    reminderModel.trySaveAndSetAlert(getApplicationContext(), true, true);
+                    // the method "reminderModel.isHasDifferentTimeCalculated()" will ensure that time has not been changed than what was given.
+                    // And changes were made on other areas.
+                    // Otherwise it needs to clear snooze details.
+                    reminderModel.trySaveAndSetAlert(getApplicationContext(), reminderModel.isOriginalTimeChanged(), true);
                     finish();
                 } else {
                     ToastHelper.showShort(ActivityReminderInput.this, "Cannot save reminder in past");

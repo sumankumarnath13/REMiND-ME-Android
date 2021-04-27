@@ -8,7 +8,7 @@
     <dimen name="dp_139">139dp</dimen>
     <dimen name="font_size_banner">37sp</dimen>
     <dimen name="font_size_extra_large">27sp</dimen>
-    <dimen name="font_size_large">19sp</dimen>
+    <dimen name="font_size_large">23sp</dimen>
     <dimen name="font_size_medium">17sp</dimen>
     <dimen name="font_size_small">13sp</dimen>
     <dimen name="font_size_extra_small">11sp</dimen>

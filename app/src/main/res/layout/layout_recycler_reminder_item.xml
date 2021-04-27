@@ -20,8 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginRight="@dimen/dp_8"
-            android:textColor="?attr/soothingText"
-            android:textSize="@dimen/font_size_extra_large" />
+            android:textColor="?attr/brightText"
+            android:textSize="@dimen/font_size_large" />
 
         <TextView
             android:id="@+id/tv_reminder_date"

@@ -1,5 +1,7 @@
 package com.example.remindme.helpers;
 
+import android.content.Context;
+import android.content.Intent;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -12,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.remindme.R;
 
 public class ActivityHelper {
+
     public static void setTitle(AppCompatActivity activity, String activityTitle) {
         //String divider = " \u2026 ";
         String divider = "   >   ";
@@ -38,9 +41,9 @@ public class ActivityHelper {
         //char_pos++;
 
         if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
-            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_dim_light)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_soothing_light)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else {
-            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_dim)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_soothing)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         char_pos++;
@@ -86,5 +89,14 @@ public class ActivityHelper {
 
         //Let the line below controlled by the theme and not to force the title to be shown by the code:
         //activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
+    }
+
+    public static void shareText(Context context, String value) {
+        final Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, value);
+        sendIntent.setType("text/plain");
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        context.startActivity(shareIntent);
     }
 }

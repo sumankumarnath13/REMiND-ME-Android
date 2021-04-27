@@ -22,6 +22,7 @@
 
 
         <item name="android:buttonStyle">@style/commonButtonStyle</item>
+        <item name="imageButtonStyle">@style/imageButtonStyle</item>
         <item name="android:alertDialogTheme">@style/BlackDialog</item>
     </style>
 
@@ -44,7 +45,8 @@
         <item name="dimText">@color/text_dim_light</item>
         <item name="soothingText">@color/text_soothing_light</item>
 
-        <item name="android:buttonStyle">@style/commonButtonStyle_light</item>
+        <item name="android:buttonStyle">@style/commonButtonStyleLight</item>
+        <item name="imageButtonStyle">@style/imageButtonStyle</item>
         <item name="android:alertDialogTheme">@style/LightDialog</item>
     </style>
 
@@ -55,12 +57,19 @@
         <item name="android:textSize">@dimen/font_size_small</item>
     </style>
 
-    <style name="commonButtonStyle_light" parent="Widget.AppCompat.Button.Borderless.Colored">
+    <style name="commonButtonStyleLight" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:background">@drawable/btn_rounded</item>
         <item name="android:padding">@dimen/dp_8</item>
         <item name="colorAccent">@color/accent_color_light</item>
         <item name="android:textSize">@dimen/font_size_small</item>
     </style>
+
+
+    <style name="imageButtonStyle" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/btn_rounded</item>
+        <item name="android:scaleType">center</item>
+    </style>
+
 
     <style name="BlackTheme.NoActionBar" parent="BlackTheme">
         <item name="windowActionBar">false</item>

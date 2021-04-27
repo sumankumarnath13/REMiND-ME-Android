@@ -7,7 +7,7 @@
     <color name="border_color">#333333</color>
     <color name="accent_color">#8766c4</color>
     <color name="text_bright">#E0E0E0</color>
-    <color name="text_soothing">#bdbdbd</color>
+    <color name="text_soothing">#A9A9A9</color>
     <color name="text_dim">#696969</color>
 
     <color name="theme_background_light">#f9f9f9</color>
@@ -24,7 +24,7 @@
     <color name="text_danger">#dc3545</color>
 
     <color name="bg_success">#28a745</color>
-    <color name="bg_info">#8766c4</color>
+    <color name="bg_info">#8a2be2</color>
     <color name="bg_warning">#f89406</color>
     <color name="bg_danger">#DC143C</color>
 

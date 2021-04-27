@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ public class ActivityReminderView extends BaseActivity {
     private ReminderModel activeReminder;
     private TextView tv_expired;
     private TextView next_snooze;
+    private ImageButton imgBtnShareNote;
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -151,6 +153,14 @@ public class ActivityReminderView extends BaseActivity {
 
         tv_expired = findViewById(R.id.tv_expired);
 
+        imgBtnShareNote = findViewById(R.id.imgBtnShareNote);
+        imgBtnShareNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityHelper.shareText(ActivityReminderView.this, activeReminder.getNote());
+            }
+        });
+
         refresh();
     }
 
@@ -187,7 +197,6 @@ public class ActivityReminderView extends BaseActivity {
 
             final TextView tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
             tv_reminder_snooze_summary.setText(activeReminder.getSnoozeModel().toString());
-
 
             final TextView tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
             tv_reminder_repeat_summary.setText(activeReminder.getRepeatSettingString());
@@ -237,7 +246,12 @@ public class ActivityReminderView extends BaseActivity {
             tv_reminder_vibrate.setTextColor(activeReminder.isEnableVibration() ?
                     getResources().getColor(R.color.text_dim) : getResources().getColor(R.color.text_danger));
 
-            tv_reminder_note.setText(activeReminder.getNote());
+            if (!StringHelper.isNullOrEmpty(activeReminder.getNote())) {
+                tv_reminder_note.setText(activeReminder.getNote());
+                imgBtnShareNote.setVisibility(View.VISIBLE);
+            } else {
+                imgBtnShareNote.setVisibility(View.GONE);
+            }
 
             final LinearLayout lv_missed_reminders = findViewById(R.id.lv_last_missed_alert);
 

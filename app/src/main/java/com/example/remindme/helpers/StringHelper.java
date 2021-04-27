@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class StringHelper {
+
     public static final SimpleDateFormat TIME_FORMAT_12 = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
     public static final SimpleDateFormat TIME_FORMAT_24 = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
 
