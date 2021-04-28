@@ -39,6 +39,7 @@ public class ActivityReminderView extends BaseActivity {
     private TextView tv_expired;
     private TextView next_snooze;
     private ImageButton imgBtnShareNote;
+    private static final String STATUS_OFF = "OFF";
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -229,7 +230,7 @@ public class ActivityReminderView extends BaseActivity {
 
             } else {
                 lv_alarm_tone_is_on.setVisibility(View.GONE);
-                tv_reminder_tone_summary.setText("OFF");
+                tv_reminder_tone_summary.setText(STATUS_OFF);
             }
 
             tv_reminder_tone_summary.setTextColor(activeReminder.isEnableTone() ?
@@ -240,7 +241,7 @@ public class ActivityReminderView extends BaseActivity {
             if (activeReminder.isEnableVibration()) {
                 tv_reminder_vibrate.setText(getResources().getStringArray(R.array.vibration_patterns)[ReminderModel.convertToVibratePattern(activeReminder.getVibratePattern())]);
             } else {
-                tv_reminder_vibrate.setText("OFF");
+                tv_reminder_vibrate.setText(STATUS_OFF);
             }
 
             tv_reminder_vibrate.setTextColor(activeReminder.isEnableVibration() ?
@@ -253,11 +254,11 @@ public class ActivityReminderView extends BaseActivity {
                 imgBtnShareNote.setVisibility(View.GONE);
             }
 
-            final LinearLayout lv_missed_reminders = findViewById(R.id.lv_last_missed_alert);
+            final LinearLayout lv_last_missed_alert = findViewById(R.id.lv_last_missed_alert);
+
 
             if (activeReminder.getLastMissedTime() != null) {
-
-                lv_missed_reminders.setVisibility(View.VISIBLE);
+                lv_last_missed_alert.setVisibility(View.VISIBLE);
                 final TextView tv_reminder_last_missed_time = findViewById(R.id.tv_reminder_last_missed_time);
                 tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(activeReminder.getLastMissedTime()));
 
@@ -295,6 +296,10 @@ public class ActivityReminderView extends BaseActivity {
 
                     tv_missed_alerts.setText(builder.toString());
                 }
+
+            } else {
+                lv_last_missed_alert.setVisibility(View.GONE);
+                isMissedAlertsVisible = false; // This will let "tv_missed_alerts" hide as well using the "else" part below
             }
 
             if (isMissedAlertsVisible) {
