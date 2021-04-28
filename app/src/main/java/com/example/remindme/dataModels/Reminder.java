@@ -12,7 +12,9 @@ public class Reminder extends RealmObject implements RealmModel {
     @PrimaryKey
     public String id;
     @Index
-    public boolean expired;
+    public boolean isExpired;
+
+    public boolean isNotification;
     public int alarmIntentId;
     public String name;
     public String note;
@@ -21,11 +23,11 @@ public class Reminder extends RealmObject implements RealmModel {
     public RealmList<Date> missedTimes;
     public String selectedAlarmTone;
     public Date nextSnoozeTime;
-    public boolean isEnableTone;
-    public boolean enabled;
-    public boolean vibrate;
+    public boolean isToneEnabled;
+    public boolean isEnabled;
+    public boolean isVibrate;
     public int vibratePattern;
-    public boolean increaseVolumeGradually;
+    public boolean isIncreaseVolumeGradually;
     public int alarmVolume;
     public int ringDurationInMin;
 
@@ -34,9 +36,11 @@ public class Reminder extends RealmObject implements RealmModel {
     public RealmList<Integer> repeatDays = new RealmList<>();
     public RealmList<Integer> repeatWeeks = new RealmList<>();
     public RealmList<Integer> repeatMonths = new RealmList<>();
+    public RealmList<Date> repeatTimeList = new RealmList<>();
     public int customTimeUnit;
     public int customTimeValue;
-    public boolean hasRepeatEnd;
+
+    public boolean isHasRepeatEnd;
     public Date repeatEndDate;
 
     public boolean snoozeEnabled;

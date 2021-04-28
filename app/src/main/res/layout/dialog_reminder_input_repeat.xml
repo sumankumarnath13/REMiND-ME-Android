@@ -140,6 +140,14 @@
                 android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_other" />
 
+            <RadioButton
+                android:id="@+id/rdoReminderRepeatTimeList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/soothingText"
+                android:textSize="@dimen/font_size_medium"
+                android:text="@string/time_list_repeat_option_label" />
+
         </LinearLayout>
 
         <LinearLayout

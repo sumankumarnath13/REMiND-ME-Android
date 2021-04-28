@@ -22,7 +22,8 @@ public class ReminderRepeatModel {
         MONTHLY,
         MONTHLY_CUSTOM,
         YEARLY,
-        OTHER
+        OTHER,
+        TIME_LIST
     }
 
     public enum TimeUnits {
@@ -59,6 +60,7 @@ public class ReminderRepeatModel {
         reminderTime = value.getTime();
     }
 
+    public final List<Date> timeList = new ArrayList<>();
     public final List<Integer> customHours;
     public final List<Integer> customDays;
     public final List<Integer> customWeeks;

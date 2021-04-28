@@ -343,14 +343,6 @@
                                     android:textColor="?attr/soothingText"
                                     android:textSize="@dimen/font_size_medium" />
 
-                                <ImageButton
-                                    android:id="@+id/imgBtnPlayStop"
-                                    android:layout_width="35dp"
-                                    android:layout_height="23dp"
-                                    android:layout_marginRight="@dimen/dp_8"
-                                    android:layout_marginEnd="@dimen/dp_8"
-                                    android:src="@drawable/ic_play" />
-
                                 <Button
                                     android:id="@+id/btnSetDefaultTone"
                                     android:layout_width="wrap_content"
@@ -359,6 +351,14 @@
                                     android:layout_marginEnd="@dimen/dp_8"
                                     style="@style/smallButtonStyle"
                                     android:text="Use Default" />
+
+                                <ImageButton
+                                    android:id="@+id/imgBtnPlayStop"
+                                    android:layout_width="35dp"
+                                    android:layout_height="23dp"
+                                    android:layout_marginRight="@dimen/dp_8"
+                                    android:layout_marginEnd="@dimen/dp_8"
+                                    android:src="@drawable/ic_play" />
 
                                 <androidx.appcompat.widget.SwitchCompat
                                     android:id="@+id/sw_reminder_tone"

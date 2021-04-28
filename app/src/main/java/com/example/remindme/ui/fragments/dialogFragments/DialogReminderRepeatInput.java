@@ -47,11 +47,13 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
     private RadioButton rdo_reminder_repeat_monthly_custom;
     private RadioButton rdo_reminder_repeat_yearly;
     private RadioButton rdo_reminder_repeat_other;
+    private RadioButton rdoReminderRepeatTimeList;
     private TextView tv_end_date_value;
     private TextView tv_end_time_value;
     private SwitchCompat sw_has_repeat_end;
     private LinearLayout lv_repeat_end_date;
     private LinearLayout lv_repeat_end_time;
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -201,6 +203,15 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
             }
         });
 
+        rdoReminderRepeatTimeList = view.findViewById(R.id.rdoReminderRepeatTimeList);
+        rdoReminderRepeatTimeList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final TimeListRepeatInputDialog ting = new TimeListRepeatInputDialog();
+                ting.show(getParentFragmentManager(), "ting tong");
+            }
+        });
+
         sw_has_repeat_end = view.findViewById(R.id.sw_has_repeat_end);
         sw_has_repeat_end.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -322,6 +333,7 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_monthly_custom.setChecked(false);
         rdo_reminder_repeat_yearly.setChecked(false);
         rdo_reminder_repeat_other.setChecked(false);
+        rdoReminderRepeatTimeList.setChecked(false);
 
         switch (model.getRepeatOption()) {
             default:
@@ -357,6 +369,9 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
                 break;
             case OTHER:
                 rdo_reminder_repeat_other.setChecked(true);
+                break;
+            case TIME_LIST:
+                rdoReminderRepeatTimeList.setChecked(true);
                 break;
         }
 

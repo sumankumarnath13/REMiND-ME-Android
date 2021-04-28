@@ -86,6 +86,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="activitySettingsTitle">Settings</string>
     <string name="activityAboutAppTitle">About App</string>
+    <string name="time_list_repeat_option_label">Time List</string>
     <array name="first_day_of_week_options">
         <item>Sunday</item>
         <item>Monday</item>
