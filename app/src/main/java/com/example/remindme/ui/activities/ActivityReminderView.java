@@ -130,11 +130,11 @@ public class ActivityReminderView extends BaseActivity {
         });
 
         next_snooze = findViewById(R.id.tv_reminder_next_snooze);
-        btn_reminder_ringing_dismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
-        btn_reminder_ringing_dismiss.setOnClickListener(new View.OnClickListener() {
+        btn_reminder_dismiss = findViewById(R.id.btn_reminder_dismiss);
+        btn_reminder_dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activeReminder.snoozeByUser(ActivityReminderView.this);
+                activeReminder.dismissByUser(ActivityReminderView.this);
                 refresh();
             }
         });
@@ -164,7 +164,7 @@ public class ActivityReminderView extends BaseActivity {
         refresh();
     }
 
-    private Button btn_reminder_ringing_dismiss;
+    private Button btn_reminder_dismiss;
 
     private void refresh() {
 
@@ -180,10 +180,10 @@ public class ActivityReminderView extends BaseActivity {
 
             if (activeReminder.getNextSnoozeOffTime() != null) {
                 next_snooze.setText(StringHelper.toTime(activeReminder.getNextSnoozeOffTime()));
-                btn_reminder_ringing_dismiss.setVisibility(View.VISIBLE);
+                btn_reminder_dismiss.setVisibility(View.VISIBLE);
             } else {
                 next_snooze.setText("");
-                btn_reminder_ringing_dismiss.setVisibility(View.GONE);
+                btn_reminder_dismiss.setVisibility(View.GONE);
             }
 
             if (activeReminder.isExpired()) {

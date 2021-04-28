@@ -18,8 +18,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="@dimen/dp_139"
-                android:layout_height="@dimen/dp_139"
+                android:layout_width="@dimen/dp_117"
+                android:layout_height="@dimen/dp_117"
                 android:src="@drawable/ic_brand" />
 
             <TextView

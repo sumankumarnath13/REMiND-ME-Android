@@ -488,7 +488,7 @@ public class ReminderModel extends ViewModel {
         if (nextTime == null) { // EOF situation
             archiveToFinished();
         } else {
-            //User's dismiss will erase missed alert history:
+            // User's dismiss will erase missed alert history:
             lastMissedTime = null;
             missedTimes.clear();
             calculatedTime = nextTime; // Set next trigger time.

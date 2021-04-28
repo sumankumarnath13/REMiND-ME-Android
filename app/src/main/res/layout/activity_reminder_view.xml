@@ -170,7 +170,7 @@
                                 android:textSize="@dimen/font_size_medium" />
 
                             <Button
-                                android:id="@+id/btn_reminder_ringing_dismiss"
+                                android:id="@+id/btn_reminder_dismiss"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/dp_8"
@@ -248,10 +248,10 @@
 
                     <ImageButton
                         android:id="@+id/imgBtnShareNote"
-                        android:layout_width="wrap_content"
+                        android:layout_width="49dp"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="@dimen/dp_16"
-                        android:paddingVertical="@dimen/dp_8"
+                        android:paddingVertical="@dimen/dp_3"
                         android:layout_marginVertical="@dimen/dp_8"
                         android:src="@drawable/ic_share" />
 

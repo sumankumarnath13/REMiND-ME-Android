@@ -196,20 +196,32 @@
                             app:tint="@color/bg_info" />
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_8"
                             android:layout_marginLeft="@dimen/dp_8"
-                            android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:text="@string/btn_repeat"
-                                android:textColor="?attr/soothingText"
-                                android:textSize="@dimen/font_size_medium" />
+                                android:layout_gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/btn_repeat"
+                                    android:textColor="?attr/soothingText"
+                                    android:textSize="@dimen/font_size_medium" />
+
+                                <androidx.appcompat.widget.SwitchCompat
+                                    android:id="@+id/sw_reminder_repeat"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent" />
+                            </LinearLayout>
 
                             <TextView
                                 android:id="@+id/tv_reminder_repeat_summary"
@@ -220,11 +232,6 @@
                                 android:textSize="@dimen/font_size_small" />
 
                         </LinearLayout>
-
-                        <androidx.appcompat.widget.SwitchCompat
-                            android:id="@+id/sw_reminder_repeat"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent" />
 
                     </LinearLayout>
 
@@ -259,20 +266,34 @@
                             android:src="@drawable/ic_reminder_snooze" />
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_8"
                             android:layout_marginLeft="@dimen/dp_8"
-                            android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:text="@string/btn_snooze"
-                                android:textColor="?attr/soothingText"
-                                android:textSize="@dimen/font_size_medium" />
+                                android:layout_gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/btn_snooze"
+                                    android:textColor="?attr/soothingText"
+                                    android:textSize="@dimen/font_size_medium" />
+
+
+                                <androidx.appcompat.widget.SwitchCompat
+                                    android:id="@+id/sw_reminder_snooze"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent" />
+
+                            </LinearLayout>
 
                             <TextView
                                 android:id="@+id/tv_reminder_snooze_summary"
@@ -283,11 +304,6 @@
                                 android:textSize="@dimen/font_size_small" />
 
                         </LinearLayout>
-
-                        <androidx.appcompat.widget.SwitchCompat
-                            android:id="@+id/sw_reminder_snooze"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent" />
 
                     </LinearLayout>
 
@@ -306,20 +322,50 @@
                             android:src="@drawable/ic_reminder_sound" />
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_8"
                             android:layout_marginLeft="@dimen/dp_8"
-                            android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:text="@string/btn_alarm_sound"
-                                android:textColor="?attr/soothingText"
-                                android:textSize="@dimen/font_size_medium" />
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/btn_alarm_sound"
+                                    android:textColor="?attr/soothingText"
+                                    android:textSize="@dimen/font_size_medium" />
+
+                                <ImageButton
+                                    android:id="@+id/imgBtnPlayStop"
+                                    android:layout_width="35dp"
+                                    android:layout_height="23dp"
+                                    android:layout_marginRight="@dimen/dp_8"
+                                    android:layout_marginEnd="@dimen/dp_8"
+                                    android:src="@drawable/ic_play" />
+
+                                <Button
+                                    android:id="@+id/btnSetDefaultTone"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="@dimen/dp_8"
+                                    android:layout_marginEnd="@dimen/dp_8"
+                                    style="@style/smallButtonStyle"
+                                    android:text="Use Default" />
+
+                                <androidx.appcompat.widget.SwitchCompat
+                                    android:id="@+id/sw_reminder_tone"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent" />
+
+                            </LinearLayout>
 
                             <TextView
                                 android:id="@+id/tv_reminder_tone_summary"
@@ -330,11 +376,6 @@
                                 android:textSize="@dimen/font_size_small" />
 
                         </LinearLayout>
-
-                        <androidx.appcompat.widget.SwitchCompat
-                            android:id="@+id/sw_reminder_tone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent" />
 
                     </LinearLayout>
 
@@ -353,7 +394,7 @@
                             android:src="@drawable/ic_sound_volume" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="@dimen/dp_117"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_8"
                             android:layout_marginLeft="@dimen/dp_8"

@@ -194,7 +194,7 @@ public class ActivityReminderRinging extends BaseActivity {
             setTurnScreenOn(true);
         }
 
-        final Button btnDismiss = findViewById(R.id.btn_reminder_ringing_dismiss);
+        final Button btnDismiss = findViewById(R.id.btn_reminder_dismiss);
         btnDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -205,7 +205,7 @@ public class ActivityReminderRinging extends BaseActivity {
             }
         });
 
-        btnSnooze = findViewById(R.id.btn_reminder_ringing_snooze);
+        btnSnooze = findViewById(R.id.btn_reminder_snooze);
         btnSnooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -21,7 +21,7 @@
         <item name="soothingText">@color/text_soothing</item>
 
 
-        <item name="android:buttonStyle">@style/commonButtonStyle</item>
+        <item name="android:buttonStyle">@style/buttonStyle</item>
         <item name="imageButtonStyle">@style/imageButtonStyle</item>
         <item name="android:alertDialogTheme">@style/BlackDialog</item>
     </style>
@@ -45,35 +45,56 @@
         <item name="dimText">@color/text_dim_light</item>
         <item name="soothingText">@color/text_soothing_light</item>
 
-        <item name="android:buttonStyle">@style/commonButtonStyleLight</item>
+        <item name="android:buttonStyle">@style/buttonStyle</item>
         <item name="imageButtonStyle">@style/imageButtonStyle</item>
         <item name="android:alertDialogTheme">@style/LightDialog</item>
     </style>
 
-    <style name="commonButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
+    <!--    <style name="blackButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">-->
+    <!--        <item name="android:minHeight">@dimen/dp_8-->
+    <!--        </item> &lt;!&ndash; Android apply default mid height of buttons making it much larger that needed. This is to override that issue &ndash;&gt;-->
+    <!--        <item name="android:background">@drawable/bg_rounded</item>-->
+    <!--        <item name="android:padding">@dimen/dp_8</item>-->
+    <!--        <item name="colorAccent">?attr/accentColor</item>-->
+    <!--        <item name="android:textSize">@dimen/font_size_small</item>-->
+    <!--    </style>-->
+
+    <style name="buttonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:minHeight">@dimen/dp_8
         </item> <!-- Android apply default mid height of buttons making it much larger that needed. This is to override that issue -->
         <item name="android:background">@drawable/bg_rounded</item>
         <item name="android:padding">@dimen/dp_8</item>
-        <item name="colorAccent">@color/accent_color</item>
+        <item name="colorAccent">?attr/accentColor</item>
         <item name="android:textSize">@dimen/font_size_small</item>
     </style>
 
-    <style name="commonButtonStyleLight" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:minHeight">@dimen/dp_8
+    <!--    <style name="smallBlackButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">-->
+    <!--        <item name="android:minHeight">0dp-->
+    <!--        </item> &lt;!&ndash; Android apply default mid height of buttons making it much larger that needed. This is to override that issue &ndash;&gt;-->
+    <!--        <item name="android:minWidth">0dp</item>-->
+    <!--        <item name="android:background">@drawable/bg_rounded</item>-->
+    <!--        <item name="android:padding">@dimen/dp_5</item>-->
+    <!--        <item name="colorAccent">?attr/accentColor</item>-->
+    <!--        <item name="android:textSize">@dimen/font_size_extra_small</item>-->
+    <!--    </style>-->
+
+    <style name="smallButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:minHeight">0dp
         </item> <!-- Android apply default mid height of buttons making it much larger that needed. This is to override that issue -->
+        <item name="android:minWidth">0dp</item>
         <item name="android:background">@drawable/bg_rounded</item>
-        <item name="android:padding">@dimen/dp_8</item>
+        <item name="android:padding">@dimen/dp_5</item>
         <item name="colorAccent">@color/accent_color_light</item>
-        <item name="android:textSize">@dimen/font_size_small</item>
+        <item name="android:textSize">@dimen/font_size_extra_small</item>
     </style>
-
 
     <style name="imageButtonStyle" parent="Widget.AppCompat.ImageButton">
+        <item name="android:minHeight">0dp
+        </item> <!-- Android apply default mid height of buttons making it much larger that needed. This is to override that issue -->
+        <item name="android:padding">@dimen/dp_3</item>
         <item name="android:background">@drawable/bg_rounded</item>
         <item name="android:scaleType">center</item>
     </style>
-
 
     <style name="BlackTheme.NoActionBar" parent="BlackTheme">
         <item name="windowActionBar">false</item>
@@ -85,7 +106,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-
     <style name="BlackDialog" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@color/bg_dialog
         </item> <!-- Changes background color -->
@@ -93,7 +113,6 @@
         <item name="colorAccent">@color/accent_color</item>
         <item name="colorPrimary">@color/bg_danger</item>
         <item name="colorPrimaryDark">@color/bg_success</item>
-
     </style>
 
     <style name="LightDialog" parent="Theme.AppCompat.Dialog.Alert">
@@ -104,7 +123,6 @@
         <item name="colorPrimary">@color/bg_danger</item>
         <item name="colorPrimaryDark">@color/bg_success</item>
     </style>
-
 
     <style name="TimePickerDialogBlack" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="android:windowBackground">@color/bg_dialog

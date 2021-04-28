@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -90,21 +91,20 @@ public class ActivityReminderInput
     private Spinner ring_duration_spinner;
     private Spinner vibrate_pattern_spinner;
 
+    private ImageButton imgBtnPlayStop;
+    private Button btnSetDefaultTone;
+    private boolean isPlayingTone;
+    private int deviceAlarmVolume;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RINGTONE_DIALOG_REQ_CODE && data != null) {
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-            TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
             if (uri != null) {
                 reminderModel.setRingToneUri(uri);
-                Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.getRingToneUri());
-                tv_reminder_tone_summary.setText(ringtone.getTitle(this));
-            } else {
-                Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-                Ringtone alarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarmToneUri);
-                tv_reminder_tone_summary.setText(alarmTone.getTitle(this));
             }
+            refreshForm();
         } else if (requestCode == NAME_SPEECH_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
@@ -305,13 +305,9 @@ public class ActivityReminderInput
         sw_reminder_tone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 if (!isUserInteracted) return;
-
                 reminderModel.setEnableTone(isChecked);
-
                 refreshForm();
-
             }
         });
 
@@ -319,13 +315,9 @@ public class ActivityReminderInput
         sw_reminder_vibrate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 if (!isUserInteracted) return;
-
                 reminderModel.setEnableVibration(isChecked);
-
                 refreshForm();
-
             }
         });
 
@@ -375,7 +367,29 @@ public class ActivityReminderInput
             }
         });
 
-        //final AudioManager audioManager = OsHelper.getAudioManager(ActivityReminderInput.this);
+        imgBtnPlayStop = findViewById(R.id.imgBtnPlayStop);
+        imgBtnPlayStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPlayingTone) {
+                    stopTone();
+                } else {
+                    startTone();
+                }
+                refreshForm();
+            }
+        });
+
+        btnSetDefaultTone = findViewById(R.id.btnSetDefaultTone);
+        btnSetDefaultTone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reminderModel.setRingToneUri(null);
+                refreshForm();
+            }
+        });
+
+        deviceAlarmVolume = OsHelper.getAlarmVolumeInPercentage(OsHelper.getAudioManager(this));
         seeker_alarm_volume = findViewById(R.id.seeker_alarm_volume);
         seeker_alarm_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -456,21 +470,27 @@ public class ActivityReminderInput
 
         sw_reminder_snooze.setChecked(reminderModel.getSnoozeModel().isEnable);
         sw_reminder_repeat.setChecked(reminderModel.getRepeatOption() != ReminderRepeatModel.ReminderRepeatOptions.OFF);
-
         sw_reminder_tone.setChecked(reminderModel.isEnableTone());
+        if (reminderModel.getRingToneUri() == null) {
+            final Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            final Ringtone alarmTone = RingtoneManager.getRingtone(this, alarmToneUri);
+            tv_reminder_tone_summary.setText(alarmTone.getTitle(this));
+            btnSetDefaultTone.setVisibility(View.INVISIBLE);
+        } else {
+            final Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.getRingToneUri());
+            tv_reminder_tone_summary.setText(ringtone.getTitle(this));
+            btnSetDefaultTone.setVisibility(View.VISIBLE);
+        }
 
         if (reminderModel.isEnableTone()) {
             sw_gradually_increase_volume.setEnabled(true);
             sw_gradually_increase_volume.setChecked(reminderModel.isIncreaseVolumeGradually());
 
+            imgBtnPlayStop.setEnabled(true);
+            btnSetDefaultTone.setEnabled(true);
+
             seeker_alarm_volume.setEnabled(true);
             tv_reminder_tone_summary.setEnabled(true);
-
-            if (reminderModel.getAlarmVolumePercentage() == 0) {
-                seeker_alarm_volume.setProgress(OsHelper.getAlarmVolumeInPercentage(OsHelper.getAudioManager(this)));
-            } else {
-                seeker_alarm_volume.setProgress(reminderModel.getAlarmVolumePercentage());
-            }
 
             ring_duration_spinner.setEnabled(true);
             ring_duration_spinner.setSelection(ReminderModel.convertToAlarmRingDuration(reminderModel.getAlarmRingDuration()));
@@ -478,13 +498,28 @@ public class ActivityReminderInput
         } else {
             sw_gradually_increase_volume.setEnabled(false);
             sw_gradually_increase_volume.setChecked(false);
+
+            imgBtnPlayStop.setEnabled(false);
+            btnSetDefaultTone.setEnabled(false);
+
             seeker_alarm_volume.setEnabled(false);
             tv_reminder_tone_summary.setEnabled(false);
             ring_duration_spinner.setEnabled(false);
         }
 
-        tv_reminder_tone_summary.setText(reminderModel.getRingToneUriSummary(this));
+        if (reminderModel.getAlarmVolumePercentage() == 0) {
+            seeker_alarm_volume.setProgress(deviceAlarmVolume);
+        } else {
+            seeker_alarm_volume.setProgress(reminderModel.getAlarmVolumePercentage());
+        }
 
+        if (isPlayingTone) {
+            imgBtnPlayStop.setImageResource(R.drawable.ic_stop);
+        } else {
+            imgBtnPlayStop.setImageResource(R.drawable.ic_play);
+        }
+
+        tv_reminder_tone_summary.setText(reminderModel.getRingToneUriSummary(this));
         sw_reminder_vibrate.setChecked(reminderModel.isEnableVibration());
         vibrate_pattern_spinner.setSelection(ReminderModel.convertToVibratePattern(reminderModel.getVibratePattern()));
         vibrate_pattern_spinner.setEnabled(reminderModel.isEnableVibration());
@@ -572,11 +607,7 @@ public class ActivityReminderInput
 
     @Override
     protected void onDestroy() {
-
-        if (ringingController != null) {
-            ringingController.stopRinging();
-        }
-
+        stopTone();
         super.onDestroy();
     }
 
@@ -590,32 +621,43 @@ public class ActivityReminderInput
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
         if (!isUserInteracted) {
             return;
         }
 
         if (parent.getId() == R.id.ring_duration_spinner) {
-
             reminderModel.setAlarmRingDuration(ReminderModel.convertToAlarmRingDuration(position));
-
         } else if (parent.getId() == R.id.vibrate_pattern_spinner) {
-
             reminderModel.setVibratePattern(ReminderModel.convertToVibratePattern(position));
-
-            if (ringingController == null) {
-
-                ringingController = new RingingController(this, reminderModel.getRingToneUri());
-
-            }
-
-            ringingController.vibrateOnce(ReminderModel.convertToVibrateFrequency(reminderModel.getVibratePattern()));
+            startVibrating();
         }
-
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private RingingController getRingingController() {
+        if (ringingController == null || !isPlayingTone) { // "!isPlayingTone" this condition will ensure new instance of RingingController with updated ReminderModel tone URI.
+            ringingController = new RingingController(ActivityReminderInput.this, reminderModel.getRingToneUri());
+        }
+        return ringingController;
+    }
+
+    private void startVibrating() {
+        getRingingController().vibrateOnce(ReminderModel.convertToVibrateFrequency(reminderModel.getVibratePattern()));
+    }
+
+    private void startTone() {
+        getRingingController().startTone(reminderModel.isIncreaseVolumeGradually(), reminderModel.getAlarmVolumePercentage());
+        isPlayingTone = true;
+    }
+
+    private void stopTone() {
+        if (ringingController != null) {
+            ringingController.stopRinging(); // Stop ring stops both tone and vibration if is playing.
+        }
+        isPlayingTone = false;
     }
 }
