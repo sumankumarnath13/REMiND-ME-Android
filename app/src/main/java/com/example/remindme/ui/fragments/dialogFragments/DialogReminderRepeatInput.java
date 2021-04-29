@@ -20,10 +20,10 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
+import com.example.remindme.controllers.AbstractDialogFragmentController;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
@@ -31,7 +31,7 @@ import com.example.remindme.viewModels.ReminderRepeatModel;
 
 import java.util.Calendar;
 
-public class DialogReminderRepeatInput extends DialogFragment implements IRepeatInputChildDialogListener {
+public class DialogReminderRepeatInput extends AbstractDialogFragmentController implements IRepeatInputChildDialogListener {
     private IRepeatInputDialogListener listener;
     private ReminderRepeatModel model;
     private boolean isCancel;
@@ -47,13 +47,11 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
     private RadioButton rdo_reminder_repeat_monthly_custom;
     private RadioButton rdo_reminder_repeat_yearly;
     private RadioButton rdo_reminder_repeat_other;
-    private RadioButton rdoReminderRepeatTimeList;
     private TextView tv_end_date_value;
     private TextView tv_end_time_value;
     private SwitchCompat sw_has_repeat_end;
     private LinearLayout lv_repeat_end_date;
     private LinearLayout lv_repeat_end_time;
-
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -203,21 +201,12 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
             }
         });
 
-        rdoReminderRepeatTimeList = view.findViewById(R.id.rdoReminderRepeatTimeList);
-        rdoReminderRepeatTimeList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final TimeListRepeatInputDialog ting = new TimeListRepeatInputDialog();
-                ting.show(getParentFragmentManager(), "ting tong");
-            }
-        });
-
         sw_has_repeat_end = view.findViewById(R.id.sw_has_repeat_end);
         sw_has_repeat_end.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if (isRefreshing) return;
+                if (isRefreshing()) return;
 
                 if (isChecked) { // Use a default repeat end to next month
 
@@ -316,10 +305,8 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         return builder.create();
     }
 
-    private boolean isRefreshing;
-
-    private void refresh() {
-        isRefreshing = true;
+    @Override
+    protected void onUIRefresh() {
         // No radio group wont work for the given layout. So resetting programmatically is required.
 
         rdo_reminder_repeat_off.setChecked(false);
@@ -333,7 +320,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
         rdo_reminder_repeat_monthly_custom.setChecked(false);
         rdo_reminder_repeat_yearly.setChecked(false);
         rdo_reminder_repeat_other.setChecked(false);
-        rdoReminderRepeatTimeList.setChecked(false);
 
         switch (model.getRepeatOption()) {
             default:
@@ -370,9 +356,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
             case OTHER:
                 rdo_reminder_repeat_other.setChecked(true);
                 break;
-            case TIME_LIST:
-                rdoReminderRepeatTimeList.setChecked(true);
-                break;
         }
 
         sw_has_repeat_end.setChecked(model.isHasRepeatEnd());
@@ -387,7 +370,6 @@ public class DialogReminderRepeatInput extends DialogFragment implements IRepeat
             lv_repeat_end_time.setVisibility(View.GONE);
         }
 
-        isRefreshing = false;
     }
 
     public void setChanges(ReminderRepeatModel m) {

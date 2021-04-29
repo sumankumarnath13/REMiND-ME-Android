@@ -179,11 +179,11 @@ public class AlertService extends Service {
                 ringingController = new RingingController(this, servingReminder.getRingToneUri());
             }
 
-            if (servingReminder.isEnableTone()) {
+            if (servingReminder.isToneEnabled()) {
                 ringingController.startTone(servingReminder.isIncreaseVolumeGradually(), servingReminder.getAlarmVolumePercentage());
             }
 
-            if (servingReminder.isEnableVibration()) {
+            if (servingReminder.isVibrationEnabled()) {
                 ringingController.startVibrating(ReminderModel.convertToVibrateFrequency(servingReminder.getVibratePattern()));
             }
 

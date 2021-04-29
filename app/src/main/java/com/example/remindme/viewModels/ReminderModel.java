@@ -74,10 +74,10 @@ public class ReminderModel extends ViewModel {
         return id;
     }
 
-    private boolean expired;
+    private boolean isExpired;
 
     public boolean isExpired() {
-        return expired;
+        return isExpired;
     }
 
     private int intId;
@@ -86,10 +86,10 @@ public class ReminderModel extends ViewModel {
         return intId;
     }
 
-    private boolean enabled = true;
+    private boolean isEnabled = true;
 
     public boolean isEnabled() {
-        return enabled;
+        return isEnabled;
     }
 
     private String name;
@@ -177,7 +177,7 @@ public class ReminderModel extends ViewModel {
         userTimeCl.set(Calendar.MILLISECOND, 0);
 
         if (originalTime != null && !originalTime.equals(userTimeCl.getTime())) {
-            originalTimeChanged = true;
+            isOriginalTimeChanged = true;
         }
 
         originalTime = userTimeCl.getTime();
@@ -219,10 +219,10 @@ public class ReminderModel extends ViewModel {
         return originalTime;
     }
 
-    private boolean originalTimeChanged;
+    private boolean isOriginalTimeChanged;
 
     public boolean isOriginalTimeChanged() {
-        return originalTimeChanged;
+        return isOriginalTimeChanged;
     }
 
     private Date calculatedTime;
@@ -243,34 +243,34 @@ public class ReminderModel extends ViewModel {
         return missedTimes;
     }
 
-    private boolean increaseVolumeGradually;
+    private boolean isIncreaseVolumeGradually;
 
     public boolean isIncreaseVolumeGradually() {
-        return this.increaseVolumeGradually;
+        return this.isIncreaseVolumeGradually;
     }
 
     public void setIncreaseVolumeGradually(boolean value) {
-        increaseVolumeGradually = value;
+        isIncreaseVolumeGradually = value;
     }
 
-    private boolean enableTone = true;
+    private boolean isToneEnabled = true;
 
-    public boolean isEnableTone() {
-        return enableTone;
+    public boolean isToneEnabled() {
+        return isToneEnabled;
     }
 
-    public void setEnableTone(boolean value) {
-        enableTone = value;
+    public void setToneEnabled(boolean value) {
+        isToneEnabled = value;
     }
 
-    private boolean enableVibration = true;
+    private boolean isVibrationEnabled = true;
 
-    public boolean isEnableVibration() {
-        return enableVibration;
+    public boolean isVibrationEnabled() {
+        return isVibrationEnabled;
     }
 
-    public void setEnableVibration(boolean value) {
-        enableVibration = value;
+    public void setVibrationEnabled(boolean value) {
+        isVibrationEnabled = value;
     }
     // endregion
 
@@ -491,21 +491,21 @@ public class ReminderModel extends ViewModel {
                 // SET NEW TRIGGER TIME
                 Date nextTime = getNextScheduleTime(currentTime);
                 if (nextTime == null) { // EOF situation. No next schedule possible
-                    enabled = false;
+                    isEnabled = false;
                     ToastHelper.showLong(context, "Reminder time expired. Please edit with a future time to enable.");
                     return false;
                 } else { // Found next trigger point.
                     calculatedTime = nextTime; // Set next trigger time.
-                    enabled = true;
+                    isEnabled = true;
                     return true;
                 }
             } else {
-                enabled = true;
+                isEnabled = true;
                 return true;
             }
         } else {
             cancelPendingIntent(context);
-            enabled = false;
+            isEnabled = false;
             return true;
         }
     }
@@ -634,23 +634,6 @@ public class ReminderModel extends ViewModel {
                     discardRepeatSettingChanges();
                     return false;
                 }
-            case TIME_LIST:
-                if (repeatValueChangeBuffer.timeList.size() > 0) {
-                    resetRepeatOptions();
-                    this.repeatModel.setRepeatOption(repeatValueChangeBuffer.getRepeatOption());
-                    this.repeatModel.timeList.addAll(repeatValueChangeBuffer.timeList);
-                    repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
-                    repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
-                    // Calculate only if its not snoozed already. This calculations will occur when snooze get off or when it will be dismissed
-                    if (nextSnoozeOffTime == null || isOriginalTimeChanged()) {
-                        calculatedTime = getNextScheduleTime(Calendar.getInstance());
-                    }
-                    discardRepeatSettingChanges();
-                    return true;
-                } else {
-                    discardRepeatSettingChanges();
-                    return false;
-                }
         }
 
     }
@@ -694,7 +677,7 @@ public class ReminderModel extends ViewModel {
     }
 
     private void setPendingIntent(Context context, Date atTime, boolean isShowElapseTimeToast) {
-        if (!enabled) {
+        if (!isEnabled) {
             return;
         }
 
@@ -1142,18 +1125,18 @@ public class ReminderModel extends ViewModel {
     public static List<Reminder> getActiveReminders(String name) {
         final Realm realm = Realm.getDefaultInstance();
         if (StringHelper.isNullOrEmpty(name)) {
-            return realm.where(Reminder.class).equalTo("expired", false).sort("time").findAll();
+            return realm.where(Reminder.class).equalTo("isExpired", false).sort("time").findAll();
         } else {
-            return realm.where(Reminder.class).equalTo("expired", false).beginsWith("name", name).sort("time").findAll();
+            return realm.where(Reminder.class).equalTo("isExpired", false).beginsWith("name", name).sort("time").findAll();
         }
     }
 
     public static List<Reminder> getDismissedReminders(String name) {
         final Realm realm = Realm.getDefaultInstance();
         if (StringHelper.isNullOrEmpty(name)) {
-            return realm.where(Reminder.class).equalTo("expired", true).findAll();
+            return realm.where(Reminder.class).equalTo("isExpired", true).findAll();
         } else {
-            return realm.where(Reminder.class).equalTo("expired", true).beginsWith("name", name).findAll();
+            return realm.where(Reminder.class).equalTo("isExpired", true).beginsWith("name", name).findAll();
         }
     }
 
@@ -1184,11 +1167,11 @@ public class ReminderModel extends ViewModel {
 
         }
 
-        expired = false;
+        isExpired = false;
 
         save();
 
-        if (enabled && !AppSettingsHelper.getInstance().isDisableAllReminders()) {
+        if (isEnabled && !AppSettingsHelper.getInstance().isDisableAllReminders()) {
             setPendingIntent(context, getAlertTime(), isShowElapseTimeToast);
         }
 
@@ -1201,7 +1184,7 @@ public class ReminderModel extends ViewModel {
 
     public void deleteAndCancelAlert(Context context) {
 
-        if (!expired) {
+        if (!isExpired) {
             cancelPendingIntent(context);
         }
 
@@ -1219,7 +1202,7 @@ public class ReminderModel extends ViewModel {
     }
 
     private void saveAsExpired() {
-        expired = true;
+        isExpired = true;
         nextSnoozeOffTime = null;
         snoozeModel.count = 0;
         save();
@@ -1230,7 +1213,7 @@ public class ReminderModel extends ViewModel {
         final Reminder entity = new Reminder();
 
         entity.id = id;
-        entity.isExpired = expired;
+        entity.isExpired = isExpired;
         entity.alarmIntentId = getIntId();
         entity.name = name;
         entity.note = note;
@@ -1250,11 +1233,11 @@ public class ReminderModel extends ViewModel {
             entity.selectedAlarmTone = ringToneUri.toString();
         }
 
-        entity.isToneEnabled = enableTone;
-        entity.isEnabled = enabled;
-        entity.isVibrate = enableVibration;
+        entity.isToneEnabled = isToneEnabled;
+        entity.isEnabled = isEnabled;
+        entity.isVibrate = isVibrationEnabled;
 
-        entity.isIncreaseVolumeGradually = increaseVolumeGradually;
+        entity.isIncreaseVolumeGradually = isIncreaseVolumeGradually;
         entity.alarmVolume = alarmVolumePercentage;
         entity.ringDurationInMin = convertToAlarmRingDuration(ringDuration);
         entity.vibratePattern = convertToVibratePattern(vibratePattern);
@@ -1263,7 +1246,6 @@ public class ReminderModel extends ViewModel {
         entity.repeatDays.clear();
         entity.repeatWeeks.clear();
         entity.repeatMonths.clear();
-        entity.repeatTimeList.clear();
 
         switch (repeatModel.getRepeatOption()) {
             default:
@@ -1305,10 +1287,6 @@ public class ReminderModel extends ViewModel {
                 entity.repeatOption = 6;
                 entity.customTimeUnit = ReminderRepeatModel.transform(repeatModel.getCustomTimeUnit());
                 entity.customTimeValue = repeatModel.getCustomTimeValue();
-                break;
-            case TIME_LIST:
-                entity.repeatOption = 7;
-                entity.repeatTimeList.addAll(repeatModel.timeList);
                 break;
 
         }
@@ -1367,7 +1345,7 @@ public class ReminderModel extends ViewModel {
 
     private void setInstance(Reminder from) {
         id = from.id;
-        expired = from.isExpired;
+        isExpired = from.isExpired;
         intId = from.alarmIntentId;
         name = from.name;
         note = from.note;
@@ -1381,11 +1359,11 @@ public class ReminderModel extends ViewModel {
         if (from.selectedAlarmTone != null) {
             ringToneUri = Uri.parse(from.selectedAlarmTone);
         }
-        enableTone = from.isToneEnabled;
-        enabled = from.isEnabled;
-        enableVibration = from.isVibrate;
+        isToneEnabled = from.isToneEnabled;
+        isEnabled = from.isEnabled;
+        isVibrationEnabled = from.isVibrate;
 
-        increaseVolumeGradually = from.isIncreaseVolumeGradually;
+        isIncreaseVolumeGradually = from.isIncreaseVolumeGradually;
         alarmVolumePercentage = from.alarmVolume;
         ringDuration = convertToAlarmRingDuration(from.ringDurationInMin);
         vibratePattern = convertToVibratePattern(from.vibratePattern);
@@ -1436,10 +1414,6 @@ public class ReminderModel extends ViewModel {
             case 6:
                 repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.OTHER);
                 repeatModel.setRepeatCustom(from.customTimeUnit, from.customTimeValue);
-                break;
-            case 7:
-                repeatModel.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.TIME_LIST);
-                repeatModel.timeList.addAll(from.repeatTimeList);
                 break;
         }
 

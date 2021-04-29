@@ -22,8 +22,7 @@ public class ReminderRepeatModel {
         MONTHLY,
         MONTHLY_CUSTOM,
         YEARLY,
-        OTHER,
-        TIME_LIST
+        OTHER
     }
 
     public enum TimeUnits {

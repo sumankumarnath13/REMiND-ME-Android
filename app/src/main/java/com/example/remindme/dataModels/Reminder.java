@@ -36,7 +36,6 @@ public class Reminder extends RealmObject implements RealmModel {
     public RealmList<Integer> repeatDays = new RealmList<>();
     public RealmList<Integer> repeatWeeks = new RealmList<>();
     public RealmList<Integer> repeatMonths = new RealmList<>();
-    public RealmList<Date> repeatTimeList = new RealmList<>();
     public int customTimeUnit;
     public int customTimeValue;
 

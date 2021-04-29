@@ -205,7 +205,7 @@ public class ActivityReminderView extends BaseActivity {
             final TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
             final LinearLayout lv_alarm_tone_is_on = findViewById(R.id.lv_alarm_tone_is_on);
 
-            if (activeReminder.isEnableTone()) {
+            if (activeReminder.isToneEnabled()) {
 
                 lv_alarm_tone_is_on.setVisibility(View.VISIBLE);
                 tv_reminder_tone_summary.setText(activeReminder.getRingToneUriSummary(this));
@@ -233,18 +233,18 @@ public class ActivityReminderView extends BaseActivity {
                 tv_reminder_tone_summary.setText(STATUS_OFF);
             }
 
-            tv_reminder_tone_summary.setTextColor(activeReminder.isEnableTone() ?
+            tv_reminder_tone_summary.setTextColor(activeReminder.isToneEnabled() ?
                     getResources().getColor(R.color.text_dim) : getResources().getColor(R.color.text_danger));
 
             final TextView tv_reminder_vibrate = findViewById(R.id.tv_reminder_vibrate);
 
-            if (activeReminder.isEnableVibration()) {
+            if (activeReminder.isVibrationEnabled()) {
                 tv_reminder_vibrate.setText(getResources().getStringArray(R.array.vibration_patterns)[ReminderModel.convertToVibratePattern(activeReminder.getVibratePattern())]);
             } else {
                 tv_reminder_vibrate.setText(STATUS_OFF);
             }
 
-            tv_reminder_vibrate.setTextColor(activeReminder.isEnableVibration() ?
+            tv_reminder_vibrate.setTextColor(activeReminder.isVibrationEnabled() ?
                     getResources().getColor(R.color.text_dim) : getResources().getColor(R.color.text_danger));
 
             if (!StringHelper.isNullOrEmpty(activeReminder.getNote())) {
