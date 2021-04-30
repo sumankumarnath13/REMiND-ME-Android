@@ -175,7 +175,7 @@ public class ActivityReminderView extends BaseActivity {
 
             // If snooze do not exists then show original time|calculated time. Because next schedule may set as calculated time until its being fetched from database
             // Else show just original time
-            if (!activeReminder.isSnoozed()) {
+            if (!activeReminder.getSnoozeModel().isSnoozed()) {
                 tv_reminder_time.setText(StringHelper.toTime(activeReminder.getAlertTime()));
                 tv_reminder_date.setText(StringHelper.toWeekdayDate(activeReminder.getAlertTime()));
             } else {
@@ -188,7 +188,7 @@ public class ActivityReminderView extends BaseActivity {
                 tv_reminder_name.setText(activeReminder.getName());
             }
 
-            if (activeReminder.isSnoozed()) {
+            if (activeReminder.getSnoozeModel().isSnoozed()) {
                 next_snooze.setText(StringHelper.toTime(activeReminder.getSnoozedTime()));
                 btn_reminder_dismiss.setVisibility(View.VISIBLE);
             } else {

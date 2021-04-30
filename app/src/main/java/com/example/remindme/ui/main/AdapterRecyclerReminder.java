@@ -117,7 +117,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             name.setVisibility(View.VISIBLE);
         }
 
-        if (reminderModel.isSnoozed()) {
+        if (reminderModel.getSnoozeModel().isSnoozed()) {
             lv_reminder_view_snooze.setVisibility(View.VISIBLE);
             next_snooze.setText(StringHelper.toTime(reminderModel.getSnoozedTime()));
         } else {

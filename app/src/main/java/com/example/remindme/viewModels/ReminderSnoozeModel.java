@@ -25,6 +25,10 @@ public class ReminderSnoozeModel {
 
     public boolean isEnable = true;
 
+    public boolean isSnoozed() {
+        return count > 0;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -33,7 +37,7 @@ public class ReminderSnoozeModel {
         if (isEnable) {
             builder.append("Interval ");
 
-            switch (intervalOption){
+            switch (intervalOption) {
                 default:
                 case M5:
                     builder.append("5 min");

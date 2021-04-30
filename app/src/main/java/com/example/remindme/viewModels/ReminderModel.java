@@ -161,10 +161,6 @@ public class ReminderModel extends ViewModel {
         return snoozeModel;
     }
 
-    public boolean isSnoozed() {
-        return snoozeModel.count > 0;
-    }
-
     private Date originalTime;
 
     public void setOriginalTime(Date userTime) {
@@ -962,7 +958,7 @@ public class ReminderModel extends ViewModel {
         return nextTime;
     }
 
-    public Date getNextSnoozeTime() {
+    private Date getNextSnoozeTime() {
 
         Date nextTime = null;
 
@@ -1315,7 +1311,8 @@ public class ReminderModel extends ViewModel {
             // Both isOriginalTimeChanged() and isHasDifferentTimeCalculated() only works if original time changed after it was loaded from database e.g editing
             // and are not valid for new reminders e.g not saved yet.
             if (isOriginalTimeChanged() || isHasDifferentTimeCalculated()) {
-                resetSnooze();
+                //resetSnooze();
+                snoozeModel.count = 0;
             }
 
         }
@@ -1328,11 +1325,6 @@ public class ReminderModel extends ViewModel {
             setPendingIntent(context, getAlertTime(), isShowElapseTimeToast);
         }
 
-    }
-
-    private void resetSnooze() {
-        //nextSnoozeOffTime = null;
-        snoozeModel.count = 0;
     }
 
     public void deleteAndCancelAlert(Context context) {
