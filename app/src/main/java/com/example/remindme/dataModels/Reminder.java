@@ -22,7 +22,7 @@ public class Reminder extends RealmObject implements RealmModel {
     public Date lastMissedTime;
     public RealmList<Date> missedTimes;
     public String selectedAlarmTone;
-    public Date nextSnoozeTime;
+    //public Date nextSnoozeTime;
     public boolean isToneEnabled;
     public boolean isEnabled;
     public boolean isVibrate;

@@ -154,7 +154,7 @@ public class AlertService extends Service {
                 .setCategory(NotificationCompat.CATEGORY_ALARM);
 
         //ALERT_INTENT_SNOOZE_ALERT
-        if (model.getSnoozeModel().isEnable) {
+        if (model.canSnooze()) {
             final PendingIntent snoozePendingIntent = PendingIntent
                     .getBroadcast(this, model.getIntId(), createNotificationActionBroadcastIntent(ReminderModel.ACTION_SNOOZE_ALARM), PendingIntent.FLAG_CANCEL_CURRENT);
             builder.addAction(R.drawable.ic_reminder_snooze, getString(R.string.btn_snooze), snoozePendingIntent);

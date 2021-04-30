@@ -65,7 +65,7 @@ public class ActivityReminderRinging extends BaseActivity {
 
             serviceBinder.setActivityOpen(true);
 
-            ReminderModel reminderModel = serviceBinder.getServingReminder();
+            final ReminderModel reminderModel = serviceBinder.getServingReminder();
             if (reminderModel == null) {
                 ToastHelper.showLong(ActivityReminderRinging.this, "Serious flow trouble!");
                 finish();
@@ -76,7 +76,7 @@ public class ActivityReminderRinging extends BaseActivity {
             ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.getName());
             ((TextView) findViewById(R.id.tv_reminder_note)).setText(reminderModel.getNote());
 
-            if (reminderModel.getSnoozeModel().isEnable) {
+            if (reminderModel.canSnooze()) {
                 btnSnooze.setVisibility(View.VISIBLE);
             } else {
                 btnSnooze.setVisibility(View.GONE);

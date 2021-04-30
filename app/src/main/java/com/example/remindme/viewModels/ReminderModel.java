@@ -161,10 +161,8 @@ public class ReminderModel extends ViewModel {
         return snoozeModel;
     }
 
-    private Date nextSnoozeOffTime = null;
-
-    public Date getNextSnoozeOffTime() {
-        return nextSnoozeOffTime;
+    public boolean isSnoozed() {
+        return snoozeModel.count > 0;
     }
 
     private Date originalTime;
@@ -464,10 +462,10 @@ public class ReminderModel extends ViewModel {
 
         if (isHasDifferentTimeCalculated()) {
             _time = calculatedTime;
-        } else if (nextSnoozeOffTime == null) {
+        } else if (snoozeModel.count == 0) {
             _time = originalTime;
         } else {
-            _time = nextSnoozeOffTime;
+            _time = getSnoozedTime();
         }
 
         return _time;
@@ -545,7 +543,7 @@ public class ReminderModel extends ViewModel {
                 repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
                 repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
                 // Calculate only if its not snoozed already. This calculations will occur when snooze get off or when it will be dismissed
-                if (nextSnoozeOffTime == null || isOriginalTimeChanged()) {
+                if (snoozeModel.count == 0 || isOriginalTimeChanged()) {
                     calculatedTime = getNextScheduleTime(Calendar.getInstance());
                 }
                 discardRepeatSettingChanges();
@@ -558,7 +556,7 @@ public class ReminderModel extends ViewModel {
                     repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
                     repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
                     // Calculate only if its not snoozed already. This calculations will occur when snooze get off or when it will be dismissed
-                    if (nextSnoozeOffTime == null || isOriginalTimeChanged()) {
+                    if (snoozeModel.count == 0 || isOriginalTimeChanged()) {
                         calculatedTime = getNextScheduleTime(Calendar.getInstance());
                     }
                     discardRepeatSettingChanges();
@@ -575,7 +573,7 @@ public class ReminderModel extends ViewModel {
                     repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
                     repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
                     // Calculate only if its not snoozed already. This calculations will occur when snooze get off or when it will be dismissed
-                    if (nextSnoozeOffTime == null || isOriginalTimeChanged()) {
+                    if (snoozeModel.count == 0 || isOriginalTimeChanged()) {
                         calculatedTime = getNextScheduleTime(Calendar.getInstance());
                     }
                     discardRepeatSettingChanges();
@@ -592,7 +590,7 @@ public class ReminderModel extends ViewModel {
                     repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
                     repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
                     // Calculate only if its not snoozed already. This calculations will occur when snooze get off or when it will be dismissed
-                    if (nextSnoozeOffTime == null || isOriginalTimeChanged()) {
+                    if (snoozeModel.count == 0 || isOriginalTimeChanged()) {
                         calculatedTime = getNextScheduleTime(Calendar.getInstance());
                     }
                     discardRepeatSettingChanges();
@@ -609,7 +607,7 @@ public class ReminderModel extends ViewModel {
                     repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
                     repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
                     // Calculate only if its not snoozed already. This calculations will occur when snooze get off or when it will be dismissed
-                    if (nextSnoozeOffTime == null || isOriginalTimeChanged()) {
+                    if (snoozeModel.count == 0 || isOriginalTimeChanged()) {
                         calculatedTime = getNextScheduleTime(Calendar.getInstance());
                     }
                     discardRepeatSettingChanges();
@@ -627,7 +625,7 @@ public class ReminderModel extends ViewModel {
                     repeatModel.setRepeatEndDate(repeatValueChangeBuffer.getRepeatEndDate());
                     repeatModel.setHasRepeatEnd(repeatValueChangeBuffer.isHasRepeatEnd());
                     // Calculate only if its not snoozed already. This calculations will occur when snooze get off or when it will be dismissed
-                    if (nextSnoozeOffTime == null || isOriginalTimeChanged()) {
+                    if (snoozeModel.count == 0 || isOriginalTimeChanged()) {
                         calculatedTime = getNextScheduleTime(Calendar.getInstance());
                     }
                     discardRepeatSettingChanges();
@@ -808,103 +806,249 @@ public class ReminderModel extends ViewModel {
 
     private void snooze(Context context, boolean isByUser) {
 
-        if (!snoozeModel.isEnable) { // If snooze isn't enable then dismiss it
+//        if (!snoozeModel.isEnable) { // If snooze isn't enable then dismiss it
+//
+//            if (isByUser) {
+//                dismissByUser(context);
+//            } else {
+//                dismissByApp(context, Calendar.getInstance());
+//            }
+//
+//            return;
+//        }
 
+        if (canSnooze()) {
+            //nextSnoozeOffTime = getNextSnoozeTime(originalTime);
+            snoozeModel.count++;
+            saveAndSetAlert(context, false);
+        } else {
             if (isByUser) {
+                // dismissByUser will calculate next schedule again and set to next time
+                ToastHelper.showShort(context, "Overriding snooze for next schedule");
                 dismissByUser(context);
             } else {
+                ToastHelper.showShort(context, "MISSED ... Overriding snooze for next schedule");
+                // This will set nextScheduledTime as calculated time internally and then call saveAndSetAlert to set for next schedule
+                //saveAsMissed(context, nextScheduledTime);
                 dismissByApp(context, Calendar.getInstance());
             }
-
-            return;
         }
+
+//        final Calendar currentTime = Calendar.getInstance();
+//
+//        if (currentTime.getTime().after(getAlertTime())) { // Set snooze only if current time is past alarm time or previous snooze time.
+//
+//            final Calendar nextSnoozeOff = Calendar.getInstance();
+//
+//            nextSnoozeOff.setTime(getAlertTime());
+//
+//            switch (snoozeModel.intervalOption) {
+//                default:
+//                case M5:
+//                    nextSnoozeOff.add(Calendar.MINUTE, 5);
+//                    break;
+//                case M10:
+//                    nextSnoozeOff.add(Calendar.MINUTE, 10);
+//                    break;
+//                case M15:
+//                    nextSnoozeOff.add(Calendar.MINUTE, 15);
+//                    break;
+//                case M30:
+//                    nextSnoozeOff.add(Calendar.MINUTE, 30);
+//                    break;
+//            }
+//            switch (snoozeModel.countOptions) {
+//                default:
+//                case R3:
+//                    if (snoozeModel.count < 3) {
+//                        snoozeModel.count++;
+//                        nextSnoozeOffTime = nextSnoozeOff.getTime();
+//                    }
+//                    break;
+//                case R5:
+//                    if (snoozeModel.count < 5) {
+//                        snoozeModel.count++;
+//                        nextSnoozeOffTime = nextSnoozeOff.getTime();
+//                    }
+//                    break;
+//                case RC:
+//                    snoozeModel.count++;
+//                    nextSnoozeOffTime = nextSnoozeOff.getTime();
+//                    break;
+//            }
+//
+//            if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
+//
+//                if (isByUser) {
+//                    dismissByUser(context);
+//                } else {
+//                    dismissByApp(context, Calendar.getInstance());
+//                }
+//            } else if (currentTime.getTime().after(nextSnoozeOffTime)) { // Snooze makes no sense if its in past!
+//
+//                if (isByUser) {
+//                    dismissByUser(context);
+//                } else {
+//                    dismissByApp(context, Calendar.getInstance());
+//                }
+//            } else {
+//
+//                final Date nextScheduledTime = getNextScheduleTime(currentTime);
+//
+//                if (nextScheduledTime != null && nextScheduledTime.compareTo(nextSnoozeOffTime) <= 0) {
+//                    // This means next schedule will arrive sooner or same time than next snooze off time. In this case
+//                    // 1. ignore snoozing mark this as missed
+//                    // 2. and set for next schedule
+//                    // resetSnooze(); // calling resetSnooze isn't required as that will be called by "saveAsMissed > saveAndSetAlert" internally having a different "calculatedTime" than "originalTime".
+//
+//                    if (isByUser) {
+//                        // dismissByUser will calculate next schedule again and set to next time
+//                        ToastHelper.showShort(context, "Overriding snooze for next schedule");
+//                        dismissByUser(context);
+//                    } else {
+//                        ToastHelper.showShort(context, "MISSED ... Overriding snooze for next schedule");
+//                        // This will set nextScheduledTime as calculated time internally and then call saveAndSetAlert to set for next schedule
+//                        //saveAsMissed(context, nextScheduledTime);
+//                        dismissByApp(context, Calendar.getInstance());
+//                    }
+//                } else { // proceed with snoozing
+//                    saveAndSetAlert(context, false);
+//                }
+//            }
+//        } else { // Else dismiss the alarm
+//
+//            cancelPendingIntent(context);
+//
+//            resetSnooze();
+//
+//            ToastHelper.showLong(context, "Dismissing from snooze! " + getIntId());
+//            if (isByUser) {
+//                dismissByUser(context);
+//            } else {
+//                dismissByApp(context, Calendar.getInstance());
+//            }
+//        }
+    }
+
+    public Date getSnoozedTime() {
+
+        Date nextTime = null;
+
+        if (snoozeModel.count > 0) {
+
+            final Calendar nextSnoozeOff = Calendar.getInstance();
+
+            nextSnoozeOff.setTime(originalTime);
+
+            switch (snoozeModel.intervalOption) {
+                default:
+                case M5:
+                    nextSnoozeOff.add(Calendar.MINUTE, 5 * snoozeModel.count);
+                    break;
+                case M10:
+                    nextSnoozeOff.add(Calendar.MINUTE, 10 * snoozeModel.count);
+                    break;
+                case M15:
+                    nextSnoozeOff.add(Calendar.MINUTE, 15 * snoozeModel.count);
+                    break;
+                case M30:
+                    nextSnoozeOff.add(Calendar.MINUTE, 30 * snoozeModel.count);
+                    break;
+            }
+
+            nextTime = nextSnoozeOff.getTime();
+        }
+
+        return nextTime;
+    }
+
+    public Date getNextSnoozeTime() {
+
+        Date nextTime = null;
+
+        int count = 0;
+
+        switch (snoozeModel.countOptions) {
+            default:
+            case R3:
+                if (snoozeModel.count < 3) {
+                    count = snoozeModel.count + 1;
+                }
+                break;
+            case R5:
+                if (snoozeModel.count < 5) {
+                    count = snoozeModel.count + 1;
+                }
+                break;
+            case RC:
+                count = snoozeModel.count + 1;
+                break;
+        }
+
+        if (count > 0) {
+
+            final Calendar nextSnoozeOff = Calendar.getInstance();
+
+            nextSnoozeOff.setTime(originalTime);
+
+            switch (snoozeModel.intervalOption) {
+                default:
+                case M5:
+                    nextSnoozeOff.add(Calendar.MINUTE, 5 * count);
+                    break;
+                case M10:
+                    nextSnoozeOff.add(Calendar.MINUTE, 10 * count);
+                    break;
+                case M15:
+                    nextSnoozeOff.add(Calendar.MINUTE, 15 * count);
+                    break;
+                case M30:
+                    nextSnoozeOff.add(Calendar.MINUTE, 30 * count);
+                    break;
+            }
+
+            nextTime = nextSnoozeOff.getTime();
+        }
+
+        return nextTime;
+    }
+
+    public boolean canSnooze() {
+
+        if (!snoozeModel.isEnable) return false;
 
         final Calendar currentTime = Calendar.getInstance();
 
         if (currentTime.getTime().after(getAlertTime())) { // Set snooze only if current time is past alarm time or previous snooze time.
 
-            final Calendar nextSnoozeOff = Calendar.getInstance();
+            final Date nextTime = getNextSnoozeTime();
 
-            nextSnoozeOff.setTime(getAlertTime());
+            final String t = StringHelper.toTimeWeekdayDate(nextTime);
 
-            switch (snoozeModel.intervalOption) {
-                default:
-                case M5:
-                    nextSnoozeOff.add(Calendar.MINUTE, 5);
-                    break;
-                case M10:
-                    nextSnoozeOff.add(Calendar.MINUTE, 10);
-                    break;
-                case M15:
-                    nextSnoozeOff.add(Calendar.MINUTE, 15);
-                    break;
-                case M30:
-                    nextSnoozeOff.add(Calendar.MINUTE, 30);
-                    break;
-            }
-            switch (snoozeModel.countOptions) {
-                default:
-                case R3:
-                    if (snoozeModel.count < 3) {
-                        snoozeModel.count++;
-                        nextSnoozeOffTime = nextSnoozeOff.getTime();
-                    }
-                    break;
-                case R5:
-                    if (snoozeModel.count < 5) {
-                        snoozeModel.count++;
-                        nextSnoozeOffTime = nextSnoozeOff.getTime();
-                    }
-                    break;
-                case RC:
-                    snoozeModel.count++;
-                    nextSnoozeOffTime = nextSnoozeOff.getTime();
-                    break;
-            }
+            if (nextTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
 
-            if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
+                return false;
 
-                if (isByUser) {
-                    dismissByUser(context);
-                } else {
-                    dismissByApp(context, Calendar.getInstance());
-                }
-            } else if (currentTime.getTime().after(nextSnoozeOffTime)) { // Snooze makes no sense if its in past!
+            } else if (currentTime.getTime().after(nextTime)) { // Snooze makes no sense if its in past!
 
-                if (isByUser) {
-                    dismissByUser(context);
-                } else {
-                    dismissByApp(context, Calendar.getInstance());
-                }
+                return false;
+
             } else {
 
                 final Date nextScheduledTime = getNextScheduleTime(currentTime);
 
-                if (nextScheduledTime != null && nextScheduledTime.before(nextSnoozeOffTime)) {
-                    // This means next schedule will arrive sooner than next snooze off time. In this case
-                    // 1. ignore snoozing mark this as missed
-                    // 2. and set for next schedule
-                    // resetSnooze(); // calling resetSnooze isn't required as that will be called by "saveAsMissed > saveAndSetAlert" internally having a different "calculatedTime" than "originalTime".
+                // proceed with snoozing
+                if (nextScheduledTime == null) { // Reached EOF
+                    return false;
+                } else
+                    return nextScheduledTime.compareTo(nextTime) > 0; // This means next schedule will arrive sooner or same time than next snooze off time. In this case snoozing further isn't possible
 
-                    calculatedTime = nextScheduledTime;
-
-                    saveAsMissed(context, nextScheduledTime);
-                } else {
-                    saveAndSetAlert(context, false);
-                }
             }
         } else { // Else dismiss the alarm
-            cancelPendingIntent(context);
 
-            resetSnooze();
-
-            ToastHelper.showLong(context, "Dismissing from snooze! " + getIntId());
-            if (isByUser) {
-                dismissByUser(context);
-            } else {
-                dismissByApp(context, Calendar.getInstance());
-            }
+            return false;
         }
+
     }
 
     private Date getNextScheduleTime(final Calendar currentTime) {
@@ -1187,7 +1331,7 @@ public class ReminderModel extends ViewModel {
     }
 
     private void resetSnooze() {
-        nextSnoozeOffTime = null;
+        //nextSnoozeOffTime = null;
         snoozeModel.count = 0;
     }
 
@@ -1212,7 +1356,7 @@ public class ReminderModel extends ViewModel {
 
     private void saveAsExpired() {
         isExpired = true;
-        nextSnoozeOffTime = null;
+        //nextSnoozeOffTime = null;
         snoozeModel.count = 0;
         save();
     }
@@ -1315,7 +1459,7 @@ public class ReminderModel extends ViewModel {
         entity.repeatEndDate = repeatModel.getRepeatEndDate();
 
         entity.snoozeEnabled = snoozeModel.isEnable;
-        entity.nextSnoozeTime = nextSnoozeOffTime;
+        //entity.nextSnoozeTime = nextSnoozeOffTime;
         entity.snoozeCount = snoozeModel.count;
 
         if (snoozeModel.isEnable) {
@@ -1441,7 +1585,7 @@ public class ReminderModel extends ViewModel {
         repeatModel.setHasRepeatEnd(from.isHasRepeatEnd);
 
         snoozeModel.isEnable = from.snoozeEnabled;
-        nextSnoozeOffTime = from.nextSnoozeTime;
+        //nextSnoozeOffTime = from.nextSnoozeTime;
         snoozeModel.count = from.snoozeCount;
 
         if (from.snoozeEnabled) {

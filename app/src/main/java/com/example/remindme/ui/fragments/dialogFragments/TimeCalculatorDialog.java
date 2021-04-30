@@ -83,7 +83,7 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
                 // So, its allowed to go backward up to return value of "getMaxForTimeUnit" to eventually get result of present after adding time.
                 // Its expected that remembering an event 3 years (getMaxForTimeUnit return for YEAR unit) back is more than sufficient.
                 final Calendar minDateCalendar = Calendar.getInstance();
-                minDateCalendar.add(Calendar.YEAR, ReminderRepeatModel.getMaxForTimeUnit(ReminderRepeatModel.TimeUnits.YEARS));
+                minDateCalendar.add(Calendar.YEAR, -1 * ReminderRepeatModel.getMaxForTimeUnit(ReminderRepeatModel.TimeUnits.YEARS)); // (-1) to gho backward.
 
                 final int mYear, mMonth, mDay;
                 mYear = calendar.get(Calendar.YEAR);

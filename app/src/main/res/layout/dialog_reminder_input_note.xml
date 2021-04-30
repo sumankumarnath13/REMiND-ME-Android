@@ -20,7 +20,7 @@
             android:autofillHints="@string/hint_reminder_note"
             android:backgroundTint="@color/bg_warning"
             android:hint="@string/hint_reminder_note"
-            android:inputType="textLongMessage|textMultiLine" />
+            android:inputType="textLongMessage|textMultiLine|textCapSentences" />
 
         <ImageView
             android:id="@+id/img_reminder_note_voice_input"
