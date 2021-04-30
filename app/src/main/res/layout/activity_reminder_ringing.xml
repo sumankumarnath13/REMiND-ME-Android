@@ -81,7 +81,6 @@
             android:layout_marginRight="@dimen/dp_8"
             android:drawableStart="@drawable/ic_reminder_dismiss"
             android:drawableLeft="@drawable/ic_reminder_dismiss"
-            android:drawablePadding="@dimen/dp_3"
             android:text="@string/btn_alarm_action_dismiss" />
 
         <Button
@@ -91,7 +90,6 @@
             android:visibility="visible"
             android:drawableStart="@drawable/ic_reminder_snooze"
             android:drawableLeft="@drawable/ic_reminder_snooze"
-            android:drawablePadding="@dimen/dp_3"
             android:text="@string/reminder_snooze_menu_caption" />
 
     </LinearLayout>

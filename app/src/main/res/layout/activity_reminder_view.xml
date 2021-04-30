@@ -348,10 +348,7 @@
                 android:layout_marginHorizontal="@dimen/dp_8"
                 android:drawableStart="@drawable/ic_close"
                 android:drawableLeft="@drawable/ic_close"
-                android:drawablePadding="@dimen/dp_3"
-                android:gravity="start|center"
-                android:text="@string/btn_delete"
-                android:textAlignment="textStart" />
+                android:text="@string/btn_delete" />
 
             <Button
                 android:id="@+id/btn_reminder_edit"
@@ -360,10 +357,7 @@
                 android:layout_marginHorizontal="@dimen/dp_8"
                 android:drawableStart="@drawable/ic_reminder_check"
                 android:drawableLeft="@drawable/ic_reminder_check"
-                android:drawablePadding="@dimen/dp_3"
-                android:gravity="start|center"
-                android:text="@string/btn_edit"
-                android:textAlignment="textStart" />
+                android:text="@string/btn_edit" />
 
         </LinearLayout>
 
