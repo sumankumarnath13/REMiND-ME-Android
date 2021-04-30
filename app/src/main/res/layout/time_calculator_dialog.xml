@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:padding="@dimen/dp_16"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/dp_8"
+        android:layout_margin="@dimen/dp_16"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font_size_extra_small"
+            android:text="FROM"
             android:textColor="@color/text_warning"
-            android:text="FROM" />
+            android:textSize="@dimen/font_size_extra_small" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal">
-
 
             <Button
                 android:id="@+id/btn_reminder_time"
@@ -46,15 +44,13 @@
         </LinearLayout>
 
         <ImageView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_marginVertical="@dimen/dp_8"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_add" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/dp_8"
             android:orientation="horizontal">
 
             <NumberPicker
@@ -74,14 +70,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font_size_extra_small"
+            android:text="RESULT"
+            android:layout_marginBottom="@dimen/dp_8"
             android:textColor="@color/text_success"
-            android:text="RESULT" />
+            android:textSize="@dimen/font_size_extra_small" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/dp_8"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -92,8 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dp_8"
                 android:textColor="?attr/brightText"
-                android:textSize="@dimen/font_size_medium"
-                android:text="12:30 PM" />
+                android:textSize="@dimen/font_size_medium" />
 
             <TextView
                 android:id="@+id/tv_reminder_date"
@@ -101,8 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dp_8"
                 android:textColor="?attr/soothingText"
-                android:textSize="@dimen/font_size_small"
-                android:text="TUE, 12 APR 2014" />
+                android:textSize="@dimen/font_size_small" />
 
         </LinearLayout>
 

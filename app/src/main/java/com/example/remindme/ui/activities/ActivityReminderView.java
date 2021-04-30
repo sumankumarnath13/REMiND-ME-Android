@@ -30,6 +30,7 @@ public class ActivityReminderView extends BaseActivity {
     private TextView tv_reminder_time;
     private TextView tv_reminder_date;
     private TextView tv_reminder_name;
+    private LinearLayout ly_note_summary_header;
     private TextView tv_reminder_note;
     private ImageView btn_expand_missed_alerts;
     private LinearLayout lv_reminder_details;
@@ -83,6 +84,7 @@ public class ActivityReminderView extends BaseActivity {
         tv_reminder_time = findViewById(R.id.tv_reminder_time);
         tv_reminder_date = findViewById(R.id.tv_reminder_date);
         tv_reminder_name = findViewById(R.id.tv_reminder_name);
+        ly_note_summary_header = findViewById(R.id.ly_note_summary_header);
         tv_reminder_note = findViewById(R.id.tv_reminder_note);
 
         final Button btnDelete = findViewById(R.id.btn_reminder_delete);
@@ -248,10 +250,12 @@ public class ActivityReminderView extends BaseActivity {
                     getResources().getColor(R.color.text_dim) : getResources().getColor(R.color.text_danger));
 
             if (!StringHelper.isNullOrEmpty(activeReminder.getNote())) {
+                ly_note_summary_header.setVisibility(View.VISIBLE);
+                tv_reminder_note.setVisibility(View.VISIBLE);
                 tv_reminder_note.setText(activeReminder.getNote());
-                imgBtnShareNote.setVisibility(View.VISIBLE);
             } else {
-                imgBtnShareNote.setVisibility(View.GONE);
+                ly_note_summary_header.setVisibility(View.GONE);
+                tv_reminder_note.setVisibility(View.GONE);
             }
 
             final LinearLayout lv_last_missed_alert = findViewById(R.id.lv_last_missed_alert);

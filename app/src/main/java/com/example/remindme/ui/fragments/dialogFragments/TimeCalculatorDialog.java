@@ -40,6 +40,8 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
     private ITimeCalculatorListener listener;
     private final Calendar calendar = Calendar.getInstance();
     private final Calendar resultCalendar = Calendar.getInstance();
+    private Button btn_reminder_time;
+    private Button btn_reminder_date;
     private NumberPicker value_picker;
     private NumberPicker unit_picker;
     private TextView tv_reminder_time;
@@ -68,15 +70,20 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
 
         final View view = inflater.inflate(R.layout.time_calculator_dialog, null);
 
-        final Button btn_reminder_time = view.findViewById(R.id.btn_reminder_time);
+        btn_reminder_time = view.findViewById(R.id.btn_reminder_time);
         btn_reminder_time.setText(StringHelper.toTime(calendar.getTime()));
 
-        final Button btn_reminder_date = view.findViewById(R.id.btn_reminder_date);
+        btn_reminder_date = view.findViewById(R.id.btn_reminder_date);
         btn_reminder_date.setText(StringHelper.toWeekdayDate(calendar.getTime()));
 
         btn_reminder_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // This calculator suppose to help user getting their target time by adding days/months from their recalled date.
+                // So, its allowed to go backward up to return value of "getMaxForTimeUnit" to eventually get result of present after adding time.
+                // Its expected that remembering an event 3 years (getMaxForTimeUnit return for YEAR unit) back is more than sufficient.
+                final Calendar minDateCalendar = Calendar.getInstance();
+                minDateCalendar.add(Calendar.YEAR, ReminderRepeatModel.getMaxForTimeUnit(ReminderRepeatModel.TimeUnits.YEARS));
 
                 final int mYear, mMonth, mDay;
                 mYear = calendar.get(Calendar.YEAR);
@@ -94,7 +101,7 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
                                 refresh();
                             }
                         }, mYear, mMonth, mDay);
-                datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis()); // This will cause extra title on the top of the regular date picker
+                datePickerDialog.getDatePicker().setMinDate(minDateCalendar.getTimeInMillis()); // This will cause extra title on the top of the regular date picker
                 datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
                 datePickerDialog.setTitle(null); // This line will try to solve the issue above
                 datePickerDialog.show();
@@ -183,8 +190,8 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
 
     @Override
     protected void onUIRefresh() {
-        // Do nothing
         resultCalendar.setTime(calendar.getTime());
+
         switch (ReminderRepeatModel.transform(unit_picker.getValue())) {
             case DAYS:
                 resultCalendar.add(Calendar.DAY_OF_YEAR, value_picker.getValue());
@@ -199,6 +206,9 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
                 resultCalendar.add(Calendar.YEAR, value_picker.getValue());
                 break;
         }
+
+        btn_reminder_time.setText(StringHelper.toTime(calendar.getTime()));
+        btn_reminder_date.setText(StringHelper.toWeekdayDate(calendar.getTime()));
 
         tv_reminder_time.setText(StringHelper.toTime(resultCalendar.getTime()));
         tv_reminder_date.setText(StringHelper.toWeekdayDate(resultCalendar.getTime()));

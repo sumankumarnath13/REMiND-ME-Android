@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_danger"
-                    android:text="Missed : "
+                    android:text="@string/missed_on"
                     android:textSize="@dimen/font_size_extra_small" />
 
                 <TextView

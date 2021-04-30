@@ -133,9 +133,11 @@ public class ReminderModel extends ViewModel {
     }
 
     private AlarmRingDurations ringDuration = AlarmRingDurations.ONE_MINUTE;
+
     public AlarmRingDurations getAlarmRingDuration() {
         return ringDuration;
     }
+
     public void setAlarmRingDuration(AlarmRingDurations value) {
         ringDuration = value;
     }
@@ -791,13 +793,7 @@ public class ReminderModel extends ViewModel {
 
         } else {
 
-            missedTimes.add(originalTime);
-
-            lastMissedTime = originalTime;
-
-            calculatedTime = nextTime; // Set next trigger time.
-
-            saveAndSetAlert(context, false); // Save changes. // Set alarm for next trigger time.
+            saveAsMissed(context, nextTime);
 
         }
     }
@@ -823,11 +819,11 @@ public class ReminderModel extends ViewModel {
             return;
         }
 
-        Calendar currentTime = Calendar.getInstance();
+        final Calendar currentTime = Calendar.getInstance();
 
         if (currentTime.getTime().after(getAlertTime())) { // Set snooze only if current time is past alarm time or previous snooze time.
 
-            Calendar nextSnoozeOff = Calendar.getInstance();
+            final Calendar nextSnoozeOff = Calendar.getInstance();
 
             nextSnoozeOff.setTime(getAlertTime());
 
@@ -867,22 +863,35 @@ public class ReminderModel extends ViewModel {
             }
 
             if (nextSnoozeOffTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
-                //ToastHelper.showLong(context, "Dismissing from snooze! " + getIntId());
+
                 if (isByUser) {
                     dismissByUser(context);
                 } else {
                     dismissByApp(context, Calendar.getInstance());
                 }
             } else if (currentTime.getTime().after(nextSnoozeOffTime)) { // Snooze makes no sense if its in past!
-                //ToastHelper.showLong(context, "Dismissing from snooze! " + getIntId());
+
                 if (isByUser) {
                     dismissByUser(context);
                 } else {
                     dismissByApp(context, Calendar.getInstance());
                 }
             } else {
-                //ToastHelper.showLong(context, "Snoozing! " + getIntId());
-                saveAndSetAlert(context, false);
+
+                final Date nextScheduledTime = getNextScheduleTime(currentTime);
+
+                if (nextScheduledTime != null && nextScheduledTime.before(nextSnoozeOffTime)) {
+                    // This means next schedule will arrive sooner than next snooze off time. In this case
+                    // 1. ignore snoozing mark this as missed
+                    // 2. and set for next schedule
+                    // resetSnooze(); // calling resetSnooze isn't required as that will be called by "saveAsMissed > saveAndSetAlert" internally having a different "calculatedTime" than "originalTime".
+
+                    calculatedTime = nextScheduledTime;
+
+                    saveAsMissed(context, nextScheduledTime);
+                } else {
+                    saveAndSetAlert(context, false);
+                }
             }
         } else { // Else dismiss the alarm
             cancelPendingIntent(context);
@@ -1206,6 +1215,17 @@ public class ReminderModel extends ViewModel {
         nextSnoozeOffTime = null;
         snoozeModel.count = 0;
         save();
+    }
+
+    private void saveAsMissed(Context context, Date nextTime) {
+
+        missedTimes.add(originalTime);
+
+        lastMissedTime = originalTime;
+
+        calculatedTime = nextTime; // Set next trigger time.
+
+        saveAndSetAlert(context, false); // Save changes. // Set alarm for next trigger time.
     }
 
     private void save() {
