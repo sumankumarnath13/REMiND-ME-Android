@@ -94,8 +94,8 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                     reminderModel.saveAndSetAlert(context, true);
                     buttonView.setChecked(isChecked);
                     if (isChecked) {
-                        time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
-                        date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
+                        time.setText(StringHelper.toTime(reminderModel.getTimeViewModel().getTime()));
+                        date.setText(StringHelper.toWeekdayDate(reminderModel.getTimeViewModel().getTime()));
                     }
                 }
             }
@@ -106,8 +106,8 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
         final ReminderModel reminderModel = ReminderModel.getInstance(reminder);
 
-        time.setText(StringHelper.toTime(reminderModel.getOriginalTime()));
-        date.setText(StringHelper.toWeekdayDate(reminderModel.getOriginalTime()));
+        time.setText(StringHelper.toTime(reminderModel.getTimeViewModel().getTime()));
+        date.setText(StringHelper.toWeekdayDate(reminderModel.getTimeViewModel().getTime()));
         tv_reminder_repeat_short_summary.setText(reminderModel.getRepeatSettingShortString());
 
         if (StringHelper.isNullOrEmpty(reminderModel.getName())) {
@@ -119,7 +119,10 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
         if (reminderModel.getSnoozeModel().isSnoozed()) {
             lv_reminder_view_snooze.setVisibility(View.VISIBLE);
-            next_snooze.setText(StringHelper.toTime(reminderModel.getSnoozedTime()));
+            next_snooze.setText(StringHelper.toTime(
+                    reminderModel.getSnoozeModel().getSnoozedTime(
+                            reminderModel.getTimeViewModel().getUpdatedTime()
+                    )));
         } else {
             lv_reminder_view_snooze.setVisibility(View.GONE);
 

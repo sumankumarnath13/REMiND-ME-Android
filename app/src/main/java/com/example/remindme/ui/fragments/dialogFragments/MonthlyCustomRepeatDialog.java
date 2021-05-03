@@ -2,7 +2,6 @@ package com.example.remindme.ui.fragments.dialogFragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,52 +10,16 @@ import android.widget.CheckBox;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
-import com.example.remindme.viewModels.ReminderRepeatModel;
+import com.example.remindme.viewModels.RepeatModel;
 
 import java.util.Calendar;
 
-public class DialogReminderRepeatInputMonthlyCustom extends DialogFragment {
+public class MonthlyCustomRepeatDialog extends CustomRepeatDialogBase {
 
-    private ReminderRepeatModel model;
-    private boolean isCancel;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            DialogReminderRepeatInput.IRepeatInputDialogListener listener = (DialogReminderRepeatInput.IRepeatInputDialogListener) context;
-            model = listener.getRepeatModel();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
-        }
-    }
-
-    @Override
-    public void onCancel(@NonNull DialogInterface dialog) {
-        super.onCancel(dialog);
-        isCancel = true;
-    }
-
-    @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        super.onDismiss(dialog);
-        if (isCancel) {
-            commitToParent();
-        }
-    }
-
-    private void commitToParent() {
-        final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
-        if (fragment != null) {
-            final IRepeatInputChildDialogListener hostDialog = (IRepeatInputChildDialogListener) fragment;
-            hostDialog.setChanges(model);
-        }
-    }
+    public static final String TAG = "MonthlyCustomRepeatDialog";
 
     @NonNull
     @Override
@@ -81,8 +44,8 @@ public class DialogReminderRepeatInputMonthlyCustom extends DialogFragment {
         final CheckBox chk_monthly_nov = view.findViewById(R.id.chk_monthly_nov);
         final CheckBox chk_monthly_dec = view.findViewById(R.id.chk_monthly_dec);
 
-        for (int i = 0; i < model.customMonths.size(); i++) {
-            int value = model.customMonths.get(i);
+        for (int i = 0; i < getModel().getCustomMonths().size(); i++) {
+            int value = getModel().getCustomMonths().get(i);
             switch (value) {
                 default:
                 case Calendar.JANUARY:
@@ -127,28 +90,33 @@ public class DialogReminderRepeatInputMonthlyCustom extends DialogFragment {
         builder.setView(view).setTitle("Select months to Repeat").setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                model.customMonths.clear();
-                if (chk_monthly_jan.isChecked()) model.customMonths.add(Calendar.JANUARY);
-                if (chk_monthly_feb.isChecked()) model.customMonths.add(Calendar.FEBRUARY);
-                if (chk_monthly_mar.isChecked()) model.customMonths.add(Calendar.MARCH);
-                if (chk_monthly_apr.isChecked()) model.customMonths.add(Calendar.APRIL);
-                if (chk_monthly_may.isChecked()) model.customMonths.add(Calendar.MAY);
-                if (chk_monthly_jun.isChecked()) model.customMonths.add(Calendar.JUNE);
-                if (chk_monthly_jul.isChecked()) model.customMonths.add(Calendar.JULY);
-                if (chk_monthly_aug.isChecked()) model.customMonths.add(Calendar.AUGUST);
-                if (chk_monthly_sep.isChecked()) model.customMonths.add(Calendar.SEPTEMBER);
-                if (chk_monthly_oct.isChecked()) model.customMonths.add(Calendar.OCTOBER);
-                if (chk_monthly_nov.isChecked()) model.customMonths.add(Calendar.NOVEMBER);
-                if (chk_monthly_dec.isChecked()) model.customMonths.add(Calendar.DECEMBER);
+                getModel().getCustomMonths().clear();
+                if (chk_monthly_jan.isChecked()) getModel().getCustomMonths().add(Calendar.JANUARY);
+                if (chk_monthly_feb.isChecked())
+                    getModel().getCustomMonths().add(Calendar.FEBRUARY);
+                if (chk_monthly_mar.isChecked()) getModel().getCustomMonths().add(Calendar.MARCH);
+                if (chk_monthly_apr.isChecked()) getModel().getCustomMonths().add(Calendar.APRIL);
+                if (chk_monthly_may.isChecked()) getModel().getCustomMonths().add(Calendar.MAY);
+                if (chk_monthly_jun.isChecked()) getModel().getCustomMonths().add(Calendar.JUNE);
+                if (chk_monthly_jul.isChecked()) getModel().getCustomMonths().add(Calendar.JULY);
+                if (chk_monthly_aug.isChecked()) getModel().getCustomMonths().add(Calendar.AUGUST);
+                if (chk_monthly_sep.isChecked())
+                    getModel().getCustomMonths().add(Calendar.SEPTEMBER);
+                if (chk_monthly_oct.isChecked()) getModel().getCustomMonths().add(Calendar.OCTOBER);
+                if (chk_monthly_nov.isChecked())
+                    getModel().getCustomMonths().add(Calendar.NOVEMBER);
+                if (chk_monthly_dec.isChecked())
+                    getModel().getCustomMonths().add(Calendar.DECEMBER);
 
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM);
-                commitToParent();
+                getModel().setEnabled(true);
+                getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM);
+                getListener().customRepeatDialogSetRepeatModel(getModel());
 
             }
         }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                commitToParent();
+
             }
         });
 

@@ -22,6 +22,7 @@ import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.WakeLockHelper;
 import com.example.remindme.ui.activities.ActivityReminderRinging;
 import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.RingingModel;
 
 public class AlertService extends Service {
     private ReminderModel servingReminder;
@@ -133,7 +134,7 @@ public class AlertService extends Service {
     }
 
     public Notification getAlarmHeadsUp(ReminderModel model) {
-        String timeStamp = StringHelper.toTime(model.getOriginalTime());
+        String timeStamp = StringHelper.toTime(model.getTimeViewModel().getTime());
 
         //ALERT_INTENT_DISMISS_ALERT
         PendingIntent dismissPendingIntent = PendingIntent
@@ -176,15 +177,15 @@ public class AlertService extends Service {
         if (isBusy) {
 
             if (ringingController == null) {
-                ringingController = new RingingController(this, servingReminder.getRingToneUri());
+                ringingController = new RingingController(this, servingReminder.getRingingModel().getRingToneUri());
             }
 
-            if (servingReminder.isToneEnabled()) {
-                ringingController.startTone(servingReminder.isIncreaseVolumeGradually(), servingReminder.getAlarmVolumePercentage());
+            if (servingReminder.getRingingModel().isToneEnabled()) {
+                ringingController.startTone(servingReminder.getRingingModel().isIncreaseVolumeGradually(), servingReminder.getRingingModel().getAlarmVolumePercentage());
             }
 
-            if (servingReminder.isVibrationEnabled()) {
-                ringingController.startVibrating(ReminderModel.convertToVibrateFrequency(servingReminder.getVibratePattern()));
+            if (servingReminder.getRingingModel().isVibrationEnabled()) {
+                ringingController.startVibrating(RingingModel.convertToVibrateFrequency(servingReminder.getRingingModel().getVibratePattern()));
             }
 
         }
@@ -272,7 +273,7 @@ public class AlertService extends Service {
             final ReminderModel newReminder = ReminderModel.getInstance(intent);
             if (newReminder != null) {
                 newReminder.snoozeByApp(this.getApplicationContext());
-                NotificationHelper.notify(this.getApplicationContext(), newReminder.getIntId(), "Missed alarm " + StringHelper.toTime(newReminder.getOriginalTime()), newReminder.getName(), newReminder.getNote());
+                NotificationHelper.notify(this.getApplicationContext(), newReminder.getIntId(), "Missed alarm " + StringHelper.toTime(newReminder.getTimeViewModel().getTime()), newReminder.getName(), newReminder.getNote());
             }
             return START_NOT_STICKY;
         }
@@ -312,7 +313,7 @@ public class AlertService extends Service {
         }
 
         int duration;
-        switch (servingReminder.getAlarmRingDuration()) {
+        switch (servingReminder.getRingingModel().getAlarmRingDuration()) {
             default:
             case ONE_MINUTE:
                 duration = 1000 * 60;

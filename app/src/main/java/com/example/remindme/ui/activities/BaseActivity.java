@@ -2,12 +2,11 @@ package com.example.remindme.ui.activities;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
+import com.example.remindme.ui.RefreshableActivity;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends RefreshableActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,4 +18,8 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    protected void onUIRefresh() {
+
+    }
 }

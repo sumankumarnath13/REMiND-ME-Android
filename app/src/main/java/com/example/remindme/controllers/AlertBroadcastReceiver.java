@@ -33,7 +33,6 @@ public class AlertBroadcastReceiver extends BroadcastReceiver {
                 ReminderModel.reScheduleAllActive(context.getApplicationContext(), true);
                 break;
             case ReminderModel.ACTION_RECEIVE_ALARM:
-                NotificationHelper.notify(context, 990, "received", "DING DONG", null);
                 WakeLockHelper.acquire(context.getApplicationContext());
                 Intent startService = new Intent(context, AlertService.class).putExtra(ReminderModel.REMINDER_ID_INTENT, ReminderModel.getReminderIdFromIntent(intent));
                 if (OsHelper.isOreoOrLater()) {
@@ -41,6 +40,13 @@ public class AlertBroadcastReceiver extends BroadcastReceiver {
                 } else {
                     context.startService(startService);
                 }
+                break;
+
+            case ReminderModel.ACTION_RECEIVE_NOTIFICATION:
+                final ReminderModel reminder = ReminderModel.getInstance(intent);
+                if (reminder == null) return;
+                NotificationHelper.notify(context, reminder.getIntId(), "Notification " + StringHelper.toTime(reminder.getTimeViewModel().getTime()), reminder.getName(), reminder.getNote());
+                reminder.snoozeByApp(context);
                 break;
         }
     }

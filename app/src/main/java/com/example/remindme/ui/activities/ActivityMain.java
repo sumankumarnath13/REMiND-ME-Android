@@ -94,36 +94,6 @@ public class ActivityMain extends AppCompatActivity {
         super.onDestroy();
     }
 
-    //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.context_menu, menu);
-//
-////        final MenuItem menuItem = menu.findItem(R.id.action_search);
-////        final SearchView sv = (SearchView) menuItem.getActionView();
-////        sv.setQueryHint("Enter name to find");
-////
-////        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-////            @Override
-////            public boolean onQueryTextSubmit(String query) {
-////
-////                if(selectedTabFrag != null && selectedTabFrag.getClass() == FragmentActiveReminder.class){
-////                    ((ISearchable)selectedTabFrag).search(query);
-////                }
-////
-////                return true;
-////            }
-////
-////            @Override
-////            public boolean onQueryTextChange(String newText) {
-////                //Toast.makeText(MainActivity.this, newText, Toast.LENGTH_SHORT).show();
-////                return false;
-////            }
-////        });
-//
-//        return true;
-//    }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

@@ -24,30 +24,30 @@
                 android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_off" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:orientation="horizontal">
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:gravity="start"-->
+            <!--                android:orientation="horizontal">-->
 
-                <RadioButton
-                    android:id="@+id/rdo_reminder_repeat_hourly"
-                    android:layout_width="117dp"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/bg_warning"
-                    android:textColor="?attr/soothingText"
-                    android:textSize="@dimen/font_size_medium"
-                    android:text="@string/repeat_hourly" />
+            <!--                <RadioButton-->
+            <!--                    android:id="@+id/rdo_reminder_repeat_hourly"-->
+            <!--                    android:layout_width="117dp"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:buttonTint="@color/bg_warning"-->
+            <!--                    android:textColor="?attr/soothingText"-->
+            <!--                    android:textSize="@dimen/font_size_medium"-->
+            <!--                    android:text="@string/repeat_hourly" />-->
 
-                <RadioButton
-                    android:id="@+id/rdo_reminder_repeat_hourly_custom"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textColor="?attr/soothingText"
-                    android:layout_weight="1"
-                    android:textSize="@dimen/font_size_medium"
-                    android:text="@string/repeat_hourly_custom" />
-            </LinearLayout>
+            <!--                <RadioButton-->
+            <!--                    android:id="@+id/rdo_reminder_repeat_hourly_custom"-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:textColor="?attr/soothingText"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:textSize="@dimen/font_size_medium"-->
+            <!--                    android:text="@string/repeat_hourly_custom" />-->
+            <!--            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="wrap_content"

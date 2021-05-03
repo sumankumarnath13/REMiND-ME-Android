@@ -23,22 +23,21 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
-import com.example.remindme.controllers.AbstractDialogFragmentController;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
-import com.example.remindme.viewModels.ReminderRepeatModel;
+import com.example.remindme.ui.RefreshableDialogFragment;
+import com.example.remindme.viewModels.RepeatModel;
 
 import java.util.Calendar;
 
-public class DialogReminderRepeatInput extends AbstractDialogFragmentController implements IRepeatInputChildDialogListener {
-    private IRepeatInputDialogListener listener;
-    private ReminderRepeatModel model;
-    private boolean isCancel;
+public class RepeatDialog extends RefreshableDialogFragment implements CustomRepeatDialogBase.ICustomRepeatDialogListener {
+    public static final String TAG = "RepeatDialog";
 
+    private IRepeatInputDialogListener listener;
+    private RepeatModel model;
     private RadioButton rdo_reminder_repeat_off;
-    private RadioButton rdo_reminder_repeat_hourly;
-    private RadioButton rdo_reminder_repeat_hourly_custom;
+
     private RadioButton rdo_reminder_repeat_daily;
     private RadioButton rdo_reminder_repeat_daily_custom;
     private RadioButton rdo_reminder_repeat_weekly;
@@ -58,23 +57,9 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
         super.onAttach(context);
         try {
             listener = (IRepeatInputDialogListener) context;
-            model = listener.getRepeatModel();
+            model = listener.repeatDialogGetRepeatModel();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
-        }
-    }
-
-    @Override
-    public void onCancel(@NonNull DialogInterface dialog) {
-        super.onCancel(dialog);
-        isCancel = true;
-    }
-
-    @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        super.onDismiss(dialog);
-        if (isCancel) {
-            listener.discardChanges();
         }
     }
 
@@ -91,13 +76,13 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
                 .setPositiveButton(R.string.dialog_positive, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.commitChanges();
+                        listener.repeatDialogSetRepeatModel(model);
                     }
                 })
                 .setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.discardChanges();
+
                     }
                 });
 
@@ -105,27 +90,8 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
         rdo_reminder_repeat_off.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.OFF);
+                model.setEnabled(false);
                 refresh();
-            }
-        });
-
-        rdo_reminder_repeat_hourly = view.findViewById(R.id.rdo_reminder_repeat_hourly);
-        rdo_reminder_repeat_hourly.setOnClickListener(new RadioButton.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY);
-                //listener.commitChanges();
-                refresh();
-            }
-        });
-
-        rdo_reminder_repeat_hourly_custom = view.findViewById(R.id.rdo_reminder_repeat_hourly_custom);
-        rdo_reminder_repeat_hourly_custom.setOnClickListener(new RadioButton.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final DialogReminderRepeatInputHourlyCustom ting = new DialogReminderRepeatInputHourlyCustom();
-                ting.show(getParentFragmentManager(), "ting");
             }
         });
 
@@ -133,7 +99,8 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
         rdo_reminder_repeat_daily.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY);
+                model.setEnabled(true);
+                model.setRepeatOption(RepeatModel.ReminderRepeatOptions.DAILY);
                 refresh();
             }
         });
@@ -142,7 +109,7 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
         rdo_reminder_repeat_daily_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final DialogReminderRepeatInputDailyCustom ting = new DialogReminderRepeatInputDailyCustom();
+                final DailyCustomRepeatDialog ting = new DailyCustomRepeatDialog();
                 ting.show(getParentFragmentManager(), "ting");
             }
         });
@@ -151,7 +118,8 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
         rdo_reminder_repeat_weekly.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.WEEKLY);
+                model.setEnabled(true);
+                model.setRepeatOption(RepeatModel.ReminderRepeatOptions.WEEKLY);
                 refresh();
             }
         });
@@ -160,7 +128,7 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
         rdo_reminder_repeat_weekly_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final DialogReminderRepeatInputWeeklyCustom ting = new DialogReminderRepeatInputWeeklyCustom();
+                final WeeklyCustomRepeatDialog ting = new WeeklyCustomRepeatDialog();
                 ting.show(getParentFragmentManager(), "ting");
             }
         });
@@ -169,7 +137,8 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
         rdo_reminder_repeat_monthly.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.MONTHLY);
+                model.setEnabled(true);
+                model.setRepeatOption(RepeatModel.ReminderRepeatOptions.MONTHLY);
                 refresh();
             }
         });
@@ -178,7 +147,7 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
         rdo_reminder_repeat_monthly_custom.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final DialogReminderRepeatInputMonthlyCustom ting = new DialogReminderRepeatInputMonthlyCustom();
+                final MonthlyCustomRepeatDialog ting = new MonthlyCustomRepeatDialog();
                 ting.show(getParentFragmentManager(), "ting");
             }
         });
@@ -187,7 +156,8 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
         rdo_reminder_repeat_yearly.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.YEARLY);
+                model.setEnabled(true);
+                model.setRepeatOption(RepeatModel.ReminderRepeatOptions.YEARLY);
                 refresh();
             }
         });
@@ -196,7 +166,7 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
         rdo_reminder_repeat_other.setOnClickListener(new RadioButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final DialogReminderRepeatInputCustom ting = new DialogReminderRepeatInputCustom();
+                final OtherRepeatDialog ting = new OtherRepeatDialog();
                 ting.show(getParentFragmentManager(), "ting");
             }
         });
@@ -210,7 +180,7 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
 
                 if (isChecked) { // Use a default repeat end to next month
 
-                    if (model.getRepeatOption() == ReminderRepeatModel.ReminderRepeatOptions.OFF) {
+                    if (!model.isEnabled()) {
                         buttonView.setChecked(false);
                         ToastHelper.showShort(view.getContext(), "Cannot enable repeat ending if its set to None.");
                         return;
@@ -310,8 +280,6 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
         // No radio group wont work for the given layout. So resetting programmatically is required.
 
         rdo_reminder_repeat_off.setChecked(false);
-        rdo_reminder_repeat_hourly.setChecked(false);
-        rdo_reminder_repeat_hourly_custom.setChecked(false);
         rdo_reminder_repeat_daily.setChecked(false);
         rdo_reminder_repeat_daily_custom.setChecked(false);
         rdo_reminder_repeat_weekly.setChecked(false);
@@ -321,68 +289,73 @@ public class DialogReminderRepeatInput extends AbstractDialogFragmentController 
         rdo_reminder_repeat_yearly.setChecked(false);
         rdo_reminder_repeat_other.setChecked(false);
 
-        switch (model.getRepeatOption()) {
-            default:
-            case OFF:
-                rdo_reminder_repeat_off.setChecked(true);
-                break;
-            case HOURLY:
-                rdo_reminder_repeat_hourly.setChecked(true);
-                break;
-            case HOURLY_CUSTOM:
-                rdo_reminder_repeat_hourly_custom.setChecked(true);
-                break;
-            case DAILY:
-                rdo_reminder_repeat_daily.setChecked(true);
-                break;
-            case DAILY_CUSTOM:
-                rdo_reminder_repeat_daily_custom.setChecked(true);
-                break;
-            case WEEKLY:
-                rdo_reminder_repeat_weekly.setChecked(true);
-                break;
-            case WEEKLY_CUSTOM:
-                rdo_reminder_repeat_weekly_custom.setChecked(true);
-                break;
-            case MONTHLY:
-                rdo_reminder_repeat_monthly.setChecked(true);
-                break;
-            case MONTHLY_CUSTOM:
-                rdo_reminder_repeat_monthly_custom.setChecked(true);
-                break;
-            case YEARLY:
-                rdo_reminder_repeat_yearly.setChecked(true);
-                break;
-            case OTHER:
-                rdo_reminder_repeat_other.setChecked(true);
-                break;
-        }
-
-        sw_has_repeat_end.setChecked(model.isHasRepeatEnd());
-
-        if (model.isHasRepeatEnd()) {
-            lv_repeat_end_date.setVisibility(View.VISIBLE);
-            lv_repeat_end_time.setVisibility(View.VISIBLE);
-            tv_end_date_value.setText(StringHelper.toWeekdayDate(model.getRepeatEndDate()));
-            tv_end_time_value.setText(StringHelper.toTime(model.getRepeatEndDate()));
-        } else {
+        if (!model.isEnabled()) {
+            //model.setEnabled(true);
+            rdo_reminder_repeat_off.setChecked(true);
             lv_repeat_end_date.setVisibility(View.GONE);
             lv_repeat_end_time.setVisibility(View.GONE);
+            sw_has_repeat_end.setEnabled(false);
+
+        } else {
+
+            switch (model.getRepeatOption()) {
+                default:
+                case DAILY:
+                    rdo_reminder_repeat_daily.setChecked(true);
+                    break;
+                case DAILY_CUSTOM:
+                    rdo_reminder_repeat_daily_custom.setChecked(true);
+                    break;
+                case WEEKLY:
+                    rdo_reminder_repeat_weekly.setChecked(true);
+                    break;
+                case WEEKLY_CUSTOM:
+                    rdo_reminder_repeat_weekly_custom.setChecked(true);
+                    break;
+                case MONTHLY:
+                    rdo_reminder_repeat_monthly.setChecked(true);
+                    break;
+                case MONTHLY_CUSTOM:
+                    rdo_reminder_repeat_monthly_custom.setChecked(true);
+                    break;
+                case YEARLY:
+                    rdo_reminder_repeat_yearly.setChecked(true);
+                    break;
+                case OTHER:
+                    rdo_reminder_repeat_other.setChecked(true);
+                    break;
+            }
+
+            sw_has_repeat_end.setEnabled(true);
+            sw_has_repeat_end.setChecked(model.isHasRepeatEnd());
+
+            if (model.isHasRepeatEnd()) {
+                lv_repeat_end_date.setVisibility(View.VISIBLE);
+                lv_repeat_end_time.setVisibility(View.VISIBLE);
+                tv_end_date_value.setText(StringHelper.toWeekdayDate(model.getRepeatEndDate()));
+                tv_end_time_value.setText(StringHelper.toTime(model.getRepeatEndDate()));
+            } else {
+                lv_repeat_end_date.setVisibility(View.GONE);
+                lv_repeat_end_time.setVisibility(View.GONE);
+            }
+
         }
 
     }
 
-    public void setChanges(ReminderRepeatModel m) {
+    public void customRepeatDialogSetRepeatModel(RepeatModel m) {
         model = m;
         refresh();
     }
 
+    @Override
+    public RepeatModel customRepeatDialogGetRepeatModel() {
+        return model;
+    }
+
     public interface IRepeatInputDialogListener {
+        void repeatDialogSetRepeatModel(RepeatModel model);
 
-        void commitChanges();
-
-        void discardChanges();
-
-        ReminderRepeatModel getRepeatModel();
+        RepeatModel repeatDialogGetRepeatModel();
     }
 }

@@ -25,7 +25,9 @@ import com.example.remindme.R;
 
 import java.util.List;
 
-public class DialogReminderNoteInput extends DialogFragment {
+public class NoteDialog extends DialogFragment {
+    public static final String TAG = "NoteDialog";
+
     private INoteInputDialogListener listener;
     private String note;
     private static final int SPEECH_REQUEST_CODE = 117;
@@ -39,7 +41,7 @@ public class DialogReminderNoteInput extends DialogFragment {
 
         try {
             listener = (INoteInputDialogListener) context;
-            note = listener.getReminderNote();
+            note = listener.dialogReminderNoteInputGetNote();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderNoteListener");
         }
@@ -108,7 +110,7 @@ public class DialogReminderNoteInput extends DialogFragment {
         builder.setView(view).setTitle("Reminder Note").setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.setNote(txt_reminder_note.getText().toString(), true);
+                listener.dialogReminderNoteInputSetNote(txt_reminder_note.getText().toString());
             }
         }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
@@ -121,8 +123,8 @@ public class DialogReminderNoteInput extends DialogFragment {
     }
 
     public interface INoteInputDialogListener {
-        void setNote(String note, boolean isEOF);
+        void dialogReminderNoteInputSetNote(String note);
 
-        String getReminderNote();
+        String dialogReminderNoteInputGetNote();
     }
 }

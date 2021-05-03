@@ -2,7 +2,6 @@ package com.example.remindme.ui.fragments.dialogFragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,55 +10,18 @@ import android.widget.CheckBox;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
-import com.example.remindme.viewModels.ReminderRepeatModel;
+import com.example.remindme.viewModels.TimeViewModel;
 
 import java.util.Calendar;
 
-public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
+public class HourlyTimeListDialog extends TimeListDialogBase {
 
-    private ReminderRepeatModel model;
-    private boolean isCancel;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            DialogReminderRepeatInput.IRepeatInputDialogListener listener = (DialogReminderRepeatInput.IRepeatInputDialogListener) context;
-            model = listener.getRepeatModel();
-            //transaction = listener.getTransaction();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
-        }
-    }
-
-    @Override
-    public void onCancel(@NonNull DialogInterface dialog) {
-        super.onCancel(dialog);
-        isCancel = true;
-    }
-
-    @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        super.onDismiss(dialog);
-        if (isCancel) {
-            commitToParent();
-        }
-    }
-
-    private void commitToParent() {
-        final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
-        if (fragment != null) {
-            final IRepeatInputChildDialogListener hostDialog = (IRepeatInputChildDialogListener) fragment;
-            hostDialog.setChanges(model);
-        }
-    }
+    public static final String TAG = "TimeListInputHourlyDialog";
 
     @NonNull
     @Override
@@ -69,7 +31,7 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
         if (activity == null) return builder.create();
         LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat_hourly_custom, null);
+        final View view = inflater.inflate(R.layout.time_list_input_hourly_dialog, null);
 
         final CheckBox chk_daily_0 = view.findViewById(R.id.chk_daily_0);
         final CheckBox chk_daily_1 = view.findViewById(R.id.chk_daily_1);
@@ -97,8 +59,8 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
         final CheckBox chk_daily_22 = view.findViewById(R.id.chk_daily_22);
         final CheckBox chk_daily_23 = view.findViewById(R.id.chk_daily_23);
 
-        Calendar c = Calendar.getInstance();
-        c.setTime(model.getReminderTime());
+        final Calendar c = Calendar.getInstance();
+        c.setTime(getModel().getUpdatedTime());
         final int min = c.get(Calendar.MINUTE);
 
         if (AppSettingsHelper.getInstance().isUse24hourTime()) {
@@ -161,8 +123,8 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
 
         }
 
-        for (int i = 0; i < model.customHours.size(); i++) {
-            int value = model.customHours.get(i);
+        for (int i = 0; i < getModel().getHourlyTimes().size(); i++) {
+            int value = getModel().getHourlyTimes().get(i);
             switch (value) {
                 default:
                 case 0:
@@ -247,41 +209,41 @@ public class DialogReminderRepeatInputHourlyCustom extends DialogFragment {
                 .setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        model.customHours.clear();
+                        getModel().getHourlyTimes().clear();
                         //int day = 0;
-                        if (chk_daily_0.isChecked()) model.customHours.add(0);
-                        if (chk_daily_1.isChecked()) model.customHours.add(1);
-                        if (chk_daily_2.isChecked()) model.customHours.add(2);
-                        if (chk_daily_3.isChecked()) model.customHours.add(3);
-                        if (chk_daily_4.isChecked()) model.customHours.add(4);
-                        if (chk_daily_5.isChecked()) model.customHours.add(5);
-                        if (chk_daily_6.isChecked()) model.customHours.add(6);
-                        if (chk_daily_7.isChecked()) model.customHours.add(7);
-                        if (chk_daily_8.isChecked()) model.customHours.add(8);
-                        if (chk_daily_9.isChecked()) model.customHours.add(9);
-                        if (chk_daily_10.isChecked()) model.customHours.add(10);
-                        if (chk_daily_11.isChecked()) model.customHours.add(11);
-                        if (chk_daily_12.isChecked()) model.customHours.add(12);
-                        if (chk_daily_13.isChecked()) model.customHours.add(13);
-                        if (chk_daily_14.isChecked()) model.customHours.add(14);
-                        if (chk_daily_15.isChecked()) model.customHours.add(15);
-                        if (chk_daily_16.isChecked()) model.customHours.add(16);
-                        if (chk_daily_17.isChecked()) model.customHours.add(17);
-                        if (chk_daily_18.isChecked()) model.customHours.add(18);
-                        if (chk_daily_19.isChecked()) model.customHours.add(19);
-                        if (chk_daily_20.isChecked()) model.customHours.add(20);
-                        if (chk_daily_21.isChecked()) model.customHours.add(21);
-                        if (chk_daily_22.isChecked()) model.customHours.add(22);
-                        if (chk_daily_23.isChecked()) model.customHours.add(23);
+                        if (chk_daily_0.isChecked()) getModel().getHourlyTimes().add(0);
+                        if (chk_daily_1.isChecked()) getModel().getHourlyTimes().add(1);
+                        if (chk_daily_2.isChecked()) getModel().getHourlyTimes().add(2);
+                        if (chk_daily_3.isChecked()) getModel().getHourlyTimes().add(3);
+                        if (chk_daily_4.isChecked()) getModel().getHourlyTimes().add(4);
+                        if (chk_daily_5.isChecked()) getModel().getHourlyTimes().add(5);
+                        if (chk_daily_6.isChecked()) getModel().getHourlyTimes().add(6);
+                        if (chk_daily_7.isChecked()) getModel().getHourlyTimes().add(7);
+                        if (chk_daily_8.isChecked()) getModel().getHourlyTimes().add(8);
+                        if (chk_daily_9.isChecked()) getModel().getHourlyTimes().add(9);
+                        if (chk_daily_10.isChecked()) getModel().getHourlyTimes().add(10);
+                        if (chk_daily_11.isChecked()) getModel().getHourlyTimes().add(11);
+                        if (chk_daily_12.isChecked()) getModel().getHourlyTimes().add(12);
+                        if (chk_daily_13.isChecked()) getModel().getHourlyTimes().add(13);
+                        if (chk_daily_14.isChecked()) getModel().getHourlyTimes().add(14);
+                        if (chk_daily_15.isChecked()) getModel().getHourlyTimes().add(15);
+                        if (chk_daily_16.isChecked()) getModel().getHourlyTimes().add(16);
+                        if (chk_daily_17.isChecked()) getModel().getHourlyTimes().add(17);
+                        if (chk_daily_18.isChecked()) getModel().getHourlyTimes().add(18);
+                        if (chk_daily_19.isChecked()) getModel().getHourlyTimes().add(19);
+                        if (chk_daily_20.isChecked()) getModel().getHourlyTimes().add(20);
+                        if (chk_daily_21.isChecked()) getModel().getHourlyTimes().add(21);
+                        if (chk_daily_22.isChecked()) getModel().getHourlyTimes().add(22);
+                        if (chk_daily_23.isChecked()) getModel().getHourlyTimes().add(23);
 
-                        model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.HOURLY_CUSTOM);
-                        commitToParent();
+                        getModel().setTimeListMode(TimeViewModel.TimeListModes.HOURLY);
+                        getListener().timeListDialogSetTimeViewModel(getModel());
 
                     }
                 }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                commitToParent();
+
             }
         });
 

@@ -54,14 +54,41 @@
                         android:layout_marginBottom="@dimen/dp_16"
                         android:textSize="@dimen/font_size_medium" />
 
-                    <Button
-                        android:id="@+id/btnCalculate"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/dimText"
-                        android:text="calculate"
+                        android:gravity="center_horizontal"
                         android:layout_marginBottom="@dimen/dp_16"
-                        style="@style/smallButtonStyle" />
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnCalculate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/dp_3"
+                            android:textColor="?attr/dimText"
+                            android:text="Calculate"
+                            style="@style/smallButtonStyle" />
+
+                        <Button
+                            android:id="@+id/btnTimeHours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/dp_3"
+                            android:textColor="?attr/dimText"
+                            android:text="Hours"
+                            style="@style/smallButtonStyle" />
+
+                        <Button
+                            android:id="@+id/btnTimeList"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/dp_3"
+                            android:textColor="?attr/dimText"
+                            android:text="List"
+                            style="@style/smallButtonStyle" />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/lvc_diff_next_reminder_trigger"
@@ -189,12 +216,39 @@
 
                     </LinearLayout>
 
+                    <!-- Is notification -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <!--                        <ImageView-->
+                        <!--                            android:layout_width="wrap_content"-->
+                        <!--                            android:layout_height="match_parent"-->
+                        <!--                            android:src="@drawable/ic_sound_volume_auto" />-->
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="As notification"
+                            android:textColor="?attr/soothingText"
+                            android:textSize="@dimen/font_size_medium" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/sw_notification"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
                     <!-- REPEAT -->
                     <LinearLayout
                         android:id="@+id/mnu_reminder_repeat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_16"
+                        android:layout_marginVertical="@dimen/dp_16"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 

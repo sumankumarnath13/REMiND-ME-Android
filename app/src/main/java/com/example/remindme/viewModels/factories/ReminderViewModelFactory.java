@@ -1,9 +1,11 @@
-package com.example.remindme.viewModels;
+package com.example.remindme.viewModels.factories;
 
 import android.content.Intent;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.example.remindme.viewModels.ReminderModel;
 
 public class ReminderViewModelFactory implements ViewModelProvider.Factory {
 

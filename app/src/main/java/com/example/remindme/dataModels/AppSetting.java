@@ -10,5 +10,6 @@ public class AppSetting extends RealmObject implements RealmModel {
     public boolean disableAllReminders;
     public boolean use24hourTime;
     public int firstDayOfWeek;
+    public String dateFormat;
     public int theme;
 }

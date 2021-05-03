@@ -3,7 +3,6 @@ package com.example.remindme.ui.fragments.dialogFragments;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -14,37 +13,31 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
-import com.example.remindme.controllers.AbstractDialogFragmentController;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
-import com.example.remindme.viewModels.ReminderRepeatModel;
+import com.example.remindme.ui.RefreshableDialogFragment;
+import com.example.remindme.viewModels.RepeatModel;
 
 import java.util.Calendar;
 import java.util.Date;
 
-public class TimeCalculatorDialog extends AbstractDialogFragmentController {
-    public interface ITimeCalculatorListener {
-        void setTime(Date newTime);
+public class DateCalculatorDialog extends RefreshableDialogFragment {
 
-        Date getTime();
-    }
+    public static final String TAG = "DateCalculatorDialog";
 
     private ITimeCalculatorListener listener;
     private final Calendar calendar = Calendar.getInstance();
     private final Calendar resultCalendar = Calendar.getInstance();
-    private Button btn_reminder_time;
     private Button btn_reminder_date;
     private NumberPicker value_picker;
     private NumberPicker unit_picker;
-    private TextView tv_reminder_time;
     private TextView tv_reminder_date;
 
 
@@ -53,8 +46,8 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
         super.onAttach(context);
         try {
             listener = (ITimeCalculatorListener) context;
-            if (listener.getTime() == null) return;
-            calendar.setTime(listener.getTime());
+            if (listener.dateCalculatorDialogGetTime() == null) return;
+            calendar.setTime(listener.dateCalculatorDialogGetTime());
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement ITimeCalculatorListener");
         }
@@ -68,10 +61,7 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
         if (activity == null) return builder.create();
         LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.time_calculator_dialog, null);
-
-        btn_reminder_time = view.findViewById(R.id.btn_reminder_time);
-        btn_reminder_time.setText(StringHelper.toTime(calendar.getTime()));
+        final View view = inflater.inflate(R.layout.date_calculator_dialog, null);
 
         btn_reminder_date = view.findViewById(R.id.btn_reminder_date);
         btn_reminder_date.setText(StringHelper.toWeekdayDate(calendar.getTime()));
@@ -83,7 +73,7 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
                 // So, its allowed to go backward up to return value of "getMaxForTimeUnit" to eventually get result of present after adding time.
                 // Its expected that remembering an event 3 years (getMaxForTimeUnit return for YEAR unit) back is more than sufficient.
                 final Calendar minDateCalendar = Calendar.getInstance();
-                minDateCalendar.add(Calendar.YEAR, -1 * ReminderRepeatModel.getMaxForTimeUnit(ReminderRepeatModel.TimeUnits.YEARS)); // (-1) to gho backward.
+                minDateCalendar.add(Calendar.YEAR, -1 * RepeatModel.getMaxForTimeUnit(RepeatModel.TimeUnits.YEARS)); // (-1) to gho backward.
 
                 final int mYear, mMonth, mDay;
                 mYear = calendar.get(Calendar.YEAR);
@@ -112,29 +102,6 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
             }
         });
 
-        btn_reminder_time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                final int mHour, mMinute;
-                mHour = calendar.get(Calendar.HOUR_OF_DAY);
-                mMinute = calendar.get(Calendar.MINUTE);
-
-                final TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-                        AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT ? R.style.TimePickerDialogLight : R.style.TimePickerDialogBlack,
-                        new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                calendar.set(Calendar.MINUTE, minute);
-                                refresh();
-                            }
-                        }, mHour, mMinute, AppSettingsHelper.getInstance().isUse24hourTime());
-                timePickerDialog.show();
-                //timePickerDialog.;
-            }
-        });
-
         value_picker = view.findViewById(R.id.value_picker);
         value_picker.setMinValue(1);
 
@@ -146,12 +113,11 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
         unit_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                value_picker.setMaxValue(ReminderRepeatModel.getMaxForTimeUnit(ReminderRepeatModel.transform(newVal)));
+                value_picker.setMaxValue(RepeatModel.getMaxForTimeUnit(RepeatModel.getTimeUnitFromInteger(newVal)));
                 refresh();
             }
         });
 
-        tv_reminder_time = view.findViewById(R.id.tv_reminder_time);
         tv_reminder_date = view.findViewById(R.id.tv_reminder_date);
 
         value_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -165,7 +131,7 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
         // Value of unit must set first before setting up value of time:
         // 1
         unit_picker.setValue(0);
-        value_picker.setMaxValue(ReminderRepeatModel.getMaxForTimeUnit(ReminderRepeatModel.TimeUnits.DAYS));
+        value_picker.setMaxValue(RepeatModel.getMaxForTimeUnit(RepeatModel.TimeUnits.DAYS));
         //unit_picker.
         // 2
         value_picker.setValue(1);
@@ -173,7 +139,7 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
         builder.setView(view).setPositiveButton("Use Result", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.setTime(resultCalendar.getTime());
+                listener.dateCalculatorDialogSetTime(resultCalendar.getTime());
             }
         }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
@@ -192,7 +158,7 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
     protected void onUIRefresh() {
         resultCalendar.setTime(calendar.getTime());
 
-        switch (ReminderRepeatModel.transform(unit_picker.getValue())) {
+        switch (RepeatModel.getTimeUnitFromInteger(unit_picker.getValue())) {
             case DAYS:
                 resultCalendar.add(Calendar.DAY_OF_YEAR, value_picker.getValue());
                 break;
@@ -207,11 +173,14 @@ public class TimeCalculatorDialog extends AbstractDialogFragmentController {
                 break;
         }
 
-        btn_reminder_time.setText(StringHelper.toTime(calendar.getTime()));
         btn_reminder_date.setText(StringHelper.toWeekdayDate(calendar.getTime()));
-
-        tv_reminder_time.setText(StringHelper.toTime(resultCalendar.getTime()));
         tv_reminder_date.setText(StringHelper.toWeekdayDate(resultCalendar.getTime()));
+    }
+
+    public interface ITimeCalculatorListener {
+        void dateCalculatorDialogSetTime(Date newTime);
+
+        Date dateCalculatorDialogGetTime();
     }
 
 }

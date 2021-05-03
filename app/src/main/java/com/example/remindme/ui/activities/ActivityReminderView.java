@@ -19,6 +19,7 @@ import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.RingingModel;
 
 import java.util.Locale;
 
@@ -26,7 +27,6 @@ import java.util.Locale;
 public class ActivityReminderView extends BaseActivity {
     private static final String MISSED_ALERT_UI_STATE = "STATE";
     private boolean isMissedAlertsVisible;
-    private boolean isUserInteracted;
     private TextView tv_reminder_time;
     private TextView tv_reminder_date;
     private TextView tv_reminder_name;
@@ -49,18 +49,10 @@ public class ActivityReminderView extends BaseActivity {
     }
 
     @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        isUserInteracted = true;
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_view);
         ActivityHelper.setTitle(this, getResources().getString(R.string.view_reminder_heading));
-
-        isUserInteracted = false;
 
         if (savedInstanceState != null) {
             isMissedAlertsVisible = savedInstanceState.getBoolean(MISSED_ALERT_UI_STATE, false);
@@ -111,7 +103,7 @@ public class ActivityReminderView extends BaseActivity {
         enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isUserInteracted) return;
+                if (!isUserInteracted()) return;
 
                 if (activeReminder != null && !activeReminder.isExpired()) {
 
@@ -149,7 +141,7 @@ public class ActivityReminderView extends BaseActivity {
             @Override
             public void onClick(View v) {
                 isMissedAlertsVisible = !isMissedAlertsVisible;
-                isUserInteracted = false; // This is very important. Because its just making a layout visible and is no real interaction.
+                setUserInteracted(false); // This is very important. Because its just making a layout visible and is no real interaction.
                 refresh();
             }
         });
@@ -169,19 +161,23 @@ public class ActivityReminderView extends BaseActivity {
 
     private Button btn_reminder_dismiss;
 
-    private void refresh() {
+    @Override
+    protected void onUIRefresh() {
+        super.onUIRefresh();
 
         if (activeReminder != null) {
 
             // If snooze do not exists then show original time|calculated time. Because next schedule may set as calculated time until its being fetched from database
             // Else show just original time
-            if (!activeReminder.getSnoozeModel().isSnoozed()) {
-                tv_reminder_time.setText(StringHelper.toTime(activeReminder.getAlertTime()));
-                tv_reminder_date.setText(StringHelper.toWeekdayDate(activeReminder.getAlertTime()));
-            } else {
-                tv_reminder_time.setText(StringHelper.toTime(activeReminder.getOriginalTime()));
-                tv_reminder_date.setText(StringHelper.toWeekdayDate(activeReminder.getOriginalTime()));
-            }
+//            if (!activeReminder.getSnoozeModel().isSnoozed()) {
+//                tv_reminder_time.setText(StringHelper.toTime(activeReminder.getAlertTime()));
+//                tv_reminder_date.setText(StringHelper.toWeekdayDate(activeReminder.getAlertTime()));
+//            } else {
+//            }
+
+            tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeViewModel().getUpdatedTime()));
+            tv_reminder_date.setText(StringHelper.toWeekdayDate(activeReminder.getTimeViewModel().getUpdatedTime()));
+
 
             if (!StringHelper.isNullOrEmpty(activeReminder.getName())) {
                 tv_reminder_name.setVisibility(View.VISIBLE);
@@ -189,10 +185,14 @@ public class ActivityReminderView extends BaseActivity {
             }
 
             if (activeReminder.getSnoozeModel().isSnoozed()) {
-                next_snooze.setText(StringHelper.toTime(activeReminder.getSnoozedTime()));
+                next_snooze.setVisibility(View.VISIBLE);
+                next_snooze.setText(StringHelper.toTime(
+                        activeReminder.getSnoozeModel().getSnoozedTime(
+                                activeReminder.getTimeViewModel().getUpdatedTime())));
+
                 btn_reminder_dismiss.setVisibility(View.VISIBLE);
             } else {
-                next_snooze.setText("");
+                next_snooze.setVisibility(View.GONE);
                 btn_reminder_dismiss.setVisibility(View.GONE);
             }
 
@@ -214,26 +214,26 @@ public class ActivityReminderView extends BaseActivity {
             final TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
             final LinearLayout lv_alarm_tone_is_on = findViewById(R.id.lv_alarm_tone_is_on);
 
-            if (activeReminder.isToneEnabled()) {
+            if (activeReminder.getRingingModel().isToneEnabled()) {
 
                 lv_alarm_tone_is_on.setVisibility(View.VISIBLE);
-                tv_reminder_tone_summary.setText(activeReminder.getRingToneUriSummary(this));
+                tv_reminder_tone_summary.setText(activeReminder.getRingingModel().getRingToneUriSummary(this));
 
                 final TextView tv_alarm_volume = findViewById(R.id.tv_alarm_volume);
 
-                if (activeReminder.isIncreaseVolumeGradually()) {
+                if (activeReminder.getRingingModel().isIncreaseVolumeGradually()) {
 
                     tv_alarm_volume.setText(String.format(Locale.ENGLISH, "%d%% to %s",
-                            ReminderModel.MINIMUM_INPUT_VOLUME_PERCENTAGE,
-                            activeReminder.getAlarmVolumePercentage() == 0 ?
-                                    "default" : activeReminder.getAlarmVolumePercentage() + "%"
+                            RingingModel.MINIMUM_INPUT_VOLUME_PERCENTAGE,
+                            activeReminder.getRingingModel().getAlarmVolumePercentage() == 0 ?
+                                    "default" : activeReminder.getRingingModel().getAlarmVolumePercentage() + "%"
                     ));
 
                 } else {
 
                     tv_alarm_volume.setText(String.format(Locale.ENGLISH, "%s",
-                            activeReminder.getAlarmVolumePercentage() == 0 ?
-                                    "default" : activeReminder.getAlarmVolumePercentage() + "%")
+                            activeReminder.getRingingModel().getAlarmVolumePercentage() == 0 ?
+                                    "default" : activeReminder.getRingingModel().getAlarmVolumePercentage() + "%")
                     );
                 }
 
@@ -242,18 +242,18 @@ public class ActivityReminderView extends BaseActivity {
                 tv_reminder_tone_summary.setText(STATUS_OFF);
             }
 
-            tv_reminder_tone_summary.setTextColor(activeReminder.isToneEnabled() ?
+            tv_reminder_tone_summary.setTextColor(activeReminder.getRingingModel().isToneEnabled() ?
                     getResources().getColor(R.color.text_dim) : getResources().getColor(R.color.text_danger));
 
             final TextView tv_reminder_vibrate = findViewById(R.id.tv_reminder_vibrate);
 
-            if (activeReminder.isVibrationEnabled()) {
-                tv_reminder_vibrate.setText(getResources().getStringArray(R.array.vibration_patterns)[ReminderModel.convertToVibratePattern(activeReminder.getVibratePattern())]);
+            if (activeReminder.getRingingModel().isVibrationEnabled()) {
+                tv_reminder_vibrate.setText(getResources().getStringArray(R.array.vibration_patterns)[RingingModel.convertToVibratePattern(activeReminder.getRingingModel().getVibratePattern())]);
             } else {
                 tv_reminder_vibrate.setText(STATUS_OFF);
             }
 
-            tv_reminder_vibrate.setTextColor(activeReminder.isVibrationEnabled() ?
+            tv_reminder_vibrate.setTextColor(activeReminder.getRingingModel().isVibrationEnabled() ?
                     getResources().getColor(R.color.text_dim) : getResources().getColor(R.color.text_danger));
 
             if (!StringHelper.isNullOrEmpty(activeReminder.getNote())) {
@@ -326,6 +326,5 @@ public class ActivityReminderView extends BaseActivity {
             }
 
         }
-
     }
 }

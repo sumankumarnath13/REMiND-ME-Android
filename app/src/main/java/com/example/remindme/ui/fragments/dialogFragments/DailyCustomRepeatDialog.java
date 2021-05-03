@@ -2,7 +2,6 @@ package com.example.remindme.ui.fragments.dialogFragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,52 +10,16 @@ import android.widget.CheckBox;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
-import com.example.remindme.viewModels.ReminderRepeatModel;
+import com.example.remindme.viewModels.RepeatModel;
 
 import java.util.Calendar;
 
-public class DialogReminderRepeatInputDailyCustom extends DialogFragment {
+public class DailyCustomRepeatDialog extends CustomRepeatDialogBase {
 
-    private ReminderRepeatModel model;
-    private boolean isCancel;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            DialogReminderRepeatInput.IRepeatInputDialogListener listener = (DialogReminderRepeatInput.IRepeatInputDialogListener) context;
-            model = listener.getRepeatModel();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
-        }
-    }
-
-    @Override
-    public void onCancel(@NonNull DialogInterface dialog) {
-        super.onCancel(dialog);
-        isCancel = true;
-    }
-
-    @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        super.onDismiss(dialog);
-        if (isCancel) {
-            commitToParent();
-        }
-    }
-
-    private void commitToParent() {
-        final Fragment fragment = getParentFragmentManager().findFragmentByTag("repeatInput");
-        if (fragment != null) {
-            final IRepeatInputChildDialogListener hostDialog = (IRepeatInputChildDialogListener) fragment;
-            hostDialog.setChanges(model);
-        }
-    }
+    public static final String TAG = "DailyCustomRepeatDialog";
 
     @NonNull
     @Override
@@ -76,8 +39,8 @@ public class DialogReminderRepeatInputDailyCustom extends DialogFragment {
         final CheckBox chk_daily_fri = view.findViewById(R.id.chk_daily_fri);
         final CheckBox chk_daily_sat = view.findViewById(R.id.chk_daily_sat);
 
-        for (int i = 0; i < model.customDays.size(); i++) {
-            int value = model.customDays.get(i);
+        for (int i = 0; i < getModel().getCustomDays().size(); i++) {
+            int value = getModel().getCustomDays().get(i);
             switch (value) {
                 default:
                 case Calendar.SUNDAY:
@@ -109,23 +72,30 @@ public class DialogReminderRepeatInputDailyCustom extends DialogFragment {
                 .setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        model.customDays.clear();
-                        if (chk_daily_sun.isChecked()) model.customDays.add(Calendar.SUNDAY);
-                        if (chk_daily_mon.isChecked()) model.customDays.add(Calendar.MONDAY);
-                        if (chk_daily_tue.isChecked()) model.customDays.add(Calendar.TUESDAY);
-                        if (chk_daily_wed.isChecked()) model.customDays.add(Calendar.WEDNESDAY);
-                        if (chk_daily_thu.isChecked()) model.customDays.add(Calendar.THURSDAY);
-                        if (chk_daily_fri.isChecked()) model.customDays.add(Calendar.FRIDAY);
-                        if (chk_daily_sat.isChecked()) model.customDays.add(Calendar.SATURDAY);
-
-                        model.setRepeatOption(ReminderRepeatModel.ReminderRepeatOptions.DAILY_CUSTOM);
-                        commitToParent();
+                        getModel().getCustomDays().clear();
+                        if (chk_daily_sun.isChecked())
+                            getModel().getCustomDays().add(Calendar.SUNDAY);
+                        if (chk_daily_mon.isChecked())
+                            getModel().getCustomDays().add(Calendar.MONDAY);
+                        if (chk_daily_tue.isChecked())
+                            getModel().getCustomDays().add(Calendar.TUESDAY);
+                        if (chk_daily_wed.isChecked())
+                            getModel().getCustomDays().add(Calendar.WEDNESDAY);
+                        if (chk_daily_thu.isChecked())
+                            getModel().getCustomDays().add(Calendar.THURSDAY);
+                        if (chk_daily_fri.isChecked())
+                            getModel().getCustomDays().add(Calendar.FRIDAY);
+                        if (chk_daily_sat.isChecked())
+                            getModel().getCustomDays().add(Calendar.SATURDAY);
+                        getModel().setEnabled(true);
+                        getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.DAILY_CUSTOM);
+                        getListener().customRepeatDialogSetRepeatModel(getModel());
 
                     }
                 }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                commitToParent();
+
             }
         });
 

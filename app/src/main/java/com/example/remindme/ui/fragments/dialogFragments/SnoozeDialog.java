@@ -19,11 +19,13 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
-import com.example.remindme.viewModels.ReminderSnoozeModel;
+import com.example.remindme.viewModels.SnoozeModel;
 
-public class DialogReminderSnoozeInput extends DialogFragment {
+public class SnoozeDialog extends DialogFragment {
+    public static final String TAG = "SnoozeDialog";
+
     private ISnoozeInputDialogListener listener;
-    private ReminderSnoozeModel model;
+    private SnoozeModel model;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -31,7 +33,7 @@ public class DialogReminderSnoozeInput extends DialogFragment {
 
         try {
             listener = (ISnoozeInputDialogListener) context;
-            model = listener.getSnoozeModel();
+            model = listener.snoozeDialogGetSnoozeModel();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderSnoozeListener");
         }
@@ -100,10 +102,10 @@ public class DialogReminderSnoozeInput extends DialogFragment {
             }
         });
 
-        sw_reminder_snooze_enabled.setChecked(model.isEnable);
+        sw_reminder_snooze_enabled.setChecked(model.isEnable());
 
         if (OsHelper.isLollipopOrLater()) {
-            if (model.isEnable) {
+            if (model.isEnable()) {
                 rdo_reminder_snooze_m5.setButtonTintList(getResources().getColorStateList(R.color.bg_success));
                 rdo_reminder_snooze_m10.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
                 rdo_reminder_snooze_m15.setButtonTintList(getResources().getColorStateList(R.color.bg_info));
@@ -135,7 +137,7 @@ public class DialogReminderSnoozeInput extends DialogFragment {
             }
         }
 
-        switch (model.intervalOption) {
+        switch (model.getInterval()) {
             default:
             case M5:
                 rdo_reminder_snooze_m5.setChecked(true);
@@ -151,7 +153,7 @@ public class DialogReminderSnoozeInput extends DialogFragment {
                 break;
         }
 
-        switch (model.countOptions) {
+        switch (model.getLimit()) {
             default:
             case R3:
                 rdo_reminder_snooze_r3.setChecked(true);
@@ -169,27 +171,27 @@ public class DialogReminderSnoozeInput extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        model.isEnable = sw_reminder_snooze_enabled.isChecked();
+                        model.setEnable(sw_reminder_snooze_enabled.isChecked());
 
                         if (rdo_reminder_snooze_m5.isChecked()) {
-                            model.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M5;
+                            model.setInterval(SnoozeModel.SnoozeIntervals.M5);
                         } else if (rdo_reminder_snooze_m10.isChecked()) {
-                            model.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M10;
+                            model.setInterval(SnoozeModel.SnoozeIntervals.M10);
                         } else if (rdo_reminder_snooze_m15.isChecked()) {
-                            model.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M15;
+                            model.setInterval(SnoozeModel.SnoozeIntervals.M15);
                         } else {
-                            model.intervalOption = ReminderSnoozeModel.SnoozeIntervalOptions.M30;
+                            model.setInterval(SnoozeModel.SnoozeIntervals.M30);
                         }
 
                         if (rdo_reminder_snooze_r3.isChecked()) {
-                            model.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R3;
+                            model.setLimit(SnoozeModel.SnoozeLimits.R3);
                         } else if (rdo_reminder_snooze_r5.isChecked()) {
-                            model.countOptions = ReminderSnoozeModel.SnoozeCountOptions.R5;
+                            model.setLimit(SnoozeModel.SnoozeLimits.R5);
                         } else {
-                            model.countOptions = ReminderSnoozeModel.SnoozeCountOptions.RC;
+                            model.setLimit(SnoozeModel.SnoozeLimits.RC);
                         }
 
-                        listener.commitSnoozeChanges();
+                        listener.snoozeDialogSetSnoozeModel(model);
                     }
                 })
                 .setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
@@ -203,8 +205,8 @@ public class DialogReminderSnoozeInput extends DialogFragment {
     }
 
     public interface ISnoozeInputDialogListener {
-        void commitSnoozeChanges();
+        void snoozeDialogSetSnoozeModel(SnoozeModel model);
 
-        ReminderSnoozeModel getSnoozeModel();
+        SnoozeModel snoozeDialogGetSnoozeModel();
     }
 }

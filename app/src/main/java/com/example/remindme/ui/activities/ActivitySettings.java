@@ -32,15 +32,13 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
     final AppSettingsHelper settingsHelper = AppSettingsHelper.getInstance();
     public static final String THEME_CHANGE_INTENT_ACTION = "THEME_CHANGE_INTENT_ACTION";
 
-    private boolean isUserInteracted;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ActivityHelper.setTitle(this, getResources().getString(R.string.activitySettingsTitle));
 
-        isUserInteracted = false;
+        setUserInteracted(false);
 
         final TextView tv_brand = findViewById(R.id.tv_brand);
         tv_brand.setText(DeviceHelper.getInstance().getBrand());
@@ -160,15 +158,9 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
     }
 
     @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        isUserInteracted = true;
-    }
-
-    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        if (!isUserInteracted) {
+        if (!isUserInteracted()) {
             return;
         }
 
@@ -192,7 +184,7 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
 
             switch (position) {
                 default:
-                    if (isUserInteracted) {
+                    if (isUserInteracted()) {
                         settingsHelper.setTheme(AppSettingsHelper.Themes.BLACK);
                         final Intent sendThemeChanged = new Intent(THEME_CHANGE_INTENT_ACTION);
                         sendBroadcast(sendThemeChanged);
@@ -201,7 +193,7 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
                     break;
 
                 case 1:
-                    if (isUserInteracted) {
+                    if (isUserInteracted()) {
                         settingsHelper.setTheme(AppSettingsHelper.Themes.LIGHT);
                         final Intent sendThemeChanged = new Intent(THEME_CHANGE_INTENT_ACTION);
                         sendBroadcast(sendThemeChanged);

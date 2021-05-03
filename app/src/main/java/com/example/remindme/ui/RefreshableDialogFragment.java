@@ -1,8 +1,7 @@
-package com.example.remindme.controllers;
-
+package com.example.remindme.ui;
 import androidx.fragment.app.DialogFragment;
 
-public abstract class AbstractDialogFragmentController extends DialogFragment {
+public abstract class RefreshableDialogFragment extends DialogFragment {
     private boolean isRefreshing;
 
     protected boolean isRefreshing() {

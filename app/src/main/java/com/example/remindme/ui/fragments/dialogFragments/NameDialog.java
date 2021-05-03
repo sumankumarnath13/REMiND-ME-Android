@@ -25,7 +25,10 @@ import com.example.remindme.R;
 
 import java.util.List;
 
-public class DialogReminderNameInput extends DialogFragment {
+public class NameDialog extends DialogFragment {
+
+    public static final String TAG = "NameDialog";
+
     private INameInputDialogListener listener;
     private String name;
     private static final int SPEECH_REQUEST_CODE = 117;
@@ -39,7 +42,7 @@ public class DialogReminderNameInput extends DialogFragment {
 
         try {
             listener = (INameInputDialogListener) context;
-            name = listener.getReminderName();
+            name = listener.nameInputDialogGetName();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderNameListener");
         }
@@ -110,7 +113,7 @@ public class DialogReminderNameInput extends DialogFragment {
         builder.setView(view).setTitle("Reminder Name").setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.setName(txt_reminder_name.getText().toString(), true);
+                listener.nameInputDialogSetName(txt_reminder_name.getText().toString());
             }
         }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
@@ -123,8 +126,8 @@ public class DialogReminderNameInput extends DialogFragment {
     }
 
     public interface INameInputDialogListener {
-        void setName(String name, boolean isEOF);
+        void nameInputDialogSetName(String name);
 
-        String getReminderName();
+        String nameInputDialogGetName();
     }
 }

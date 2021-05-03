@@ -24,7 +24,7 @@ public class AppSettingsHelper {
             use24hourTime = setting.use24hourTime;
             disableAllReminders = setting.disableAllReminders;
             firstDayOfWeek = setting.firstDayOfWeek;
-
+            dateFormat = setting.dateFormat;
             if (setting.theme == 1) {
                 theme = Themes.LIGHT;
             } else {
@@ -86,12 +86,24 @@ public class AppSettingsHelper {
         update();
     }
 
+    private String dateFormat = "dd MMM yy";
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+        update();
+    }
+
     private void update() {
         final AppSetting setting = new AppSetting();
         setting.id = ID;
         setting.disableAllReminders = disableAllReminders;
         setting.use24hourTime = use24hourTime;
         setting.firstDayOfWeek = firstDayOfWeek;
+        setting.dateFormat = dateFormat;
 
         switch (theme) {
             default:
