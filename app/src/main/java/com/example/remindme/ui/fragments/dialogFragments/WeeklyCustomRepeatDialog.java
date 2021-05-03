@@ -36,7 +36,7 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
         final CheckBox chk_weekly_4 = view.findViewById(R.id.chk_weekly_4);
         final CheckBox chk_weekly_5 = view.findViewById(R.id.chk_weekly_5);
 
-        final String weekDayName = StringHelper.toWeekday(getModel().getReminderTime());
+        final String weekDayName = StringHelper.toWeekday(getModel().getParent().getTimeModel().getAlertTime(false));
 
         chk_weekly_1.setText("On 1st " + weekDayName + " of the month");
         chk_weekly_2.setText("On 2nd " + weekDayName + " of the month");

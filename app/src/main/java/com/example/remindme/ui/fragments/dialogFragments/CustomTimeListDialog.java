@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
-import com.example.remindme.viewModels.TimeViewModel;
+import com.example.remindme.viewModels.TimeModel;
 
 import java.util.Calendar;
 
@@ -32,7 +32,7 @@ public class CustomTimeListDialog extends TimeListDialogBase {
 
 
         final Calendar c = Calendar.getInstance();
-        c.setTime(getModel().getUpdatedTime());
+        c.setTime(getModel().getTime());
         final int min = c.get(Calendar.MINUTE);
 
 
@@ -45,7 +45,7 @@ public class CustomTimeListDialog extends TimeListDialogBase {
 
                         getModel().clearTimes();
                         getModel().addTime(c.getTime());
-                        getModel().setTimeListMode(TimeViewModel.TimeListModes.CUSTOM);
+                        getModel().setTimeListMode(TimeModel.TimeListModes.CUSTOM);
                         getListener().timeListDialogSetTimeViewModel(getModel());
 
                     }

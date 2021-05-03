@@ -145,6 +145,13 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
         }
         first_day_of_week_spinner.setOnItemSelectedListener(this);
 
+        final Spinner dateFormatSpinner = findViewById(R.id.dateFormatSpinner);
+        ArrayAdapter<CharSequence> dateFormatSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.date_formats, R.layout.support_simple_spinner_dropdown_item);
+        // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
+        dateFormatSpinner.setAdapter(dateFormatSpinnerAdapter);
+        dateFormatSpinner.setSelection(dateFormatSpinnerAdapter.getPosition(settingsHelper.getDateFormat(this)));
+        dateFormatSpinner.setOnItemSelectedListener(this);
+
         final Spinner theme_spinner = findViewById(R.id.theme_spinner);
         ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.themes, R.layout.support_simple_spinner_dropdown_item);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
@@ -179,28 +186,24 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
                     settingsHelper.setFirstDayOfWeek(Calendar.SATURDAY);
                     break;
             }
+        } else if (parent.getId() == R.id.dateFormatSpinner) {
+            settingsHelper.setDateFormat(getResources().getStringArray(R.array.date_formats)[position]);
         } else {
 
-
-            switch (position) {
-                default:
-                    if (isUserInteracted()) {
-                        settingsHelper.setTheme(AppSettingsHelper.Themes.BLACK);
-                        final Intent sendThemeChanged = new Intent(THEME_CHANGE_INTENT_ACTION);
-                        sendBroadcast(sendThemeChanged);
-                        recreate();
-                    }
-                    break;
-
-                case 1:
-                    if (isUserInteracted()) {
-                        settingsHelper.setTheme(AppSettingsHelper.Themes.LIGHT);
-                        final Intent sendThemeChanged = new Intent(THEME_CHANGE_INTENT_ACTION);
-                        sendBroadcast(sendThemeChanged);
-                        recreate();
-                    }
-                    break;
-
+            if (position == 1) {
+                if (isUserInteracted()) {
+                    settingsHelper.setTheme(AppSettingsHelper.Themes.LIGHT);
+                    final Intent sendThemeChanged = new Intent(THEME_CHANGE_INTENT_ACTION);
+                    sendBroadcast(sendThemeChanged);
+                    recreate();
+                }
+            } else {
+                if (isUserInteracted()) {
+                    settingsHelper.setTheme(AppSettingsHelper.Themes.BLACK);
+                    final Intent sendThemeChanged = new Intent(THEME_CHANGE_INTENT_ACTION);
+                    sendBroadcast(sendThemeChanged);
+                    recreate();
+                }
             }
         }
 

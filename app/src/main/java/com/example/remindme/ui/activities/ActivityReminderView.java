@@ -175,8 +175,8 @@ public class ActivityReminderView extends BaseActivity {
 //            } else {
 //            }
 
-            tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeViewModel().getUpdatedTime()));
-            tv_reminder_date.setText(StringHelper.toWeekdayDate(activeReminder.getTimeViewModel().getUpdatedTime()));
+            tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeModel().getTime()));
+            tv_reminder_date.setText(StringHelper.toWeekdayDate(this, activeReminder.getTimeModel().getTime()));
 
 
             if (!StringHelper.isNullOrEmpty(activeReminder.getName())) {
@@ -188,7 +188,7 @@ public class ActivityReminderView extends BaseActivity {
                 next_snooze.setVisibility(View.VISIBLE);
                 next_snooze.setText(StringHelper.toTime(
                         activeReminder.getSnoozeModel().getSnoozedTime(
-                                activeReminder.getTimeViewModel().getUpdatedTime())));
+                                activeReminder.getTimeModel().getTime())));
 
                 btn_reminder_dismiss.setVisibility(View.VISIBLE);
             } else {
@@ -271,7 +271,7 @@ public class ActivityReminderView extends BaseActivity {
             if (activeReminder.getLastMissedTime() != null) {
                 lv_last_missed_alert.setVisibility(View.VISIBLE);
                 final TextView tv_reminder_last_missed_time = findViewById(R.id.tv_reminder_last_missed_time);
-                tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(activeReminder.getLastMissedTime()));
+                tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(this, activeReminder.getLastMissedTime()));
 
                 if (activeReminder.getMissedTimes().size() > 1) {
                     btn_expand_missed_alerts.setVisibility(View.VISIBLE);
@@ -301,7 +301,7 @@ public class ActivityReminderView extends BaseActivity {
                             }
                         }
 
-                        builder.append(StringHelper.toTimeWeekdayDate(activeReminder.getMissedTimes().get(s)));
+                        builder.append(StringHelper.toTimeWeekdayDate(this, activeReminder.getMissedTimes().get(s)));
                         builder.append("\n");
                     }
 

@@ -57,11 +57,11 @@ public class ReminderModel extends ViewModel {
 
     private static Class<? extends BroadcastReceiver> externalBroadcastReceiverClass;
 
-    private final LogModel logger = new LogModel();
-
-    public String getLogs() {
-        return logger.toString();
-    }
+//    private final LogModel logger = new LogModel();
+//
+//    public String getLogs() {
+//        return logger.toString();
+//    }
 
     // region variables & accessors
 
@@ -89,14 +89,14 @@ public class ReminderModel extends ViewModel {
         return isEnabled;
     }
 
-    private TimeViewModel timeViewModel;
+    private TimeModel timeModel;
 
-    public TimeViewModel getTimeViewModel() {
-        return timeViewModel;
+    public TimeModel getTimeModel() {
+        return timeModel;
     }
 
-    public void setTimeViewModel(final TimeViewModel model) {
-        timeViewModel = model;
+    public void setTimeModel(final TimeModel model) {
+        timeModel = model;
     }
 
     private String name;
@@ -153,14 +153,10 @@ public class ReminderModel extends ViewModel {
         snoozeModel = value;
     }
 
-    private RingingModel ringingModel;
+    private final RingingModel ringingModel;
 
     public RingingModel getRingingModel() {
         return ringingModel;
-    }
-
-    public void setRingingModel(RingingModel value) {
-        ringingModel = value;
     }
 
     public Date getLastMissedTime() {
@@ -175,14 +171,6 @@ public class ReminderModel extends ViewModel {
 
     public List<Date> getMissedTimes() {
         return missedTimes;
-    }
-
-    public Date getAlertTime() {
-        if (snoozeModel.isSnoozed()) {
-            return snoozeModel.getSnoozedTime(getTimeViewModel().getUpdatedTime());
-        } else {
-            return getTimeViewModel().getUpdatedTime();
-        }
     }
 
     // endregion
@@ -208,7 +196,7 @@ public class ReminderModel extends ViewModel {
             final Reminder r = reminders.get(i);
             final ReminderModel reminderModel = ReminderModel.getInstance(r);
             if (reminderModel.isEnabled()) {
-                if (calendar.getTime().after(reminderModel.getTimeViewModel().getUpdatedTime()) && isDeviceRebooted) {
+                if (calendar.getTime().after(reminderModel.getTimeModel().getTime()) && isDeviceRebooted) {
                     // App getting killed after a while. But Broadcast receiver recreating app which leads to rescheduling.
                     // And for the logic below it getting dismissed before it could be snoozed from alerts.
                     // isDeviceRebooted will prevent this from happening.
@@ -216,12 +204,12 @@ public class ReminderModel extends ViewModel {
                 } else if (!reminderModel.isPendingIntentExists(context)) {
                     isNewAlertFound = true;
 
-                    if (calendar.getTime().after(reminderModel.getTimeViewModel().getUpdatedTime())) {
+                    if (calendar.getTime().after(reminderModel.getTimeModel().getTime())) {
                         NotificationHelper.notify(context, reminderModel.getIntId(), "Dismissing reminder!", reminderModel.getSignatureName(), reminderModel.note);
                         reminderModel.dismissByApp(context, calendar);
                     } else {
                         NotificationHelper.notify(context, reminderModel.getIntId(), "New reminder!", reminderModel.getSignatureName(), reminderModel.note);
-                        reminderModel.setPendingIntent(context, reminderModel.getTimeViewModel().getUpdatedTime(), false);
+                        reminderModel.setPendingIntent(context, reminderModel.getTimeModel().getTime(), false);
                     }
                 }
             }
@@ -300,15 +288,15 @@ public class ReminderModel extends ViewModel {
 
             Calendar currentTime = Calendar.getInstance();
 
-            if (currentTime.getTime().after(timeViewModel.getUpdatedTime())) { //If the time is in past then find if next schedule exists
+            if (currentTime.getTime().after(getTimeModel().getTime())) { //If the time is in past then find if next schedule exists
                 // SET NEW TRIGGER TIME
-                Date nextTime = getRepeatModel().getNextScheduleTime(currentTime.getTime());
+                final Date nextTime = getRepeatModel().getNextScheduleTime(currentTime.getTime());
                 if (nextTime == null) { // EOF situation. No next schedule possible
                     isEnabled = false;
                     ToastHelper.showLong(context, "Reminder time expired. Please edit with a future time to enable.");
                     return false;
                 } else { // Found next trigger point.
-                    timeViewModel.setUpdatedTime(nextTime);
+                    timeModel.setScheduledTime(nextTime);
                     //calculatedTime = nextTime; // Set next trigger time.
                     isEnabled = true;
                     return true;
@@ -355,7 +343,7 @@ public class ReminderModel extends ViewModel {
             return;
         }
 
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
 
         long different = atTime.getTime() - calendar.getTime().getTime();
 
@@ -445,32 +433,24 @@ public class ReminderModel extends ViewModel {
     }
 
     public void dismissByUser(final Context context) {
-
-        Date nextTime = getRepeatModel().getNextScheduleTime(Calendar.getInstance().getTime());
-
+        final Date nextTime = getRepeatModel().getNextScheduleTime(Calendar.getInstance().getTime());
         if (nextTime == null) { // EOF situation
             saveAsExpired();
         } else {
             // User's dismiss will erase missed alert history:
             missedTimes.clear();
-            timeViewModel.setUpdatedTime(nextTime);
+            getTimeModel().setScheduledTime(nextTime);
             //calculatedTime = nextTime; // Set next trigger time.
             saveAndSetAlert(context, false); // Save changes. // Set alarm for next trigger time.
         }
     }
 
     public void dismissByApp(final Context context, final Calendar currentTime) {
-
-        Date nextTime = getRepeatModel().getNextScheduleTime(currentTime.getTime());
-
+        final Date nextTime = getRepeatModel().getNextScheduleTime(currentTime.getTime());
         if (nextTime == null) { // EOF situation
-
             saveAsExpired();
-
         } else {
-
             saveAsMissed(context, nextTime);
-
         }
     }
 
@@ -486,7 +466,7 @@ public class ReminderModel extends ViewModel {
 
         if (canSnooze()) {
             //nextSnoozeOffTime = getNextSnoozeTime(originalTime);
-            snoozeModel.addCount();
+            getSnoozeModel().addCount();
             saveAndSetAlert(context, false);
         } else {
             if (isByUser) {
@@ -504,40 +484,37 @@ public class ReminderModel extends ViewModel {
 
     public boolean canSnooze() {
 
-        if (!snoozeModel.isEnable()) return false;
+        if (!getSnoozeModel().isEnable()) return false;
 
         final Calendar currentTime = Calendar.getInstance();
 
-        if (currentTime.getTime().after(timeViewModel.getUpdatedTime())) { // Set snooze only if current time is past alarm time or previous snooze time.
+        if (currentTime.getTime().after(getTimeModel().getAlertTime(true))) { // Set snooze only if current time is past alarm time or previous snooze time.
 
-            final Date nextTime = snoozeModel.getNextSnoozeTime(timeViewModel.getUpdatedTime());
+            final Date nextSnoozeTime = getSnoozeModel().getNextSnoozeTime(getTimeModel().getTime());
 
-            if (nextTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
-
+            if (nextSnoozeTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
                 return false;
-
-            } else if (currentTime.getTime().after(nextTime)) { // Snooze makes no sense if its in past!
-
-                return false;
-
-            } else {
-
-                final Date nextScheduledTime = getRepeatModel().getNextScheduleTime(currentTime.getTime());
-
-                // proceed with snoozing
-                if (nextScheduledTime == null) { // Reached EOF
-                    return false;
-                } else
-                    return nextScheduledTime.compareTo(nextTime) > 0; // This means next schedule will arrive sooner or same time than next snooze off time. In this case snoozing further isn't possible
-
             }
+
+            if (currentTime.getTime().after(nextSnoozeTime)) { // Snooze makes no sense if its in past!
+                return false;
+            }
+
+            final Date nextScheduledTime = getRepeatModel().getNextScheduleTime(getTimeModel().getTime());
+
+            // proceed with snoozing
+            if (nextScheduledTime == null) { // Reached EOF
+                return false;
+            }
+
+            return nextScheduledTime.compareTo(nextSnoozeTime) > 0; // This means next schedule will arrive sooner or same time than next snooze off time. In this case snoozing further isn't possible
+
         } else { // Else dismiss the alarm
 
             return false;
         }
 
     }
-
 
     public static List<Reminder> getActiveReminders(final String name) {
         final Realm realm = Realm.getDefaultInstance();
@@ -578,11 +555,10 @@ public class ReminderModel extends ViewModel {
             // For both cases snooze no longer required as the time on which it was calculated is already modified.
             // Both isOriginalTimeChanged() and isHasDifferentTimeCalculated() only works if original time changed after it was loaded from database e.g editing
             // and are not valid for new reminders e.g not saved yet.
-            if (timeViewModel.isTimeChanged() || timeViewModel.isTimeUpdated()) {
+            if (getTimeModel().isTimeChanged() || getTimeModel().isHasScheduledTime()) {
                 //resetSnooze();
-                snoozeModel.clearCount();
+                getSnoozeModel().clearCount();
             }
-
         }
 
         isExpired = false;
@@ -590,7 +566,7 @@ public class ReminderModel extends ViewModel {
         save();
 
         if (isEnabled && !AppSettingsHelper.getInstance().isDisableAllReminders()) {
-            setPendingIntent(context, getAlertTime(), isShowElapseTimeToast);
+            setPendingIntent(context, getTimeModel().getAlertTime(true), isShowElapseTimeToast);
         }
 
     }
@@ -616,18 +592,13 @@ public class ReminderModel extends ViewModel {
 
     private void saveAsExpired() {
         isExpired = true;
-        //nextSnoozeOffTime = null;
-        snoozeModel.clearCount();
+        getSnoozeModel().clearCount();
         save();
     }
 
     private void saveAsMissed(final Context context, Date nextTime) {
-
-        missedTimes.add(timeViewModel.getUpdatedTime());
-
-        getTimeViewModel().setUpdatedTime(nextTime);
-        //calculatedTime = nextTime; // Set next trigger time.
-
+        missedTimes.add(getTimeModel().getTime());
+        getTimeModel().setScheduledTime(nextTime);
         saveAndSetAlert(context, false); // Save changes. // Set alarm for next trigger time.
     }
 
@@ -642,20 +613,19 @@ public class ReminderModel extends ViewModel {
         entity.name = getName();
         entity.note = getNote();
         entity.isNotification = isNotification();
-        entity.time = getTimeViewModel().getUpdatedTime();
-        //entity.customTimes = new RealmList<>();
-        entity.customTimes.addAll(getTimeViewModel().getCustomTimes());
-        //entity.hourlyTimes = new RealmList<>();
-        entity.hourlyTimes.addAll(getTimeViewModel().getHourlyTimes());
-        entity.timeListMode = TimeViewModel.getIntegerOfTimeListMode(getTimeViewModel().getTimeListMode());
 
+        entity.time = getTimeModel().getAlertTime(false);
 
-        //entity.missedTimes = new RealmList<>();
+        entity.customTimes.addAll(getTimeModel().getCustomTimes());
+        entity.hourlyTimes.addAll(getTimeModel().getHourlyTimes());
+        entity.timeListMode = TimeModel.getIntegerOfTimeListMode(getTimeModel().getTimeListMode());
+
         entity.missedTimes.addAll(missedTimes);
 
         if (getRingingModel().getRingToneUri() != null) {
             entity.selectedAlarmTone = getRingingModel().getRingToneUri().toString();
         }
+
         entity.isToneEnabled = getRingingModel().isToneEnabled();
         entity.alarmVolume = getRingingModel().getAlarmVolumePercentage();
         entity.isIncreaseVolumeGradually = getRingingModel().isIncreaseVolumeGradually();
@@ -664,9 +634,6 @@ public class ReminderModel extends ViewModel {
         entity.isVibrate = getRingingModel().isVibrationEnabled();
         entity.vibratePattern = RingingModel.convertToVibratePattern(getRingingModel().getVibratePattern());
 
-        //entity.repeatDays.clear();
-        //entity.repeatWeeks.clear();
-        //entity.repeatMonths.clear();
         entity.isRepeatEnabled = getRepeatModel().isEnabled();
         entity.repeatOption = RepeatModel.getIntegerOfRepeatOption(getRepeatModel().getRepeatOption());
         entity.repeatDays.addAll(getRepeatModel().getCustomDays());
@@ -703,10 +670,10 @@ public class ReminderModel extends ViewModel {
         setNote(from.note);
         setNotification(from.isNotification);
 
-        getTimeViewModel().setTime(from.time);
-        getTimeViewModel().addTimes(from.customTimes);
-        getTimeViewModel().setHourlyTimes(from.hourlyTimes);
-        getTimeViewModel().setTimeListMode(TimeViewModel.getTimeListModeFromInteger(from.timeListMode));
+        getTimeModel().setTime(from.time, true);
+        getTimeModel().addTimes(from.customTimes);
+        getTimeModel().setHourlyTimes(from.hourlyTimes);
+        getTimeModel().setTimeListMode(TimeModel.getTimeListModeFromInteger(from.timeListMode));
 
         missedTimes.addAll(from.missedTimes);
 
@@ -772,7 +739,7 @@ public class ReminderModel extends ViewModel {
 
     public ReminderModel() {
         id = null;
-        timeViewModel = new TimeViewModel(this);
+        timeModel = new TimeModel(this);
         repeatModel = new RepeatModel(this);
         snoozeModel = new SnoozeModel(this);
         ringingModel = new RingingModel();

@@ -94,8 +94,8 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                     reminderModel.saveAndSetAlert(context, true);
                     buttonView.setChecked(isChecked);
                     if (isChecked) {
-                        time.setText(StringHelper.toTime(reminderModel.getTimeViewModel().getTime()));
-                        date.setText(StringHelper.toWeekdayDate(reminderModel.getTimeViewModel().getTime()));
+                        time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
+                        date.setText(StringHelper.toWeekdayDate(context, reminderModel.getTimeModel().getTime()));
                     }
                 }
             }
@@ -106,8 +106,8 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
         final ReminderModel reminderModel = ReminderModel.getInstance(reminder);
 
-        time.setText(StringHelper.toTime(reminderModel.getTimeViewModel().getTime()));
-        date.setText(StringHelper.toWeekdayDate(reminderModel.getTimeViewModel().getTime()));
+        time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
+        date.setText(StringHelper.toWeekdayDate(holder.linearLayout.getContext(), reminderModel.getTimeModel().getTime()));
         tv_reminder_repeat_short_summary.setText(reminderModel.getRepeatSettingShortString());
 
         if (StringHelper.isNullOrEmpty(reminderModel.getName())) {
@@ -121,14 +121,14 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             lv_reminder_view_snooze.setVisibility(View.VISIBLE);
             next_snooze.setText(StringHelper.toTime(
                     reminderModel.getSnoozeModel().getSnoozedTime(
-                            reminderModel.getTimeViewModel().getUpdatedTime()
+                            reminderModel.getTimeModel().getTime()
                     )));
         } else {
             lv_reminder_view_snooze.setVisibility(View.GONE);
 
             if (reminderModel.getLastMissedTime() != null) {
                 lv_reminder_last_missed_time.setVisibility(View.VISIBLE);
-                tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(reminderModel.getLastMissedTime()));
+                tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(holder.linearLayout.getContext(), reminderModel.getLastMissedTime()));
             } else {
                 lv_reminder_last_missed_time.setVisibility(View.GONE);
             }

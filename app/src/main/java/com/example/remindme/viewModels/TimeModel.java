@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class TimeViewModel extends ViewModel {
+public class TimeModel extends ViewModel {
 
     public enum TimeListModes {
         NONE,
@@ -15,11 +15,11 @@ public class TimeViewModel extends ViewModel {
         CUSTOM,
     }
 
-    public TimeViewModel copy() {
-        TimeViewModel instance = new TimeViewModel(reminderModel);
+    public TimeModel copy() {
+        TimeModel instance = new TimeModel(parent);
 
         instance.time = time;
-        instance.updatedTime = updatedTime;
+        instance.scheduledTime = scheduledTime;
         instance.timeListMode = timeListMode;
         instance.addTimes(getCustomTimes());
         instance.setHourlyTimes(getHourlyTimes());
@@ -27,70 +27,111 @@ public class TimeViewModel extends ViewModel {
         return instance;
     }
 
-    private final ReminderModel reminderModel;
+    private final ReminderModel parent;
 
-    public TimeViewModel(final ReminderModel parent) {
-        reminderModel = parent;
+    public ReminderModel getParent() {
+        return parent;
+    }
+
+    public TimeModel(final ReminderModel reminderModel) {
+        parent = reminderModel;
+
+        final Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        time = calendar.getTime();
+
     }
 
     private Date time;
 
-    public void setTime(final Date value) {
-        if (value == null) return;
-
-        final Date userTime = purifyTime(value); // Remove second and milli(s) from time.
-
-        if (time != null && !time.equals(userTime)) { // If new time is different than what was set before.
-
-            isTimeChanged = true;
-        }
-
-        time = userTime;
-
-        if (Calendar.getInstance().getTime().compareTo(time) >= 0) { // If the user value "effectively" is in past then calculate next schedule.
-            updatedTime = reminderModel.getRepeatModel().getNextScheduleTime(time); // Given_time will be used if its not null.
-        } else {
-            // If not then no need of calculated time. The given time will be used.
-            updatedTime = null;
-        }
-
-        purifyTimes(getUpdatedTime(), getCustomTimes());
-    }
-
     public Date getTime() {
-
-        if (time == null) {
-            final Calendar _c = Calendar.getInstance();
-            _c.add(Calendar.HOUR_OF_DAY, 1);
-            return purifyTime(_c);
-        }
-
         return time;
     }
 
-    private Date updatedTime;
+    public Date getAlertTime(final boolean isIncludeSnooze) {
 
-    public Date getUpdatedTime() {
+        if (isIncludeSnooze && getParent().getSnoozeModel().isEnable() && getParent().getSnoozeModel().isSnoozed()) { // If snoozed then next alert time will use it
+            return getParent().getSnoozeModel().getSnoozedTime(getTime());
+        }
 
-        return updatedTime == null ? getTime() : updatedTime;
+        if (isHasScheduledTime()) {
+            return getScheduledTime();
+        }
+
+        return getTime();
+
     }
 
-    public void setUpdatedTime(final Date value) {
+    public void setTime(final Date value, final boolean isReadFromDb) {
+
         if (value == null) return;
 
-        updatedTime = value;
+        if (isReadFromDb) {
 
-        purifyTimes(getUpdatedTime(), getCustomTimes());
+            time = value;
+
+            isTimeChanged = false;
+
+        } else {
+
+            final Calendar calendar = Calendar.getInstance();
+            calendar.setTime(value);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+
+            if (time != null && !time.equals(calendar.getTime())) { // If new time is different than what was set before.
+                isTimeChanged = true;
+            }
+
+            time = calendar.getTime();
+
+            final Calendar currentTimeCalendar = Calendar.getInstance();
+
+            // if alert time is already in past then find next schedule
+            if (currentTimeCalendar.getTime().compareTo(time) >= 0) {
+                final Date nextSchedule = getParent().getRepeatModel().getNextScheduleTime(time);
+                setScheduledTime(nextSchedule);
+            }
+        }
+    }
+
+    public void setTime(final Date value) {
+
+        setTime(value, false);
+    }
+
+    private boolean hasScheduledTime;
+
+    public boolean isHasScheduledTime() {
+        return hasScheduledTime;
+    }
+
+    private Date scheduledTime;
+
+    public Date getScheduledTime() {
+
+        return scheduledTime;
+    }
+
+    public void setScheduledTime(final Date value) {
+
+        if (value == null) return;
+
+        if (value.compareTo(time) == 0) { // Ignore if intended next schedule is same as time.
+            return;
+        }
+
+        scheduledTime = value;
+
+        hasScheduledTime = true;
     }
 
     private boolean isTimeChanged;
 
     public boolean isTimeChanged() {
         return isTimeChanged;
-    }
-
-    public boolean isTimeUpdated() {
-        return updatedTime != null && time != null && !updatedTime.equals(time);
     }
 
     private TimeListModes timeListMode = TimeListModes.NONE;
@@ -115,13 +156,13 @@ public class TimeViewModel extends ViewModel {
 
     public void addTime(final Date time) {
         customTimes.add(time);
-        purifyTimes(getUpdatedTime(), getCustomTimes());
+        //purifyTimes(getScheduledTime(), getCustomTimes());
     }
 
     public void addTimes(final List<Date> values) {
         customTimes.clear();
         customTimes.addAll(values);
-        purifyTimes(getUpdatedTime(), getCustomTimes());
+        //purifyTimes(getScheduledTime(), getCustomTimes());
     }
 
     private final ArrayList<Integer> hourlyTimes = new ArrayList<>();
@@ -134,19 +175,6 @@ public class TimeViewModel extends ViewModel {
         hourlyTimes.clear();
         hourlyTimes.addAll(values);
     }
-
-    private static Date purifyTime(final Date date) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return purifyTime(calendar);
-    }
-
-    private static Date purifyTime(final Calendar calendar) {
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        return calendar.getTime();
-    }
-
 
     private static void purifyTimes(final Date primaryTime, List<Date> times) {
         final Calendar calendar = Calendar.getInstance();

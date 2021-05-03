@@ -108,6 +108,17 @@
         <item>Black</item>
         <item>Light</item>
     </array>
+    <array name="date_formats">
+        <item>dd MMM yy</item>
+        <item>dd MMM yyyy</item>
+        <item>dd MMMM yy</item>
+        <item>dd MMMM yyyy</item>
+        <item>MMM dd yy</item>
+        <item>MMM dd yyyy</item>
+        <item>MMMM dd yy</item>
+        <item>MMMM dd yyyy</item>
+
+    </array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="missed_on">"Missed on : "</string>

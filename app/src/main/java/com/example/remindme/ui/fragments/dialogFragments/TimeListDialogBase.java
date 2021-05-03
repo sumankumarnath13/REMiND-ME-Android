@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.remindme.viewModels.TimeViewModel;
+import com.example.remindme.viewModels.TimeModel;
 
 public class TimeListDialogBase extends DialogFragment {
 
@@ -17,9 +17,9 @@ public class TimeListDialogBase extends DialogFragment {
     }
 
 
-    private TimeViewModel model;
+    private TimeModel model;
 
-    protected TimeViewModel getModel() {
+    protected TimeModel getModel() {
         return model;
     }
 
@@ -53,8 +53,8 @@ public class TimeListDialogBase extends DialogFragment {
 
 
     public interface ITimeListListener {
-        TimeViewModel timeListDialogGetTimeViewModel();
+        TimeModel timeListDialogGetTimeViewModel();
 
-        void timeListDialogSetTimeViewModel(TimeViewModel model);
+        void timeListDialogSetTimeViewModel(TimeModel model);
     }
 }

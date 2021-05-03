@@ -1,30 +1,34 @@
 package com.example.remindme.helpers;
 
+import android.content.Context;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class StringHelper {
 
-    public static final SimpleDateFormat TIME_FORMAT_12 = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
-    public static final SimpleDateFormat TIME_FORMAT_24 = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+    public static final String TIME_FORMAT_12 = "hh:mm a";
+    public static final String TIME_FORMAT_24 = "HH:mm";
 
-    public static final SimpleDateFormat ALERT_TIME_FORMAT_12 = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
-    public static final SimpleDateFormat ALERT_TIME_FORMAT_24 = new SimpleDateFormat("H:mm", Locale.ENGLISH);
+    public static final String ALERT_TIME_FORMAT_12 = "h:mm a";
+    public static final String ALERT_TIME_FORMAT_24 = "H:mm";
 
-    public static final SimpleDateFormat TIME_WEEKDAY_DATE_FORMAT_12 = new SimpleDateFormat("hh:mm a - EEE dd MMM yy", Locale.ENGLISH);
-    public static final SimpleDateFormat TIME_WEEKDAY_DATE_FORMAT_24 = new SimpleDateFormat("HH:mm - EEE dd MMM yy", Locale.ENGLISH);
+    public static final String TIME_WEEKDAY_DATE_FORMAT_12 = "hh:mm a - EEE %s";
+    public static final String TIME_WEEKDAY_DATE_FORMAT_24 = "HH:mm - EEE %s";
 
-    public static final SimpleDateFormat WEEKDAY_FORMAT = new SimpleDateFormat("EEE", Locale.ENGLISH);
-    public static final SimpleDateFormat WEEKDAY_DATE_FORMAT = new SimpleDateFormat("EEE dd MMM yy", Locale.ENGLISH);
+    public static final String WEEKDAY_FORMAT = "EEE";
+    public static final String WEEKDAY_DATE_FORMAT = "EEE %s";
 
 
     public static String toTime(Date value) {
         if (value != null) {
             if (AppSettingsHelper.getInstance().isUse24hourTime()) {
-                return TIME_FORMAT_24.format(value).toUpperCase();
+                final SimpleDateFormat format = new SimpleDateFormat(TIME_FORMAT_24, Locale.ENGLISH);
+                return format.format(value).toUpperCase();
             } else {
-                return TIME_FORMAT_12.format(value).toUpperCase();
+                final SimpleDateFormat format = new SimpleDateFormat(TIME_FORMAT_12, Locale.ENGLISH);
+                return format.format(value).toUpperCase();
             }
         } else {
             return "null";
@@ -34,9 +38,11 @@ public class StringHelper {
     public static String toAlertTime(Date value) {
         if (value != null) {
             if (AppSettingsHelper.getInstance().isUse24hourTime()) {
-                return ALERT_TIME_FORMAT_24.format(value).toUpperCase();
+                final SimpleDateFormat format = new SimpleDateFormat(ALERT_TIME_FORMAT_24, Locale.ENGLISH);
+                return format.format(value).toUpperCase();
             } else {
-                return ALERT_TIME_FORMAT_12.format(value).toUpperCase();
+                final SimpleDateFormat format = new SimpleDateFormat(ALERT_TIME_FORMAT_12, Locale.ENGLISH);
+                return format.format(value).toUpperCase();
             }
         } else {
             return "null";
@@ -45,27 +51,40 @@ public class StringHelper {
 
     public static String toWeekday(Date value) {
         if (value != null) {
-            return WEEKDAY_FORMAT.format(value).toUpperCase();
+            final SimpleDateFormat format = new SimpleDateFormat(WEEKDAY_FORMAT, Locale.ENGLISH);
+            return format.format(value).toUpperCase();
         } else {
             return "null";
         }
     }
 
-    public static String toWeekdayDate(Date value) {
+    public static String toWeekdayDate(Context context, Date value) {
         if (value != null) {
-            return WEEKDAY_DATE_FORMAT.format(value).toUpperCase();
+            final SimpleDateFormat format = new SimpleDateFormat(
+                    String.format(WEEKDAY_DATE_FORMAT,
+                            AppSettingsHelper.getInstance().getDateFormat(context)),
+                    Locale.ENGLISH);
+            return format.format(value).toUpperCase();
         } else {
             return "null";
         }
     }
 
-    public static String toTimeWeekdayDate(Date value) {
+    public static String toTimeWeekdayDate(Context context, Date value) {
         if (value != null) {
 
             if (AppSettingsHelper.getInstance().isUse24hourTime()) {
-                return TIME_WEEKDAY_DATE_FORMAT_24.format(value).toUpperCase();
+                final SimpleDateFormat format = new SimpleDateFormat(
+                        String.format(TIME_WEEKDAY_DATE_FORMAT_24,
+                                AppSettingsHelper.getInstance().getDateFormat(context)),
+                        Locale.ENGLISH);
+                return format.format(value).toUpperCase();
             } else {
-                return TIME_WEEKDAY_DATE_FORMAT_12.format(value).toUpperCase();
+                final SimpleDateFormat format = new SimpleDateFormat(
+                        String.format(TIME_WEEKDAY_DATE_FORMAT_12,
+                                AppSettingsHelper.getInstance().getDateFormat(context)),
+                        Locale.ENGLISH);
+                return format.format(value).toUpperCase();
             }
 
         } else {

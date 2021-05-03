@@ -28,6 +28,7 @@ import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.ui.RefreshableDialogFragment;
 import com.example.remindme.viewModels.RepeatModel;
+import com.example.remindme.viewModels.TimeModel;
 
 import java.util.Calendar;
 
@@ -38,6 +39,7 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
     private RepeatModel model;
     private RadioButton rdo_reminder_repeat_off;
 
+    private RadioButton rdo_reminder_repeat_hourly;
     private RadioButton rdo_reminder_repeat_daily;
     private RadioButton rdo_reminder_repeat_daily_custom;
     private RadioButton rdo_reminder_repeat_weekly;
@@ -91,6 +93,16 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
             @Override
             public void onClick(View v) {
                 model.setEnabled(false);
+                refresh();
+            }
+        });
+
+        rdo_reminder_repeat_hourly = view.findViewById(R.id.rdo_reminder_repeat_hourly);
+        rdo_reminder_repeat_hourly.setOnClickListener(new RadioButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                model.setEnabled(true);
+                model.setRepeatOption(RepeatModel.ReminderRepeatOptions.HOURLY);
                 refresh();
             }
         });
@@ -188,7 +200,7 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
 
                     if (!model.isHasRepeatEnd()) {
                         Calendar c = Calendar.getInstance();
-                        c.setTime(model.getReminderTime());
+                        c.setTime(model.getParent().getTimeModel().getAlertTime(false));
                         c.add(Calendar.MONTH, 6);
                         model.setRepeatEndDate(c.getTime());
                     }
@@ -209,7 +221,8 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
                 if (model.isHasRepeatEnd()) {
                     alertTime.setTime(model.getRepeatEndDate());
                 } else {
-                    alertTime.setTime(model.getReminderTime());
+                    //alertTime.setTime(model.getParent().getTimeModel().getAlertTime(false));
+                    alertTime.set(Calendar.MONTH, 6);
                 }
 
                 final int mYear, mMonth, mDay;
@@ -225,6 +238,8 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
                                 alertTime.set(Calendar.YEAR, year);
                                 alertTime.set(Calendar.MONTH, monthOfYear);
                                 alertTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                alertTime.set(Calendar.SECOND, 0);
+                                alertTime.set(Calendar.MILLISECOND, 0);
                                 model.setRepeatEndDate(alertTime.getTime());
                                 refresh();
                             }
@@ -245,7 +260,8 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
                 if (model.isHasRepeatEnd()) {
                     alertTime.setTime(model.getRepeatEndDate());
                 } else {
-                    alertTime.setTime(model.getReminderTime());
+                    //alertTime.setTime(model.getParent().getTimeModel().getAlertTime(false));
+                    alertTime.set(Calendar.MONTH, 6);
                 }
 
                 final int mHour, mMinute;
@@ -259,6 +275,7 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
                                 alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                 alertTime.set(Calendar.MINUTE, minute);
                                 alertTime.set(Calendar.SECOND, 0); // Setting second to 0 is important.
+                                alertTime.set(Calendar.MILLISECOND, 0);
                                 model.setRepeatEndDate(alertTime.getTime());
                                 refresh();
                             }
@@ -280,6 +297,7 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
         // No radio group wont work for the given layout. So resetting programmatically is required.
 
         rdo_reminder_repeat_off.setChecked(false);
+        rdo_reminder_repeat_hourly.setChecked(false);
         rdo_reminder_repeat_daily.setChecked(false);
         rdo_reminder_repeat_daily_custom.setChecked(false);
         rdo_reminder_repeat_weekly.setChecked(false);
@@ -288,6 +306,13 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
         rdo_reminder_repeat_monthly_custom.setChecked(false);
         rdo_reminder_repeat_yearly.setChecked(false);
         rdo_reminder_repeat_other.setChecked(false);
+
+        if (model.getParent().getTimeModel().getTimeListMode() != TimeModel.TimeListModes.NONE) {
+            rdo_reminder_repeat_off.setEnabled(false); // Time list and hourly repeat cannot coexists.
+        } else {
+            rdo_reminder_repeat_off.setEnabled(true);
+        }
+
 
         if (!model.isEnabled()) {
             //model.setEnabled(true);
@@ -300,6 +325,9 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
 
             switch (model.getRepeatOption()) {
                 default:
+                case HOURLY:
+                    rdo_reminder_repeat_hourly.setChecked(true);
+                    break;
                 case DAILY:
                     rdo_reminder_repeat_daily.setChecked(true);
                     break;
@@ -332,15 +360,13 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
             if (model.isHasRepeatEnd()) {
                 lv_repeat_end_date.setVisibility(View.VISIBLE);
                 lv_repeat_end_time.setVisibility(View.VISIBLE);
-                tv_end_date_value.setText(StringHelper.toWeekdayDate(model.getRepeatEndDate()));
+                tv_end_date_value.setText(StringHelper.toWeekdayDate(this.getContext(), model.getRepeatEndDate()));
                 tv_end_time_value.setText(StringHelper.toTime(model.getRepeatEndDate()));
             } else {
                 lv_repeat_end_date.setVisibility(View.GONE);
                 lv_repeat_end_time.setVisibility(View.GONE);
             }
-
         }
-
     }
 
     public void customRepeatDialogSetRepeatModel(RepeatModel m) {

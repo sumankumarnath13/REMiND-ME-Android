@@ -64,7 +64,7 @@ public class DateCalculatorDialog extends RefreshableDialogFragment {
         final View view = inflater.inflate(R.layout.date_calculator_dialog, null);
 
         btn_reminder_date = view.findViewById(R.id.btn_reminder_date);
-        btn_reminder_date.setText(StringHelper.toWeekdayDate(calendar.getTime()));
+        btn_reminder_date.setText(StringHelper.toWeekdayDate(this.getContext(), calendar.getTime()));
 
         btn_reminder_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,8 +173,8 @@ public class DateCalculatorDialog extends RefreshableDialogFragment {
                 break;
         }
 
-        btn_reminder_date.setText(StringHelper.toWeekdayDate(calendar.getTime()));
-        tv_reminder_date.setText(StringHelper.toWeekdayDate(resultCalendar.getTime()));
+        btn_reminder_date.setText(StringHelper.toWeekdayDate(this.getContext(), calendar.getTime()));
+        tv_reminder_date.setText(StringHelper.toWeekdayDate(this.getContext(), resultCalendar.getTime()));
     }
 
     public interface ITimeCalculatorListener {

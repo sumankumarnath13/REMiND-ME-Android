@@ -1,5 +1,8 @@
 package com.example.remindme.helpers;
 
+import android.content.Context;
+
+import com.example.remindme.R;
 import com.example.remindme.dataModels.AppSetting;
 
 import java.util.Calendar;
@@ -86,9 +89,12 @@ public class AppSettingsHelper {
         update();
     }
 
-    private String dateFormat = "dd MMM yy";
+    private String dateFormat;
 
-    public String getDateFormat() {
+    public String getDateFormat(Context context) {
+        if (dateFormat == null) {
+            return context.getResources().getStringArray(R.array.date_formats)[0];
+        }
         return dateFormat;
     }
 

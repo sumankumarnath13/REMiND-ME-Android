@@ -26,7 +26,7 @@ public class ActivityAboutApp extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                final String subject = String.format("App feedback - %s", StringHelper.toWeekdayDate(Calendar.getInstance().getTime()));
+                final String subject = String.format("App feedback - %s", StringHelper.toWeekdayDate(ActivityAboutApp.this, Calendar.getInstance().getTime()));
                 final String emailText = String.format("Brand : %s\nModel : %s\nSystem : %s\nUpdates : %s\n---\n",
                         DeviceHelper.getInstance().getBrand(),
                         DeviceHelper.getInstance().getModel(),

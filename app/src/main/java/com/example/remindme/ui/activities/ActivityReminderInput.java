@@ -48,7 +48,7 @@ import com.example.remindme.viewModels.ReminderModel;
 import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.RingingModel;
 import com.example.remindme.viewModels.SnoozeModel;
-import com.example.remindme.viewModels.TimeViewModel;
+import com.example.remindme.viewModels.TimeModel;
 import com.example.remindme.viewModels.factories.ReminderViewModelFactory;
 import com.example.remindme.viewModels.factories.RepeatViewModelFactory;
 import com.example.remindme.viewModels.factories.SnoozeViewModelFactory;
@@ -207,7 +207,7 @@ public class ActivityReminderInput
             public void onClick(View view) {
                 final Calendar alertTime = Calendar.getInstance();
                 //final Calendar currentTime = Calendar.getInstance();
-                alertTime.setTime(reminderModel.getTimeViewModel().getUpdatedTime());
+                alertTime.setTime(reminderModel.getTimeModel().getTime());
                 final int mYear, mMonth, mDay;
                 mYear = alertTime.get(Calendar.YEAR);
                 mMonth = alertTime.get(Calendar.MONTH);
@@ -221,7 +221,9 @@ public class ActivityReminderInput
                                 alertTime.set(Calendar.YEAR, year);
                                 alertTime.set(Calendar.MONTH, monthOfYear);
                                 alertTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                reminderModel.getTimeViewModel().setTime(alertTime.getTime());
+                                alertTime.set(Calendar.SECOND, 0);
+                                alertTime.set(Calendar.MILLISECOND, 0);
+                                reminderModel.getTimeModel().setTime(alertTime.getTime());
                                 refresh();
                             }
                         }, mYear, mMonth, mDay);
@@ -241,7 +243,7 @@ public class ActivityReminderInput
             public void onClick(View view) {
                 final Calendar alertTime = Calendar.getInstance();
                 //final Calendar currentTime = Calendar.getInstance();
-                alertTime.setTime(reminderModel.getTimeViewModel().getUpdatedTime());
+                alertTime.setTime(reminderModel.getTimeModel().getTime());
                 final int mHour, mMinute;
                 mHour = alertTime.get(Calendar.HOUR_OF_DAY);
                 mMinute = alertTime.get(Calendar.MINUTE);
@@ -253,7 +255,9 @@ public class ActivityReminderInput
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                 alertTime.set(Calendar.MINUTE, minute);
-                                reminderModel.getTimeViewModel().setTime(alertTime.getTime());
+                                alertTime.set(Calendar.SECOND, 0);
+                                alertTime.set(Calendar.MILLISECOND, 0);
+                                reminderModel.getTimeModel().setTime(alertTime.getTime());
                                 refresh();
                             }
                         }, mHour, mMinute, AppSettingsHelper.getInstance().isUse24hourTime());
@@ -275,6 +279,12 @@ public class ActivityReminderInput
         btnTimeHours.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
+                    ToastHelper.showShort(ActivityReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
+                    return;
+                }
+
                 HourlyTimeListDialog hourlyTimeListDialog = new HourlyTimeListDialog();
                 hourlyTimeListDialog.show(getSupportFragmentManager(), HourlyTimeListDialog.TAG);
             }
@@ -284,6 +294,12 @@ public class ActivityReminderInput
         btnTimeList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
+                    ToastHelper.showShort(ActivityReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
+                    return;
+                }
+
                 CustomTimeListDialog timeListInputHourlyDialog = new CustomTimeListDialog();
                 timeListInputHourlyDialog.show(getSupportFragmentManager(), CustomTimeListDialog.TAG);
             }
@@ -329,9 +345,7 @@ public class ActivityReminderInput
         mnu_reminder_tone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (reminderModel.getRingingModel().getRingToneUri() == null) {
-//                    reminderModel.getRingingModel().setRingToneUri(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
-//                }
+
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select alarm tone:");
@@ -366,11 +380,11 @@ public class ActivityReminderInput
         btn_reminder_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (reminderModel.getAlertTime().after(Calendar.getInstance().getTime())) {
+                if (reminderModel.getTimeModel().getAlertTime(true).after(Calendar.getInstance().getTime())) {
                     // the method "reminderModel.isHasDifferentTimeCalculated()" will ensure that time has not been changed than what was given.
                     // And changes were made on other areas.
                     // Otherwise it needs to clear snooze details.
-                    reminderModel.saveAndSetAlert(getApplicationContext(), true);
+                    reminderModel.saveAndSetAlert(ActivityReminderInput.this, true);
                     finish();
                 } else {
                     ToastHelper.showShort(ActivityReminderInput.this, "Cannot save reminder in past");
@@ -497,22 +511,22 @@ public class ActivityReminderInput
     protected void onUIRefresh() {
         super.onUIRefresh();
 
-        btn_reminder_time.setText(StringHelper.toTime(reminderModel.getTimeViewModel().getTime()));
-        btn_reminder_date.setText(StringHelper.toWeekdayDate(reminderModel.getTimeViewModel().getTime()));
+        btn_reminder_time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
+        btn_reminder_date.setText(StringHelper.toWeekdayDate(this, reminderModel.getTimeModel().getTime()));
 
         btnTimeHours.setBackgroundColor(getResources().getColor(R.color.bg_warning));
         btnTimeList.setBackgroundColor(getResources().getColor(R.color.bg_warning));
 
-        if (reminderModel.getTimeViewModel().getTimeListMode() == TimeViewModel.TimeListModes.HOURLY) {
+        if (reminderModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.HOURLY) {
             btnTimeHours.setBackgroundColor(getResources().getColor(R.color.bg_danger));
-        } else if (reminderModel.getTimeViewModel().getTimeListMode() == TimeViewModel.TimeListModes.CUSTOM) {
+        } else if (reminderModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.CUSTOM) {
             btnTimeList.setBackgroundColor(getResources().getColor(R.color.bg_danger));
         }
 
-        if (reminderModel.getTimeViewModel().isTimeUpdated()) {
+        if (reminderModel.getTimeModel().isHasScheduledTime()) {
             lvc_diff_next_reminder_trigger.setVisibility(View.VISIBLE);
-            tv_reminder_trigger_time.setText(StringHelper.toTime(reminderModel.getTimeViewModel().getUpdatedTime()));
-            tv_reminder_trigger_date.setText(StringHelper.toWeekdayDate(reminderModel.getTimeViewModel().getUpdatedTime()));
+            tv_reminder_trigger_time.setText(StringHelper.toTime(reminderModel.getTimeModel().getScheduledTime()));
+            tv_reminder_trigger_date.setText(StringHelper.toWeekdayDate(this, reminderModel.getTimeModel().getScheduledTime()));
         } else {
             lvc_diff_next_reminder_trigger.setVisibility(View.GONE);
         }
@@ -605,14 +619,14 @@ public class ActivityReminderInput
 
 
     @Override
-    public TimeViewModel timeListDialogGetTimeViewModel() {
+    public TimeModel timeListDialogGetTimeViewModel() {
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return new ViewModelProvider(this, new TimeViewModelFactory(reminderModel)).get(TimeViewModel.class);
+        return new ViewModelProvider(this, new TimeViewModelFactory(reminderModel)).get(TimeModel.class);
     }
 
     @Override
-    public void timeListDialogSetTimeViewModel(TimeViewModel model) {
-        reminderModel.setTimeViewModel(model);
+    public void timeListDialogSetTimeViewModel(TimeModel model) {
+        reminderModel.setTimeModel(model);
         refresh();
     }
 
@@ -622,7 +636,7 @@ public class ActivityReminderInput
 
         final Calendar currentTime = Calendar.getInstance();
         if (currentTime.getTime().compareTo(newTime) < 0) {
-            reminderModel.getTimeViewModel().setTime(newTime);
+            reminderModel.getTimeModel().setTime(newTime);
             refresh();
         } else {
             ToastHelper.showShort(this, "Cannot save reminder in past");
@@ -632,7 +646,7 @@ public class ActivityReminderInput
     @Override
     public Date dateCalculatorDialogGetTime() {
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.getTimeViewModel().getUpdatedTime();
+        return reminderModel.getTimeModel().getAlertTime(false);
     }
 
 
@@ -671,7 +685,7 @@ public class ActivityReminderInput
 
         if (model.isValid()) {
             reminderModel.setRepeatModel(model);
-            reminderModel.getTimeViewModel().setUpdatedTime(model.getValidatedNextScheduledTime());
+            reminderModel.getTimeModel().setScheduledTime(model.getValidatedNextScheduledTime());
             refresh();
         } else {
             ToastHelper.showShort(this, "Please check repeat settings");

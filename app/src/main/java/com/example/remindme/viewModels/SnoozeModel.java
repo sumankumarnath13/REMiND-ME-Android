@@ -22,7 +22,7 @@ public class SnoozeModel extends ViewModel {
     }
 
     public SnoozeModel copy() {
-        SnoozeModel instance = new SnoozeModel(reminderModel);
+        SnoozeModel instance = new SnoozeModel(parent);
 
         instance.setEnable(isEnable());
         instance.setInterval(getInterval());
@@ -32,10 +32,14 @@ public class SnoozeModel extends ViewModel {
         return instance;
     }
 
-    private final ReminderModel reminderModel;
+    private final ReminderModel parent;
 
-    public SnoozeModel(ReminderModel parent) {
-        reminderModel = parent;
+    public ReminderModel getParent() {
+        return parent;
+    }
+
+    public SnoozeModel(final ReminderModel reminderModel) {
+        this.parent = reminderModel;
     }
 
     private SnoozeIntervals interval = SnoozeIntervals.M5;
@@ -84,7 +88,7 @@ public class SnoozeModel extends ViewModel {
 
     public void setEnable(boolean value) {
         if (value) {
-            reminderModel.setNotification(false);
+            parent.setNotification(false);
         }
 
         isEnable = value;

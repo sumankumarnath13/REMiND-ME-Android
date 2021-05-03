@@ -72,7 +72,7 @@ public class ActivityReminderRinging extends BaseActivity {
                 return;
             }
 
-            txt_reminder_alarm_time.setText(StringHelper.toAlertTime(reminderModel.getTimeViewModel().getUpdatedTime()));
+            txt_reminder_alarm_time.setText(StringHelper.toAlertTime(reminderModel.getTimeModel().getTime()));
             ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.getName());
             ((TextView) findViewById(R.id.tv_reminder_note)).setText(reminderModel.getNote());
 

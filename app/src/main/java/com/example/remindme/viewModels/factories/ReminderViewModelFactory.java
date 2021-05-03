@@ -22,7 +22,5 @@ public class ReminderViewModelFactory implements ViewModelProvider.Factory {
             m = new ReminderModel();
         }
         return (T) m;
-
-        //return (T) ReminderModel.getInstance(intent);
     }
 }

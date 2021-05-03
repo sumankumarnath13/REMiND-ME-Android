@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
-import com.example.remindme.viewModels.TimeViewModel;
+import com.example.remindme.viewModels.TimeModel;
 
 import java.util.Calendar;
 
@@ -60,7 +60,7 @@ public class HourlyTimeListDialog extends TimeListDialogBase {
         final CheckBox chk_daily_23 = view.findViewById(R.id.chk_daily_23);
 
         final Calendar c = Calendar.getInstance();
-        c.setTime(getModel().getUpdatedTime());
+        c.setTime(getModel().getTime());
         final int min = c.get(Calendar.MINUTE);
 
         if (AppSettingsHelper.getInstance().isUse24hourTime()) {
@@ -236,7 +236,7 @@ public class HourlyTimeListDialog extends TimeListDialogBase {
                         if (chk_daily_22.isChecked()) getModel().getHourlyTimes().add(22);
                         if (chk_daily_23.isChecked()) getModel().getHourlyTimes().add(23);
 
-                        getModel().setTimeListMode(TimeViewModel.TimeListModes.HOURLY);
+                        getModel().setTimeListMode(TimeModel.TimeListModes.HOURLY);
                         getListener().timeListDialogSetTimeViewModel(getModel());
 
                     }

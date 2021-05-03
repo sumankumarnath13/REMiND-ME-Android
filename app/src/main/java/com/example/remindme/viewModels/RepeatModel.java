@@ -1,5 +1,7 @@
 package com.example.remindme.viewModels;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
@@ -13,6 +15,7 @@ import java.util.List;
 
 public class RepeatModel extends ViewModel {
 
+    private static final int HOURLY = 0;
     private static final int DAILY = 1;
     private static final int DAILY_CUSTOM = 11;
     private static final int WEEKLY = 2;
@@ -23,6 +26,7 @@ public class RepeatModel extends ViewModel {
     private static final int OTHER = 9;
 
     public enum ReminderRepeatOptions {
+        HOURLY,
         DAILY,
         DAILY_CUSTOM,
         WEEKLY,
@@ -43,7 +47,7 @@ public class RepeatModel extends ViewModel {
 
     public RepeatModel copy() {
 
-        RepeatModel instance = new RepeatModel(reminderModel);
+        RepeatModel instance = new RepeatModel(parent);
 
         instance.setEnabled(isEnabled());
         instance.setCustomDays(getCustomDays());
@@ -59,10 +63,14 @@ public class RepeatModel extends ViewModel {
 
     }
 
-    private final ReminderModel reminderModel;
+    private final ReminderModel parent;
 
-    public RepeatModel(ReminderModel parent) {
-        reminderModel = parent;
+    public ReminderModel getParent() {
+        return parent;
+    }
+
+    public RepeatModel(final ReminderModel reminderModel) {
+        this.parent = reminderModel;
     }
 
     private boolean isEnabled;
@@ -88,9 +96,6 @@ public class RepeatModel extends ViewModel {
         repeatOption = value;
     }
 
-    public Date getReminderTime() {
-        return reminderModel.getTimeViewModel().getUpdatedTime();
-    }
 
 //    private final List<Integer> customHours = new ArrayList<>();
 //
@@ -178,12 +183,12 @@ public class RepeatModel extends ViewModel {
             return false;
         }
 
-        if (repeatEndDate == null || getReminderTime() == null) { // Cannot enable without repeat end date
+        if (repeatEndDate == null) { // Cannot enable without repeat end date
             return false;
         }
 
         // End date cannot be same or less than reminder date
-        return repeatEndDate.compareTo(getReminderTime()) > 0;
+        return repeatEndDate.compareTo(getParent().getTimeModel().getAlertTime(false)) > 0;
     }
 
     private Date repeatEndDate;
@@ -211,7 +216,7 @@ public class RepeatModel extends ViewModel {
         boolean isValid = false;
 
         switch (repeatOption) {
-            default: //NONE: DAILY: WEEKLY: MONTHLY: YEARLY:
+            default: //NONE: HOURLY, DAILY: WEEKLY: MONTHLY: YEARLY:
                 customDays.clear();
                 customWeeks.clear();
                 customMonths.clear();
@@ -262,7 +267,7 @@ public class RepeatModel extends ViewModel {
 
         if (isValid) {
             // Check if any schedule is possible with current settings
-            validatedNextScheduledTime = getNextScheduleTime(reminderModel.getTimeViewModel().getTime());
+            validatedNextScheduledTime = getNextScheduleTime(parent.getTimeModel().getTime());
             // nextTime is null means no schedule is possible
             isValid = validatedNextScheduledTime != null;
         }
@@ -306,16 +311,6 @@ public class RepeatModel extends ViewModel {
         newScheduleCl.set(Calendar.SECOND, 0);
         newScheduleCl.set(Calendar.MILLISECOND, 0);
 
-//        if (repeatOption == ReminderRepeatOptions.HOURLY) {
-//            // Set alarm values to current time onwards
-//            newScheduleCl.set(Calendar.MINUTE, MINUTE);
-//            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
-//            if (newScheduleCl.compareTo(baseCl) < 0) {
-//                newScheduleCl.add(Calendar.HOUR_OF_DAY, 1);
-//            }
-//            nextScheduleTime = newScheduleCl.getTime();
-//        } else
-
 
 //        else if (repeatOption == ReminderRepeatOptions.HOURLY_CUSTOM) {
 //            // Set alarm values to current time onwards
@@ -345,7 +340,15 @@ public class RepeatModel extends ViewModel {
 //            }
 //        }
 //
-        if (repeatOption == ReminderRepeatOptions.DAILY) {
+        if (repeatOption == ReminderRepeatOptions.HOURLY) {
+            // Set alarm values to current time onwards
+            newScheduleCl.set(Calendar.MINUTE, MINUTE);
+            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
+            if (newScheduleCl.compareTo(baseCl) < 0) {
+                newScheduleCl.add(Calendar.HOUR_OF_DAY, 1);
+            }
+            nextScheduleTime = newScheduleCl.getTime();
+        } else if (repeatOption == ReminderRepeatOptions.DAILY) {
             // Set alarm values to current time onwards
             newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
             newScheduleCl.set(Calendar.MINUTE, MINUTE);
@@ -502,8 +505,7 @@ public class RepeatModel extends ViewModel {
 
 
     @NonNull
-    @Override
-    public String toString() {
+    public String toString(Context context) {
 
         if (!isEnabled()) {
             return "OFF";
@@ -512,9 +514,9 @@ public class RepeatModel extends ViewModel {
         StringBuilder builder = new StringBuilder();
         switch (repeatOption) {
             default:
-//            case HOURLY:
-//                builder.append("Hourly");
-//                break;
+            case HOURLY:
+                builder.append("Hourly");
+                break;
 //            case HOURLY_CUSTOM:
 //                builder.append("On ");
 //                for (int i = 0; i < customHours.size(); i++) {
@@ -676,7 +678,7 @@ public class RepeatModel extends ViewModel {
         }
 
         if (isHasRepeatEnd()) {
-            builder.append(" till ").append(StringHelper.toTimeWeekdayDate(getRepeatEndDate()));
+            builder.append(" till ").append(StringHelper.toTimeWeekdayDate(context, getRepeatEndDate()));
         }
 
         return StringHelper.trimEnd(builder.toString(), ",");
@@ -690,9 +692,9 @@ public class RepeatModel extends ViewModel {
         StringBuilder builder = new StringBuilder();
         switch (repeatOption) {
             default:
-//            case HOURLY:
-//                builder.append("Hourly");
-//                break;
+            case HOURLY:
+                builder.append("Hourly");
+                break;
 //            case HOURLY_CUSTOM:
 //                builder.append("Hourly custom");
 //                break;
@@ -742,6 +744,8 @@ public class RepeatModel extends ViewModel {
     public static int getIntegerOfRepeatOption(ReminderRepeatOptions option) {
         switch (option) {
             default:
+            case HOURLY:
+                return HOURLY;
             case DAILY:
                 return DAILY;
             case DAILY_CUSTOM:
@@ -764,6 +768,9 @@ public class RepeatModel extends ViewModel {
     public static ReminderRepeatOptions getRepeatOptionFromInteger(int value) {
         switch (value) {
             default:
+            case HOURLY:
+                return ReminderRepeatOptions.HOURLY;
+
             case DAILY:
                 return ReminderRepeatOptions.DAILY;
 
