@@ -2,10 +2,11 @@
     <string name="app_name">Remind Me</string>
     <string name="app_label">Remind\u0020Me</string>
 
-    <string name="dialog_positive">OK</string>
+    <string name="dialog_positive">Set</string>
     <string name="dialog_negative">Cancel</string>
     <string name="btn_edit">Edit&#160;&#160;&#160;</string>
     <string name="btn_delete">Delete&#160;</string> <!-- ending space is required to manage button right padding issues -->
+
 
     <string name="tab_text_1">Active</string>
     <string name="tab_text_3">Finished</string>

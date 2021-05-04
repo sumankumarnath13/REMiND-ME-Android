@@ -6,7 +6,7 @@ import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.ui.RefreshableActivity;
 
-public class BaseActivity extends RefreshableActivity {
+public class ActivityBase extends RefreshableActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

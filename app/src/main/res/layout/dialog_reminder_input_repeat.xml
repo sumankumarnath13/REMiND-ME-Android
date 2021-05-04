@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
                 android:id="@+id/rdo_reminder_repeat_off"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_success"
+                app:buttonTint="@color/bg_success"
                 android:textColor="?attr/soothingText"
                 android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_off" />
@@ -34,19 +35,10 @@
                     android:id="@+id/rdo_reminder_repeat_hourly"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/bg_warning"
+                    app:buttonTint="@color/bg_warning"
                     android:textColor="?attr/soothingText"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_hourly" />
-
-                <!--                            <RadioButton-->
-                <!--                                android:id="@+id/rdo_reminder_repeat_hourly_custom"-->
-                <!--                                android:layout_width="0dp"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:textColor="?attr/soothingText"-->
-                <!--                                android:layout_weight="1"-->
-                <!--                                android:textSize="@dimen/font_size_medium"-->
-                <!--                                android:text="@string/repeat_hourly_custom" />-->
 
             </LinearLayout>
 
@@ -61,7 +53,7 @@
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
                     android:textColor="?attr/soothingText"
-                    android:buttonTint="@color/bg_info"
+                    app:buttonTint="@color/bg_info"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_daily" />
 
@@ -110,7 +102,7 @@
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
                     android:textColor="?attr/soothingText"
-                    android:buttonTint="@color/bg_warning"
+                    app:buttonTint="@color/bg_warning"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_monthly" />
 
@@ -129,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/soothingText"
-                android:buttonTint="@color/bg_danger"
+                app:buttonTint="@color/bg_danger"
                 android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_yearly" />
 

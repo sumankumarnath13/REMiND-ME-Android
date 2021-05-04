@@ -13,12 +13,12 @@ import com.example.remindme.helpers.StringHelper;
 
 import java.util.Calendar;
 
-public class ActivityAboutApp extends BaseActivity {
+public class AboutApp extends ActivityBase {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about_app);
+        setContentView(R.layout.about_app);
         ActivityHelper.setTitle(this, getResources().getString(R.string.activityAboutAppTitle));
 
         final Button btn_send_feedback = findViewById(R.id.btn_send_feedback);
@@ -26,7 +26,7 @@ public class ActivityAboutApp extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                final String subject = String.format("App feedback - %s", StringHelper.toWeekdayDate(ActivityAboutApp.this, Calendar.getInstance().getTime()));
+                final String subject = String.format("App feedback - %s", StringHelper.toWeekdayDate(AboutApp.this, Calendar.getInstance().getTime()));
                 final String emailText = String.format("Brand : %s\nModel : %s\nSystem : %s\nUpdates : %s\n---\n",
                         DeviceHelper.getInstance().getBrand(),
                         DeviceHelper.getInstance().getModel(),
@@ -66,7 +66,7 @@ public class ActivityAboutApp extends BaseActivity {
         btn_share_app.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityHelper.shareText(ActivityAboutApp.this, "DING DONG Friends");
+                ActivityHelper.shareText(AboutApp.this, "DING DONG Friends");
             }
         });
     }

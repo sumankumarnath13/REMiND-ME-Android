@@ -17,8 +17,8 @@
         android:roundIcon="@drawable/ic_brand"
         android:supportsRtl="true"
         android:theme="@style/LightTheme">
-        <activity android:name=".ui.activities.ActivityAboutApp" />
-        <activity android:name=".ui.activities.ActivitySettings" />
+        <activity android:name=".ui.activities.AboutApp" />
+        <activity android:name=".ui.activities.Settings" />
 
         <receiver
             android:name=".controllers.AlertBroadcastReceiver"
@@ -41,13 +41,13 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.activities.ActivityReminderRinging"
+            android:name=".ui.activities.ReminderRinging"
             android:excludeFromRecents="true"
             android:noHistory="true" />
-        <activity android:name=".ui.activities.ActivityReminderView" />
-        <activity android:name=".ui.activities.ActivityReminderInput" />
+        <activity android:name=".ui.activities.ReminderView" />
+        <activity android:name=".ui.activities.ReminderInput" />
         <activity
-            android:name=".ui.activities.ActivityMain"
+            android:name=".ui.activities.Main"
             android:label="@string/app_name"
             android:theme="@style/BlackTheme.NoActionBar">
             <intent-filter>

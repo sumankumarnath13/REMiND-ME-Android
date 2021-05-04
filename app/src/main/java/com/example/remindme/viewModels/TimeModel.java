@@ -150,19 +150,20 @@ public class TimeModel extends ViewModel {
         return customTimes;
     }
 
-    public void clearTimes() {
-        customTimes.clear();
+    public void addCustomTime(final Date time) {
+        final int foundIndex = customTimes.indexOf(time);
+        if (foundIndex < 0) {
+            customTimes.add(time);
+        }
     }
 
-    public void addTime(final Date time) {
-        customTimes.add(time);
-        //purifyTimes(getScheduledTime(), getCustomTimes());
+    public void removeCustomTime(final Date time) {
+        customTimes.remove(time);
     }
 
     public void addTimes(final List<Date> values) {
         customTimes.clear();
         customTimes.addAll(values);
-        //purifyTimes(getScheduledTime(), getCustomTimes());
     }
 
     private final ArrayList<Integer> hourlyTimes = new ArrayList<>();

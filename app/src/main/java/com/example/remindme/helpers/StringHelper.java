@@ -60,8 +60,6 @@ public class StringHelper {
 
     public static String toWeekdayDate(Context context, Date value) {
         if (value != null) {
-            String x = AppSettingsHelper.getInstance().getDateFormat(context);
-
             final SimpleDateFormat format = new SimpleDateFormat(
                     String.format(Locale.getDefault(), WEEKDAY_DATE_FORMAT,
                             AppSettingsHelper.getInstance().getDateFormat(context)),

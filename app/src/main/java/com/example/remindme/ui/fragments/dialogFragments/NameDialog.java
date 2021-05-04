@@ -68,7 +68,7 @@ public class NameDialog extends DialogFragment {
         if (activity == null) return builder.create();
         LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.dialog_reminder_input_name, null);
+        final View view = inflater.inflate(R.layout.input_name_dialog, null);
 
         txt_reminder_name = view.findViewById(R.id.txt_reminder_name);
         tv_reminder_name_limit_msg = view.findViewById(R.id.tv_reminder_name_limit_msg);

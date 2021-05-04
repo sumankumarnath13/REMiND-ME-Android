@@ -28,7 +28,7 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
         if (activity == null) return builder.create();
         LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat_weekly_custom, null);
+        final View view = inflater.inflate(R.layout.reminder_repeat_weekly_custom_dialog, null);
 
         final CheckBox chk_weekly_1 = view.findViewById(R.id.chk_weekly_1);
         final CheckBox chk_weekly_2 = view.findViewById(R.id.chk_weekly_2);

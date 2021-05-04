@@ -56,9 +56,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class ActivityReminderInput
+public class ReminderInput
         extends
-        BaseActivity
+        ActivityBase
         implements
         AdapterView.OnItemSelectedListener,
         TimeListDialogBase.ITimeListListener,
@@ -140,7 +140,7 @@ public class ActivityReminderInput
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reminder_input);
+        setContentView(R.layout.reminder_input);
 
         setUserInteracted(false);
 
@@ -210,7 +210,7 @@ public class ActivityReminderInput
                 mYear = alertTime.get(Calendar.YEAR);
                 mMonth = alertTime.get(Calendar.MONTH);
                 mDay = alertTime.get(Calendar.DAY_OF_MONTH);
-                final DatePickerDialog datePickerDialog = new DatePickerDialog(ActivityReminderInput.this,
+                final DatePickerDialog datePickerDialog = new DatePickerDialog(ReminderInput.this,
                         AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT ? R.style.DatePickerDialogLight : R.style.DatePickerDialogBlack,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
@@ -246,7 +246,7 @@ public class ActivityReminderInput
                 mHour = alertTime.get(Calendar.HOUR_OF_DAY);
                 mMinute = alertTime.get(Calendar.MINUTE);
 
-                final TimePickerDialog timePickerDialog = new TimePickerDialog(ActivityReminderInput.this,
+                final TimePickerDialog timePickerDialog = new TimePickerDialog(ReminderInput.this,
                         AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT ? R.style.TimePickerDialogLight : R.style.TimePickerDialogBlack,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
@@ -279,7 +279,7 @@ public class ActivityReminderInput
             public void onClick(View v) {
 
                 if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
-                    ToastHelper.showShort(ActivityReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
+                    ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
                     return;
                 }
 
@@ -294,7 +294,7 @@ public class ActivityReminderInput
             public void onClick(View v) {
 
                 if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
-                    ToastHelper.showShort(ActivityReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
+                    ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
                     return;
                 }
 
@@ -382,10 +382,10 @@ public class ActivityReminderInput
                     // the method "reminderModel.isHasDifferentTimeCalculated()" will ensure that time has not been changed than what was given.
                     // And changes were made on other areas.
                     // Otherwise it needs to clear snooze details.
-                    reminderModel.saveAndSetAlert(ActivityReminderInput.this, true);
+                    reminderModel.saveAndSetAlert(ReminderInput.this, true);
                     finish();
                 } else {
-                    ToastHelper.showShort(ActivityReminderInput.this, "Cannot save reminder in past");
+                    ToastHelper.showShort(ReminderInput.this, "Cannot save reminder in past");
                 }
             }
         });
@@ -464,7 +464,7 @@ public class ActivityReminderInput
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 reminderModel.getRingingModel().setAlarmVolumePercentage(seekBar.getProgress());
-                ToastHelper.showShort(ActivityReminderInput.this, "Alarm will ring at " + reminderModel.getRingingModel().getAlarmVolumePercentage() + "% volume");
+                ToastHelper.showShort(ReminderInput.this, "Alarm will ring at " + reminderModel.getRingingModel().getAlarmVolumePercentage() + "% volume");
             }
         });
 
@@ -729,7 +729,7 @@ public class ActivityReminderInput
 
     private RingingController getRingingController() {
         if (ringingController == null || !isPlayingTone) { // "!isPlayingTone" this condition will ensure new instance of RingingController with updated ReminderModel tone URI.
-            ringingController = new RingingController(ActivityReminderInput.this, reminderModel.getRingingModel().getRingToneUri());
+            ringingController = new RingingController(ReminderInput.this, reminderModel.getRingingModel().getRingToneUri());
         }
         return ringingController;
     }

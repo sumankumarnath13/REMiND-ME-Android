@@ -4,11 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 
 import com.example.remindme.viewModels.RepeatModel;
 
-public class CustomRepeatDialogBase extends DialogFragment {
+public class CustomRepeatDialogBase extends RefreshableDialogFragmentBase {
 
     private RepeatModel model;
 
@@ -50,6 +49,10 @@ public class CustomRepeatDialogBase extends DialogFragment {
         }
     }
 
+    @Override
+    protected void onUIRefresh() {
+
+    }
 
     public interface ICustomRepeatDialogListener {
         void customRepeatDialogSetRepeatModel(RepeatModel model);

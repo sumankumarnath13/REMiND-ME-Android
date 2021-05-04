@@ -9,6 +9,10 @@
         </item> <!-- Changes background color or app bar and title -->
         <item name="colorPrimary">@color/theme_background
         </item> <!-- Changes background color or app bar and title -->
+        <item name="colorButtonNormal">@color/border_color
+        </item> <!-- Disabled button text color -->
+        <item name="colorControlNormal">@color/border_color
+        </item> <!-- Disabled control tint color -->
         <item name="android:textCursorDrawable">@null
         </item> <!-- Make edit text cursor color neutral to accent color -->
 
@@ -22,6 +26,7 @@
 
 
         <item name="android:buttonStyle">@style/buttonStyle</item>
+        <item name="android:radioButtonStyle">@style/radioButtonStyle</item>
         <item name="imageButtonStyle">@style/imageButtonStyle</item>
         <item name="android:alertDialogTheme">@style/BlackDialog</item>
     </style>
@@ -35,6 +40,10 @@
         </item> <!-- Changes background color or app bar and title -->
         <item name="colorPrimary">@color/theme_background_light
         </item> <!-- Changes background color or app bar and title -->
+        <item name="colorButtonNormal">@color/border_color_light
+        </item> <!-- Disabled button text color -->
+        <item name="colorControlNormal">@color/border_color_light
+        </item> <!-- Disabled control tint color -->
         <item name="android:textCursorDrawable">@null
         </item> <!-- Make edit text cursor color neutral to accent color -->
 
@@ -46,18 +55,17 @@
         <item name="soothingText">@color/text_soothing_light</item>
 
         <item name="android:buttonStyle">@style/buttonStyle</item>
+        <item name="android:radioButtonStyle">@style/radioButtonStyle</item>
         <item name="imageButtonStyle">@style/imageButtonStyle</item>
         <item name="android:alertDialogTheme">@style/LightDialog</item>
     </style>
 
-    <!--    <style name="blackButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">-->
-    <!--        <item name="android:minHeight">@dimen/dp_8-->
-    <!--        </item> &lt;!&ndash; Android apply default mid height of buttons making it much larger that needed. This is to override that issue &ndash;&gt;-->
-    <!--        <item name="android:background">@drawable/bg_rounded</item>-->
-    <!--        <item name="android:padding">@dimen/dp_8</item>-->
-    <!--        <item name="colorAccent">?attr/accentColor</item>-->
-    <!--        <item name="android:textSize">@dimen/font_size_small</item>-->
-    <!--    </style>-->
+    <style name="radioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:textSize">@dimen/font_size_medium</item>
+        <item name="android:textColor">?attr/soothingText</item>
+        <item name="colorControlNormal">?attr/borderColor</item>
+        <item name="colorButtonNormal">?attr/borderColor</item>
+    </style>
 
     <style name="buttonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:minHeight">@dimen/dp_8
@@ -65,18 +73,9 @@
         <item name="android:background">@drawable/bg_rounded</item>
         <item name="android:padding">@dimen/dp_8</item>
         <item name="colorAccent">?attr/accentColor</item>
+        <!--        <item name="colorButtonNormal">?attr/borderColor</item>-->
         <item name="android:textSize">@dimen/font_size_small</item>
     </style>
-
-    <!--    <style name="smallBlackButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">-->
-    <!--        <item name="android:minHeight">0dp-->
-    <!--        </item> &lt;!&ndash; Android apply default mid height of buttons making it much larger that needed. This is to override that issue &ndash;&gt;-->
-    <!--        <item name="android:minWidth">0dp</item>-->
-    <!--        <item name="android:background">@drawable/bg_rounded</item>-->
-    <!--        <item name="android:padding">@dimen/dp_5</item>-->
-    <!--        <item name="colorAccent">?attr/accentColor</item>-->
-    <!--        <item name="android:textSize">@dimen/font_size_extra_small</item>-->
-    <!--    </style>-->
 
     <style name="smallButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:minHeight">0dp
@@ -85,6 +84,7 @@
         <item name="android:background">@drawable/bg_rounded</item>
         <item name="android:padding">@dimen/dp_5</item>
         <item name="colorAccent">@color/accent_color_light</item>
+        <!--        <item name="colorButtonNormal">?attr/borderColor</item>-->
         <item name="android:textSize">@dimen/font_size_extra_small</item>
     </style>
 

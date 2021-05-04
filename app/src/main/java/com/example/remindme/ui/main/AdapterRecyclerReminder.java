@@ -18,7 +18,7 @@ import com.example.remindme.dataModels.Reminder;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
-import com.example.remindme.ui.activities.ActivityReminderView;
+import com.example.remindme.ui.activities.ReminderView;
 import com.example.remindme.viewModels.ReminderModel;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
     @Override
     public ReminderHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.layout_recycler_reminder_item, parent, false);
+                .inflate(R.layout.reminder_recycler_item, parent, false);
 
         return new ReminderHolder(v);
     }
@@ -68,7 +68,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 final Context context = view.getContext();
                 if (context == null) return;
 
-                final Intent intent = new Intent(context, ActivityReminderView.class);
+                final Intent intent = new Intent(context, ReminderView.class);
                 intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminder.id);
                 context.startActivity(intent);
             }

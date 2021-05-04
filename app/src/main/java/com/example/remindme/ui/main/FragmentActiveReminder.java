@@ -50,7 +50,7 @@ public class FragmentActiveReminder extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_active_reminder, container, false);
+        final View view = inflater.inflate(R.layout.active_reminder_fragment, container, false);
 
         // Inflate the layout for this fragment
         recyclerView = view.findViewById(R.id.recycler_reminders);

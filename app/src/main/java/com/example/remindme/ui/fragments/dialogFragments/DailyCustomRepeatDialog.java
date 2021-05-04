@@ -29,7 +29,7 @@ public class DailyCustomRepeatDialog extends CustomRepeatDialogBase {
         if (activity == null) return builder.create();
         LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat_daily_custom, null);
+        final View view = inflater.inflate(R.layout.reminder_repeat_daily_custom_dialog, null);
 
         final CheckBox chk_daily_sun = view.findViewById(R.id.chk_daily_sun);
         final CheckBox chk_daily_mon = view.findViewById(R.id.chk_daily_mon);

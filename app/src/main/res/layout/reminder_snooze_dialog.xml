@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_16"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_reminder_snooze"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textColor="?attr/soothingText"
+            android:textSize="@dimen/font_size_large"
+            android:layout_marginBottom="@dimen/dp_16"
+            android:text="@string/snooze_heading" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/dimText"
+            android:textSize="@dimen/font_size_large"
+            android:text="@string/snooze_interval_heading"></TextView>
+
+        <RadioGroup
+            android:id="@+id/rg_snooze_interval_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rdo_reminder_snooze_m5"
+                android:layout_width="151dp"
+                android:layout_height="wrap_content"
+                android:text="@string/snooze_interval_m5" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rdo_reminder_snooze_m10"
+                android:layout_width="151dp"
+                android:layout_height="wrap_content"
+                android:text="@string/snooze_interval_m10" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rdo_reminder_snooze_m15"
+                android:layout_width="151dp"
+                android:layout_height="wrap_content"
+                android:text="@string/snooze_interval_m15" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rdo_reminder_snooze_m30"
+                android:layout_width="151dp"
+                android:layout_height="wrap_content"
+                android:text="@string/snooze_interval_m30" />
+        </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/dimText"
+        android:textSize="@dimen/font_size_large"
+        android:text="@string/snooze_repeat_heading">
+    </TextView>
+
+    <RadioGroup android:id="@+id/rg_snooze_repeat_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rdo_reminder_snooze_r3"
+            android:layout_width="151dp"
+            android:layout_height="wrap_content"
+            android:text="@string/snooze_repeat_r3" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rdo_reminder_snooze_r5"
+            android:layout_width="151dp"
+            android:layout_height="wrap_content"
+            android:text="@string/snooze_repeat_r5" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rdo_reminder_snooze_rc"
+            android:layout_width="151dp"
+            android:layout_height="wrap_content"
+            android:text="@string/snooze_repeat_rc" />
+    </RadioGroup>
+
+</LinearLayout>
+
+</ScrollView>
+

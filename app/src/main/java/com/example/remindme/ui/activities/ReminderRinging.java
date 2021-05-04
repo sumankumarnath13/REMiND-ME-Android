@@ -29,7 +29,7 @@ import com.example.remindme.viewModels.ReminderModel;
 
 import java.util.Date;
 
-public class ActivityReminderRinging extends BaseActivity {
+public class ReminderRinging extends ActivityBase {
 
     private boolean isReceiverRegistered = false;
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -67,7 +67,7 @@ public class ActivityReminderRinging extends BaseActivity {
 
             final ReminderModel reminderModel = serviceBinder.getServingReminder();
             if (reminderModel == null) {
-                ToastHelper.showLong(ActivityReminderRinging.this, "Serious flow trouble!");
+                ToastHelper.showLong(ReminderRinging.this, "Serious flow trouble!");
                 finish();
                 return;
             }
@@ -177,7 +177,7 @@ public class ActivityReminderRinging extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reminder_ringing);
+        setContentView(R.layout.reminder_ringing);
         ActivityHelper.setTitle(this, null);
 
         // Important: have to do the following in order to show without unlocking

@@ -22,13 +22,12 @@ import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
-import com.example.remindme.ui.RefreshableDialogFragment;
 import com.example.remindme.viewModels.RepeatModel;
 
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateCalculatorDialog extends RefreshableDialogFragment {
+public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
 
     public static final String TAG = "DateCalculatorDialog";
 

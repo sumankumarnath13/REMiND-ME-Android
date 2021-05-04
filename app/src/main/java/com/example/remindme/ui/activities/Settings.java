@@ -31,7 +31,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class ActivitySettings extends BaseActivity implements AdapterView.OnItemSelectedListener {
+public class Settings extends ActivityBase implements AdapterView.OnItemSelectedListener {
 
     final AppSettingsHelper settingsHelper = AppSettingsHelper.getInstance();
     public static final String THEME_CHANGE_INTENT_ACTION = "THEME_CHANGE_INTENT_ACTION";
@@ -78,7 +78,7 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 OsHelper.setAlarmVolumeInPercentage(audioManager, seekBar.getProgress());
-                ToastHelper.showShort(ActivitySettings.this, "Alarm volume is set to " + seekBar.getProgress() + "%");
+                ToastHelper.showShort(Settings.this, "Alarm volume is set to " + seekBar.getProgress() + "%");
             }
         });
 
@@ -92,14 +92,14 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
                 if (isChecked) {
                     for (int i = 0; i < list.size(); i++) {
                         ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
-                        reminderModel.trySetEnabled(ActivitySettings.this, false);
+                        reminderModel.trySetEnabled(Settings.this, false);
                     }
                 } else {
                     for (int i = 0; i < list.size(); i++) {
                         ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
                         if (reminderModel.isEnabled()) {
-                            if (reminderModel.trySetEnabled(ActivitySettings.this, true)) {
-                                reminderModel.saveAndSetAlert(ActivitySettings.this, false);
+                            if (reminderModel.trySetEnabled(Settings.this, true)) {
+                                reminderModel.saveAndSetAlert(Settings.this, false);
                             }
                         }
                     }

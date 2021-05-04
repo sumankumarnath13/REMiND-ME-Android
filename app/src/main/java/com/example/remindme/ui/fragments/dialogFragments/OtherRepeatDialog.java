@@ -28,7 +28,7 @@ public class OtherRepeatDialog extends CustomRepeatDialogBase {
         if (activity == null) return builder.create();
         LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat_custom, null);
+        final View view = inflater.inflate(R.layout.reminder_repeat_custom_dialog, null);
 
         final NumberPicker value_picker = view.findViewById(R.id.value_picker);
         value_picker.setMinValue(1);

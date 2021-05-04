@@ -29,7 +29,7 @@ public class MonthlyCustomRepeatDialog extends CustomRepeatDialogBase {
         if (activity == null) return builder.create();
         LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat_monthly_custom, null);
+        final View view = inflater.inflate(R.layout.reminder_repeat_monthly_custom_dialog, null);
 
         final CheckBox chk_monthly_jan = view.findViewById(R.id.chk_monthly_jan);
         final CheckBox chk_monthly_feb = view.findViewById(R.id.chk_monthly_feb);

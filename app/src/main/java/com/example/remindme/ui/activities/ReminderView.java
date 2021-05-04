@@ -24,7 +24,7 @@ import com.example.remindme.viewModels.RingingModel;
 import java.util.Locale;
 
 
-public class ActivityReminderView extends BaseActivity {
+public class ReminderView extends ActivityBase {
     private static final String MISSED_ALERT_UI_STATE = "STATE";
     private boolean isMissedAlertsVisible;
     private TextView tv_reminder_time;
@@ -39,7 +39,6 @@ public class ActivityReminderView extends BaseActivity {
     private ReminderModel activeReminder;
     private TextView tv_expired;
     private TextView next_snooze;
-    private ImageButton imgBtnShareNote;
     private static final String STATUS_OFF = "OFF";
 
     @Override
@@ -51,7 +50,7 @@ public class ActivityReminderView extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reminder_view);
+        setContentView(R.layout.reminder_view);
         ActivityHelper.setTitle(this, getResources().getString(R.string.view_reminder_heading));
 
         if (savedInstanceState != null) {
@@ -60,7 +59,7 @@ public class ActivityReminderView extends BaseActivity {
 
         Intent intent = getIntent();
         if (intent == null) {
-            ToastHelper.showLong(ActivityReminderView.this, "Reminder not found");
+            ToastHelper.showLong(ReminderView.this, "Reminder not found");
             finish();
             return;
         }
@@ -68,7 +67,7 @@ public class ActivityReminderView extends BaseActivity {
         activeReminder = ReminderModel.getInstance(getIntent());
 
         if (activeReminder == null) {
-            ToastHelper.showLong(ActivityReminderView.this, "Reminder not found");
+            ToastHelper.showLong(ReminderView.this, "Reminder not found");
             finish();
             return;
         }
@@ -92,7 +91,7 @@ public class ActivityReminderView extends BaseActivity {
         btnChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent input_i = new Intent(getApplicationContext(), ActivityReminderInput.class);
+                Intent input_i = new Intent(getApplicationContext(), ReminderInput.class);
                 ReminderModel.setReminderIdInIntent(input_i, activeReminder.getId());
                 startActivity(input_i);
                 finish();
@@ -115,7 +114,7 @@ public class ActivityReminderView extends BaseActivity {
                     } else {
 
                         if (activeReminder.trySetEnabled(getApplicationContext(), isChecked)) {
-                            activeReminder.saveAndSetAlert(ActivityReminderView.this, true);
+                            activeReminder.saveAndSetAlert(ReminderView.this, true);
                         } else {
                             buttonView.setChecked(false);
                         }
@@ -129,7 +128,7 @@ public class ActivityReminderView extends BaseActivity {
         btn_reminder_dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activeReminder.dismissByUser(ActivityReminderView.this);
+                activeReminder.dismissByUser(ReminderView.this);
                 refresh();
             }
         });
@@ -148,11 +147,11 @@ public class ActivityReminderView extends BaseActivity {
 
         tv_expired = findViewById(R.id.tv_expired);
 
-        imgBtnShareNote = findViewById(R.id.imgBtnShareNote);
+        final ImageButton imgBtnShareNote = findViewById(R.id.imgBtnShareNote);
         imgBtnShareNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityHelper.shareText(ActivityReminderView.this, activeReminder.getNote());
+                ActivityHelper.shareText(ReminderView.this, activeReminder.getNote());
             }
         });
 
@@ -167,17 +166,13 @@ public class ActivityReminderView extends BaseActivity {
 
         if (activeReminder != null) {
 
-            // If snooze do not exists then show original time|calculated time. Because next schedule may set as calculated time until its being fetched from database
-            // Else show just original time
-//            if (!activeReminder.getSnoozeModel().isSnoozed()) {
-//                tv_reminder_time.setText(StringHelper.toTime(activeReminder.getAlertTime()));
-//                tv_reminder_date.setText(StringHelper.toWeekdayDate(activeReminder.getAlertTime()));
-//            } else {
-//            }
-
-            tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeModel().getTime()));
-            tv_reminder_date.setText(StringHelper.toWeekdayDate(this, activeReminder.getTimeModel().getTime()));
-
+            if (activeReminder.getTimeModel().isHasScheduledTime()) {
+                tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeModel().getScheduledTime()));
+                tv_reminder_date.setText(StringHelper.toWeekdayDate(this, activeReminder.getTimeModel().getScheduledTime()));
+            } else {
+                tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeModel().getTime()));
+                tv_reminder_date.setText(StringHelper.toWeekdayDate(this, activeReminder.getTimeModel().getTime()));
+            }
 
             if (!StringHelper.isNullOrEmpty(activeReminder.getName())) {
                 tv_reminder_name.setVisibility(View.VISIBLE);

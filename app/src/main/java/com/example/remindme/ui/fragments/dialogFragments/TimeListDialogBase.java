@@ -4,13 +4,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.viewModels.TimeModel;
 import com.example.remindme.viewModels.factories.TimeViewModelFactory;
 
-public class TimeListDialogBase extends DialogFragment {
+public class TimeListDialogBase extends RefreshableDialogFragmentBase {
 
     private ITimeListListener listener;
 
@@ -53,6 +52,10 @@ public class TimeListDialogBase extends DialogFragment {
         }
     }
 
+    @Override
+    protected void onUIRefresh() {
+
+    }
 
     public interface ITimeListListener {
 

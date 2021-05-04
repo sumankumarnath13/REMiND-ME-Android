@@ -28,14 +28,13 @@ import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
-import com.example.remindme.ui.RefreshableDialogFragment;
 import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.TimeModel;
 import com.example.remindme.viewModels.factories.RepeatViewModelFactory;
 
 import java.util.Calendar;
 
-public class RepeatDialog extends RefreshableDialogFragment implements CustomRepeatDialogBase.ICustomRepeatDialogListener {
+public class RepeatDialog extends RefreshableDialogFragmentBase implements CustomRepeatDialogBase.ICustomRepeatDialogListener {
     public static final String TAG = "RepeatDialog";
 
     private IRepeatInputDialogListener listener;
@@ -131,7 +130,7 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
             @Override
             public void onClick(View v) {
                 final DailyCustomRepeatDialog ting = new DailyCustomRepeatDialog();
-                ting.show(getParentFragmentManager(), "ting");
+                ting.show(getParentFragmentManager(), DailyCustomRepeatDialog.TAG);
             }
         });
 
@@ -152,7 +151,7 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
             @Override
             public void onClick(View v) {
                 final WeeklyCustomRepeatDialog ting = new WeeklyCustomRepeatDialog();
-                ting.show(getParentFragmentManager(), "ting");
+                ting.show(getParentFragmentManager(), WeeklyCustomRepeatDialog.TAG);
             }
         });
 
@@ -173,7 +172,7 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
             @Override
             public void onClick(View v) {
                 final MonthlyCustomRepeatDialog ting = new MonthlyCustomRepeatDialog();
-                ting.show(getParentFragmentManager(), "ting");
+                ting.show(getParentFragmentManager(), MonthlyCustomRepeatDialog.TAG);
             }
         });
 
@@ -194,7 +193,7 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
             @Override
             public void onClick(View v) {
                 final OtherRepeatDialog ting = new OtherRepeatDialog();
-                ting.show(getParentFragmentManager(), "ting");
+                ting.show(getParentFragmentManager(), OtherRepeatDialog.TAG);
             }
         });
 

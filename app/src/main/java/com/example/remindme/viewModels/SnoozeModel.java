@@ -88,7 +88,7 @@ public class SnoozeModel extends ViewModel {
 
     public void setEnable(boolean value) {
         if (value) {
-            parent.setNotification(false);
+            getParent().setNotification(false);
         }
 
         isEnable = value;

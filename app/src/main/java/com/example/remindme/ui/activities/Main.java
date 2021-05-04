@@ -20,13 +20,13 @@ import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.ui.main.AdapterSectionsPager;
 import com.google.android.material.tabs.TabLayout;
 
-public class ActivityMain extends AppCompatActivity {
+public class Main extends AppCompatActivity {
 
     private boolean isThemeChangeReceiverRegistered = false;
     private final BroadcastReceiver themeChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (ActivitySettings.THEME_CHANGE_INTENT_ACTION.equals(intent.getAction())) {
+            if (Settings.THEME_CHANGE_INTENT_ACTION.equals(intent.getAction())) {
                 recreate();
             }
         }
@@ -40,9 +40,9 @@ public class ActivityMain extends AppCompatActivity {
             setTheme(R.style.BlackTheme_NoActionBar);
         }
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main);
 
-        final IntentFilter intentFilter = new IntentFilter(ActivitySettings.THEME_CHANGE_INTENT_ACTION);
+        final IntentFilter intentFilter = new IntentFilter(Settings.THEME_CHANGE_INTENT_ACTION);
         registerReceiver(themeChangeReceiver, intentFilter);
         isThemeChangeReceiverRegistered = true;
 
@@ -77,7 +77,7 @@ public class ActivityMain extends AppCompatActivity {
         btnNewReminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent addNewReminderActivity = new Intent(ActivityMain.this, ActivityReminderInput.class);
+                Intent addNewReminderActivity = new Intent(Main.this, ReminderInput.class);
                 startActivity(addNewReminderActivity);
             }
         });
@@ -99,12 +99,12 @@ public class ActivityMain extends AppCompatActivity {
         switch (item.getItemId()) {
             default:
             case R.id.action_settings:
-                Intent settings_intent = new Intent(this, ActivitySettings.class);
+                Intent settings_intent = new Intent(this, Settings.class);
                 startActivity(settings_intent);
                 break;
 
             case R.id.action_about_app:
-                Intent aboutAppIntent = new Intent(this, ActivityAboutApp.class);
+                Intent aboutAppIntent = new Intent(this, AboutApp.class);
                 startActivity(aboutAppIntent);
                 break;
         }

@@ -20,12 +20,19 @@
             android:gravity="start">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Morning"
-                android:paddingHorizontal="@dimen/dp_8"
-                android:textColor="@color/text_success"
-                android:textSize="@dimen/font_size_large" />
+                android:textColor="?attr/soothingText"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textSize="@dimen/font_size_medium" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginVertical="@dimen/dp_3"
+                android:background="?attr/borderColor" />
 
             <CheckBox
                 android:id="@+id/chk_daily_5"
@@ -122,17 +129,25 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Night"
-                android:paddingHorizontal="@dimen/dp_8"
-                android:textColor="@color/text_danger"
-                android:textSize="@dimen/font_size_large" />
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textColor="?attr/soothingText"
+                android:textSize="@dimen/font_size_medium" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginVertical="@dimen/dp_3"
+                android:background="?attr/borderColor" />
 
             <CheckBox
                 android:id="@+id/chk_daily_17"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size_small"
                 android:buttonTint="@color/bg_danger"
                 android:textColor="?attr/soothingText" />
 
