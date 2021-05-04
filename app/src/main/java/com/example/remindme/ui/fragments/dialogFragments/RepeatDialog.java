@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
+import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.ui.RefreshableDialogFragment;
@@ -91,31 +92,37 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
                 });
 
         rdo_reminder_repeat_off = view.findViewById(R.id.rdo_reminder_repeat_off);
-        rdo_reminder_repeat_off.setOnClickListener(new RadioButton.OnClickListener() {
+        rdo_reminder_repeat_off.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                model.setEnabled(false);
-                refresh();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isRefreshing() && isChecked) {
+                    model.setEnabled(false);
+                    refresh();
+                }
             }
         });
 
         rdo_reminder_repeat_hourly = view.findViewById(R.id.rdo_reminder_repeat_hourly);
-        rdo_reminder_repeat_hourly.setOnClickListener(new RadioButton.OnClickListener() {
+        rdo_reminder_repeat_hourly.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                model.setEnabled(true);
-                model.setRepeatOption(RepeatModel.ReminderRepeatOptions.HOURLY);
-                refresh();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isRefreshing() && isChecked) {
+                    model.setEnabled(true);
+                    model.setRepeatOption(RepeatModel.ReminderRepeatOptions.HOURLY);
+                    refresh();
+                }
             }
         });
 
         rdo_reminder_repeat_daily = view.findViewById(R.id.rdo_reminder_repeat_daily);
-        rdo_reminder_repeat_daily.setOnClickListener(new RadioButton.OnClickListener() {
+        rdo_reminder_repeat_daily.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                model.setEnabled(true);
-                model.setRepeatOption(RepeatModel.ReminderRepeatOptions.DAILY);
-                refresh();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isRefreshing() && isChecked) {
+                    model.setEnabled(true);
+                    model.setRepeatOption(RepeatModel.ReminderRepeatOptions.DAILY);
+                    refresh();
+                }
             }
         });
 
@@ -129,12 +136,14 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
         });
 
         rdo_reminder_repeat_weekly = view.findViewById(R.id.rdo_reminder_repeat_weekly);
-        rdo_reminder_repeat_weekly.setOnClickListener(new RadioButton.OnClickListener() {
+        rdo_reminder_repeat_weekly.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                model.setEnabled(true);
-                model.setRepeatOption(RepeatModel.ReminderRepeatOptions.WEEKLY);
-                refresh();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isRefreshing() && isChecked) {
+                    model.setEnabled(true);
+                    model.setRepeatOption(RepeatModel.ReminderRepeatOptions.WEEKLY);
+                    refresh();
+                }
             }
         });
 
@@ -148,12 +157,14 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
         });
 
         rdo_reminder_repeat_monthly = view.findViewById(R.id.rdo_reminder_repeat_monthly);
-        rdo_reminder_repeat_monthly.setOnClickListener(new RadioButton.OnClickListener() {
+        rdo_reminder_repeat_monthly.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                model.setEnabled(true);
-                model.setRepeatOption(RepeatModel.ReminderRepeatOptions.MONTHLY);
-                refresh();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isRefreshing() && isChecked) {
+                    model.setEnabled(true);
+                    model.setRepeatOption(RepeatModel.ReminderRepeatOptions.MONTHLY);
+                    refresh();
+                }
             }
         });
 
@@ -167,12 +178,14 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
         });
 
         rdo_reminder_repeat_yearly = view.findViewById(R.id.rdo_reminder_repeat_yearly);
-        rdo_reminder_repeat_yearly.setOnClickListener(new RadioButton.OnClickListener() {
+        rdo_reminder_repeat_yearly.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                model.setEnabled(true);
-                model.setRepeatOption(RepeatModel.ReminderRepeatOptions.YEARLY);
-                refresh();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isRefreshing() && isChecked) {
+                    model.setEnabled(true);
+                    model.setRepeatOption(RepeatModel.ReminderRepeatOptions.YEARLY);
+                    refresh();
+                }
             }
         });
 
@@ -309,12 +322,21 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
         rdo_reminder_repeat_yearly.setChecked(false);
         rdo_reminder_repeat_other.setChecked(false);
 
-        if (model.getParent().getTimeModel().getTimeListMode() != TimeModel.TimeListModes.NONE) {
-            rdo_reminder_repeat_off.setEnabled(false); // Time list and hourly repeat cannot coexists.
-        } else {
-            rdo_reminder_repeat_off.setEnabled(true);
-        }
+        // Time list and hourly repeat cannot coexists.
+        rdo_reminder_repeat_hourly.setEnabled(model.getParent().getTimeModel().getTimeListMode() == TimeModel.TimeListModes.NONE);
 
+        if (OsHelper.isLollipopOrLater()) {
+            if (model.getParent().getTimeModel().getTimeListMode() == TimeModel.TimeListModes.NONE) {
+                rdo_reminder_repeat_hourly.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
+            } else {
+
+                if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
+                    rdo_reminder_repeat_hourly.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                } else {
+                    rdo_reminder_repeat_hourly.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                }
+            }
+        }
 
         if (!model.isEnabled()) {
             //model.setEnabled(true);

@@ -236,7 +236,12 @@ public class HourlyTimeListDialog extends TimeListDialogBase {
                         if (chk_daily_22.isChecked()) getModel().getHourlyTimes().add(22);
                         if (chk_daily_23.isChecked()) getModel().getHourlyTimes().add(23);
 
-                        getModel().setTimeListMode(TimeModel.TimeListModes.HOURLY);
+                        if (getModel().getHourlyTimes().size() > 0) { // At least one is selected
+                            getModel().setTimeListMode(TimeModel.TimeListModes.HOURLY);
+                        } else {
+                            getModel().setTimeListMode(TimeModel.TimeListModes.NONE);
+                        }
+
                         getListener().setTimeListDialogModel(getModel());
 
                     }
