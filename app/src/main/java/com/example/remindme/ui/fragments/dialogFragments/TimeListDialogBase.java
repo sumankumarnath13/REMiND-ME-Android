@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.viewModels.TimeModel;
+import com.example.remindme.viewModels.factories.TimeViewModelFactory;
 
 public class TimeListDialogBase extends DialogFragment {
 
@@ -28,7 +30,7 @@ public class TimeListDialogBase extends DialogFragment {
         super.onAttach(context);
         try {
             listener = (ITimeListListener) context;
-            model = listener.timeListDialogGetTimeViewModel();
+            model = new ViewModelProvider(this, new TimeViewModelFactory(listener.getTimeListDialogModel().getParent())).get(TimeModel.class);
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement ITimeListListener");
         }
@@ -39,7 +41,7 @@ public class TimeListDialogBase extends DialogFragment {
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
-        getListener().timeListDialogSetTimeViewModel(getModel());
+        getListener().setTimeListDialogModel(getModel());
         canceled = true;
     }
 
@@ -47,14 +49,16 @@ public class TimeListDialogBase extends DialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (!canceled) {
-            getListener().timeListDialogSetTimeViewModel(getModel());
+            getListener().setTimeListDialogModel(getModel());
         }
     }
 
 
     public interface ITimeListListener {
-        TimeModel timeListDialogGetTimeViewModel();
 
-        void timeListDialogSetTimeViewModel(TimeModel model);
+        TimeModel getTimeListDialogModel();
+
+        void setTimeListDialogModel(TimeModel model);
+
     }
 }

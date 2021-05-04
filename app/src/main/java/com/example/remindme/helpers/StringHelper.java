@@ -24,10 +24,10 @@ public class StringHelper {
     public static String toTime(Date value) {
         if (value != null) {
             if (AppSettingsHelper.getInstance().isUse24hourTime()) {
-                final SimpleDateFormat format = new SimpleDateFormat(TIME_FORMAT_24, Locale.ENGLISH);
+                final SimpleDateFormat format = new SimpleDateFormat(TIME_FORMAT_24, Locale.getDefault());
                 return format.format(value).toUpperCase();
             } else {
-                final SimpleDateFormat format = new SimpleDateFormat(TIME_FORMAT_12, Locale.ENGLISH);
+                final SimpleDateFormat format = new SimpleDateFormat(TIME_FORMAT_12, Locale.getDefault());
                 return format.format(value).toUpperCase();
             }
         } else {
@@ -38,10 +38,10 @@ public class StringHelper {
     public static String toAlertTime(Date value) {
         if (value != null) {
             if (AppSettingsHelper.getInstance().isUse24hourTime()) {
-                final SimpleDateFormat format = new SimpleDateFormat(ALERT_TIME_FORMAT_24, Locale.ENGLISH);
+                final SimpleDateFormat format = new SimpleDateFormat(ALERT_TIME_FORMAT_24, Locale.getDefault());
                 return format.format(value).toUpperCase();
             } else {
-                final SimpleDateFormat format = new SimpleDateFormat(ALERT_TIME_FORMAT_12, Locale.ENGLISH);
+                final SimpleDateFormat format = new SimpleDateFormat(ALERT_TIME_FORMAT_12, Locale.getDefault());
                 return format.format(value).toUpperCase();
             }
         } else {
@@ -51,7 +51,7 @@ public class StringHelper {
 
     public static String toWeekday(Date value) {
         if (value != null) {
-            final SimpleDateFormat format = new SimpleDateFormat(WEEKDAY_FORMAT, Locale.ENGLISH);
+            final SimpleDateFormat format = new SimpleDateFormat(WEEKDAY_FORMAT, Locale.getDefault());
             return format.format(value).toUpperCase();
         } else {
             return "null";
@@ -60,10 +60,12 @@ public class StringHelper {
 
     public static String toWeekdayDate(Context context, Date value) {
         if (value != null) {
+            String x = AppSettingsHelper.getInstance().getDateFormat(context);
+
             final SimpleDateFormat format = new SimpleDateFormat(
-                    String.format(WEEKDAY_DATE_FORMAT,
+                    String.format(Locale.getDefault(), WEEKDAY_DATE_FORMAT,
                             AppSettingsHelper.getInstance().getDateFormat(context)),
-                    Locale.ENGLISH);
+                    Locale.getDefault());
             return format.format(value).toUpperCase();
         } else {
             return "null";
@@ -75,15 +77,15 @@ public class StringHelper {
 
             if (AppSettingsHelper.getInstance().isUse24hourTime()) {
                 final SimpleDateFormat format = new SimpleDateFormat(
-                        String.format(TIME_WEEKDAY_DATE_FORMAT_24,
+                        String.format(Locale.getDefault(), TIME_WEEKDAY_DATE_FORMAT_24,
                                 AppSettingsHelper.getInstance().getDateFormat(context)),
-                        Locale.ENGLISH);
+                        Locale.getDefault());
                 return format.format(value).toUpperCase();
             } else {
                 final SimpleDateFormat format = new SimpleDateFormat(
-                        String.format(TIME_WEEKDAY_DATE_FORMAT_12,
+                        String.format(Locale.getDefault(), TIME_WEEKDAY_DATE_FORMAT_12,
                                 AppSettingsHelper.getInstance().getDateFormat(context)),
-                        Locale.ENGLISH);
+                        Locale.getDefault());
                 return format.format(value).toUpperCase();
             }
 
@@ -121,18 +123,18 @@ public class StringHelper {
     }
 
     public static String get24(int hour, int min) {
-        return String.format(Locale.ENGLISH, "%d:%02d", hour, min);
+        return String.format(Locale.getDefault(), "%d:%02d", hour, min);
     }
 
     public static String get12(int hour, int min) {
         if (hour == 0) {
-            return String.format(Locale.ENGLISH, "12:%02d am", min);
+            return String.format(Locale.getDefault(), "12:%02d am", min);
         } else if (hour == 12) {
-            return String.format(Locale.ENGLISH, "12:%02d pm", min);
+            return String.format(Locale.getDefault(), "12:%02d pm", min);
         } else if (hour < 12) {
-            return String.format(Locale.ENGLISH, "%d:%02d am", hour, min);
+            return String.format(Locale.getDefault(), "%d:%02d am", hour, min);
         } else {
-            return String.format(Locale.ENGLISH, "%d:%02d pm", hour - 11, min);
+            return String.format(Locale.getDefault(), "%d:%02d pm", hour - 11, min);
         }
     }
 

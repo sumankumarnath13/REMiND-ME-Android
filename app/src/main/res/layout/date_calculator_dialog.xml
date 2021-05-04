@@ -76,9 +76,8 @@
                 android:id="@+id/tv_reminder_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dp_8"
                 android:textColor="?attr/soothingText"
-                android:textSize="@dimen/font_size_small" />
+                android:textSize="@dimen/font_size_medium" />
 
         </LinearLayout>
 

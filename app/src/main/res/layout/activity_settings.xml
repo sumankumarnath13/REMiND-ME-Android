@@ -136,7 +136,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:background="@drawable/border_vertical"
-            android:paddingVertical="@dimen/dp_05"
+            android:paddingVertical="@dimen/dp_8"
             android:orientation="horizontal">
 
             <Button
@@ -154,7 +154,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingVertical="@dimen/dp_8">
+            android:paddingVertical="@dimen/dp_16">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -175,7 +175,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingVertical="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_16"
             android:orientation="horizontal">
 
             <TextView
@@ -196,17 +196,32 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:paddingVertical="@dimen/dp_8">
+            android:paddingVertical="@dimen/dp_3">
 
-            <TextView
-                android:layout_width="0dp"
+            <LinearLayout
                 android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Use 24 hour format"
-                android:textColor="?attr/soothingText"
-                android:textSize="@dimen/font_size_medium" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Use 24 hour format"
+                    android:textColor="?attr/soothingText"
+                    android:textSize="@dimen/font_size_medium" />
+
+                <TextView
+                    android:id="@+id/timeFormatTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/dimText"
+                    android:textSize="@dimen/font_size_extra_small"
+                    android:text="12:14 AM" />
+
+            </LinearLayout>
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/sw_use_24_hour"
@@ -219,7 +234,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingVertical="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_8"
             android:orientation="horizontal">
 
             <TextView
@@ -240,17 +255,32 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:paddingVertical="@dimen/dp_8"
+            android:gravity="top"
+            android:paddingVertical="@dimen/dp_3"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
+            <LinearLayout
                 android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Date format"
-                android:textColor="?attr/soothingText"
-                android:textSize="@dimen/font_size_medium" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date format"
+                    android:textColor="?attr/soothingText"
+                    android:textSize="@dimen/font_size_medium" />
+
+                <TextView
+                    android:id="@+id/dateFormatTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/dimText"
+                    android:textSize="@dimen/font_size_extra_small"
+                    android:text="JAN 12, 2012" />
+
+            </LinearLayout>
 
             <Spinner
                 android:id="@+id/dateFormatSpinner"
@@ -262,8 +292,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:paddingVertical="@dimen/dp_8"
+            android:gravity="top"
+            android:paddingBottom="@dimen/dp_16"
             android:orientation="horizontal">
 
             <TextView

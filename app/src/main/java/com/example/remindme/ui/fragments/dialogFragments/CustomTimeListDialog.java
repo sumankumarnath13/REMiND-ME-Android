@@ -46,7 +46,7 @@ public class CustomTimeListDialog extends TimeListDialogBase {
                         getModel().clearTimes();
                         getModel().addTime(c.getTime());
                         getModel().setTimeListMode(TimeModel.TimeListModes.CUSTOM);
-                        getListener().timeListDialogSetTimeViewModel(getModel());
+                        getListener().setTimeListDialogModel(getModel());
 
                     }
                 }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {

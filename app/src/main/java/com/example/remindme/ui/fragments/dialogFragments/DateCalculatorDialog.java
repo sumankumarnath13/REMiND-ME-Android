@@ -46,8 +46,8 @@ public class DateCalculatorDialog extends RefreshableDialogFragment {
         super.onAttach(context);
         try {
             listener = (ITimeCalculatorListener) context;
-            if (listener.dateCalculatorDialogGetTime() == null) return;
-            calendar.setTime(listener.dateCalculatorDialogGetTime());
+            if (listener.getDateCalculatorDialogModel() == null) return;
+            calendar.setTime(listener.getDateCalculatorDialogModel());
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement ITimeCalculatorListener");
         }
@@ -139,7 +139,7 @@ public class DateCalculatorDialog extends RefreshableDialogFragment {
         builder.setView(view).setPositiveButton("Use Result", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.dateCalculatorDialogSetTime(resultCalendar.getTime());
+                listener.setDateCalculatorDialogModel(resultCalendar.getTime());
             }
         }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
@@ -156,6 +156,7 @@ public class DateCalculatorDialog extends RefreshableDialogFragment {
 
     @Override
     protected void onUIRefresh() {
+
         resultCalendar.setTime(calendar.getTime());
 
         switch (RepeatModel.getTimeUnitFromInteger(unit_picker.getValue())) {
@@ -174,13 +175,17 @@ public class DateCalculatorDialog extends RefreshableDialogFragment {
         }
 
         btn_reminder_date.setText(StringHelper.toWeekdayDate(this.getContext(), calendar.getTime()));
+
         tv_reminder_date.setText(StringHelper.toWeekdayDate(this.getContext(), resultCalendar.getTime()));
+
     }
 
     public interface ITimeCalculatorListener {
-        void dateCalculatorDialogSetTime(Date newTime);
 
-        Date dateCalculatorDialogGetTime();
+        void setDateCalculatorDialogModel(Date newTime);
+
+        Date getDateCalculatorDialogModel();
+
     }
 
 }

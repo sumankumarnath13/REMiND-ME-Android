@@ -109,15 +109,10 @@
         <item>Light</item>
     </array>
     <array name="date_formats">
-        <item>dd MMM yy</item>
-        <item>dd MMM yyyy</item>
-        <item>dd MMMM yy</item>
-        <item>dd MMMM yyyy</item>
-        <item>MMM dd yy</item>
-        <item>MMM dd yyyy</item>
-        <item>MMMM dd yy</item>
-        <item>MMMM dd yyyy</item>
-
+        <item>dd LLL yy</item>
+        <item>dd LLL yyyy</item>
+        <item>LLL dd, yy</item>
+        <item>LLL dd, yyyy</item>
     </array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

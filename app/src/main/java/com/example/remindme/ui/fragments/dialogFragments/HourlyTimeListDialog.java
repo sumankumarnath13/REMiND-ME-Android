@@ -237,7 +237,7 @@ public class HourlyTimeListDialog extends TimeListDialogBase {
                         if (chk_daily_23.isChecked()) getModel().getHourlyTimes().add(23);
 
                         getModel().setTimeListMode(TimeModel.TimeListModes.HOURLY);
-                        getListener().timeListDialogSetTimeViewModel(getModel());
+                        getListener().setTimeListDialogModel(getModel());
 
                     }
                 }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {

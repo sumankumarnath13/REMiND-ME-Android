@@ -50,8 +50,6 @@ import com.example.remindme.viewModels.RingingModel;
 import com.example.remindme.viewModels.SnoozeModel;
 import com.example.remindme.viewModels.TimeModel;
 import com.example.remindme.viewModels.factories.ReminderViewModelFactory;
-import com.example.remindme.viewModels.factories.RepeatViewModelFactory;
-import com.example.remindme.viewModels.factories.SnoozeViewModelFactory;
 import com.example.remindme.viewModels.factories.TimeViewModelFactory;
 
 import java.util.Calendar;
@@ -492,13 +490,13 @@ public class ActivityReminderInput
         sv_container = findViewById(R.id.sv_container);
 
         ring_duration_spinner = findViewById(R.id.ring_duration_spinner);
-        ArrayAdapter<CharSequence> ring_duration_adapter = ArrayAdapter.createFromResource(this, R.array.ring_durations, R.layout.support_simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> ring_duration_adapter = ArrayAdapter.createFromResource(this, R.array.ring_durations, R.layout.simple_spinner_dropdown_item);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         ring_duration_spinner.setAdapter(ring_duration_adapter);
         ring_duration_spinner.setOnItemSelectedListener(this);
 
         vibrate_pattern_spinner = findViewById(R.id.vibrate_pattern_spinner);
-        ArrayAdapter<CharSequence> vibrate_pattern_adapter = ArrayAdapter.createFromResource(this, R.array.vibration_patterns, R.layout.support_simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> vibrate_pattern_adapter = ArrayAdapter.createFromResource(this, R.array.vibration_patterns, R.layout.simple_spinner_dropdown_item);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         vibrate_pattern_spinner.setAdapter(vibrate_pattern_adapter);
         vibrate_pattern_spinner.setOnItemSelectedListener(this);
@@ -536,7 +534,7 @@ public class ActivityReminderInput
 
         sw_notification.setChecked(reminderModel.isNotification());
 
-        tv_reminder_repeat_summary.setText(reminderModel.getRepeatSettingString());
+        tv_reminder_repeat_summary.setText(reminderModel.getRepeatModel().toString(this));
         tv_reminder_snooze_summary.setText(reminderModel.getSnoozeModel().toString());
 
         sw_reminder_snooze.setChecked(reminderModel.getSnoozeModel().isEnable());
@@ -619,19 +617,25 @@ public class ActivityReminderInput
 
 
     @Override
-    public TimeModel timeListDialogGetTimeViewModel() {
+    public TimeModel getTimeListDialogModel() {
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
         return new ViewModelProvider(this, new TimeViewModelFactory(reminderModel)).get(TimeModel.class);
     }
 
     @Override
-    public void timeListDialogSetTimeViewModel(TimeModel model) {
+    public void setTimeListDialogModel(TimeModel model) {
         reminderModel.setTimeModel(model);
         refresh();
     }
 
     @Override
-    public void dateCalculatorDialogSetTime(Date newTime) {
+    public Date getDateCalculatorDialogModel() {
+        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
+        return reminderModel.getTimeModel().getAlertTime(false);
+    }
+
+    @Override
+    public void setDateCalculatorDialogModel(Date newTime) {
         if (newTime == null) return;
 
         final Calendar currentTime = Calendar.getInstance();
@@ -644,44 +648,37 @@ public class ActivityReminderInput
     }
 
     @Override
-    public Date dateCalculatorDialogGetTime() {
-        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.getTimeModel().getAlertTime(false);
-    }
-
-
-    @Override
-    public String nameInputDialogGetName() {
+    public String getNameInputDialogModel() {
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
         return reminderModel.getName();
     }
 
     @Override
-    public void nameInputDialogSetName(String name) {
+    public void setNameInputDialogModel(String name) {
         reminderModel.setName(name);
         refresh();
     }
 
     @Override
-    public String dialogReminderNoteInputGetNote() {
+    public String getNoteDialogModel() {
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
         return reminderModel.getNote();
     }
 
     @Override
-    public void dialogReminderNoteInputSetNote(String note) {
+    public void setNoteDialogModel(String note) {
         reminderModel.setNote(note);
         refresh();
     }
 
     @Override
-    public RepeatModel repeatDialogGetRepeatModel() {
+    public RepeatModel getRepeatDialogModel() {
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return new ViewModelProvider(this, new RepeatViewModelFactory(reminderModel)).get(RepeatModel.class);
+        return reminderModel.getRepeatModel();
     }
 
     @Override
-    public void repeatDialogSetRepeatModel(RepeatModel model) {
+    public void setRepeatDialogModel(RepeatModel model) {
 
         if (model.isValid()) {
             reminderModel.setRepeatModel(model);
@@ -694,15 +691,15 @@ public class ActivityReminderInput
     }
 
     @Override
-    public void snoozeDialogSetSnoozeModel(SnoozeModel model) {
-        reminderModel.setSnoozeModel(model);
-        refresh();
+    public SnoozeModel getSnoozeDialogModel() {
+        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
+        return reminderModel.getSnoozeModel();
     }
 
     @Override
-    public SnoozeModel snoozeDialogGetSnoozeModel() {
-        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return new ViewModelProvider(this, new SnoozeViewModelFactory(reminderModel)).get(SnoozeModel.class);
+    public void setSnoozeDialogModel(SnoozeModel model) {
+        reminderModel.setSnoozeModel(model);
+        refresh();
     }
 
     @Override

@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
@@ -29,6 +30,7 @@ import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.ui.RefreshableDialogFragment;
 import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.TimeModel;
+import com.example.remindme.viewModels.factories.RepeatViewModelFactory;
 
 import java.util.Calendar;
 
@@ -59,7 +61,7 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
         super.onAttach(context);
         try {
             listener = (IRepeatInputDialogListener) context;
-            model = listener.repeatDialogGetRepeatModel();
+            model = new ViewModelProvider(this, new RepeatViewModelFactory(listener.getRepeatDialogModel().getParent())).get(RepeatModel.class);
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
         }
@@ -78,7 +80,7 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
                 .setPositiveButton(R.string.dialog_positive, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.repeatDialogSetRepeatModel(model);
+                        listener.setRepeatDialogModel(model);
                     }
                 })
                 .setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
@@ -380,8 +382,10 @@ public class RepeatDialog extends RefreshableDialogFragment implements CustomRep
     }
 
     public interface IRepeatInputDialogListener {
-        void repeatDialogSetRepeatModel(RepeatModel model);
 
-        RepeatModel repeatDialogGetRepeatModel();
+        void setRepeatDialogModel(RepeatModel model);
+
+        RepeatModel getRepeatDialogModel();
+
     }
 }

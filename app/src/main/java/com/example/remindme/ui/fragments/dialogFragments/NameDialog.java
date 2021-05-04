@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.remindme.R;
 
 import java.util.List;
+import java.util.Locale;
 
 public class NameDialog extends DialogFragment {
 
@@ -34,7 +35,7 @@ public class NameDialog extends DialogFragment {
     private static final int SPEECH_REQUEST_CODE = 117;
     private EditText txt_reminder_name;
     private TextView tv_reminder_name_limit_msg;
-    private static final int NOTE_MAX_LENGTH = 50;
+    private static final int NAME_MAX_LENGTH = 50;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -42,7 +43,7 @@ public class NameDialog extends DialogFragment {
 
         try {
             listener = (INameInputDialogListener) context;
-            name = listener.nameInputDialogGetName();
+            name = listener.getNameInputDialogModel();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderNameListener");
         }
@@ -88,11 +89,11 @@ public class NameDialog extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 int len = s.length();
-                if (len > NOTE_MAX_LENGTH) {
-                    s.delete(NOTE_MAX_LENGTH, len);
+                if (len > NAME_MAX_LENGTH) {
+                    s.delete(NAME_MAX_LENGTH, len);
                 }
-                if (NOTE_MAX_LENGTH - len > 0) {
-                    tv_reminder_name_limit_msg.setText(NOTE_MAX_LENGTH - len + " characters available");
+                if (NAME_MAX_LENGTH - len > 0) {
+                    tv_reminder_name_limit_msg.setText(String.format(Locale.getDefault(), "%d characters available", NAME_MAX_LENGTH - len));
                 } else {
                     tv_reminder_name_limit_msg.setText("0 character available");
                 }
@@ -113,7 +114,7 @@ public class NameDialog extends DialogFragment {
         builder.setView(view).setTitle("Reminder Name").setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.nameInputDialogSetName(txt_reminder_name.getText().toString());
+                listener.setNameInputDialogModel(txt_reminder_name.getText().toString());
             }
         }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
@@ -126,8 +127,10 @@ public class NameDialog extends DialogFragment {
     }
 
     public interface INameInputDialogListener {
-        void nameInputDialogSetName(String name);
 
-        String nameInputDialogGetName();
+        void setNameInputDialogModel(String name);
+
+        String getNameInputDialogModel();
+
     }
 }

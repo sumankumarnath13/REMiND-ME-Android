@@ -312,10 +312,6 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    public String getRepeatSettingString() {
-        return repeatModel.toString();
-    }
-
     public String getRepeatSettingShortString() {
         return repeatModel.toShortString();
     }

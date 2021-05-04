@@ -21,16 +21,23 @@ import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.DeviceHelper;
 import com.example.remindme.helpers.OsHelper;
+import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.ReminderModel;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class ActivitySettings extends BaseActivity implements AdapterView.OnItemSelectedListener {
 
     final AppSettingsHelper settingsHelper = AppSettingsHelper.getInstance();
     public static final String THEME_CHANGE_INTENT_ACTION = "THEME_CHANGE_INTENT_ACTION";
+
+    private TextView timeFormatTextView;
+    private TextView dateFormatTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,14 +107,6 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
             }
         });
 
-        final SwitchCompat sw_use_24_hour = findViewById(R.id.sw_use_24_hour);
-        sw_use_24_hour.setChecked(settingsHelper.isUse24hourTime());
-        sw_use_24_hour.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settingsHelper.setUse24hourTime(isChecked);
-            }
-        });
 
         final Button btn_os_setup_faqs = findViewById(R.id.btn_os_setup_faqs);
         btn_os_setup_faqs.setOnClickListener(new View.OnClickListener() {
@@ -119,17 +118,15 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
             }
         });
 
-        final TextView tv_active_reminder_count = findViewById(R.id.tv_active_reminder_count);
 
+        final TextView tv_active_reminder_count = findViewById(R.id.tv_active_reminder_count);
         tv_active_reminder_count.setText(String.valueOf(ReminderModel.getActiveReminders(null).size()));
 
         final TextView tv_expired_reminder_count = findViewById(R.id.tv_expired_reminder_count);
-
         tv_expired_reminder_count.setText(String.valueOf(ReminderModel.getDismissedReminders(null).size()));
 
         final Spinner first_day_of_week_spinner = findViewById(R.id.first_day_of_week_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.first_day_of_week_options, R.layout.support_simple_spinner_dropdown_item);
-        // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.first_day_of_week_options, R.layout.simple_spinner_dropdown_item);
         first_day_of_week_spinner.setAdapter(adapter);
         switch (settingsHelper.getFirstDayOfWeek()) {
             default:
@@ -145,15 +142,41 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
         }
         first_day_of_week_spinner.setOnItemSelectedListener(this);
 
+
+        final Calendar currentDateCalendar = Calendar.getInstance();
+        timeFormatTextView = findViewById(R.id.timeFormatTextView);
+        timeFormatTextView.setText(StringHelper.toTime(currentDateCalendar.getTime()));
+        final SwitchCompat sw_use_24_hour = findViewById(R.id.sw_use_24_hour);
+        sw_use_24_hour.setChecked(settingsHelper.isUse24hourTime());
+        sw_use_24_hour.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isUserInteracted()) {
+                    settingsHelper.setUse24hourTime(isChecked);
+                    timeFormatTextView.setText(StringHelper.toTime(Calendar.getInstance().getTime()));
+                }
+            }
+        });
+
+
+        dateFormatTextView = findViewById(R.id.dateFormatTextView);
+        final SimpleDateFormat selectedDateFormat = new SimpleDateFormat(AppSettingsHelper.getInstance().getDateFormat(this), Locale.getDefault());
+        dateFormatTextView.setText(selectedDateFormat.format(currentDateCalendar.getTime()));
         final Spinner dateFormatSpinner = findViewById(R.id.dateFormatSpinner);
-        ArrayAdapter<CharSequence> dateFormatSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.date_formats, R.layout.support_simple_spinner_dropdown_item);
-        // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
+        final String[] datePatterns = getResources().getStringArray(R.array.date_formats);
+        final ArrayList<String> datePatternValues = new ArrayList<>();
+        for (final String datePattern : datePatterns) {
+            final SimpleDateFormat format = new SimpleDateFormat(datePattern, Locale.getDefault());
+            datePatternValues.add(format.format(currentDateCalendar.getTime()));
+        }
+        final ArrayAdapter<String> dateFormatSpinnerAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_dropdown_item, datePatternValues);
         dateFormatSpinner.setAdapter(dateFormatSpinnerAdapter);
         dateFormatSpinner.setSelection(dateFormatSpinnerAdapter.getPosition(settingsHelper.getDateFormat(this)));
         dateFormatSpinner.setOnItemSelectedListener(this);
 
+
         final Spinner theme_spinner = findViewById(R.id.theme_spinner);
-        ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.themes, R.layout.support_simple_spinner_dropdown_item);
+        final ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.themes, R.layout.simple_spinner_dropdown_item);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         theme_spinner.setAdapter(theme_spinner_adapter);
         if (settingsHelper.getTheme() == AppSettingsHelper.Themes.LIGHT) {
@@ -188,6 +211,7 @@ public class ActivitySettings extends BaseActivity implements AdapterView.OnItem
             }
         } else if (parent.getId() == R.id.dateFormatSpinner) {
             settingsHelper.setDateFormat(getResources().getStringArray(R.array.date_formats)[position]);
+            dateFormatTextView.setText(StringHelper.toWeekdayDate(this, Calendar.getInstance().getTime()));
         } else {
 
             if (position == 1) {

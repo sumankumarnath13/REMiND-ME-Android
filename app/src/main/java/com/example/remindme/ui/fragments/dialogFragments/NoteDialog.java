@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.remindme.R;
 
 import java.util.List;
+import java.util.Locale;
 
 public class NoteDialog extends DialogFragment {
     public static final String TAG = "NoteDialog";
@@ -41,7 +42,7 @@ public class NoteDialog extends DialogFragment {
 
         try {
             listener = (INoteInputDialogListener) context;
-            note = listener.dialogReminderNoteInputGetNote();
+            note = listener.getNoteDialogModel();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderNoteListener");
         }
@@ -89,7 +90,7 @@ public class NoteDialog extends DialogFragment {
                     s.delete(NOTE_MAX_LENGTH, len);
                 }
                 if (NOTE_MAX_LENGTH - len > 0) {
-                    tv_reminder_note_limit_msg.setText(NOTE_MAX_LENGTH - len + " characters available");
+                    tv_reminder_note_limit_msg.setText(String.format(Locale.getDefault(), "%d characters available", NOTE_MAX_LENGTH - len));
                 } else {
                     tv_reminder_note_limit_msg.setText("0 character available");
                 }
@@ -110,7 +111,7 @@ public class NoteDialog extends DialogFragment {
         builder.setView(view).setTitle("Reminder Note").setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.dialogReminderNoteInputSetNote(txt_reminder_note.getText().toString());
+                listener.setNoteDialogModel(txt_reminder_note.getText().toString());
             }
         }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
@@ -123,8 +124,10 @@ public class NoteDialog extends DialogFragment {
     }
 
     public interface INoteInputDialogListener {
-        void dialogReminderNoteInputSetNote(String note);
 
-        String dialogReminderNoteInputGetNote();
+        void setNoteDialogModel(String note);
+
+        String getNoteDialogModel();
+
     }
 }

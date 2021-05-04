@@ -209,7 +209,7 @@ public class ActivityReminderView extends BaseActivity {
             tv_reminder_snooze_summary.setText(activeReminder.getSnoozeModel().toString());
 
             final TextView tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
-            tv_reminder_repeat_summary.setText(activeReminder.getRepeatSettingString());
+            tv_reminder_repeat_summary.setText(activeReminder.getRepeatModel().toString(this));
 
             final TextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
             final LinearLayout lv_alarm_tone_is_on = findViewById(R.id.lv_alarm_tone_is_on);

@@ -15,11 +15,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.viewModels.SnoozeModel;
+import com.example.remindme.viewModels.factories.SnoozeViewModelFactory;
 
 public class SnoozeDialog extends DialogFragment {
     public static final String TAG = "SnoozeDialog";
@@ -33,7 +35,7 @@ public class SnoozeDialog extends DialogFragment {
 
         try {
             listener = (ISnoozeInputDialogListener) context;
-            model = listener.snoozeDialogGetSnoozeModel();
+            model = new ViewModelProvider(this, new SnoozeViewModelFactory(listener.getSnoozeDialogModel().getParent())).get(SnoozeModel.class);
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderSnoozeListener");
         }
@@ -191,7 +193,7 @@ public class SnoozeDialog extends DialogFragment {
                             model.setLimit(SnoozeModel.SnoozeLimits.RC);
                         }
 
-                        listener.snoozeDialogSetSnoozeModel(model);
+                        listener.setSnoozeDialogModel(model);
                     }
                 })
                 .setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
@@ -205,8 +207,10 @@ public class SnoozeDialog extends DialogFragment {
     }
 
     public interface ISnoozeInputDialogListener {
-        void snoozeDialogSetSnoozeModel(SnoozeModel model);
 
-        SnoozeModel snoozeDialogGetSnoozeModel();
+        void setSnoozeDialogModel(SnoozeModel model);
+
+        SnoozeModel getSnoozeDialogModel();
+
     }
 }
