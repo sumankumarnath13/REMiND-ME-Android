@@ -79,6 +79,7 @@ public class HourlyTimeListDialog extends TimeListDialogBase {
             chk_daily_9.setText(StringHelper.get24(hour++, min));
             chk_daily_10.setText(StringHelper.get24(hour++, min));
             chk_daily_11.setText(StringHelper.get24(hour++, min));
+
             chk_daily_12.setText(StringHelper.get24(hour++, min));
             chk_daily_13.setText(StringHelper.get24(hour++, min));
             chk_daily_14.setText(StringHelper.get24(hour++, min));
@@ -108,6 +109,7 @@ public class HourlyTimeListDialog extends TimeListDialogBase {
             chk_daily_9.setText(StringHelper.get12(hour++, min));
             chk_daily_10.setText(StringHelper.get12(hour++, min));
             chk_daily_11.setText(StringHelper.get12(hour++, min));
+
             chk_daily_12.setText(StringHelper.get12(hour++, min));
             chk_daily_13.setText(StringHelper.get12(hour++, min));
             chk_daily_14.setText(StringHelper.get12(hour++, min));

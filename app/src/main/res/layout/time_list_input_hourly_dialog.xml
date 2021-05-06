@@ -19,20 +19,55 @@
             android:orientation="vertical"
             android:gravity="start">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Morning"
-                android:textColor="?attr/soothingText"
-                android:textAlignment="center"
-                android:gravity="center"
-                android:textSize="@dimen/font_size_medium" />
+            <!--            <TextView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="Morning"-->
+            <!--                android:textColor="?attr/soothingText"-->
+            <!--                android:textAlignment="center"-->
+            <!--                android:gravity="center"-->
+            <!--                android:textSize="@dimen/font_size_medium" />-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_1"
-                android:layout_marginVertical="@dimen/dp_3"
-                android:background="?attr/borderColor" />
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="@dimen/dp_1"-->
+            <!--                android:layout_marginVertical="@dimen/dp_3"-->
+            <!--                android:background="?attr/borderColor" />-->
+
+            <CheckBox
+                android:id="@+id/chk_daily_0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="?attr/soothingText" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="?attr/soothingText" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="?attr/soothingText" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="?attr/soothingText" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_success"
+                android:textColor="?attr/soothingText" />
 
             <CheckBox
                 android:id="@+id/chk_daily_5"
@@ -83,41 +118,6 @@
                 android:buttonTint="@color/bg_success"
                 android:textColor="?attr/soothingText" />
 
-            <CheckBox
-                android:id="@+id/chk_daily_12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_success"
-                android:textColor="?attr/soothingText" />
-
-            <CheckBox
-                android:id="@+id/chk_daily_13"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_success"
-                android:textColor="?attr/soothingText" />
-
-            <CheckBox
-                android:id="@+id/chk_daily_14"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_success"
-                android:textColor="?attr/soothingText" />
-
-            <CheckBox
-                android:id="@+id/chk_daily_15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_success"
-                android:textColor="?attr/soothingText" />
-
-            <CheckBox
-                android:id="@+id/chk_daily_16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_success"
-                android:textColor="?attr/soothingText" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -128,20 +128,55 @@
             android:gravity="start"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Night"
-                android:textAlignment="center"
-                android:gravity="center"
-                android:textColor="?attr/soothingText"
-                android:textSize="@dimen/font_size_medium" />
+            <!--            <TextView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="Night"-->
+            <!--                android:textAlignment="center"-->
+            <!--                android:gravity="center"-->
+            <!--                android:textColor="?attr/soothingText"-->
+            <!--                android:textSize="@dimen/font_size_medium" />-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_1"
-                android:layout_marginVertical="@dimen/dp_3"
-                android:background="?attr/borderColor" />
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="@dimen/dp_1"-->
+            <!--                android:layout_marginVertical="@dimen/dp_3"-->
+            <!--                android:background="?attr/borderColor" />-->
+
+            <CheckBox
+                android:id="@+id/chk_daily_12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_danger"
+                android:textColor="?attr/soothingText" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_danger"
+                android:textColor="?attr/soothingText" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_danger"
+                android:textColor="?attr/soothingText" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_danger"
+                android:textColor="?attr/soothingText" />
+
+            <CheckBox
+                android:id="@+id/chk_daily_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_danger"
+                android:textColor="?attr/soothingText" />
 
             <CheckBox
                 android:id="@+id/chk_daily_17"
@@ -188,41 +223,6 @@
 
             <CheckBox
                 android:id="@+id/chk_daily_23"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_danger"
-                android:textColor="?attr/soothingText" />
-
-            <CheckBox
-                android:id="@+id/chk_daily_0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_danger"
-                android:textColor="?attr/soothingText" />
-
-            <CheckBox
-                android:id="@+id/chk_daily_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_danger"
-                android:textColor="?attr/soothingText" />
-
-            <CheckBox
-                android:id="@+id/chk_daily_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_danger"
-                android:textColor="?attr/soothingText" />
-
-            <CheckBox
-                android:id="@+id/chk_daily_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/bg_danger"
-                android:textColor="?attr/soothingText" />
-
-            <CheckBox
-                android:id="@+id/chk_daily_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/bg_danger"

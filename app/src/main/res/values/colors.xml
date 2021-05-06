@@ -2,7 +2,7 @@
 <resources>
 
     <color name="theme_background">#000000</color>
-    <color name="bg_dialog">#181818
+    <color name="bg_dialog">#0c0c0c
     </color> <!-- Because theme color is pure black and no shadow can be any more darker, dialog have to have a lighter color to appear as different window -->
     <color name="border_color">#333333</color>
     <color name="accent_color">#8766c4</color>

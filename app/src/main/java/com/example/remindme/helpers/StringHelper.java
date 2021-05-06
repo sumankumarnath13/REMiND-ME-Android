@@ -132,7 +132,7 @@ public class StringHelper {
         } else if (hour < 12) {
             return String.format(Locale.getDefault(), "%d:%02d am", hour, min);
         } else {
-            return String.format(Locale.getDefault(), "%d:%02d pm", hour - 11, min);
+            return String.format(Locale.getDefault(), "%d:%02d pm", hour - 12, min);
         }
     }
 

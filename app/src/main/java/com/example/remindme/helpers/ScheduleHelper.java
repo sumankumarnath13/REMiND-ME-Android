@@ -73,7 +73,7 @@ public class ScheduleHelper {
 
                 for (int i = 0; i < timeListHours.size(); i++) {
 
-                    calculator.set(Calendar.HOUR_OF_DAY, timeListHours.get(i) + 1);
+                    calculator.set(Calendar.HOUR_OF_DAY, timeListHours.get(i));
 
                     if (i == 0) {
                         firstTimeListTime = calculator.getTime();
@@ -137,7 +137,6 @@ public class ScheduleHelper {
         String x = "";
 
     }
-
 
     public Date getNextHour() {
         calculator.set(Calendar.MINUTE, alertMinute);
@@ -219,7 +218,6 @@ public class ScheduleHelper {
 
         return calculator.getTime();
     }
-
 
     public Date getNextDayOfWeek(final List<Integer> weeksOfMonth) {
 

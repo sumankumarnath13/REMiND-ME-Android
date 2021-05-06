@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -93,7 +92,7 @@ public class CustomTimeListDialog extends TimeListDialogBase {
         }
     }
 
-    private Button btnAddCustomTime;
+    private ImageButton imgBtnAddCustomTime;
     private RecyclerView timeListRecycler;
 
     @NonNull
@@ -108,8 +107,8 @@ public class CustomTimeListDialog extends TimeListDialogBase {
 
         timeListRecycler = view.findViewById(R.id.timeListRecycler);
 
-        btnAddCustomTime = view.findViewById(R.id.btnAddCustomTime);
-        btnAddCustomTime.setOnClickListener(new View.OnClickListener() {
+        imgBtnAddCustomTime = view.findViewById(R.id.imgBtnAddCustomTime);
+        imgBtnAddCustomTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar alertTime = Calendar.getInstance();

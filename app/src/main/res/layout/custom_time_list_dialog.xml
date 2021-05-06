@@ -30,14 +30,12 @@
         android:padding="@dimen/dp_16"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnAddCustomTime"
+        <ImageButton
+            android:id="@+id/imgBtnAddCustomTime"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_add"
-            android:drawableStart="@drawable/ic_add"
-            android:drawablePadding="@dimen/dp_3"
-            android:text="Add more time" />
+            android:layout_height="25dp"
+            android:padding="@dimen/dp_8"
+            android:src="@drawable/ic_add" />
 
     </LinearLayout>
 

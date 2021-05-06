@@ -3,11 +3,13 @@ package com.example.remindme.ui.activities;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -512,13 +514,18 @@ public class ReminderInput
         btn_reminder_time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
         btn_reminder_date.setText(StringHelper.toWeekdayDate(this, reminderModel.getTimeModel().getTime()));
 
-        btnTimeHours.setBackgroundColor(getResources().getColor(R.color.bg_warning));
-        btnTimeList.setBackgroundColor(getResources().getColor(R.color.bg_warning));
+        final Resources.Theme theme = getTheme();
+        final TypedValue typedValue = new TypedValue();
+        theme.resolveAttribute(R.attr.soothingText, typedValue, true);
+        final int soothingTextColor = typedValue.resourceId;
+
+        btnTimeHours.setTextColor(getResources().getColor(soothingTextColor));
+        btnTimeList.setTextColor(getResources().getColor(soothingTextColor));
 
         if (reminderModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.HOURLY) {
-            btnTimeHours.setBackgroundColor(getResources().getColor(R.color.bg_danger));
+            btnTimeHours.setTextColor(getResources().getColor(R.color.text_success));
         } else if (reminderModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.CUSTOM) {
-            btnTimeList.setBackgroundColor(getResources().getColor(R.color.bg_danger));
+            btnTimeList.setTextColor(getResources().getColor(R.color.text_success));
         }
 
         if (reminderModel.getTimeModel().isHasScheduledTime()) {
