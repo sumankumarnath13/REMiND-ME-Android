@@ -25,7 +25,7 @@
 
     <color name="bg_success">#53b96a</color>
     <color name="bg_info">#6c529d</color>
-    <color name="bg_warning">#e58329</color>
+    <color name="bg_warning">#e67a00</color>
     <!--    <color name="bg_danger">#dc3545</color>-->
     <color name="bg_danger">#c64e58</color>
     <!--    <color name="bg_danger">#cb5051</color>-->

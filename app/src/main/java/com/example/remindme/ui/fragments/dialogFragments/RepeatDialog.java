@@ -19,14 +19,12 @@ import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
-import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.RepeatModel;
@@ -325,18 +323,18 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
         // Time list and hourly repeat cannot coexists.
         rdo_reminder_repeat_hourly.setEnabled(model.getParent().getTimeModel().getTimeListMode() == TimeModel.TimeListModes.NONE);
 
-        if (OsHelper.isLollipopOrLater()) {
-            if (model.getParent().getTimeModel().getTimeListMode() == TimeModel.TimeListModes.NONE) {
-                rdo_reminder_repeat_hourly.setButtonTintList(AppCompatResources.getColorStateList(getActivity(), R.color.bg_warning));
-            } else {
-
-                if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
-                    rdo_reminder_repeat_hourly.setButtonTintList(AppCompatResources.getColorStateList(getActivity(), R.color.border_color_light));
-                } else {
-                    rdo_reminder_repeat_hourly.setButtonTintList(AppCompatResources.getColorStateList(getActivity(), R.color.border_color));
-                }
-            }
-        }
+//        if (OsHelper.isLollipopOrLater()) {
+//            if (model.getParent().getTimeModel().getTimeListMode() == TimeModel.TimeListModes.NONE) {
+//                rdo_reminder_repeat_hourly.setButtonTintList(AppCompatResources.getColorStateList(getActivity(), R.color.bg_warning));
+//            } else {
+//
+//                if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
+//                    rdo_reminder_repeat_hourly.setButtonTintList(AppCompatResources.getColorStateList(getActivity(), R.color.border_color_light));
+//                } else {
+//                    rdo_reminder_repeat_hourly.setButtonTintList(AppCompatResources.getColorStateList(getActivity(), R.color.border_color));
+//                }
+//            }
+//        }
 
         if (!model.isEnabled()) {
             //model.setEnabled(true);
