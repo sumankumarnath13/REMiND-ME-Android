@@ -17,7 +17,6 @@ public class TimeListDialogBase extends RefreshableDialogFragmentBase {
         return listener;
     }
 
-
     private TimeModel model;
 
     protected TimeModel getModel() {

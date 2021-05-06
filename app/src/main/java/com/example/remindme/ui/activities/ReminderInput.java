@@ -624,27 +624,28 @@ public class ReminderInput
 
     @Override
     public void setTimeListDialogModel(TimeModel model) {
-        reminderModel.setTimeModel(model);
+
+        if (reminderModel.getRepeatModel().isValid(model)) {
+            reminderModel.setTimeModel(model);
+            reminderModel.getTimeModel().setScheduledTime(reminderModel.getRepeatModel().getValidatedScheduledTime());
+        } else {
+            ToastHelper.showShort(this, "Please check repeat settings");
+        }
+
         refresh();
     }
 
     @Override
     public Date getDateCalculatorDialogModel() {
         reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.getTimeModel().getAlertTime(false);
+        return reminderModel.getTimeModel().getTime();
     }
 
     @Override
     public void setDateCalculatorDialogModel(Date newTime) {
         if (newTime == null) return;
-
-        final Calendar currentTime = Calendar.getInstance();
-        if (currentTime.getTime().compareTo(newTime) < 0) {
-            reminderModel.getTimeModel().setTime(newTime);
-            refresh();
-        } else {
-            ToastHelper.showShort(this, "Cannot save reminder in past");
-        }
+        reminderModel.getTimeModel().setTime(newTime);
+        refresh();
     }
 
     @Override
@@ -680,14 +681,14 @@ public class ReminderInput
     @Override
     public void setRepeatDialogModel(RepeatModel model) {
 
-        if (model.isValid()) {
+        if (model.isValid(reminderModel.getTimeModel())) {
             reminderModel.setRepeatModel(model);
-            reminderModel.getTimeModel().setScheduledTime(model.getValidatedNextScheduledTime());
-            refresh();
+            reminderModel.getTimeModel().setScheduledTime(model.getValidatedScheduledTime());
         } else {
             ToastHelper.showShort(this, "Please check repeat settings");
         }
 
+        refresh();
     }
 
     @Override

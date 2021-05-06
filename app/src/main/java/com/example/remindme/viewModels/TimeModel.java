@@ -21,8 +21,8 @@ public class TimeModel extends ViewModel {
         instance.time = time;
         instance.scheduledTime = scheduledTime;
         instance.timeListMode = timeListMode;
-        instance.addTimes(getCustomTimes());
-        instance.setHourlyTimes(getHourlyTimes());
+        instance.setTimeListTimes(getTimeListTimes());
+        instance.setTimeListHours(getTimeListHours());
 
         return instance;
     }
@@ -44,24 +44,11 @@ public class TimeModel extends ViewModel {
 
     }
 
+
     private Date time;
 
     public Date getTime() {
         return time;
-    }
-
-    public Date getAlertTime(final boolean isIncludeSnooze) {
-
-        if (isIncludeSnooze && getParent().getSnoozeModel().isEnable() && getParent().getSnoozeModel().isSnoozed()) { // If snoozed then next alert time will use it
-            return getParent().getSnoozeModel().getSnoozedTime(getTime());
-        }
-
-        if (isHasScheduledTime()) {
-            return getScheduledTime();
-        }
-
-        return getTime();
-
     }
 
     public void setTime(final Date value, final boolean isReadFromDb) {
@@ -82,18 +69,15 @@ public class TimeModel extends ViewModel {
             calendar.set(Calendar.MILLISECOND, 0);
 
             if (time != null && !time.equals(calendar.getTime())) { // If new time is different than what was set before.
+
                 isTimeChanged = true;
+
             }
 
             time = calendar.getTime();
 
-            final Calendar currentTimeCalendar = Calendar.getInstance();
+            setScheduledTime(getParent().getRepeatModel().schedule(this));
 
-            // if alert time is already in past then find next schedule
-            if (currentTimeCalendar.getTime().compareTo(time) >= 0) {
-                final Date nextSchedule = getParent().getRepeatModel().getNextScheduleTime(time);
-                setScheduledTime(nextSchedule);
-            }
         }
     }
 
@@ -102,11 +86,13 @@ public class TimeModel extends ViewModel {
         setTime(value, false);
     }
 
+
     private boolean hasScheduledTime;
 
     public boolean isHasScheduledTime() {
         return hasScheduledTime;
     }
+
 
     private Date scheduledTime;
 
@@ -117,15 +103,18 @@ public class TimeModel extends ViewModel {
 
     public void setScheduledTime(final Date value) {
 
-        if (value == null) return;
-
-        if (value.compareTo(time) == 0) { // Ignore if intended next schedule is same as time.
+        if (value == null) {
+            hasScheduledTime = false;
             return;
         }
 
-        scheduledTime = value;
+        if (value.compareTo(time) == 0) { // Ignore if intended next schedule is same as time.
+            hasScheduledTime = false;
+            return;
+        }
 
         hasScheduledTime = true;
+        scheduledTime = value;
     }
 
     private boolean isTimeChanged;
@@ -133,6 +122,22 @@ public class TimeModel extends ViewModel {
     public boolean isTimeChanged() {
         return isTimeChanged;
     }
+
+
+    public Date getAlertTime(final boolean isIncludeSnooze) {
+
+        if (isIncludeSnooze && getParent().getSnoozeModel().isEnable() && getParent().getSnoozeModel().isSnoozed()) { // If snoozed then next alert time will use it
+            return getParent().getSnoozeModel().getSnoozedTime(getTime());
+        }
+
+        if (isHasScheduledTime()) {
+            return getScheduledTime();
+        }
+
+        return getTime();
+
+    }
+
 
     private TimeListModes timeListMode = TimeListModes.NONE;
 
@@ -144,58 +149,48 @@ public class TimeModel extends ViewModel {
         this.timeListMode = timeListMode;
     }
 
-    private final ArrayList<Date> customTimes = new ArrayList<>();
 
-    public List<Date> getCustomTimes() {
-        return customTimes;
+    private final ArrayList<Date> timeListTimes = new ArrayList<>();
+
+    public List<Date> getTimeListTimes() {
+        return timeListTimes;
     }
 
-    public void addCustomTime(final Date time) {
-        final int foundIndex = customTimes.indexOf(time);
+    public void addTimeListTime(final Date time) {
+        final int foundIndex = timeListTimes.indexOf(time);
         if (foundIndex < 0) {
-            customTimes.add(time);
+            timeListTimes.add(time);
         }
     }
 
-    public void removeCustomTime(final Date time) {
-        customTimes.remove(time);
+    public void removeTimeListTime(final Date time) {
+        timeListTimes.remove(time);
     }
 
-    public void addTimes(final List<Date> values) {
-        customTimes.clear();
-        customTimes.addAll(values);
+    public void setTimeListTimes(final List<Date> times) {
+        timeListTimes.clear();
+        timeListTimes.addAll(times);
     }
 
-    private final ArrayList<Integer> hourlyTimes = new ArrayList<>();
 
-    public ArrayList<Integer> getHourlyTimes() {
-        return hourlyTimes;
+    private final ArrayList<Integer> timeListHours = new ArrayList<>();
+
+    public ArrayList<Integer> getTimeListHours() {
+        return timeListHours;
     }
 
-    public void setHourlyTimes(final List<Integer> values) {
-        hourlyTimes.clear();
-        hourlyTimes.addAll(values);
-    }
-
-    private static void purifyTimes(final Date primaryTime, List<Date> times) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(primaryTime);
-        if (times.size() > 0) {
-            final int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
-            final int month = calendar.get(Calendar.MONTH);
-            final int year = calendar.get(Calendar.YEAR);
-
-            for (int i = 0; i < times.size(); i++) {
-                calendar.setTime(times.get(i));
-                calendar.set(Calendar.DAY_OF_YEAR, dayOfYear);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-                times.get(i).setTime(calendar.getTime().getTime());
-            }
+    public void addTimeListHour(final int hour) {
+        final int foundIndex = timeListHours.indexOf(hour);
+        if (foundIndex < 0) {
+            timeListHours.add(hour);
         }
     }
+
+    public void setTimeListHours(final List<Integer> values) {
+        timeListHours.clear();
+        timeListHours.addAll(values);
+    }
+
 
     public static int getIntegerOfTimeListMode(TimeListModes mode) {
         switch (mode) {
@@ -220,4 +215,5 @@ public class TimeModel extends ViewModel {
                 return TimeListModes.CUSTOM;
         }
     }
+
 }

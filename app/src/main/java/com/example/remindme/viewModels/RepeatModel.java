@@ -5,11 +5,11 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
+import com.example.remindme.helpers.ScheduleHelper;
 import com.example.remindme.helpers.StringHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +43,6 @@ public class RepeatModel extends ViewModel {
         MONTHS,
         YEARS,
     }
-
 
     public RepeatModel copy() {
 
@@ -93,20 +92,26 @@ public class RepeatModel extends ViewModel {
     }
 
     public void setRepeatOption(ReminderRepeatOptions value) {
+        switch (value) {
+            case DAILY_CUSTOM:
+                if (getCustomDays().size() == 0) {
+                    value = ReminderRepeatOptions.DAILY;
+                }
+                break;
+            case WEEKLY_CUSTOM:
+                if (getCustomWeeks().size() == 0) {
+                    value = ReminderRepeatOptions.WEEKLY;
+                }
+                break;
+            case MONTHLY_CUSTOM:
+                if (getCustomMonths().size() == 0) {
+                    value = ReminderRepeatOptions.MONTHLY;
+                }
+                break;
+        }
+
         repeatOption = value;
     }
-
-
-//    private final List<Integer> customHours = new ArrayList<>();
-//
-//    public List<Integer> getCustomHours() {
-//        return customHours;
-//    }
-//
-//    public void setCustomHours(List<Integer> hours) {
-//        customHours.clear();
-//        customHours.addAll(hours);
-//    }
 
     private final List<Integer> customDays = new ArrayList<>();
 
@@ -142,6 +147,7 @@ public class RepeatModel extends ViewModel {
     }
 
     private TimeUnits customTimeUnit = TimeUnits.DAYS;
+
     private int customTimeValue = 3;
 
     public void setRepeatCustom(final TimeUnits unit, final int value) {
@@ -202,17 +208,17 @@ public class RepeatModel extends ViewModel {
         hasRepeatEnd = isRepeatEndValid();
     }
 
-    private Date validatedNextScheduledTime;
+    private Date validatedScheduledTime;
 
-    public Date getValidatedNextScheduledTime() {
-        if (validatedNextScheduledTime == null) return null;
+    public Date getValidatedScheduledTime() {
+        if (validatedScheduledTime == null) return null;
 
-        final Date result = validatedNextScheduledTime;
-        validatedNextScheduledTime = null;
+        final Date result = validatedScheduledTime;
+        validatedScheduledTime = null;
         return result;
     }
 
-    public boolean isValid() {
+    public boolean isValid(final TimeModel timeModel) {
         boolean isValid = false;
 
         switch (repeatOption) {
@@ -229,26 +235,24 @@ public class RepeatModel extends ViewModel {
                     customWeeks.clear();
                     customMonths.clear();
                     isValid = true;
-                    break;
-
                 }
+                break;
             case WEEKLY_CUSTOM:
                 if (customWeeks.size() > 0) {
                     customDays.clear();
                     //customWeeks.clear();
                     customMonths.clear();
                     isValid = true;
-                    break;
                 }
+                break;
             case MONTHLY_CUSTOM:
                 if (customMonths.size() > 0) {
                     customDays.clear();
                     customWeeks.clear();
                     //customMonths.clear();
                     isValid = true;
-                    break;
-
                 }
+                break;
             case OTHER:
                 if (getCustomTimeValue() > 0 &&
                         getCustomTimeValue() <= getMaxForTimeUnit(getCustomTimeUnit())) {
@@ -256,10 +260,9 @@ public class RepeatModel extends ViewModel {
                     customWeeks.clear();
                     customMonths.clear();
                     isValid = true;
-                    break;
                 }
+                break;
         }
-
 
         if (isValid && hasRepeatEnd && repeatEndDate == null) {
             isValid = false;
@@ -267,242 +270,71 @@ public class RepeatModel extends ViewModel {
 
         if (isValid) {
             // Check if any schedule is possible with current settings
-            validatedNextScheduledTime = getNextScheduleTime(parent.getTimeModel().getTime());
+            validatedScheduledTime = schedule(timeModel);
             // nextTime is null means no schedule is possible
-            isValid = validatedNextScheduledTime != null;
+            isValid = validatedScheduledTime != null;
         }
 
         return isValid;
     }
 
-    public Date getNextScheduleTime(final Date fromTime) {
+    public Date schedule(final TimeModel timeModel) {
         /*
          * This method will look for next closest date and time to repeat from reminder set time.
          * If the time is in past then it will bring the DAY of YEAR to present and then will look for next possible schedule based on repeat settings.
          * This method will return a non null value only if there is a dat can reached in future.
          * */
 
-
-        final Calendar currentTimeCalendar = Calendar.getInstance();
-
-        if (fromTime == null) return null;
+        if (timeModel.getTime() == null) return null;
 
         Date nextScheduleTime = null;
-        final Calendar reminderCal = Calendar.getInstance();
-        //Calculation to find next schedule will begin from current time
-        reminderCal.setTime(fromTime);
 
-        final int MINUTE = reminderCal.get(Calendar.MINUTE);
-        final int HOUR_OF_DAY = reminderCal.get(Calendar.HOUR_OF_DAY);
-        final int DAY_OF_YEAR = reminderCal.get(Calendar.DAY_OF_YEAR);
-
-        // If the time from which it needs to calculate is in past then use current time as start point
-        final Calendar baseCl = Calendar.getInstance();
-        if (reminderCal.before(currentTimeCalendar)) {
-            //Reminder was in past: Start calculation from present.
-            baseCl.setTime(currentTimeCalendar.getTime());
-        } else {
-            //Reminder is in future. Start from there then.
-            baseCl.setTime(fromTime);
-        }
-
-        final Calendar newScheduleCl = Calendar.getInstance();
-        // Any reminder time be it base or calculated will not take seconds/mil.s. into consideration. However, current time must contain it to compare if its in past or future precisely.
-        newScheduleCl.set(Calendar.SECOND, 0);
-        newScheduleCl.set(Calendar.MILLISECOND, 0);
-
-
-//        else if (repeatOption == ReminderRepeatOptions.HOURLY_CUSTOM) {
-//            // Set alarm values to current time onwards
-//            newScheduleCl.set(Calendar.MINUTE, MINUTE);
-//            // Check when is the next closest time from onwards
-//            Collections.sort(customHours);
-//            //Find next schedule today
-//            //nextScheduleCal.set(Calendar.HOUR_OF_DAY, 0);
-//            for (int i = 0; i < customHours.size(); i++) {
-//                newScheduleCl.set(Calendar.HOUR_OF_DAY, customHours.get(i));
-//                if (newScheduleCl.compareTo(baseCl) >= 0) {
-//                    nextScheduleTime = newScheduleCl.getTime();
-//                    break;
-//                }
-//            }
-//            if (nextScheduleTime == null) {
-//                //Reset and Find next schedule tomorrow :
-//                newScheduleCl.set(Calendar.HOUR_OF_DAY, 0);
-//                newScheduleCl.add(Calendar.DATE, 1);
-//                for (int i = 0; i < customHours.size(); i++) {
-//                    newScheduleCl.set(Calendar.HOUR_OF_DAY, customHours.get(i));
-//                    if (newScheduleCl.compareTo(baseCl) >= 0) {
-//                        nextScheduleTime = newScheduleCl.getTime();
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//
         if (repeatOption == ReminderRepeatOptions.HOURLY) {
-            // Set alarm values to current time onwards
-            newScheduleCl.set(Calendar.MINUTE, MINUTE);
-            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
-            if (newScheduleCl.compareTo(baseCl) < 0) {
-                newScheduleCl.add(Calendar.HOUR_OF_DAY, 1);
-            }
-            nextScheduleTime = newScheduleCl.getTime();
+
+            nextScheduleTime = new ScheduleHelper(timeModel).getNextHour();
+
         } else if (repeatOption == ReminderRepeatOptions.DAILY) {
-            // Set alarm values to current time onwards
-            newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
-            newScheduleCl.set(Calendar.MINUTE, MINUTE);
-            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
-            if (newScheduleCl.compareTo(baseCl) < 0) {
-                newScheduleCl.add(Calendar.DAY_OF_YEAR, 1);
-            }
-            nextScheduleTime = newScheduleCl.getTime();
+
+            nextScheduleTime = new ScheduleHelper(timeModel).getNextDay();
+
         } else if (repeatOption == ReminderRepeatOptions.WEEKLY) {
-            // Set alarm values to current time onwards
-            newScheduleCl.set(Calendar.DAY_OF_YEAR, DAY_OF_YEAR);
-            newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
-            newScheduleCl.set(Calendar.MINUTE, MINUTE);
-            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
-            if (newScheduleCl.compareTo(baseCl) < 0) {
-                newScheduleCl.add(Calendar.WEEK_OF_YEAR, 1);
-            }
-            nextScheduleTime = newScheduleCl.getTime();
+
+            nextScheduleTime = new ScheduleHelper(timeModel).getNextDayOfWeek();
+
         } else if (repeatOption == ReminderRepeatOptions.MONTHLY) {
-            // Set alarm values to current time onwards
-            newScheduleCl.set(Calendar.DAY_OF_YEAR, DAY_OF_YEAR);
-            newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
-            newScheduleCl.set(Calendar.MINUTE, MINUTE);
-            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
-            if (newScheduleCl.compareTo(baseCl) < 0) {
-                newScheduleCl.add(Calendar.MONTH, 1);
-            }
-            nextScheduleTime = newScheduleCl.getTime();
+
+            nextScheduleTime = new ScheduleHelper(timeModel).getNextDayOfMonth();
+
         } else if (repeatOption == ReminderRepeatOptions.YEARLY) {
-            newScheduleCl.set(Calendar.DAY_OF_YEAR, DAY_OF_YEAR);
-            newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
-            newScheduleCl.set(Calendar.MINUTE, MINUTE);
-            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
-            if (newScheduleCl.compareTo(baseCl) < 0) {
-                newScheduleCl.add(Calendar.YEAR, 1);
-            }
-            nextScheduleTime = newScheduleCl.getTime();
+
+            nextScheduleTime = new ScheduleHelper(timeModel).getNextYear();
+
         } else if (repeatOption == RepeatModel.ReminderRepeatOptions.DAILY_CUSTOM) {
-            // Set alarm values to current time onwards
-            newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
-            newScheduleCl.set(Calendar.MINUTE, MINUTE);
 
-            // Check when is the next closest time from onwards
-            Collections.sort(customDays);
-            //Find next schedule today
-            //nextScheduleCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-            for (int i = 0; i < customDays.size(); i++) {
-                newScheduleCl.set(Calendar.DAY_OF_WEEK, customDays.get(i));
-                if (newScheduleCl.compareTo(baseCl) >= 0) {
-                    nextScheduleTime = newScheduleCl.getTime();
-                    break;
-                }
-            }
-            if (nextScheduleTime == null) {
-                //Find next schedule next week :
-                newScheduleCl.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                newScheduleCl.add(Calendar.WEEK_OF_YEAR, 1);
-                for (int i = 0; i < customDays.size(); i++) {
-                    newScheduleCl.set(Calendar.DAY_OF_WEEK, customDays.get(i));
-                    if (newScheduleCl.compareTo(baseCl) >= 0) {
-                        nextScheduleTime = newScheduleCl.getTime();
-                        break;
-                    }
-                }
-            }
+            nextScheduleTime = new ScheduleHelper(timeModel).getNextDay(getCustomDays());
+
         } else if (repeatOption == RepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM) {
-            // Set alarm values to current time onwards
-            newScheduleCl.set(Calendar.DAY_OF_WEEK, Calendar.DAY_OF_WEEK);
-            newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
-            newScheduleCl.set(Calendar.MINUTE, MINUTE);
 
-            // Check when is the next closest time from onwards
-            Collections.sort(customWeeks);
-            //nextScheduleCal.set(Calendar.DAY_OF_MONTH, 1);
-            //Find next schedule today
-            for (int i = 0; i < customWeeks.size(); i++) {
-                newScheduleCl.set(Calendar.WEEK_OF_MONTH, customWeeks.get(i) + 1);
-                if (newScheduleCl.compareTo(baseCl) >= 0) {
-                    nextScheduleTime = newScheduleCl.getTime();
-                    break;
-                }
-            }
-            if (nextScheduleTime == null) {
-                //Find next schedule next month :
-                newScheduleCl.set(Calendar.DAY_OF_MONTH, 1);
-                newScheduleCl.add(Calendar.MONTH, 1);
-                for (int i = 0; i < customWeeks.size(); i++) {
-                    newScheduleCl.set(Calendar.WEEK_OF_MONTH, customWeeks.get(i) + 1);
-                    if (newScheduleCl.compareTo(baseCl) >= 0) {
-                        nextScheduleTime = newScheduleCl.getTime();
-                        break;
-                    }
-                }
-            }
+            nextScheduleTime = new ScheduleHelper(timeModel).getNextDayOfWeek(getCustomWeeks());
+
         } else if (repeatOption == RepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM) {
-            // Set alarm values to current time onwards
-            newScheduleCl.set(Calendar.DAY_OF_YEAR, DAY_OF_YEAR);
-            newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
-            newScheduleCl.set(Calendar.MINUTE, MINUTE);
 
-            // Check when is the next closest time from onwards
-            Collections.sort(customMonths);
-            //Find next schedule today
-            //nextScheduleCal.set(Calendar.MONTH, Calendar.JANUARY);
-            for (int i = 0; i < customMonths.size(); i++) {
-                newScheduleCl.set(Calendar.MONTH, customMonths.get(i));
-                if (newScheduleCl.compareTo(baseCl) >= 0) {
-                    nextScheduleTime = newScheduleCl.getTime();
-                    break;
-                }
-            }
-            if (nextScheduleTime == null) {
-                //Find next schedule next year :
-                newScheduleCl.set(Calendar.MONTH, Calendar.JANUARY);
-                newScheduleCl.add(Calendar.YEAR, 1);
-                for (int i = 0; i < customMonths.size(); i++) {
-                    newScheduleCl.set(Calendar.MONTH, customMonths.get(i));
-                    if (newScheduleCl.compareTo(baseCl) >= 0) {
-                        nextScheduleTime = newScheduleCl.getTime();
-                        break;
-                    }
-                }
-            }
+            nextScheduleTime = new ScheduleHelper(timeModel).getNextDayOfMonth(getCustomMonths());
+
         } else if (repeatOption == RepeatModel.ReminderRepeatOptions.OTHER) {
-            newScheduleCl.set(Calendar.DAY_OF_YEAR, DAY_OF_YEAR);
-            newScheduleCl.set(Calendar.HOUR_OF_DAY, HOUR_OF_DAY);
-            newScheduleCl.set(Calendar.MINUTE, MINUTE);
-            // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
-            if (newScheduleCl.compareTo(baseCl) < 0) {
-                switch (getCustomTimeUnit()) {
-                    case DAYS:
-                        newScheduleCl.add(Calendar.DAY_OF_YEAR, getCustomTimeValue());
-                        break;
-                    case WEEKS:
-                        newScheduleCl.add(Calendar.WEEK_OF_YEAR, getCustomTimeValue());
-                        break;
-                    case MONTHS:
-                        newScheduleCl.add(Calendar.MONTH, getCustomTimeValue());
-                        break;
-                    case YEARS:
-                        newScheduleCl.add(Calendar.YEAR, getCustomTimeValue());
-                        break;
-                }
-            }
-            nextScheduleTime = newScheduleCl.getTime();
+
+            nextScheduleTime = new ScheduleHelper(timeModel).getNextDayCustom(getCustomTimeUnit(), getCustomTimeValue());
+
         }
 
         if (nextScheduleTime != null && getRepeatEndDate() != null) {
+
             return nextScheduleTime.after(getRepeatEndDate()) ? null : nextScheduleTime;
+
         }
 
         return nextScheduleTime;
     }
-
 
     @NonNull
     public String toString(Context context) {
@@ -824,4 +656,5 @@ public class RepeatModel extends ViewModel {
                 return 3;
         }
     }
+
 }

@@ -61,7 +61,7 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
         super.onAttach(context);
         try {
             listener = (IRepeatInputDialogListener) context;
-            model = new ViewModelProvider(this, new RepeatViewModelFactory(listener.getRepeatDialogModel().getParent())).get(RepeatModel.class);
+            model = new ViewModelProvider(this, new RepeatViewModelFactory(listener.getRepeatDialogModel())).get(RepeatModel.class);
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
         }
@@ -393,7 +393,9 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
     }
 
     public void customRepeatDialogSetRepeatModel(RepeatModel m) {
-        model = m;
+        if (m.isValid(model.getParent().getTimeModel())) {
+            model = m;
+        }
         refresh();
     }
 

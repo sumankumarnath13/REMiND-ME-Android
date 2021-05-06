@@ -200,13 +200,13 @@ public class ReminderModel extends ViewModel {
                     // App getting killed after a while. But Broadcast receiver recreating app which leads to rescheduling.
                     // And for the logic below it getting dismissed before it could be snoozed from alerts.
                     // isDeviceRebooted will prevent this from happening.
-                    reminderModel.dismissByApp(context, calendar);
+                    reminderModel.dismissByApp(context);
                 } else if (!reminderModel.isPendingIntentExists(context)) {
                     isNewAlertFound = true;
 
                     if (calendar.getTime().after(reminderModel.getTimeModel().getTime())) {
                         NotificationHelper.notify(context, reminderModel.getIntId(), "Dismissing reminder!", reminderModel.getSignatureName(), reminderModel.note);
-                        reminderModel.dismissByApp(context, calendar);
+                        reminderModel.dismissByApp(context);
                     } else {
                         NotificationHelper.notify(context, reminderModel.getIntId(), "New reminder!", reminderModel.getSignatureName(), reminderModel.note);
                         reminderModel.setPendingIntent(context, reminderModel.getTimeModel().getTime(), false);
@@ -286,25 +286,19 @@ public class ReminderModel extends ViewModel {
 
         if (value && !AppSettingsHelper.getInstance().isDisableAllReminders()) {
 
-            Calendar currentTime = Calendar.getInstance();
+            final Date nextTime = getRepeatModel().schedule(getTimeModel());
 
-            if (currentTime.getTime().after(getTimeModel().getTime())) { //If the time is in past then find if next schedule exists
-                // SET NEW TRIGGER TIME
-                final Date nextTime = getRepeatModel().getNextScheduleTime(currentTime.getTime());
-                if (nextTime == null) { // EOF situation. No next schedule possible
-                    isEnabled = false;
-                    ToastHelper.showLong(context, "Reminder time expired. Please edit with a future time to enable.");
-                    return false;
-                } else { // Found next trigger point.
-                    timeModel.setScheduledTime(nextTime);
-                    //calculatedTime = nextTime; // Set next trigger time.
-                    isEnabled = true;
-                    return true;
-                }
-            } else {
+            if (nextTime == null) { // EOF situation. No next schedule possible
+                isEnabled = false;
+                ToastHelper.showLong(context, "Reminder time expired. Please edit with a future time to enable.");
+                return false;
+            } else { // Found next trigger point.
+                timeModel.setScheduledTime(nextTime);
+                //calculatedTime = nextTime; // Set next trigger time.
                 isEnabled = true;
                 return true;
             }
+
         } else {
             cancelPendingIntent(context);
             isEnabled = false;
@@ -429,7 +423,7 @@ public class ReminderModel extends ViewModel {
     }
 
     public void dismissByUser(final Context context) {
-        final Date nextTime = getRepeatModel().getNextScheduleTime(Calendar.getInstance().getTime());
+        final Date nextTime = getRepeatModel().schedule(getTimeModel());
         if (nextTime == null) { // EOF situation
             saveAsExpired();
         } else {
@@ -441,8 +435,8 @@ public class ReminderModel extends ViewModel {
         }
     }
 
-    public void dismissByApp(final Context context, final Calendar currentTime) {
-        final Date nextTime = getRepeatModel().getNextScheduleTime(currentTime.getTime());
+    public void dismissByApp(final Context context) {
+        final Date nextTime = getRepeatModel().schedule(getTimeModel());
         if (nextTime == null) { // EOF situation
             saveAsExpired();
         } else {
@@ -473,7 +467,7 @@ public class ReminderModel extends ViewModel {
                 ToastHelper.showShort(context, "MISSED ... Overriding snooze for next schedule");
                 // This will set nextScheduledTime as calculated time internally and then call saveAndSetAlert to set for next schedule
                 //saveAsMissed(context, nextScheduledTime);
-                dismissByApp(context, Calendar.getInstance());
+                dismissByApp(context);
             }
         }
     }
@@ -496,7 +490,7 @@ public class ReminderModel extends ViewModel {
                 return false;
             }
 
-            final Date nextScheduledTime = getRepeatModel().getNextScheduleTime(getTimeModel().getTime());
+            final Date nextScheduledTime = getRepeatModel().schedule(getTimeModel());
 
             // proceed with snoozing
             if (nextScheduledTime == null) { // Reached EOF
@@ -612,8 +606,8 @@ public class ReminderModel extends ViewModel {
 
         entity.time = getTimeModel().getAlertTime(false);
 
-        entity.customTimes.addAll(getTimeModel().getCustomTimes());
-        entity.hourlyTimes.addAll(getTimeModel().getHourlyTimes());
+        entity.customTimes.addAll(getTimeModel().getTimeListTimes());
+        entity.hourlyTimes.addAll(getTimeModel().getTimeListHours());
         entity.timeListMode = TimeModel.getIntegerOfTimeListMode(getTimeModel().getTimeListMode());
 
         entity.missedTimes.addAll(missedTimes);
@@ -667,8 +661,8 @@ public class ReminderModel extends ViewModel {
         setNotification(from.isNotification);
 
         getTimeModel().setTime(from.time, true);
-        getTimeModel().addTimes(from.customTimes);
-        getTimeModel().setHourlyTimes(from.hourlyTimes);
+        getTimeModel().setTimeListTimes(from.customTimes);
+        getTimeModel().setTimeListHours(from.hourlyTimes);
         getTimeModel().setTimeListMode(TimeModel.getTimeListModeFromInteger(from.timeListMode));
 
         missedTimes.addAll(from.missedTimes);
@@ -685,11 +679,11 @@ public class ReminderModel extends ViewModel {
 
         RepeatModel repeatModel = new RepeatModel(this);
         repeatModel.setEnabled(from.isRepeatEnabled);
-        repeatModel.setRepeatOption(RepeatModel.getRepeatOptionFromInteger(from.repeatOption));
         repeatModel.setCustomDays(from.repeatDays);
         repeatModel.setCustomWeeks(from.repeatWeeks);
         repeatModel.setCustomMonths(from.repeatMonths);
         repeatModel.setRepeatCustom(from.repeatCustomTimeUnit, from.repeatCustomTimeValue);
+        repeatModel.setRepeatOption(RepeatModel.getRepeatOptionFromInteger(from.repeatOption));
         repeatModel.setHasRepeatEnd(from.isHasRepeatEnd);
         repeatModel.setRepeatEndDate(from.repeatEndDate);
         setRepeatModel(repeatModel);

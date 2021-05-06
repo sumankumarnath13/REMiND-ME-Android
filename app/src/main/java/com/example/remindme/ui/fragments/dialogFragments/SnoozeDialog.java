@@ -40,7 +40,7 @@ public class SnoozeDialog extends RefreshableDialogFragmentBase {
 
         try {
             listener = (ISnoozeInputDialogListener) context;
-            model = new ViewModelProvider(this, new SnoozeViewModelFactory(listener.getSnoozeDialogModel().getParent())).get(SnoozeModel.class);
+            model = new ViewModelProvider(this, new SnoozeViewModelFactory(listener.getSnoozeDialogModel())).get(SnoozeModel.class);
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement ISnoozeInputDialogListener");
         }
@@ -160,6 +160,36 @@ public class SnoozeDialog extends RefreshableDialogFragmentBase {
 
     @Override
     protected void onUIRefresh() {
+
+        switch (model.getInterval()) {
+            default:
+            case M5:
+                rdo_reminder_snooze_m5.setChecked(true);
+                break;
+            case M10:
+                rdo_reminder_snooze_m10.setChecked(true);
+                break;
+            case M15:
+                rdo_reminder_snooze_m15.setChecked(true);
+                break;
+            case M30:
+                rdo_reminder_snooze_m30.setChecked(true);
+                break;
+        }
+
+        switch (model.getLimit()) {
+            default:
+            case R3:
+                rdo_reminder_snooze_r3.setChecked(true);
+                break;
+            case R5:
+                rdo_reminder_snooze_r5.setChecked(true);
+                break;
+            case RC:
+                rdo_reminder_snooze_rc.setChecked(true);
+                break;
+        }
+
         rdo_reminder_snooze_m5.setEnabled(model.isEnable());
         rdo_reminder_snooze_m10.setEnabled(model.isEnable());
         rdo_reminder_snooze_m15.setEnabled(model.isEnable());

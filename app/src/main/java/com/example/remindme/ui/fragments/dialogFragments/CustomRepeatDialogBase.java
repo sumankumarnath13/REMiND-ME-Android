@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.viewModels.RepeatModel;
+import com.example.remindme.viewModels.factories.RepeatViewModelFactory;
 
 public class CustomRepeatDialogBase extends RefreshableDialogFragmentBase {
 
@@ -26,7 +28,7 @@ public class CustomRepeatDialogBase extends RefreshableDialogFragmentBase {
         super.onAttach(context);
         try {
             listener = (CustomRepeatDialogBase.ICustomRepeatDialogListener) getParentFragmentManager().findFragmentByTag(RepeatDialog.TAG);
-            model = listener.customRepeatDialogGetRepeatModel();
+            model = new ViewModelProvider(this, new RepeatViewModelFactory(listener.customRepeatDialogGetRepeatModel())).get(RepeatModel.class);
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
         }

@@ -3,19 +3,19 @@ package com.example.remindme.viewModels.factories;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.RepeatModel;
 
 public class RepeatViewModelFactory implements ViewModelProvider.Factory {
 
-    private final ReminderModel reminderModel;
+    private final RepeatModel source;
 
-    public RepeatViewModelFactory(ReminderModel parent) {
-        reminderModel = parent;
+    public RepeatViewModelFactory(final RepeatModel source) {
+        this.source = source;
     }
 
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        return (T) reminderModel.getRepeatModel().copy();
+        return (T) source.copy();
     }
 
 }

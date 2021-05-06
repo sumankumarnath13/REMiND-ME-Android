@@ -65,7 +65,7 @@ public class CustomTimeListDialog extends TimeListDialogBase {
             holder.imgBtnRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getModel().removeCustomTime(time);
+                    getModel().removeTimeListTime(time);
                     refresh();
                 }
             });
@@ -128,7 +128,7 @@ public class CustomTimeListDialog extends TimeListDialogBase {
                                 alertTime.set(Calendar.SECOND, 0);
                                 alertTime.set(Calendar.MILLISECOND, 0);
 
-                                getModel().addCustomTime(alertTime.getTime());
+                                getModel().addTimeListTime(alertTime.getTime());
                                 refresh();
 
                             }
@@ -143,7 +143,7 @@ public class CustomTimeListDialog extends TimeListDialogBase {
                 .setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (getModel().getCustomTimes().size() > 0) {
+                        if (getModel().getTimeListTimes().size() > 0) {
                             getModel().setTimeListMode(TimeModel.TimeListModes.CUSTOM);
                             getListener().setTimeListDialogModel(getModel());
                         } else {
@@ -166,7 +166,7 @@ public class CustomTimeListDialog extends TimeListDialogBase {
     protected void onUIRefresh() {
         super.onUIRefresh();
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        final CustomTimeListAdapter timeListAdapter = new CustomTimeListAdapter(getModel().getCustomTimes());
+        final CustomTimeListAdapter timeListAdapter = new CustomTimeListAdapter(getModel().getTimeListTimes());
         timeListRecycler.setAdapter(timeListAdapter);
         timeListRecycler.setLayoutManager(layoutManager);
     }
