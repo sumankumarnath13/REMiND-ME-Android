@@ -2,7 +2,8 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -17,7 +18,7 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
-            android:buttonTint="@color/bg_info"
+            app:buttonTint="@color/bg_success"
             android:text="@string/repeat_daily_custom_sun" />
 
         <CheckBox
@@ -26,7 +27,7 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
-            android:buttonTint="@color/bg_info"
+            app:buttonTint="@color/bg_success"
             android:text="@string/repeat_daily_custom_mon" />
 
         <CheckBox
@@ -35,7 +36,7 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
-            android:buttonTint="@color/bg_info"
+            app:buttonTint="@color/bg_success"
             android:text="@string/repeat_daily_custom_tue" />
 
         <CheckBox
@@ -44,7 +45,7 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
-            android:buttonTint="@color/bg_info"
+            app:buttonTint="@color/bg_success"
             android:text="@string/repeat_daily_custom_wed" />
 
         <CheckBox
@@ -53,7 +54,7 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
-            android:buttonTint="@color/bg_info"
+            app:buttonTint="@color/bg_success"
             android:text="@string/repeat_daily_custom_thu" />
 
         <CheckBox
@@ -62,7 +63,7 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
-            android:buttonTint="@color/bg_info"
+            app:buttonTint="@color/bg_success"
             android:text="@string/repeat_daily_custom_fri" />
 
         <CheckBox
@@ -71,7 +72,7 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/soothingText"
             android:textSize="@dimen/font_size_medium"
-            android:buttonTint="@color/bg_info"
+            app:buttonTint="@color/bg_success"
             android:text="@string/repeat_daily_custom_sat" />
 
     </LinearLayout>

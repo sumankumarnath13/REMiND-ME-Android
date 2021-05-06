@@ -25,7 +25,7 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             app:tabRippleColor="?attr/accentColor"
-            app:tabSelectedTextColor="@color/text_warning"
+            app:tabSelectedTextColor="@color/bg_warning"
             app:tabIndicatorColor="?attr/accentColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

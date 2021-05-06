@@ -287,6 +287,8 @@ public class RepeatModel extends ViewModel {
 
         if (timeModel.getTime() == null) return null;
 
+        if (!isEnabled()) return null;
+
         Date nextScheduleTime = null;
 
         if (repeatOption == ReminderRepeatOptions.HOURLY) {

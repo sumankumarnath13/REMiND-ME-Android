@@ -5,7 +5,7 @@
     <color name="bg_dialog">#0c0c0c
     </color> <!-- Because theme color is pure black and no shadow can be any more darker, dialog have to have a lighter color to appear as different window -->
     <color name="border_color">#333333</color>
-    <color name="accent_color">#8766c4</color>
+    <color name="accent_color">#6c529d</color>
     <color name="text_bright">#E0E0E0</color>
     <color name="text_soothing">#A9A9A9</color>
     <color name="text_dim">#696969</color>
@@ -19,14 +19,16 @@
 
 
     <color name="text_success">#28a745</color>
-    <color name="text_info">#8a2be2</color>
+    <color name="text_info">#8766c4</color>
     <color name="text_warning">#f80</color>
-    <color name="text_danger">#dc3545</color>
+    <color name="text_danger">#e74646</color>
 
-    <color name="bg_success">#28a745</color>
-    <color name="bg_info">#8a2be2</color>
-    <color name="bg_warning">#f89406</color>
-    <color name="bg_danger">#DC143C</color>
+    <color name="bg_success">#53b96a</color>
+    <color name="bg_info">#6c529d</color>
+    <color name="bg_warning">#e58329</color>
+    <!--    <color name="bg_danger">#dc3545</color>-->
+    <color name="bg_danger">#c64e58</color>
+    <!--    <color name="bg_danger">#cb5051</color>-->
 
 
 </resources>

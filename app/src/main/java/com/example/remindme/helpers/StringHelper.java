@@ -11,8 +11,8 @@ public class StringHelper {
     public static final String TIME_FORMAT_12 = "hh:mm a";
     public static final String TIME_FORMAT_24 = "HH:mm";
 
-    public static final String ALERT_TIME_FORMAT_12 = "h:mm a";
-    public static final String ALERT_TIME_FORMAT_24 = "H:mm";
+    public static final String ALERT_TIME_FORMAT_12 = "h:mm:ss a";
+    public static final String ALERT_TIME_FORMAT_24 = "H:mm:ss";
 
     public static final String TIME_WEEKDAY_DATE_FORMAT_12 = "hh:mm a - EEE %s";
     public static final String TIME_WEEKDAY_DATE_FORMAT_24 = "HH:mm - EEE %s";

@@ -19,6 +19,7 @@ import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -75,7 +76,7 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
         if (activity == null) return builder.create();
         LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.dialog_reminder_input_repeat, null);
+        final View view = inflater.inflate(R.layout.reminder_repeat_dialog, null);
         builder.setView(view).setTitle("Select Repeat Option")
                 .setPositiveButton(R.string.dialog_positive, new DialogInterface.OnClickListener() {
                     @Override
@@ -326,13 +327,13 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
 
         if (OsHelper.isLollipopOrLater()) {
             if (model.getParent().getTimeModel().getTimeListMode() == TimeModel.TimeListModes.NONE) {
-                rdo_reminder_repeat_hourly.setButtonTintList(getResources().getColorStateList(R.color.bg_warning));
+                rdo_reminder_repeat_hourly.setButtonTintList(AppCompatResources.getColorStateList(getActivity(), R.color.bg_warning));
             } else {
 
                 if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
-                    rdo_reminder_repeat_hourly.setButtonTintList(getResources().getColorStateList(R.color.border_color_light));
+                    rdo_reminder_repeat_hourly.setButtonTintList(AppCompatResources.getColorStateList(getActivity(), R.color.border_color_light));
                 } else {
-                    rdo_reminder_repeat_hourly.setButtonTintList(getResources().getColorStateList(R.color.border_color));
+                    rdo_reminder_repeat_hourly.setButtonTintList(AppCompatResources.getColorStateList(getActivity(), R.color.border_color));
                 }
             }
         }

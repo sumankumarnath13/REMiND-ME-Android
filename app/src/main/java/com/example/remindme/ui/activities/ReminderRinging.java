@@ -12,7 +12,6 @@ import android.os.IBinder;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -72,9 +71,9 @@ public class ReminderRinging extends ActivityBase {
                 return;
             }
 
-            txt_reminder_alarm_time.setText(StringHelper.toAlertTime(reminderModel.getTimeModel().getTime()));
-            ((TextView) findViewById(R.id.tv_reminder_name)).setText(reminderModel.getName());
-            ((TextView) findViewById(R.id.tv_reminder_note)).setText(reminderModel.getNote());
+            //tv_reminder_time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
+            tv_reminder_name.setText(reminderModel.getName());
+            tv_reminder_note.setText(reminderModel.getNote());
 
             if (reminderModel.canSnooze()) {
                 btnSnooze.setVisibility(View.VISIBLE);
@@ -103,11 +102,11 @@ public class ReminderRinging extends ActivityBase {
                 colorIndex = 0;
             }
 
-            final String alertStr = getString(R.string.reminder_alert_heading);
-            Spannable spannable = new SpannableString(alertStr);
-            spannable.setSpan(new ForegroundColorSpan(getResources().getColor(colors[colorIndex])), 0, alertStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannable.setSpan(new RelativeSizeSpan(2.7f), 0, alertStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            tv_reminder_ringing_title.setText(spannable);
+            String coloredTimeString = StringHelper.toTime(serviceBinder.getServingReminder().getTimeModel().getTime());
+            Spannable spannable = new SpannableString(coloredTimeString);
+            spannable.setSpan(new ForegroundColorSpan(getResources().getColor(colors[colorIndex])), 0, coloredTimeString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            //spannable.setSpan(new RelativeSizeSpan(2.7f), 0, alertStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tv_reminder_time.setText(spannable);
 
             colorIndex++;
         }
@@ -170,8 +169,9 @@ public class ReminderRinging extends ActivityBase {
     }
 
     private TextView tv_time_now;
-    private TextView tv_reminder_ringing_title;
-    private TextView txt_reminder_alarm_time;
+    private TextView tv_reminder_time;
+    private TextView tv_reminder_name;
+    private TextView tv_reminder_note;
     private Button btnSnooze;
 
     @Override
@@ -217,8 +217,9 @@ public class ReminderRinging extends ActivityBase {
         });
 
         tv_time_now = findViewById(R.id.tv_time_now);
-        tv_reminder_ringing_title = findViewById(R.id.tv_reminder_ringing_title);
-        txt_reminder_alarm_time = findViewById(R.id.txt_reminder_alarm_time);
+        tv_reminder_time = findViewById(R.id.tv_reminder_time);
+        tv_reminder_name = findViewById(R.id.tv_reminder_name);
+        tv_reminder_note = findViewById(R.id.tv_reminder_note);
 
         bindAlarmService();
         registerReceiver();

@@ -20,7 +20,7 @@
                 android:id="@+id/rdo_reminder_repeat_off"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:buttonTint="@color/bg_success"
+                app:buttonTint="@color/bg_danger"
                 android:textColor="?attr/soothingText"
                 android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_off" />
@@ -35,7 +35,6 @@
                     android:id="@+id/rdo_reminder_repeat_hourly"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
-                    app:buttonTint="@color/bg_warning"
                     android:textColor="?attr/soothingText"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_hourly" />
@@ -53,7 +52,6 @@
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
                     android:textColor="?attr/soothingText"
-                    app:buttonTint="@color/bg_info"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_daily" />
 
@@ -62,6 +60,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="?attr/soothingText"
+                    app:buttonTint="@color/bg_success"
                     android:layout_weight="1"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_daily_custom" />
@@ -86,6 +85,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="?attr/soothingText"
+                    app:buttonTint="@color/bg_warning"
                     android:layout_weight="1"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_weekly_custom" />
@@ -102,7 +102,6 @@
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
                     android:textColor="?attr/soothingText"
-                    app:buttonTint="@color/bg_warning"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_monthly" />
 
@@ -111,6 +110,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="?attr/soothingText"
+                    app:buttonTint="@color/bg_info"
                     android:layout_weight="1"
                     android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_monthly_custom" />
@@ -121,7 +121,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/soothingText"
-                app:buttonTint="@color/bg_danger"
                 android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_yearly" />
 
