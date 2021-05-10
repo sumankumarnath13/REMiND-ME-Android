@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,46 +7,45 @@
     android:gravity="center_horizontal"
     tools:context=".ui.activities.ReminderRinging">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/dp_32"
         android:orientation="vertical">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_time_now"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/dp_16"
             android:textSize="@dimen/font_size_medium"
-            android:textColor="?attr/dimText" />
+            android:textColor="?attr/themeDimText" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_reminder_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textAlignment="center"
             android:layout_marginBottom="@dimen/dp_32"
-            android:textSize="@dimen/font_size_extra_large"
-            android:textColor="?attr/soothingText" />
+            android:textSize="@dimen/font_size_extra_large" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingVertical="@dimen/dp_32"
             android:orientation="vertical">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_reminder_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,9 +53,9 @@
                 android:textAlignment="center"
                 android:textSize="@dimen/font_size_banner"
                 android:layout_marginVertical="@dimen/dp_32"
-                android:textColor="?attr/brightText" />
+                android:textColor="?attr/themeBrightText" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_reminder_note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,39 +64,36 @@
                 android:layout_marginVertical="@dimen/dp_32"
                 android:textSize="@dimen/font_size_medium" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- Footer aligned to bottom -->
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingVertical="@dimen/dp_32"
         android:gravity="center_horizontal">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_reminder_dismiss"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_32"
-            android:layout_marginRight="@dimen/dp_32"
             android:drawableStart="@drawable/ic_reminder_dismiss"
-            android:drawableLeft="@drawable/ic_reminder_dismiss"
             android:text="@string/btn_alarm_action_dismiss"
             android:textSize="@dimen/font_size_medium" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_reminder_snooze"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="visible"
             android:drawableStart="@drawable/ic_reminder_snooze"
-            android:drawableLeft="@drawable/ic_reminder_snooze"
             android:text="@string/reminder_snooze_menu_caption"
             android:textSize="@dimen/font_size_medium" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

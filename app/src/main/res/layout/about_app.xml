@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,20 +21,20 @@
             <ImageView
                 android:layout_width="@dimen/dp_117"
                 android:layout_height="@dimen/dp_117"
-                android:src="@drawable/ic_brand" />
+                app:srcCompat="@drawable/ic_brand"
+                android:contentDescription="@string/missingImageDesc" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Version"
-                android:textColor="?attr/dimText"
+                android:textColor="?attr/themeDimText"
                 android:textSize="@dimen/font_size_small" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.1.1"
-                android:textColor="?attr/soothingText"
                 android:textSize="@dimen/font_size_large" />
 
         </LinearLayout>
@@ -45,13 +46,13 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_send_feedback"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Send feedback"
-                android:textColor="@color/text_warning" />
+                android:textColor="?attr/themeWarningColor" />
 
         </LinearLayout>
 
@@ -62,13 +63,13 @@
             android:layout_marginTop="@dimen/dp_16"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_view_faq"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="FAQ (User's guide)"
-                android:textColor="@color/text_info" />
+                android:textColor="?attr/themeCuriosityColor" />
 
         </LinearLayout>
 
@@ -79,13 +80,13 @@
             android:layout_marginTop="@dimen/dp_16"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_view_license"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="License Info"
-                android:textColor="?attr/dimText" />
+                android:textColor="?attr/themeDimText" />
 
         </LinearLayout>
 
@@ -96,13 +97,13 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_share_app"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Tell a friend about this App"
-                android:textColor="@color/text_success" />
+                android:textColor="?attr/themeSuccessColor" />
 
         </LinearLayout>
 

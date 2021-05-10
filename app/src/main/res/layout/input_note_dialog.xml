@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:autofillHints="@string/hint_reminder_note"
-            android:backgroundTint="@color/bg_warning"
+            app:backgroundTint="?attr/themeWarningColor"
             android:hint="@string/hint_reminder_note"
             android:inputType="textLongMessage|textMultiLine|textCapSentences" />
 
@@ -26,14 +26,15 @@
             android:id="@+id/img_reminder_note_voice_input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_mic"
-            app:tint="@color/bg_warning" />
+            app:srcCompat="@drawable/ic_mic"
+            app:tint="?attr/themeWarningColor"
+            android:contentDescription="@string/missingImageDesc" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_reminder_note_limit_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="?attr/dimText" />
+        android:textColor="?attr/themeDimText" />
 
 </LinearLayout>

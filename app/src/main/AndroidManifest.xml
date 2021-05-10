@@ -22,7 +22,6 @@
 
         <receiver
             android:name=".controllers.AlertBroadcastReceiver"
-            android:directBootAware="true"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -37,7 +36,6 @@
 
         <service
             android:name=".controllers.AlertService"
-            android:directBootAware="true"
             android:exported="false" />
 
         <activity
@@ -49,7 +47,7 @@
         <activity
             android:name=".ui.activities.Main"
             android:label="@string/app_name"
-            android:theme="@style/BlackTheme.NoActionBar">
+            android:theme="@style/NoActionBarStyle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

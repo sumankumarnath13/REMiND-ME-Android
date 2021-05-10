@@ -2,7 +2,6 @@ package com.example.remindme.ui.fragments.dialogFragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +22,11 @@ public class OtherRepeatDialog extends CustomRepeatDialogBase {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        FragmentActivity activity = getActivity();
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        if (activity == null) return builder.create();
-        LayoutInflater inflater = activity.getLayoutInflater();
+        final FragmentActivity activity = getActivity();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        if (activity == null)
+            return builder.create();
+        final LayoutInflater inflater = activity.getLayoutInflater();
 
         final View view = inflater.inflate(R.layout.reminder_repeat_custom_dialog, null);
 
@@ -38,12 +38,7 @@ public class OtherRepeatDialog extends CustomRepeatDialogBase {
         unit_picker.setMinValue(0);
         unit_picker.setMaxValue(units.length - 1);
         unit_picker.setDisplayedValues(units);
-        unit_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                value_picker.setMaxValue(RepeatModel.getMaxForTimeUnit(RepeatModel.getTimeUnitFromInteger(newVal)));
-            }
-        });
+        unit_picker.setOnValueChangedListener((picker, oldVal, newVal) -> value_picker.setMaxValue(RepeatModel.getMaxForTimeUnit(RepeatModel.getTimeUnitFromInteger(newVal))));
 
         // Value of unit must set first before setting up value of time:
         // 1
@@ -53,20 +48,14 @@ public class OtherRepeatDialog extends CustomRepeatDialogBase {
         // 2
         value_picker.setValue(Math.max(getModel().getCustomTimeValue(), 1));
 
-        builder.setView(view).setTitle("Customize time to Repeat").setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getModel().setRepeatCustom(unit_picker.getValue(), value_picker.getValue());
+        builder.setView(view).setTitle("Customize time to Repeat").setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
+            getModel().setRepeatCustom(unit_picker.getValue(), value_picker.getValue());
 
-                getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.OTHER);
-                getListener().customRepeatDialogSetRepeatModel(getModel());
+            getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.OTHER);
+            getListener().setCustomRepeatDialogModel(getModel());
 
-            }
-        }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
 
-            }
         });
 
         return builder.create();

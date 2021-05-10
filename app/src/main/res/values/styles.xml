@@ -1,182 +1,504 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="BlackTheme" parent="Theme.AppCompat.DayNight">
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/theme_background
+    <style name="BlackTheme" parent="Theme.AppCompat">
+        <item name="themeSuccessColor">
+            @color/colorSuccess
         </item>
-        <item name="android:windowBackground">@color/theme_background</item>
-        <item name="colorAccent">@color/accent_color</item> <!-- Set button colors etc -->
-        <item name="colorPrimaryDark">@color/theme_background
+        <item name="themeCuriosityColor">
+            @color/colorCuriosity
+        </item>
+        <item name="themeWarningColor">
+            @color/colorWarning
+        </item>
+        <item name="themeDangerColor">
+            @color/colorDanger
+        </item>
+        <item name="themeAccentColor">
+            @color/colorAccent
+        </item>
+        <item name="themeBackgroundColor">
+            @color/colorBackground
+        </item>
+        <item name="themeDialogBackgroundColor">
+            @color/colorDialogBackground
+        </item>
+        <item name="themeControlNormalColor">
+            @color/colorThemeControlNormal
+        </item>
+        <item name="themeDisabledControlColor">
+            @color/colorDisabledControl
+        </item>
+        <item name="themeBorderColor">
+            @color/colorBorder
+        </item>
+        <item name="themeBrightText">
+            @color/colorBrightText
+        </item>
+        <item name="themeSoothingText">
+            @color/colorSoothingText
+        </item>
+        <item name="themeDimText">
+            @color/colorDimText
+        </item>
+
+
+        <item name="android:windowLightStatusBar" tools:targetApi="m">
+            false
+        </item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">
+            ?attr/themeBackgroundColor
+        </item>
+        <item name="colorPrimaryDark">
+            ?attr/themeBackgroundColor
         </item> <!-- Changes background color or app bar and title -->
-        <item name="colorPrimary">@color/theme_background
+        <item name="android:windowBackground">
+            ?attr/themeBackgroundColor
+        </item>
+        <item name="colorPrimary">
+            ?attr/themeBackgroundColor
         </item> <!-- Changes background color or app bar and title -->
-        <item name="colorButtonNormal">@color/border_color
-        </item> <!-- Disabled button text color -->
-        <item name="colorControlNormal">@color/border_color
-        </item> <!-- Disabled control tint color -->
-        <item name="android:textCursorDrawable">@null
+
+        <!-- ********************************************* -->
+        <!--        <item name="android:textColor">-->
+        <!--            ?attr/themeSoothingText-->
+        <!--        </item>-->
+        <item name="android:textColorHint">
+            ?attr/themeDimText
+        </item>
+        <!-- ********************************************* -->
+
+        <item name="colorAccent">
+            ?attr/themeAccentColor
+        </item>
+        <item name="colorControlNormal">
+            ?attr/themeControlNormalColor
+        </item>
+        <item name="colorControlHighlight">
+            ?attr/themeAccentColor
+        </item>
+        <item name="android:colorBackground">
+            ?attr/themeDialogBackgroundColor
+        </item> <!-- drop down and context menu background -->
+        <item name="android:colorForeground">
+            ?attr/themeSoothingText
+        </item> <!-- This somehow affects switch off bar color -->
+        <item name="actionBarStyle">
+            @style/ActionBarStyle
+        </item>
+        <item name="android:textViewStyle">
+            @style/TextViewStyle
+        </item>
+        <item name="android:editTextStyle">
+            @style/EditTextStyle
+        </item>
+        <item name="android:textCursorDrawable">
+            @null
+        </item> <!-- Make edit text cursor color neutral to accent color -->
+
+        <!--        <item name="android:numberPickerStyle" tools:targetApi="n">-->
+        <!--            @style/NumberPickerStyle-->
+        <!--        </item>-->
+
+        <item name="android:buttonStyle">
+            @style/buttonStyle
+        </item>
+        <item name="android:checkboxStyle">
+            @style/checkBoxStyle
+        </item>
+        <item name="android:radioButtonStyle">
+            @style/radioButtonStyle
+        </item>
+        <item name="imageButtonStyle">
+            @style/ImageButtonStyle
+        </item>
+        <item name="switchStyle">
+            @style/switchStyle
+        </item>
+        <item name="android:alertDialogTheme">
+            @style/DialogStyle
+        </item>
+        <item name="android:timePickerStyle" tools:targetApi="lollipop">
+            @style/TimePickerStyle
+        </item>
+        <item name="android:datePickerStyle" tools:targetApi="lollipop">
+            @style/DatePickerStyle
+        </item>
+    </style>
+
+    <style name="LightTheme" parent="Theme.AppCompat">
+        <item name="themeSuccessColor">
+            @color/colorSuccessLight
+        </item>
+        <item name="themeCuriosityColor">
+            @color/colorCuriosityLight
+        </item>
+        <item name="themeWarningColor">
+            @color/colorWarningLight
+        </item>
+        <item name="themeDangerColor">
+            @color/colorDangerLight
+        </item>
+        <item name="themeAccentColor">
+            @color/colorAccentLight
+        </item>
+        <item name="themeBackgroundColor">
+            @color/colorBackgroundLight
+        </item>
+        <item name="themeDialogBackgroundColor">
+            @color/colorDialogBackgroundLight
+        </item>
+        <item name="themeControlNormalColor">
+            @color/colorThemeControlNormalLight
+        </item>
+        <item name="themeDisabledControlColor">
+            @color/colorDisabledControlLight
+        </item>
+        <item name="themeBorderColor">
+            @color/colorBorderLight
+        </item>
+        <item name="themeBrightText">
+            @color/colorBrightTextLight
+        </item>
+        <item name="themeSoothingText">
+            @color/colorSoothingTextLight
+        </item>
+        <item name="themeDimText">
+            @color/colorDimTextLight
+        </item>
+
+
+        <item name="android:windowLightStatusBar" tools:targetApi="m">
+            true
+        </item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">
+            ?attr/themeBackgroundColor
+        </item>
+        <item name="colorPrimaryDark">
+            ?attr/themeBackgroundColor
+        </item> <!-- Changes background color or app bar and title -->
+        <item name="android:windowBackground">
+            ?attr/themeBackgroundColor
+        </item>
+        <item name="colorPrimary">
+            ?attr/themeBackgroundColor
+        </item> <!-- Changes background color or app bar and title -->
+        <item name="android:textCursorDrawable">
+            @null
         </item> <!-- Make edit text cursor color neutral to accent color -->
 
 
-        <item name="themeBackground">@color/theme_background</item>
-        <item name="borderColor">@color/border_color</item>
-        <item name="brightText">@color/text_bright</item>
-        <item name="accentColor">@color/accent_color</item>
-        <item name="dimText">@color/text_dim</item>
-        <item name="soothingText">@color/text_soothing</item>
+        <!-- ********************************************* -->
+        <!--        <item name="android:textColor">-->
+        <!--            ?attr/themeSoothingText-->
+        <!--        </item>-->
+        <item name="android:textColorHint">
+            ?attr/themeDimText
+        </item>
+        <!-- ********************************************* -->
 
 
-        <item name="android:buttonStyle">@style/buttonStyle</item>
-        <item name="android:radioButtonStyle">@style/radioButtonStyle</item>
-        <item name="imageButtonStyle">@style/imageButtonStyle</item>
-        <item name="android:alertDialogTheme">@style/BlackDialog</item>
+        <item name="colorAccent">
+            ?attr/themeAccentColor
+        </item>
+        <item name="colorControlNormal">
+            ?attr/themeControlNormalColor
+        </item>
+        <item name="colorControlHighlight">
+            ?attr/themeAccentColor
+        </item>
+        <item name="android:colorBackground">
+            ?attr/themeDialogBackgroundColor
+        </item> <!-- drop down and context menu background -->
+        <item name="android:colorForeground">
+            ?attr/themeSoothingText
+        </item> <!-- This somehow affects switch off bar color -->
+        <item name="actionBarStyle">
+            @style/ActionBarStyle
+        </item>
+        <item name="android:textViewStyle">
+            @style/TextViewStyle
+        </item>
+        <item name="android:editTextStyle">
+            @style/EditTextStyle
+        </item>
+
+        <!--        <item name="android:numberPickerStyle" tools:targetApi="n">-->
+        <!--            @style/NumberPickerStyle-->
+        <!--        </item>-->
+
+        <item name="android:buttonStyle">
+            @style/buttonStyle
+        </item>
+        <item name="android:checkboxStyle">
+            @style/checkBoxStyle
+        </item>
+        <item name="android:radioButtonStyle">
+            @style/radioButtonStyle
+        </item>
+        <item name="imageButtonStyle">
+            @style/ImageButtonStyle
+        </item>
+        <item name="switchStyle">
+            @style/switchStyle
+        </item>
+        <item name="android:alertDialogTheme">
+            @style/DialogStyle
+        </item>
+        <item name="android:timePickerStyle" tools:targetApi="lollipop">
+            @style/TimePickerStyle
+        </item>
+        <item name="android:datePickerStyle" tools:targetApi="lollipop">
+            @style/DatePickerStyle
+        </item>
     </style>
 
-    <style name="LightTheme" parent="Theme.AppCompat.Light">
-        <item name="android:statusBarColor" tools:targetApi="m">@color/theme_background_light</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="android:windowBackground">@color/theme_background_light</item>
-        <item name="colorAccent">@color/accent_color_light</item> <!-- Set button colors etc -->
-        <item name="colorPrimaryDark">@color/text_soothing_light
-        </item> <!-- Changes background color or app bar and title -->
-        <item name="colorPrimary">@color/theme_background_light
-        </item> <!-- Changes background color or app bar and title -->
-        <item name="colorButtonNormal">@color/border_color_light
-        </item> <!-- Disabled button text color -->
-        <item name="colorControlNormal">@color/border_color_light
-        </item> <!-- Disabled control tint color -->
-        <item name="android:textCursorDrawable">@null
-        </item> <!-- Make edit text cursor color neutral to accent color -->
-
-        <item name="themeBackground">@color/theme_background_light</item>
-        <item name="borderColor">@color/border_color_light</item>
-        <item name="brightText">@color/text_bright_light</item>
-        <item name="accentColor">@color/accent_color_light</item>
-        <item name="dimText">@color/text_dim_light</item>
-        <item name="soothingText">@color/text_soothing_light</item>
-
-        <item name="android:buttonStyle">@style/buttonStyle</item>
-        <item name="android:radioButtonStyle">@style/radioButtonStyle</item>
-        <item name="imageButtonStyle">@style/imageButtonStyle</item>
-        <item name="android:alertDialogTheme">@style/LightDialog</item>
+    <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:windowContentOverlay">
+            @null
+        </item> <!-- Remove title bar shadow -->
+        <!-- action bar background - without android prefix -->
+        <item name="background">
+            ?attr/themeBackgroundColor
+        </item>
+        <!-- action bar elevation - without android prefix -->
+        <item name="elevation">
+            0dp
+        </item>
+        <item name="subtitleTextStyle">
+            @style/ActionBarSubTitleTextStyle
+        </item>
+        <item name="colorControlNormal">
+            ?attr/themeSoothingText
+        </item>
     </style>
 
-    <style name="radioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
-        <item name="android:textSize">@dimen/font_size_medium</item>
-        <item name="android:textColor">?attr/soothingText</item>
-        <item name="colorControlNormal">?attr/borderColor</item>
-        <item name="colorButtonNormal">?attr/borderColor</item>
+    <style name="ActionBarSubTitleTextStyle" parent="@android:style/TextAppearance">
+        <item name="android:textColor">
+            ?attr/themeDimText
+        </item>
+    </style>
+
+    <style name="NoActionBarStyle" parent="BlackTheme">
+        <item name="windowActionBar">
+            false
+        </item>
+        <item name="windowNoTitle">
+            true
+        </item>
+    </style>
+
+    <style name="NoActionBarLightStyle" parent="LightTheme">
+        <item name="windowActionBar">
+            false
+        </item>
+        <item name="windowNoTitle">
+            true
+        </item>
+    </style>
+
+    <style name="DialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">
+            ?attr/themeDialogBackgroundColor
+        </item> <!-- Changes background color -->
+        <item name="colorControlHighlight">
+            ?attr/themeAccentColor
+        </item>
+        <item name="colorControlNormal">
+            ?attr/themeDisabledControlColor
+        </item>
+        <item name="android:windowTitleStyle">
+            @style/DialogTitleTextStyle
+        </item>
+        <item name="android:textSize">
+            @dimen/font_size_medium
+        </item>
+        <item name="android:textColor">
+            ?attr/themeSoothingText
+        </item>
+        <item name="dialogCornerRadius">
+            @dimen/dp_8
+        </item>
+    </style>
+
+    <style name="DialogTitleTextStyle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">
+            @dimen/font_size_medium
+        </item>
+        <item name="android:textColor">
+            ?attr/themeDimText
+        </item>
+    </style>
+
+    <style name="TextViewStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">
+            @dimen/font_size_medium
+        </item>
+        <item name="android:textColorHint">
+            ?attr/themeDimText
+        </item>
+        <item name="android:textColor">
+            ?attr/themeSoothingText
+        </item>
+    </style>
+
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">
+            ?attr/themeSoothingText
+        </item>
+    </style>
+
+    <style name="NumberPickerStyle" parent="Theme.AppCompat">
+        <item name="android:textColor">
+            ?attr/themeSoothingText
+        </item>
+
     </style>
 
     <style name="buttonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:minHeight">@dimen/dp_8
+        <item name="android:minHeight">
+            @dimen/dp_8
         </item> <!-- Android apply default mid height of buttons making it much larger that needed. This is to override that issue -->
-        <item name="android:background">@drawable/bg_rounded</item>
-        <item name="android:padding">@dimen/dp_8</item>
-        <item name="colorAccent">?attr/accentColor</item>
-        <!--        <item name="colorButtonNormal">?attr/borderColor</item>-->
-        <item name="android:textSize">@dimen/font_size_small</item>
+        <item name="android:background">
+            @drawable/rounded_button_background_selector
+        </item>
+        <item name="android:padding">
+            @dimen/dp_8
+        </item>
+        <item name="android:paddingStart">
+            @dimen/dp_16
+        </item>
+        <item name="android:paddingEnd">
+            @dimen/dp_16
+        </item>
+        <item name="android:textSize">
+            @dimen/font_size_small
+        </item>
+        <item name="android:textColor">
+            @drawable/button_text_color_selector
+        </item>
     </style>
 
-    <style name="smallButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:minHeight">0dp
+    <style name="SmallButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:minHeight">
+            0dp
         </item> <!-- Android apply default mid height of buttons making it much larger that needed. This is to override that issue -->
-        <item name="android:minWidth">0dp</item>
-        <item name="android:background">@drawable/bg_rounded</item>
-        <item name="android:padding">@dimen/dp_5</item>
-        <item name="colorAccent">@color/accent_color_light</item>
-        <!--        <item name="colorButtonNormal">?attr/borderColor</item>-->
-        <item name="android:textSize">@dimen/font_size_extra_small</item>
+        <item name="android:minWidth">
+            0dp
+        </item>
+        <item name="android:background">
+            @drawable/rounded_button_background_selector
+        </item>
+        <item name="android:padding">
+            @dimen/dp_3
+        </item>
+        <item name="android:paddingStart">
+            @dimen/dp_8
+        </item>
+        <item name="android:paddingEnd">
+            @dimen/dp_8
+        </item>
+        <item name="android:textSize">
+            @dimen/font_size_extra_small
+        </item>
+        <item name="android:textColor">
+            @drawable/button_text_color_selector
+        </item>
     </style>
 
-    <style name="imageButtonStyle" parent="Widget.AppCompat.ImageButton">
-        <item name="android:minHeight">0dp
+    <style name="ImageButtonStyle" parent="Widget.AppCompat.ImageButton">
+        <item name="android:minHeight">
+            0dp
         </item> <!-- Android apply default mid height of buttons making it much larger that needed. This is to override that issue -->
-        <item name="android:padding">@dimen/dp_3</item>
-        <item name="android:background">@drawable/bg_rounded</item>
-        <item name="android:scaleType">center</item>
+        <item name="android:padding">
+            @dimen/dp_3
+        </item>
+        <item name="paddingStart">
+            @dimen/dp_8
+        </item>
+        <item name="paddingEnd">
+            @dimen/dp_8
+        </item>
+        <item name="android:background">
+            @drawable/rounded_button_background_selector
+        </item>
+        <item name="android:scaleType">
+            center
+        </item>
     </style>
 
-    <style name="BlackTheme.NoActionBar" parent="BlackTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="checkBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textSize">
+            @dimen/font_size_medium
+        </item>
+        <item name="android:textColor">
+            ?attr/themeSoothingText
+        </item>
+        <item name="buttonTint">
+            @drawable/compound_button_tint_color_selector
+        </item>
     </style>
 
-    <style name="LightTheme.NoActionBar" parent="LightTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="switchStyle" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:textSize">
+            @dimen/font_size_medium
+        </item>
+        <item name="android:textColor">
+            ?attr/themeSoothingText
+        </item>
+        <item name="thumbTint">
+            @drawable/compound_button_tint_color_selector
+        </item>
     </style>
 
-    <style name="BlackDialog" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="android:windowBackground">@color/bg_dialog
+    <style name="radioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:textSize">
+            @dimen/font_size_medium
+        </item>
+        <item name="android:textColor">
+            ?attr/themeSoothingText
+        </item>
+        <item name="buttonTint">
+            @drawable/compound_button_tint_color_selector
+        </item>
+    </style>
+
+    <style name="TimePickerStyle" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">
+            ?attr/themeDialogBackgroundColor
         </item> <!-- Changes background color -->
-        <item name="android:textColorPrimary">@color/text_soothing</item>
-        <item name="colorAccent">@color/accent_color</item>
-        <item name="colorPrimary">@color/bg_danger</item>
-        <item name="colorPrimaryDark">@color/bg_success</item>
-    </style>
-
-    <style name="LightDialog" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="android:windowBackground">@color/theme_background_light
-        </item> <!-- Changes background color -->
-        <item name="android:textColorPrimary">@color/text_soothing_light</item>
-        <item name="colorAccent">@color/accent_color_light</item>
-        <item name="colorPrimary">@color/bg_danger</item>
-        <item name="colorPrimaryDark">@color/bg_success</item>
-    </style>
-
-    <style name="TimePickerDialogBlack" parent="Theme.AppCompat.DayNight.Dialog">
-        <item name="android:windowBackground">@color/bg_dialog
-        </item> <!-- Changes background color -->
-        <item name="colorControlActivated">@color/bg_success
+        <item name="colorControlActivated">
+            ?attr/themeSuccessColor
         </item> <!-- Change selection/cursor color -->
-        <item name="tint">@color/accent_color
+        <item name="tint">
+            ?attr/themeAccentColor
         </item> <!-- Change mode switch color for time picker-->
-        <item name="colorAccent">@color/accent_color
+        <item name="colorAccent">
+            ?attr/themeAccentColor
         </item> <!-- Change OK/Cancel button color -->
-        <item name="android:textColorPrimary">@color/text_bright</item>
-        <item name="android:textColorSecondary">@color/text_soothing</item>
+        <item name="android:textColorPrimary">
+            ?attr/themeSoothingText
+        </item>
+        <item name="android:textColorSecondary">
+            ?attr/themeDimText
+        </item>
     </style>
 
-    <style name="TimePickerDialogLight" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:windowBackground">@color/theme_background_light
+    <style name="DatePickerStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">
+            ?attr/themeDialogBackgroundColor
         </item> <!-- Changes background color -->
-        <item name="colorControlActivated">@color/bg_success
+        <item name="colorControlActivated">
+            ?attr/themeSuccessColor
         </item> <!-- Change selection/cursor color -->
-        <item name="tint">@color/accent_color_light
-        </item> <!-- Change mode switch color for time picker-->
-        <item name="colorAccent">@color/accent_color_light
+        <item name="colorAccent">
+            ?attr/themeAccentColor
         </item> <!-- Change OK/Cancel button color -->
-        <item name="android:textColorPrimary">@color/text_bright_light</item>
-        <item name="android:textColorSecondary">@color/text_soothing_light</item>
-
-        <!--        <item name="colorControlNormal">@color/bg_warning-->
-        <!--        </item> &lt;!&ndash; Change clock's analog mode spinner down arrow color and inputs border bottom color | Not required here, but keeping as important information &ndash;&gt;-->
-        <!--        <item name="buttonTint">@color/text_danger-->
-        <!--        </item>&lt;!&ndash; Change mode switch color for time picker in some devices > It seems this has no effects at all &ndash;&gt;-->
-
-    </style>
-
-    <style name="DatePickerDialogBlack" parent="Theme.AppCompat.DayNight.Dialog">
-        <item name="android:windowBackground">@color/bg_dialog
-        </item> <!-- Changes background color -->
-        <item name="colorControlActivated">@color/bg_success
-        </item> <!-- Change selection/cursor color -->
-        <item name="colorAccent">@color/accent_color</item> <!-- Change OK/Cancel button color -->
-        <item name="android:textColorPrimary">@color/text_bright</item>
-        <item name="android:textColorSecondary">@color/text_soothing</item>
-    </style>
-
-    <style name="DatePickerDialogLight" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:windowBackground">@color/theme_background_light
-        </item> <!-- Changes background color -->
-        <item name="colorControlActivated">@color/bg_success
-        </item> <!-- Change selection/cursor color -->
-        <item name="colorAccent">@color/accent_color_light
-        </item> <!-- Change OK/Cancel button color -->
-        <item name="android:textColorPrimary">@color/text_bright_light</item>
-        <item name="android:textColorSecondary">@color/text_soothing_light</item>
-        <!--                <item name="colorPrimary">@color/theme_background_light</item>-->
-        <!--                <item name="colorPrimaryDark">@color/text_soothing_light</item>-->
+        <item name="android:textColorPrimary">
+            ?attr/themeSoothingText
+        </item>
+        <item name="android:textColorSecondary">
+            ?attr/themeDimText
+        </item>
     </style>
 
 </resources>

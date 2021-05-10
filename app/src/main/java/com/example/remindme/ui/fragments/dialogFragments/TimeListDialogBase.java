@@ -39,16 +39,16 @@ public class TimeListDialogBase extends RefreshableDialogFragmentBase {
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
-        getListener().setTimeListDialogModel(getModel());
-        canceled = true;
+//        getListener().setTimeListDialogModel(getModel());
+//        canceled = true;
     }
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        if (!canceled) {
-            getListener().setTimeListDialogModel(getModel());
-        }
+//        if (!canceled) {
+//            getListener().setTimeListDialogModel(getModel());
+//        }
     }
 
     @Override

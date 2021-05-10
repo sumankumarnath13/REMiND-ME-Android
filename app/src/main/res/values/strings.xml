@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Remind Me</string>
-    <string name="app_label">Remind\u0020Me</string>
+    <string name="app_label">Remind Me</string>
 
     <string name="dialog_positive">Set</string>
     <string name="dialog_negative">Cancel</string>
-    <string name="btn_edit">Edit&#160;&#160;&#160;</string>
-    <string name="btn_delete">Delete&#160;</string> <!-- ending space is required to manage button right padding issues -->
+    <string name="btn_edit">&#160;Edit</string>
+    <string name="btn_delete">Delete</string> <!-- ending space is required to manage button right padding issues -->
 
 
     <string name="tab_text_1">Active</string>
@@ -13,20 +13,19 @@
 
     <string name="hint_reminder_name">Give a name …</string>
     <string name="hint_reminder_note">Extra notes …</string>
-    <string name="btn_save">Set Reminder&#160;</string> <!-- ending space is required to manage button right padding issues -->
+    <string name="btn_save">Set Reminder</string> <!-- ending space is required to manage button right padding issues -->
     <string name="btn_time">Set Time</string>
     <string name="btn_date">Set Date</string>
     <string name="btn_repeat">Repeat</string>
 
     <string name="repeat_off">Off</string>
     <string name="repeat_hourly">Hourly</string>
-    <string name="repeat_hourly_custom">Hourly Custom</string>
     <string name="repeat_daily">Daily</string>
-    <string name="repeat_daily_custom">Daily Custom</string>
+    <string name="repeat_daily_custom">Weekdays</string>
     <string name="repeat_weekly">Weekly</string>
-    <string name="repeat_weekly_custom">Weekly Custom</string>
+    <string name="repeat_weekly_custom">Weeks of month</string>
     <string name="repeat_monthly">Monthly</string>
-    <string name="repeat_monthly_custom">Monthly Custom</string>
+    <string name="repeat_monthly_custom">Months of year</string>
     <string name="repeat_yearly">Yearly</string>
 
     <string name="repeat_daily_custom_mon">Monday</string>
@@ -37,10 +36,11 @@
     <string name="repeat_daily_custom_sat">Saturday</string>
     <string name="repeat_daily_custom_sun">Sunday</string>
 
-    <string name="repeat_weekly_custom_week1">1st week of the month</string>
-    <string name="repeat_weekly_custom_week2">2nd week of the month</string>
-    <string name="repeat_weekly_custom_week3">3rd week of the month</string>
-    <string name="repeat_weekly_custom_week4">4th week of the month</string>
+    <string name="repeat_weekly_custom_week1">On 1st %s of month</string>
+    <string name="repeat_weekly_custom_week2">On 2nd %s of month</string>
+    <string name="repeat_weekly_custom_week3">On 3rd %s of month</string>
+    <string name="repeat_weekly_custom_week4">On 4th %s of month</string>
+    <string name="repeat_weekly_custom_week5">On 5th %s of month</string>
 
     <string name="repeat_monthly_custom_jan">January</string>
     <string name="repeat_monthly_custom_feb">February</string>
@@ -69,16 +69,15 @@
     <string name="snooze_repeat_r3">3 Times</string>
     <string name="snooze_repeat_r5">5 Times</string>
     <string name="snooze_repeat_rc">Continuously</string>
-    <string name="add_new_reminder">Set New Reminder&#160;</string> <!-- ending space is required to manage button right padding issues -->
-    <string name="reminder_snooze_menu_caption">Snooze&#160;</string> <!-- ending space is required to manage button right padding issues -->
-    <string name="btn_alarm_action_dismiss">&#160;Dismiss&#160;</string> <!-- ending space is required to manage button right padding issues -->
+    <string name="add_new_reminder">Set New Reminder</string> <!-- ending space is required to manage button right padding issues -->
+    <string name="reminder_snooze_menu_caption">Snooze</string> <!-- ending space is required to manage button right padding issues -->
+    <string name="btn_alarm_action_dismiss">Dismiss</string> <!-- ending space is required to manage button right padding issues -->
 
     <string name="snooze_repeat_heading">Repeat</string>
 
-    <string name="new_reminder_heading">New</string>
-    <string name="view_reminder_heading">View</string>
-    <string name="edit_reminder_heading">Update</string>
-    <string name="reminder_alert_heading">Ding Dong</string>
+    <string name="new_reminder_heading">Set New Reminder</string>
+    <string name="view_reminder_heading">Viewing Reminder</string>
+    <string name="edit_reminder_heading">Updating Reminder</string>
     <string name="heading_calculated_alarm_time">First alert will raise on</string>
     <string name="increase_volume_gradually_label">Auto increase volume</string>
     <string name="alarm_volume_label">Alarm volume</string>
@@ -87,11 +86,16 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="activitySettingsTitle">Settings</string>
     <string name="activityAboutAppTitle">About App</string>
-    <string name="time_list_repeat_option_label">Time List</string>
     <array name="first_day_of_week_options">
-        <item>Sunday</item>
-        <item>Monday</item>
-        <item>Saturday</item>
+        <item>
+            Sunday
+        </item>
+        <item>
+            Monday
+        </item>
+        <item>
+            Saturday
+        </item>
     </array>
     <array name="ring_durations">
         <item>1 minute</item>
@@ -116,6 +120,6 @@
         <item>LLL dd, yyyy</item>
     </array>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="missed_on">"Missed on : "</string>
+    <string name="missingImageDesc">oops</string>
 </resources>

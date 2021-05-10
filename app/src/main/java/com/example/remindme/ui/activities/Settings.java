@@ -7,17 +7,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatSeekBar;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.remindme.R;
 import com.example.remindme.dataModels.Reminder;
-import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.DeviceHelper;
 import com.example.remindme.helpers.OsHelper;
@@ -36,33 +35,33 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
     final AppSettingsHelper settingsHelper = AppSettingsHelper.getInstance();
     public static final String THEME_CHANGE_INTENT_ACTION = "THEME_CHANGE_INTENT_ACTION";
 
-    private TextView timeFormatTextView;
-    private TextView dateFormatTextView;
+    private AppCompatTextView timeFormatTextView;
+    private AppCompatTextView dateFormatTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        ActivityHelper.setTitle(this, getResources().getString(R.string.activitySettingsTitle));
+        setActivitySubTitle(getResources().getString(R.string.activitySettingsTitle));
 
         setUserInteracted(false);
 
-        final TextView tv_brand = findViewById(R.id.tv_brand);
+        final AppCompatTextView tv_brand = findViewById(R.id.tv_brand);
         tv_brand.setText(DeviceHelper.getInstance().getBrand());
-        final TextView tv_model = findViewById(R.id.tv_model);
+        final AppCompatTextView tv_model = findViewById(R.id.tv_model);
         tv_model.setText(DeviceHelper.getInstance().getModel());
 
-        final TextView tv_os_signature = findViewById(R.id.tv_os_signature);
+        final AppCompatTextView tv_os_signature = findViewById(R.id.tv_os_signature);
         tv_os_signature.setText(DeviceHelper.getInstance().getOperatingSystemSignature());
 
-        final TextView tv_os_update_signature = findViewById(R.id.tv_os_update_signature);
+        final AppCompatTextView tv_os_update_signature = findViewById(R.id.tv_os_update_signature);
         tv_os_update_signature.setText(DeviceHelper.getInstance().getOperatingSystemUpdateSignature());
 
 
         final AudioManager audioManager = OsHelper.getAudioManager(this);
-        final SeekBar seeker_alarm_stream_volume = findViewById(R.id.seeker_alarm_stream_volume);
+        final AppCompatSeekBar seeker_alarm_stream_volume = findViewById(R.id.seeker_alarm_stream_volume);
         seeker_alarm_stream_volume.setProgress(OsHelper.getAlarmVolumeInPercentage(OsHelper.getAudioManager(this)));
-        seeker_alarm_stream_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seeker_alarm_stream_volume.setOnSeekBarChangeListener(new AppCompatSeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 //                if (fromUser) {
@@ -84,23 +83,20 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
 
         final SwitchCompat sw_disable_all_reminders = findViewById(R.id.sw_disable_all_reminders);
         sw_disable_all_reminders.setChecked(settingsHelper.isDisableAllReminders());
-        sw_disable_all_reminders.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settingsHelper.setDisableAllReminders(isChecked);
-                List<Reminder> list = ReminderModel.getActiveReminders(null);
-                if (isChecked) {
-                    for (int i = 0; i < list.size(); i++) {
-                        ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
-                        reminderModel.trySetEnabled(Settings.this, false);
-                    }
-                } else {
-                    for (int i = 0; i < list.size(); i++) {
-                        ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
-                        if (reminderModel.isEnabled()) {
-                            if (reminderModel.trySetEnabled(Settings.this, true)) {
-                                reminderModel.saveAndSetAlert(Settings.this, false);
-                            }
+        sw_disable_all_reminders.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            settingsHelper.setDisableAllReminders(isChecked);
+            List<Reminder> list = ReminderModel.getActiveReminders(null);
+            if (isChecked) {
+                for (int i = 0; i < list.size(); i++) {
+                    ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
+                    reminderModel.trySetEnabled(Settings.this, false);
+                }
+            } else {
+                for (int i = 0; i < list.size(); i++) {
+                    ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
+                    if (reminderModel.isEnabled()) {
+                        if (reminderModel.trySetEnabled(Settings.this, true)) {
+                            reminderModel.saveAndSetAlert(Settings.this, false);
                         }
                     }
                 }
@@ -108,24 +104,21 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
         });
 
 
-        final Button btn_os_setup_faqs = findViewById(R.id.btn_os_setup_faqs);
-        btn_os_setup_faqs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Intent faqIntent = new Intent(Intent.ACTION_VIEW);
-                faqIntent.setData(Uri.parse("https://www.google.co.in"));
-                startActivity(faqIntent);
-            }
+        final AppCompatButton btn_os_setup_faqs = findViewById(R.id.btn_os_setup_faqs);
+        btn_os_setup_faqs.setOnClickListener(v -> {
+            final Intent faqIntent = new Intent(Intent.ACTION_VIEW);
+            faqIntent.setData(Uri.parse("https://www.google.co.in"));
+            startActivity(faqIntent);
         });
 
 
-        final TextView tv_active_reminder_count = findViewById(R.id.tv_active_reminder_count);
+        final AppCompatTextView tv_active_reminder_count = findViewById(R.id.tv_active_reminder_count);
         tv_active_reminder_count.setText(String.valueOf(ReminderModel.getActiveReminders(null).size()));
 
-        final TextView tv_expired_reminder_count = findViewById(R.id.tv_expired_reminder_count);
+        final AppCompatTextView tv_expired_reminder_count = findViewById(R.id.tv_expired_reminder_count);
         tv_expired_reminder_count.setText(String.valueOf(ReminderModel.getDismissedReminders(null).size()));
 
-        final Spinner first_day_of_week_spinner = findViewById(R.id.first_day_of_week_spinner);
+        final AppCompatSpinner first_day_of_week_spinner = findViewById(R.id.first_day_of_week_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.first_day_of_week_options, R.layout.simple_spinner_dropdown_item);
         first_day_of_week_spinner.setAdapter(adapter);
         switch (settingsHelper.getFirstDayOfWeek()) {
@@ -148,13 +141,10 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
         timeFormatTextView.setText(StringHelper.toTime(currentDateCalendar.getTime()));
         final SwitchCompat sw_use_24_hour = findViewById(R.id.sw_use_24_hour);
         sw_use_24_hour.setChecked(settingsHelper.isUse24hourTime());
-        sw_use_24_hour.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isUserInteracted()) {
-                    settingsHelper.setUse24hourTime(isChecked);
-                    timeFormatTextView.setText(StringHelper.toTime(Calendar.getInstance().getTime()));
-                }
+        sw_use_24_hour.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isUserInteracted()) {
+                settingsHelper.setUse24hourTime(isChecked);
+                timeFormatTextView.setText(StringHelper.toTime(Calendar.getInstance().getTime()));
             }
         });
 
@@ -162,7 +152,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
         dateFormatTextView = findViewById(R.id.dateFormatTextView);
         final SimpleDateFormat selectedDateFormat = new SimpleDateFormat(AppSettingsHelper.getInstance().getDateFormat(this), Locale.getDefault());
         dateFormatTextView.setText(selectedDateFormat.format(currentDateCalendar.getTime()));
-        final Spinner dateFormatSpinner = findViewById(R.id.dateFormatSpinner);
+        final AppCompatSpinner dateFormatSpinner = findViewById(R.id.dateFormatSpinner);
         final String[] datePatterns = getResources().getStringArray(R.array.date_formats);
         final ArrayList<String> datePatternValues = new ArrayList<>();
         for (final String datePattern : datePatterns) {
@@ -175,7 +165,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
         dateFormatSpinner.setOnItemSelectedListener(this);
 
 
-        final Spinner theme_spinner = findViewById(R.id.theme_spinner);
+        final AppCompatSpinner theme_spinner = findViewById(R.id.theme_spinner);
         final ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.themes, R.layout.simple_spinner_dropdown_item);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         theme_spinner.setAdapter(theme_spinner_adapter);
@@ -219,18 +209,15 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
                     settingsHelper.setTheme(AppSettingsHelper.Themes.LIGHT);
                     final Intent sendThemeChanged = new Intent(THEME_CHANGE_INTENT_ACTION);
                     sendBroadcast(sendThemeChanged);
-                    recreate();
                 }
             } else {
                 if (isUserInteracted()) {
                     settingsHelper.setTheme(AppSettingsHelper.Themes.BLACK);
                     final Intent sendThemeChanged = new Intent(THEME_CHANGE_INTENT_ACTION);
                     sendBroadcast(sendThemeChanged);
-                    recreate();
                 }
             }
         }
-
     }
 
     @Override

@@ -21,8 +21,9 @@ public class AppSettingsHelper {
     private static final String ID = "ID";
 
     private AppSettingsHelper() {
-        Realm realm = Realm.getDefaultInstance();
-        AppSetting setting = realm.where(AppSetting.class).equalTo("id", ID).findFirst();
+        final Realm realm = Realm.getDefaultInstance();
+        final AppSetting setting = realm.where(AppSetting.class).equalTo("id", ID).findFirst();
+        realm.close();
         if (setting != null) {
             use24hourTime = setting.use24hourTime;
             disableAllReminders = setting.disableAllReminders;
@@ -121,14 +122,14 @@ public class AppSettingsHelper {
                 break;
         }
 
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
+        final Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction() {
             @ParametersAreNonnullByDefault
             @Override
             public void execute(Realm realm) {
                 realm.insertOrUpdate(setting);
             }
-        });
+        }, realm::close);
     }
 
 }

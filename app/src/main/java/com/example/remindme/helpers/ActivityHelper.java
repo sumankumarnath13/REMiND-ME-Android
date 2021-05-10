@@ -30,40 +30,40 @@ public class ActivityHelper {
 
         Spannable spannable = new SpannableString(finalTitle);
         int char_pos = 0;
-        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_success)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.colorSuccess)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
         //char_pos++;
-        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_warning)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.colorWarning)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
         //char_pos++;
-        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_info)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.colorCuriosity)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
         //char_pos++;
 
         if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
-            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_soothing_light)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.colorSoothingTextLight)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else {
-            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_soothing)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.colorSoothingText)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         char_pos++;
         //char_pos++;
-        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_warning)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.colorWarning)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
         //char_pos++;
-        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_danger)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.colorDanger)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
         char_pos++;
 //        char_pos++;
 //        char_pos++;
-        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_success)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.colorSuccess)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         char_pos++;
         //char_pos++;
-        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_danger)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.colorDanger)), char_pos, char_pos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         //This is the end of fixed Title and dynamic position begins:
         if (title != null) {
-            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_dim)), finalTitle.length() - title.length(), finalTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.colorDimText)), finalTitle.length() - title.length(), finalTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(new RelativeSizeSpan(1.0f), finalTitle.length() - activityTitle.length(), finalTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             //spannable.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE), finalTitle.length() - title.length(), finalTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             //spannable.setSpan(new UnderlineSpan(), finalTitle.length() - activityTitle.length(), finalTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -9,13 +9,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.NumberPicker;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
@@ -34,10 +33,10 @@ public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
     private ITimeCalculatorListener listener;
     private final Calendar calendar = Calendar.getInstance();
     private final Calendar resultCalendar = Calendar.getInstance();
-    private Button btn_reminder_date;
+    private AppCompatButton btn_reminder_date;
     private NumberPicker value_picker;
     private NumberPicker unit_picker;
-    private TextView tv_reminder_date;
+    private AppCompatTextView tv_reminder_date;
 
 
     @Override
@@ -55,49 +54,42 @@ public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        FragmentActivity activity = getActivity();
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        if (activity == null) return builder.create();
-        LayoutInflater inflater = activity.getLayoutInflater();
+        final FragmentActivity activity = getActivity();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        if (activity == null)
+            return builder.create();
+        final LayoutInflater inflater = activity.getLayoutInflater();
 
         final View view = inflater.inflate(R.layout.date_calculator_dialog, null);
 
         btn_reminder_date = view.findViewById(R.id.btn_reminder_date);
         btn_reminder_date.setText(StringHelper.toWeekdayDate(this.getContext(), calendar.getTime()));
 
-        btn_reminder_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // This calculator suppose to help user getting their target time by adding days/months from their recalled date.
-                // So, its allowed to go backward up to return value of "getMaxForTimeUnit" to eventually get result of present after adding time.
-                // Its expected that remembering an event 3 years (getMaxForTimeUnit return for YEAR unit) back is more than sufficient.
-                final Calendar minDateCalendar = Calendar.getInstance();
-                minDateCalendar.add(Calendar.YEAR, -1 * RepeatModel.getMaxForTimeUnit(RepeatModel.TimeUnits.YEARS)); // (-1) to gho backward.
+        btn_reminder_date.setOnClickListener(view12 -> {
+            // This calculator suppose to help user getting their target time by adding days/months from their recalled date.
+            // So, its allowed to go backward up to return value of "getMaxForTimeUnit" to eventually get result of present after adding time.
+            // Its expected that remembering an event 3 years (getMaxForTimeUnit return for YEAR unit) back is more than sufficient.
+            final Calendar minDateCalendar = Calendar.getInstance();
+            minDateCalendar.add(Calendar.YEAR, -1 * RepeatModel.getMaxForTimeUnit(RepeatModel.TimeUnits.YEARS)); // (-1) to gho backward.
 
-                final int mYear, mMonth, mDay;
-                mYear = calendar.get(Calendar.YEAR);
-                mMonth = calendar.get(Calendar.MONTH);
-                mDay = calendar.get(Calendar.DAY_OF_MONTH);
-                final DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                        AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT ? R.style.DatePickerDialogLight : R.style.DatePickerDialogBlack,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                calendar.set(Calendar.YEAR, year);
-                                calendar.set(Calendar.MONTH, monthOfYear);
-                                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                refresh();
-                            }
-                        }, mYear, mMonth, mDay);
-                datePickerDialog.getDatePicker().setMinDate(minDateCalendar.getTimeInMillis()); // This will cause extra title on the top of the regular date picker
-                datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
-                datePickerDialog.setTitle(null); // This line will try to solve the issue above
-                datePickerDialog.show();
+            final int mYear, mMonth, mDay;
+            mYear = calendar.get(Calendar.YEAR);
+            mMonth = calendar.get(Calendar.MONTH);
+            mDay = calendar.get(Calendar.DAY_OF_MONTH);
+            final DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), R.style.DatePickerStyle,
+                    (view1, year, monthOfYear, dayOfMonth) -> {
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        refresh();
+                    }, mYear, mMonth, mDay);
+            datePickerDialog.getDatePicker().setMinDate(minDateCalendar.getTimeInMillis()); // This will cause extra title on the top of the regular date picker
+            datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
+            datePickerDialog.setTitle(null); // This line will try to solve the issue above
+            datePickerDialog.show();
 
-                if (OsHelper.isLollipopOrLater()) {
-                    datePickerDialog.getDatePicker().setFirstDayOfWeek(AppSettingsHelper.getInstance().getFirstDayOfWeek());
-                }
+            if (OsHelper.isLollipopOrLater()) {
+                datePickerDialog.getDatePicker().setFirstDayOfWeek(AppSettingsHelper.getInstance().getFirstDayOfWeek());
             }
         });
 
@@ -109,22 +101,14 @@ public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
         unit_picker.setMinValue(0);
         unit_picker.setMaxValue(units.length - 1);
         unit_picker.setDisplayedValues(units);
-        unit_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                value_picker.setMaxValue(RepeatModel.getMaxForTimeUnit(RepeatModel.getTimeUnitFromInteger(newVal)));
-                refresh();
-            }
+        unit_picker.setOnValueChangedListener((picker, oldVal, newVal) -> {
+            value_picker.setMaxValue(RepeatModel.getMaxForTimeUnit(RepeatModel.getTimeUnitFromInteger(newVal)));
+            refresh();
         });
 
         tv_reminder_date = view.findViewById(R.id.tv_reminder_date);
 
-        value_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                refresh();
-            }
-        });
+        value_picker.setOnValueChangedListener((picker, oldVal, newVal) -> refresh());
 
 
         // Value of unit must set first before setting up value of time:
@@ -135,12 +119,7 @@ public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
         // 2
         value_picker.setValue(1);
 
-        builder.setView(view).setPositiveButton("Use Result", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                listener.setDateCalculatorDialogModel(resultCalendar.getTime());
-            }
-        }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
+        builder.setView(view).setPositiveButton("Use Result", (dialog, which) -> listener.setDateCalculatorDialogModel(resultCalendar.getTime())).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //DO nothing

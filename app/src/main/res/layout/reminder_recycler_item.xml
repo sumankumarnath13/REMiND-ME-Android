@@ -19,17 +19,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_8"
-            android:layout_marginRight="@dimen/dp_8"
-            android:textColor="?attr/brightText"
-            android:textSize="@dimen/font_size_large" />
+            android:textColor="?attr/themeBrightText"
+            android:textSize="@dimen/font_size_extra_large" />
 
         <TextView
             android:id="@+id/tv_reminder_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="?attr/dimText"
-            android:textSize="@dimen/font_size_medium" />
+            android:textColor="?attr/themeDimText"
+            android:textSize="@dimen/font_size_small" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/sw_reminder_enabled"
@@ -37,6 +36,11 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_reminder_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,15 +57,14 @@
                 android:layout_width="@dimen/dp_16"
                 android:layout_height="@dimen/dp_16"
                 android:layout_marginEnd="@dimen/dp_3"
-                android:layout_marginRight="@dimen/dp_3"
-                android:src="@drawable/ic_reminder_repeat"
-                app:tint="@color/bg_info" />
+                app:srcCompat="@drawable/ic_reminder_repeat"
+                android:contentDescription="@string/missingImageDesc" />
 
             <TextView
                 android:id="@+id/tv_reminder_repeat_short_summary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/dimText"
+                android:textColor="?attr/themeDimText"
                 android:textSize="@dimen/font_size_extra_small" />
 
         </LinearLayout>
@@ -71,7 +74,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginLeft="@dimen/dp_8"
             android:layout_weight="1"
             android:gravity="end">
 
@@ -86,15 +88,14 @@
                     android:layout_width="@dimen/dp_16"
                     android:layout_height="@dimen/dp_16"
                     android:layout_marginEnd="@dimen/dp_3"
-                    android:layout_marginRight="@dimen/dp_3"
-                    android:src="@drawable/ic_reminder_snooze"
-                    app:tint="@color/bg_warning" />
+                    app:srcCompat="@drawable/ic_reminder_snooze"
+                    android:contentDescription="@string/missingImageDesc" />
 
                 <TextView
                     android:id="@+id/tv_reminder_next_snooze"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_warning"
+                    android:textColor="?attr/themeWarningColor"
                     android:textSize="@dimen/font_size_extra_small" />
 
             </LinearLayout>
@@ -109,7 +110,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_danger"
+                    android:textColor="?attr/themeDangerColor"
                     android:text="@string/missed_on"
                     android:textSize="@dimen/font_size_extra_small" />
 
@@ -117,7 +118,7 @@
                     android:id="@+id/tv_reminder_last_missed_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/dimText"
+                    android:textColor="?attr/themeDimText"
                     android:textSize="@dimen/font_size_extra_small" />
 
             </LinearLayout>
@@ -125,12 +126,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_reminder_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="?attr/soothingText" />
 
 </LinearLayout>
 

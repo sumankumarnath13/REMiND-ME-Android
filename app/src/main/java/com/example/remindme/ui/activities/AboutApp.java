@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.remindme.R;
-import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.DeviceHelper;
 import com.example.remindme.helpers.StringHelper;
 
@@ -19,9 +19,9 @@ public class AboutApp extends ActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_app);
-        ActivityHelper.setTitle(this, getResources().getString(R.string.activityAboutAppTitle));
+        setActivitySubTitle(getResources().getString(R.string.activityAboutAppTitle));
 
-        final Button btn_send_feedback = findViewById(R.id.btn_send_feedback);
+        final AppCompatButton btn_send_feedback = findViewById(R.id.btn_send_feedback);
         btn_send_feedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,7 +42,7 @@ public class AboutApp extends ActivityBase {
             }
         });
 
-        final Button btn_view_faq = findViewById(R.id.btn_view_faq);
+        final AppCompatButton btn_view_faq = findViewById(R.id.btn_view_faq);
         btn_view_faq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +52,7 @@ public class AboutApp extends ActivityBase {
             }
         });
 
-        final Button btn_view_license = findViewById(R.id.btn_view_license);
+        final AppCompatButton btn_view_license = findViewById(R.id.btn_view_license);
         btn_view_license.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,11 +62,11 @@ public class AboutApp extends ActivityBase {
             }
         });
 
-        final Button btn_share_app = findViewById(R.id.btn_share_app);
+        final AppCompatButton btn_share_app = findViewById(R.id.btn_share_app);
         btn_share_app.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityHelper.shareText(AboutApp.this, "DING DONG Friends");
+                shareText("DING DONG Friends");
             }
         });
     }

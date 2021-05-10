@@ -14,26 +14,24 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatSeekBar;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.R;
 import com.example.remindme.controllers.RingingController;
-import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
@@ -79,35 +77,35 @@ public class ReminderInput
     private ReminderModel reminderModel = null;
     private RingingController ringingController;
 
-    private TextView tv_reminder_trigger_time;
-    private TextView tv_reminder_trigger_date;
-    private Button btn_reminder_time;
-    private Button btn_reminder_date;
-    private Button btnTimeHours;
-    private Button btnTimeList;
+    private AppCompatTextView tv_reminder_trigger_time;
+    private AppCompatTextView tv_reminder_trigger_date;
+    private AppCompatButton btn_reminder_time;
+    private AppCompatButton btn_reminder_date;
+    private AppCompatButton btnTimeHours;
+    private AppCompatButton btnTimeList;
 
-    private TextView tv_reminder_tone_summary;
-    private TextView tv_reminder_name_summary;
-    private TextView tv_reminder_note_summary;
+    private AppCompatTextView tv_reminder_tone_summary;
+    private AppCompatTextView tv_reminder_name_summary;
+    private AppCompatTextView tv_reminder_note_summary;
     private SwitchCompat sw_notification;
     private SwitchCompat sw_reminder_repeat;
     private SwitchCompat sw_reminder_snooze;
-    private TextView tv_reminder_repeat_summary;
-    private TextView tv_reminder_snooze_summary;
-    private SeekBar seeker_alarm_volume;
+    private AppCompatTextView tv_reminder_repeat_summary;
+    private AppCompatTextView tv_reminder_snooze_summary;
+    private AppCompatSeekBar seeker_alarm_volume;
     private SwitchCompat sw_gradually_increase_volume;
-    private LinearLayout lvc_diff_next_reminder_trigger;
+    private LinearLayoutCompat lvc_diff_next_reminder_trigger;
 
     private SwitchCompat sw_reminder_tone;
     private SwitchCompat sw_reminder_vibrate;
-    private LinearLayout lv_reminder_extra_inputs;
-    private ImageView btn_reminder_extra_inputs;
-    private ScrollView sv_container;
-    private Spinner ring_duration_spinner;
-    private Spinner vibrate_pattern_spinner;
+    private LinearLayoutCompat lv_reminder_extra_inputs;
+    private AppCompatImageButton btn_reminder_extra_inputs;
+    private NestedScrollView sv_container;
+    private AppCompatSpinner ring_duration_spinner;
+    private AppCompatSpinner vibrate_pattern_spinner;
 
-    private ImageButton imgBtnPlayStop;
-    private Button btnSetDefaultTone;
+    private AppCompatImageButton imgBtnPlayStop;
+    private AppCompatButton btnSetDefaultTone;
     private boolean isPlayingTone;
     private int deviceAlarmVolume;
 
@@ -153,9 +151,9 @@ public class ReminderInput
         reminderModel = new ViewModelProvider(this, new ReminderViewModelFactory(getIntent())).get(ReminderModel.class);
 
         if (reminderModel.isNew()) { // First time creating the activity
-            ActivityHelper.setTitle(this, getResources().getString(R.string.new_reminder_heading));
+            setActivitySubTitle(getResources().getString(R.string.new_reminder_heading));
         } else {
-            ActivityHelper.setTitle(this, getResources().getString(R.string.edit_reminder_heading));
+            setActivitySubTitle(getResources().getString(R.string.edit_reminder_heading));
         }
 
         tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
@@ -163,13 +161,10 @@ public class ReminderInput
         tv_reminder_note_summary = findViewById(R.id.tv_reminder_note_summary);
         tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
         sw_notification = findViewById(R.id.sw_notification);
-        sw_notification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isUserInteracted()) {
-                    reminderModel.setNotification(isChecked);
-                    refresh();
-                }
+        sw_notification.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isUserInteracted()) {
+                reminderModel.setNotification(isChecked);
+                refresh();
             }
         });
         sw_reminder_repeat = findViewById(R.id.sw_reminder_repeat);
@@ -181,270 +176,202 @@ public class ReminderInput
         btn_reminder_time = findViewById(R.id.btn_reminder_time);
         lvc_diff_next_reminder_trigger = findViewById(R.id.lvc_diff_next_reminder_trigger);
 
-        sw_reminder_repeat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isUserInteracted()) {
-                    reminderModel.getRepeatModel().setEnabled(isChecked);
-                    refresh();
-                }
+        sw_reminder_repeat.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isUserInteracted()) {
+                reminderModel.getRepeatModel().setEnabled(isChecked);
+                refresh();
             }
         });
 
-
-        sw_reminder_snooze.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isUserInteracted()) {
-                    reminderModel.getSnoozeModel().setEnable(sw_reminder_snooze.isChecked());
-                    refresh();
-                }
+        sw_reminder_snooze.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isUserInteracted()) {
+                reminderModel.getSnoozeModel().setEnable(sw_reminder_snooze.isChecked());
+                refresh();
             }
         });
 
-        btn_reminder_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar alertTime = Calendar.getInstance();
-                //final Calendar currentTime = Calendar.getInstance();
-                alertTime.setTime(reminderModel.getTimeModel().getTime());
-                final int mYear, mMonth, mDay;
-                mYear = alertTime.get(Calendar.YEAR);
-                mMonth = alertTime.get(Calendar.MONTH);
-                mDay = alertTime.get(Calendar.DAY_OF_MONTH);
-                final DatePickerDialog datePickerDialog = new DatePickerDialog(ReminderInput.this,
-                        AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT ? R.style.DatePickerDialogLight : R.style.DatePickerDialogBlack,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                alertTime.set(Calendar.YEAR, year);
-                                alertTime.set(Calendar.MONTH, monthOfYear);
-                                alertTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                alertTime.set(Calendar.SECOND, 0);
-                                alertTime.set(Calendar.MILLISECOND, 0);
-                                reminderModel.getTimeModel().setTime(alertTime.getTime());
-                                refresh();
-                            }
-                        }, mYear, mMonth, mDay);
-                datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis()); // This will cause extra title on the top of the regular date picker
-                datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
-                datePickerDialog.setTitle(null); // This line will try to solve the issue above
-                datePickerDialog.show();
+        btn_reminder_date.setOnClickListener(view -> {
+            final Calendar alertTime = Calendar.getInstance();
+            //final Calendar currentTime = Calendar.getInstance();
+            alertTime.setTime(reminderModel.getTimeModel().getTime());
+            final int mYear, mMonth, mDay;
+            mYear = alertTime.get(Calendar.YEAR);
+            mMonth = alertTime.get(Calendar.MONTH);
+            mDay = alertTime.get(Calendar.DAY_OF_MONTH);
+            final DatePickerDialog datePickerDialog = new DatePickerDialog(ReminderInput.this, R.style.DatePickerStyle,
+                    (view12, year, monthOfYear, dayOfMonth) -> {
+                        alertTime.set(Calendar.YEAR, year);
+                        alertTime.set(Calendar.MONTH, monthOfYear);
+                        alertTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        alertTime.set(Calendar.SECOND, 0);
+                        alertTime.set(Calendar.MILLISECOND, 0);
+                        reminderModel.getTimeModel().setTime(alertTime.getTime());
+                        refresh();
+                    }, mYear, mMonth, mDay);
+            datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis()); // This will cause extra title on the top of the regular date picker
+            datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
+            datePickerDialog.setTitle(null); // This line will try to solve the issue above
+            datePickerDialog.show();
 
-                if (OsHelper.isLollipopOrLater()) {
-                    datePickerDialog.getDatePicker().setFirstDayOfWeek(AppSettingsHelper.getInstance().getFirstDayOfWeek());
-                }
+            if (OsHelper.isLollipopOrLater()) {
+                datePickerDialog.getDatePicker().setFirstDayOfWeek(AppSettingsHelper.getInstance().getFirstDayOfWeek());
             }
         });
 
-        btn_reminder_time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar alertTime = Calendar.getInstance();
-                //final Calendar currentTime = Calendar.getInstance();
-                alertTime.setTime(reminderModel.getTimeModel().getTime());
-                final int mHour, mMinute;
-                mHour = alertTime.get(Calendar.HOUR_OF_DAY);
-                mMinute = alertTime.get(Calendar.MINUTE);
+        btn_reminder_time.setOnClickListener(view -> {
+            final Calendar alertTime = Calendar.getInstance();
+            //final Calendar currentTime = Calendar.getInstance();
+            alertTime.setTime(reminderModel.getTimeModel().getTime());
+            final int mHour, mMinute;
+            mHour = alertTime.get(Calendar.HOUR_OF_DAY);
+            mMinute = alertTime.get(Calendar.MINUTE);
 
-                final TimePickerDialog timePickerDialog = new TimePickerDialog(ReminderInput.this,
-                        AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT ? R.style.TimePickerDialogLight : R.style.TimePickerDialogBlack,
-                        new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                alertTime.set(Calendar.MINUTE, minute);
-                                alertTime.set(Calendar.SECOND, 0);
-                                alertTime.set(Calendar.MILLISECOND, 0);
-                                reminderModel.getTimeModel().setTime(alertTime.getTime());
-                                refresh();
-                            }
-                        }, mHour, mMinute, AppSettingsHelper.getInstance().isUse24hourTime());
-                timePickerDialog.show();
-                //timePickerDialog.;
-            }
+            final TimePickerDialog timePickerDialog = new TimePickerDialog(ReminderInput.this, R.style.TimePickerStyle,
+                    (view1, hourOfDay, minute) -> {
+                        alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        alertTime.set(Calendar.MINUTE, minute);
+                        alertTime.set(Calendar.SECOND, 0);
+                        alertTime.set(Calendar.MILLISECOND, 0);
+                        reminderModel.getTimeModel().setTime(alertTime.getTime());
+                        refresh();
+                    }, mHour, mMinute, AppSettingsHelper.getInstance().isUse24hourTime());
+            timePickerDialog.show();
+            //timePickerDialog.;
         });
 
-        final Button btnCalculate = findViewById(R.id.btnCalculate);
-        btnCalculate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DateCalculatorDialog calculatorDialog = new DateCalculatorDialog();
-                calculatorDialog.show(getSupportFragmentManager(), DateCalculatorDialog.TAG);
-            }
+        final AppCompatButton btnCalculate = findViewById(R.id.btnCalculate);
+        btnCalculate.setOnClickListener(v -> {
+            DateCalculatorDialog calculatorDialog = new DateCalculatorDialog();
+            calculatorDialog.show(getSupportFragmentManager(), DateCalculatorDialog.TAG);
         });
 
         btnTimeHours = findViewById(R.id.btnTimeHours);
-        btnTimeHours.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnTimeHours.setOnClickListener(v -> {
 
-                if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
-                    ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
-                    return;
-                }
-
-                HourlyTimeListDialog hourlyTimeListDialog = new HourlyTimeListDialog();
-                hourlyTimeListDialog.show(getSupportFragmentManager(), HourlyTimeListDialog.TAG);
+            if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
+                ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
+                return;
             }
+
+            HourlyTimeListDialog hourlyTimeListDialog = new HourlyTimeListDialog();
+            hourlyTimeListDialog.show(getSupportFragmentManager(), HourlyTimeListDialog.TAG);
         });
 
         btnTimeList = findViewById(R.id.btnTimeList);
-        btnTimeList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnTimeList.setOnClickListener(v -> {
 
-                if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
-                    ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
-                    return;
-                }
-
-                CustomTimeListDialog timeListInputHourlyDialog = new CustomTimeListDialog();
-                timeListInputHourlyDialog.show(getSupportFragmentManager(), CustomTimeListDialog.TAG);
+            if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
+                ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
+                return;
             }
+
+            CustomTimeListDialog timeListInputHourlyDialog = new CustomTimeListDialog();
+            timeListInputHourlyDialog.show(getSupportFragmentManager(), CustomTimeListDialog.TAG);
         });
 
-        final LinearLayout mnu_reminder_name = findViewById(R.id.mnu_reminder_name);
-        mnu_reminder_name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NameDialog nameInput = new NameDialog();
-                nameInput.show(getSupportFragmentManager(), NameDialog.TAG);
-            }
+        final LinearLayoutCompat mnu_reminder_name = findViewById(R.id.mnu_reminder_name);
+        mnu_reminder_name.setOnClickListener(v -> {
+            NameDialog nameInput = new NameDialog();
+            nameInput.show(getSupportFragmentManager(), NameDialog.TAG);
         });
 
-        final LinearLayout mnu_reminder_note = findViewById(R.id.mnu_reminder_note);
-        mnu_reminder_note.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NoteDialog noteInput = new NoteDialog();
-                noteInput.show(getSupportFragmentManager(), NoteDialog.TAG);
-            }
+        final LinearLayoutCompat mnu_reminder_note = findViewById(R.id.mnu_reminder_note);
+        mnu_reminder_note.setOnClickListener(v -> {
+            NoteDialog noteInput = new NoteDialog();
+            noteInput.show(getSupportFragmentManager(), NoteDialog.TAG);
         });
 
-        final LinearLayout mnu_reminder_repeat = findViewById(R.id.mnu_reminder_repeat);
-        mnu_reminder_repeat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RepeatDialog repeatInput = new RepeatDialog();
-                repeatInput.show(getSupportFragmentManager(), RepeatDialog.TAG);
-            }
+        final LinearLayoutCompat mnu_reminder_repeat = findViewById(R.id.mnu_reminder_repeat);
+        mnu_reminder_repeat.setOnClickListener(v -> {
+            RepeatDialog repeatInput = new RepeatDialog();
+            repeatInput.show(getSupportFragmentManager(), RepeatDialog.TAG);
         });
 
-        final LinearLayout mnu_reminder_snooze = findViewById(R.id.mnu_reminder_snooze);
-        mnu_reminder_snooze.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SnoozeDialog snoozeInput = new SnoozeDialog();
-                snoozeInput.show(getSupportFragmentManager(), SnoozeDialog.TAG);
-            }
+        final LinearLayoutCompat mnu_reminder_snooze = findViewById(R.id.mnu_reminder_snooze);
+        mnu_reminder_snooze.setOnClickListener(v -> {
+            SnoozeDialog snoozeInput = new SnoozeDialog();
+            snoozeInput.show(getSupportFragmentManager(), SnoozeDialog.TAG);
         });
 
-        final LinearLayout mnu_reminder_tone = findViewById(R.id.mnu_reminder_tone);
-        mnu_reminder_tone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        final LinearLayoutCompat mnu_reminder_tone = findViewById(R.id.mnu_reminder_tone);
+        mnu_reminder_tone.setOnClickListener(v -> {
 
-                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select alarm tone:");
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, reminderModel.getRingingModel().getRingToneUri());
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-                startActivityForResult(intent, RINGTONE_DIALOG_REQ_CODE);
-            }
+            Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select alarm tone:");
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, reminderModel.getRingingModel().getRingToneUri());
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+            startActivityForResult(intent, RINGTONE_DIALOG_REQ_CODE);
         });
 
         sw_reminder_tone = findViewById(R.id.sw_reminder_tone);
-        sw_reminder_tone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isUserInteracted()) return;
-                reminderModel.getRingingModel().setToneEnabled(isChecked);
-                refresh();
-            }
+        sw_reminder_tone.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isUserInteracted())
+                return;
+            reminderModel.getRingingModel().setToneEnabled(isChecked);
+            refresh();
         });
 
         sw_reminder_vibrate = findViewById(R.id.sw_reminder_vibrate);
-        sw_reminder_vibrate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isUserInteracted()) return;
-                reminderModel.getRingingModel().setVibrationEnabled(isChecked);
-                refresh();
+        sw_reminder_vibrate.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isUserInteracted())
+                return;
+            reminderModel.getRingingModel().setVibrationEnabled(isChecked);
+            refresh();
+        });
+
+        final AppCompatButton btn_reminder_save = findViewById(R.id.btn_reminder_save);
+        btn_reminder_save.setOnClickListener(view -> {
+            if (reminderModel.getTimeModel().getAlertTime(true).after(Calendar.getInstance().getTime())) {
+                // the method "reminderModel.isHasDifferentTimeCalculated()" will ensure that time has not been changed than what was given.
+                // And changes were made on other areas.
+                // Otherwise it needs to clear snooze details.
+                reminderModel.saveAndSetAlert(ReminderInput.this, true);
+                finish();
+            } else {
+                ToastHelper.showShort(ReminderInput.this, "Cannot save reminder in past");
             }
         });
 
-        final Button btn_reminder_save = findViewById(R.id.btn_reminder_save);
-        btn_reminder_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (reminderModel.getTimeModel().getAlertTime(true).after(Calendar.getInstance().getTime())) {
-                    // the method "reminderModel.isHasDifferentTimeCalculated()" will ensure that time has not been changed than what was given.
-                    // And changes were made on other areas.
-                    // Otherwise it needs to clear snooze details.
-                    reminderModel.saveAndSetAlert(ReminderInput.this, true);
-                    finish();
-                } else {
-                    ToastHelper.showShort(ReminderInput.this, "Cannot save reminder in past");
-                }
-            }
+        final AppCompatImageView img_reminder_name_voice_input = findViewById(R.id.img_reminder_name_voice_input);
+        img_reminder_name_voice_input.setOnClickListener(v -> {
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            // This starts the activity and populates the intent with the speech text.
+            startActivityForResult(intent, NAME_SPEECH_REQUEST_CODE);
         });
 
-        final ImageView img_reminder_name_voice_input = findViewById(R.id.img_reminder_name_voice_input);
-        img_reminder_name_voice_input.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                // This starts the activity and populates the intent with the speech text.
-                startActivityForResult(intent, NAME_SPEECH_REQUEST_CODE);
-            }
-        });
-
-        final ImageView img_reminder_note_voice_input = findViewById(R.id.img_reminder_note_voice_input);
-        img_reminder_note_voice_input.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                // This starts the activity and populates the intent with the speech text.
-                startActivityForResult(intent, NOTE_SPEECH_REQUEST_CODE);
-            }
+        final AppCompatImageView img_reminder_note_voice_input = findViewById(R.id.img_reminder_note_voice_input);
+        img_reminder_note_voice_input.setOnClickListener(v -> {
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            // This starts the activity and populates the intent with the speech text.
+            startActivityForResult(intent, NOTE_SPEECH_REQUEST_CODE);
         });
 
         sw_gradually_increase_volume = findViewById(R.id.sw_gradually_increase_volume);
-        sw_gradually_increase_volume.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isUserInteracted()) {
-                    reminderModel.getRingingModel().setIncreaseVolumeGradually(sw_gradually_increase_volume.isChecked());
-                    refresh();
-                }
+        sw_gradually_increase_volume.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isUserInteracted()) {
+                reminderModel.getRingingModel().setIncreaseVolumeGradually(sw_gradually_increase_volume.isChecked());
+                refresh();
             }
         });
 
         imgBtnPlayStop = findViewById(R.id.imgBtnPlayStop);
-        imgBtnPlayStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isPlayingTone) {
-                    stopTone();
-                } else {
-                    startTone();
-                }
-                refresh();
+        imgBtnPlayStop.setOnClickListener(v -> {
+            if (isPlayingTone) {
+                stopTone();
+            } else {
+                startTone();
             }
+            refresh();
         });
 
         btnSetDefaultTone = findViewById(R.id.btnSetDefaultTone);
-        btnSetDefaultTone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reminderModel.getRingingModel().setDefaultRingTone();
-                refresh();
-            }
+        btnSetDefaultTone.setOnClickListener(v -> {
+            reminderModel.getRingingModel().setDefaultRingTone();
+            refresh();
         });
 
         deviceAlarmVolume = OsHelper.getAlarmVolumeInPercentage(OsHelper.getAudioManager(this));
@@ -470,23 +397,16 @@ public class ReminderInput
             }
         });
 
+
         lv_reminder_extra_inputs = findViewById(R.id.lv_reminder_extra_inputs);
         btn_reminder_extra_inputs = findViewById(R.id.btn_reminder_extra_inputs);
-        btn_reminder_extra_inputs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btn_reminder_extra_inputs.setOnClickListener(v -> {
 
-                isExtraInputsVisible = !isExtraInputsVisible;
-                setUserInteracted(false); // This is very important. Because its just making a layout visible and is no real interaction.
-                setExtraInputs();
-                sv_container.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        sv_container.fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                });
+            isExtraInputsVisible = !isExtraInputsVisible;
+            setUserInteracted(false); // This is very important. Because its just making a layout visible and is no real interaction.
+            setExtraInputs();
+            sv_container.post(() -> sv_container.fullScroll(ScrollView.FOCUS_DOWN));
 
-            }
         });
 
         sv_container = findViewById(R.id.sv_container);
@@ -516,16 +436,16 @@ public class ReminderInput
 
         final Resources.Theme theme = getTheme();
         final TypedValue typedValue = new TypedValue();
-        theme.resolveAttribute(R.attr.soothingText, typedValue, true);
+        theme.resolveAttribute(R.attr.themeSoothingText, typedValue, true);
         final int soothingTextColor = typedValue.resourceId;
 
         btnTimeHours.setTextColor(getResources().getColor(soothingTextColor));
         btnTimeList.setTextColor(getResources().getColor(soothingTextColor));
 
         if (reminderModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.HOURLY) {
-            btnTimeHours.setTextColor(getResources().getColor(R.color.text_success));
+            btnTimeHours.setTextColor(getResources().getColor(R.color.colorSuccess));
         } else if (reminderModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.CUSTOM) {
-            btnTimeList.setTextColor(getResources().getColor(R.color.text_success));
+            btnTimeList.setTextColor(getResources().getColor(R.color.colorSuccess));
         }
 
         if (reminderModel.getTimeModel().isHasScheduledTime()) {
@@ -609,19 +529,18 @@ public class ReminderInput
         if (isExtraInputsVisible) {
 
             btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_up);
-            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(R.color.bg_danger), android.graphics.PorterDuff.Mode.SRC_IN);
+            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(R.color.colorDangerLight), android.graphics.PorterDuff.Mode.SRC_IN);
 
             lv_reminder_extra_inputs.setVisibility(View.VISIBLE);
 
         } else {
 
             btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_down);
-            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(R.color.bg_success), android.graphics.PorterDuff.Mode.SRC_IN);
+            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(R.color.colorSuccessLight), android.graphics.PorterDuff.Mode.SRC_IN);
             lv_reminder_extra_inputs.setVisibility(View.GONE);
 
         }
     }
-
 
     @Override
     public TimeModel getTimeListDialogModel() {

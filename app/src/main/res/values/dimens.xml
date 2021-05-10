@@ -1,17 +1,45 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="dp_05">0.5dp</dimen>
-    <dimen name="dp_3">3dp</dimen>
-    <dimen name="dp_5">5dp</dimen>
-    <dimen name="dp_8">8dp</dimen>
-    <dimen name="dp_16">16dp</dimen>
-    <dimen name="dp_32">32dp</dimen>
-    <dimen name="dp_117">117dp</dimen>
-    <dimen name="font_size_banner">37sp</dimen>
-    <dimen name="font_size_extra_large">27sp</dimen>
-    <dimen name="font_size_large">23sp</dimen>
-    <dimen name="font_size_medium">17sp</dimen>
-    <dimen name="font_size_small">13sp</dimen>
-    <dimen name="font_size_extra_small">11sp</dimen>
-    <dimen name="dp_1">1dp</dimen>
+    <dimen name="dp_05">
+        0.5dp
+    </dimen>
+    <dimen name="dp_1">
+        1dp
+    </dimen>
+    <dimen name="dp_3">
+        3dp
+    </dimen>
+    <dimen name="dp_5">
+        5dp
+    </dimen>
+    <dimen name="dp_8">
+        8dp
+    </dimen>
+    <dimen name="dp_16">
+        16dp
+    </dimen>
+    <dimen name="dp_32">
+        32dp
+    </dimen>
+    <dimen name="dp_117">
+        117dp
+    </dimen>
+    <dimen name="font_size_banner">
+        37sp
+    </dimen>
+    <dimen name="font_size_extra_large">
+        23sp
+    </dimen>
+    <dimen name="font_size_large">
+        19sp
+    </dimen>
+    <dimen name="font_size_medium">
+        17sp
+    </dimen>
+    <dimen name="font_size_small">
+        15sp
+    </dimen>
+    <dimen name="font_size_extra_small">
+        13sp
+    </dimen>
 </resources>

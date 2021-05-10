@@ -4,142 +4,123 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_16"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/dp_8"
             android:orientation="vertical">
 
-            <RadioButton
+            <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rdo_reminder_repeat_off"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:buttonTint="@color/bg_danger"
-                android:textColor="?attr/soothingText"
-                android:textSize="@dimen/font_size_medium"
+                app:buttonTint="?attr/themeDangerColor"
                 android:text="@string/repeat_off" />
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:orientation="horizontal">
 
-                <RadioButton
+                <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rdo_reminder_repeat_hourly"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/soothingText"
-                    android:textSize="@dimen/font_size_medium"
+                    android:checked="false"
                     android:text="@string/repeat_hourly" />
 
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:orientation="horizontal">
 
-                <RadioButton
+                <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rdo_reminder_repeat_daily"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/soothingText"
-                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_daily" />
 
-                <RadioButton
+                <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rdo_reminder_repeat_daily_custom"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/soothingText"
-                    app:buttonTint="@color/bg_success"
+                    app:buttonTint="?attr/themeSuccessColor"
                     android:layout_weight="1"
-                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_daily_custom" />
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:orientation="horizontal">
 
-                <RadioButton
+                <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rdo_reminder_repeat_weekly"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/soothingText"
-                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_weekly" />
 
-                <RadioButton
+                <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rdo_reminder_repeat_weekly_custom"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/soothingText"
-                    app:buttonTint="@color/bg_warning"
+                    app:buttonTint="?attr/themeWarningColor"
                     android:layout_weight="1"
-                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_weekly_custom" />
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:orientation="horizontal">
 
-                <RadioButton
+                <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rdo_reminder_repeat_monthly"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/soothingText"
-                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_monthly" />
 
-                <RadioButton
+                <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rdo_reminder_repeat_monthly_custom"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/soothingText"
-                    app:buttonTint="@color/bg_info"
+                    app:buttonTint="?attr/themeCuriosityColor"
                     android:layout_weight="1"
-                    android:textSize="@dimen/font_size_medium"
                     android:text="@string/repeat_monthly_custom" />
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <RadioButton
+            <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rdo_reminder_repeat_yearly"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/soothingText"
-                android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_yearly" />
 
-            <RadioButton
+            <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rdo_reminder_repeat_other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/soothingText"
-                android:textSize="@dimen/font_size_medium"
                 android:text="@string/repeat_other" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
-            android:background="?attr/borderColor" />
+            android:background="?attr/themeBorderColor" />
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_8"
@@ -150,62 +131,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Has Repeat end"
-                android:textColor="?attr/soothingText"
                 android:textSize="@dimen/font_size_medium" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/lv_repeat_end_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_8"
             android:layout_marginHorizontal="@dimen/dp_8"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/dp_8"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_8"
-                android:textColor="?attr/soothingText"
                 android:text="End Time " />
 
             <TextView
                 android:id="@+id/tv_end_time_value"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textSize="@dimen/font_size_large"
-                android:textColor="?attr/brightText" />
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size_medium"
+                android:textColor="?attr/themeBrightText" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/lv_repeat_end_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_8"
             android:layout_marginHorizontal="@dimen/dp_8"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/dp_8"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_8"
-                android:textColor="?attr/soothingText"
                 android:text="End Date " />
 
             <TextView
                 android:id="@+id/tv_end_date_value"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textSize="@dimen/font_size_medium"
-                android:textColor="?attr/dimText" />
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size_small"
+                android:textColor="?attr/themeDimText" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </ScrollView>
 

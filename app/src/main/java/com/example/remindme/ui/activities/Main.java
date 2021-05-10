@@ -1,50 +1,26 @@
 package com.example.remindme.ui.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.remindme.R;
-import com.example.remindme.helpers.ActivityHelper;
-import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.ui.main.AdapterSectionsPager;
 import com.google.android.material.tabs.TabLayout;
 
-public class Main extends AppCompatActivity {
+public class Main extends ActivityBase {
 
-    private boolean isThemeChangeReceiverRegistered = false;
-    private final BroadcastReceiver themeChangeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Settings.THEME_CHANGE_INTENT_ACTION.equals(intent.getAction())) {
-                recreate();
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
-            setTheme(R.style.LightTheme_NoActionBar);
-        } else {
-            setTheme(R.style.BlackTheme_NoActionBar);
-        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        final IntentFilter intentFilter = new IntentFilter(Settings.THEME_CHANGE_INTENT_ACTION);
-        registerReceiver(themeChangeReceiver, intentFilter);
-        isThemeChangeReceiverRegistered = true;
 
         final AdapterSectionsPager adapterSectionsPager = new AdapterSectionsPager(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.viewpager);
@@ -71,28 +47,15 @@ public class Main extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        ActivityHelper.setTitle(this, "");
+        setActivitySubTitle("");
 
-        final Button btnNewReminder = findViewById(R.id.btn_main_new_reminder);
-        btnNewReminder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent addNewReminderActivity = new Intent(Main.this, ReminderInput.class);
-                startActivity(addNewReminderActivity);
-            }
+        final AppCompatButton btnNewReminder = findViewById(R.id.btn_main_new_reminder);
+        btnNewReminder.setOnClickListener(view -> {
+            Intent addNewReminderActivity = new Intent(Main.this, ReminderInput.class);
+            startActivity(addNewReminderActivity);
         });
     }
 
-    @Override
-    protected void onDestroy() {
-
-        if (isThemeChangeReceiverRegistered) {
-            unregisterReceiver(themeChangeReceiver);
-            isThemeChangeReceiverRegistered = false;
-        }
-
-        super.onDestroy();
-    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

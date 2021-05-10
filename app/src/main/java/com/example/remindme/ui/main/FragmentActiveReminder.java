@@ -98,7 +98,7 @@ public class FragmentActiveReminder extends Fragment {
     }
 
     public void search(String input) {
-        final RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(ReminderModel.getActiveReminders(input));
+        final AdapterRecyclerReminder mAdapter = new AdapterRecyclerReminder(ReminderModel.getActiveReminders(input));
         recyclerView.setAdapter(mAdapter);
     }
 }

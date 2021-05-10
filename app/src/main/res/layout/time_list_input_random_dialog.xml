@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,12 +15,8 @@
             android:id="@+id/timeListRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="1dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginEnd="1dp"
-            android:layout_marginBottom="1dp"
             android:visibility="visible"
-            android:paddingHorizontal="13dp" />
+            android:paddingHorizontal="@dimen/dp_16" />
 
     </ScrollView>
 
@@ -32,10 +29,11 @@
 
         <ImageButton
             android:id="@+id/imgBtnAddCustomTime"
-            android:layout_width="wrap_content"
+            android:layout_width="25dp"
             android:layout_height="25dp"
-            android:padding="@dimen/dp_8"
-            android:src="@drawable/ic_add" />
+            android:background="@null"
+            app:srcCompat="@drawable/ic_add"
+            android:contentDescription="@string/missingImageDesc" />
 
     </LinearLayout>
 

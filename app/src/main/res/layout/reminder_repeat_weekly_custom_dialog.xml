@@ -1,58 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_16"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical">
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_weekly_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/soothingText"
-            android:textSize="@dimen/font_size_medium"
-            app:buttonTint="@color/bg_warning" />
+            android:text="@string/repeat_weekly_custom_week1"
+            app:buttonTint="?attr/themeWarningColor" />
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_weekly_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/soothingText"
-            android:textSize="@dimen/font_size_medium"
-            app:buttonTint="@color/bg_warning" />
+            android:text="@string/repeat_weekly_custom_week2"
+            app:buttonTint="?attr/themeWarningColor" />
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_weekly_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/soothingText"
-            android:textSize="@dimen/font_size_medium"
-            app:buttonTint="@color/bg_warning" />
+            android:text="@string/repeat_weekly_custom_week3"
+            app:buttonTint="?attr/themeWarningColor" />
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_weekly_4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/soothingText"
-            android:textSize="@dimen/font_size_medium"
-            app:buttonTint="@color/bg_warning" />
+            android:text="@string/repeat_weekly_custom_week4"
+            app:buttonTint="?attr/themeWarningColor" />
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_weekly_5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/soothingText"
-            android:textSize="@dimen/font_size_medium"
-            app:buttonTint="@color/bg_warning" />
+            android:text="@string/repeat_weekly_custom_week5"
+            app:buttonTint="?attr/themeWarningColor" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
 

@@ -2,7 +2,6 @@ package com.example.remindme.ui.fragments.dialogFragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,11 +37,11 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
 
         final String weekDayName = StringHelper.toWeekday(getModel().getParent().getTimeModel().getAlertTime(false));
 
-        chk_weekly_1.setText("On 1st " + weekDayName + " of the month");
-        chk_weekly_2.setText("On 2nd " + weekDayName + " of the month");
-        chk_weekly_3.setText("On 3rd " + weekDayName + " of the month");
-        chk_weekly_4.setText("On 4th " + weekDayName + " of the month");
-        chk_weekly_5.setText("On 5th " + weekDayName + " of the month (if exists)");
+        chk_weekly_1.setText(getString(R.string.repeat_weekly_custom_week1, weekDayName));
+        chk_weekly_2.setText(getString(R.string.repeat_weekly_custom_week2, weekDayName));
+        chk_weekly_3.setText(getString(R.string.repeat_weekly_custom_week3, weekDayName));
+        chk_weekly_4.setText(getString(R.string.repeat_weekly_custom_week4, weekDayName));
+        chk_weekly_5.setText(getString(R.string.repeat_weekly_custom_week5, weekDayName));
 
         for (int i = 0; i < getModel().getCustomWeeks().size(); i++) {
             int value = getModel().getCustomWeeks().get(i);
@@ -66,24 +65,23 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
             }
         }
 
-        builder.setView(view).setTitle("Select weeks to Repeat").setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getModel().getCustomWeeks().clear();
-                if (chk_weekly_1.isChecked()) getModel().getCustomWeeks().add(0);
-                if (chk_weekly_2.isChecked()) getModel().getCustomWeeks().add(1);
-                if (chk_weekly_3.isChecked()) getModel().getCustomWeeks().add(2);
-                if (chk_weekly_4.isChecked()) getModel().getCustomWeeks().add(3);
-                if (chk_weekly_5.isChecked()) getModel().getCustomWeeks().add(4);
-                getModel().setEnabled(true);
-                getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM);
-                getListener().customRepeatDialogSetRepeatModel(getModel());
-            }
-        }).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        builder.setView(view).setTitle("Select weeks to Repeat").setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
+            getModel().getCustomWeeks().clear();
+            if (chk_weekly_1.isChecked())
+                getModel().getCustomWeeks().add(0);
+            if (chk_weekly_2.isChecked())
+                getModel().getCustomWeeks().add(1);
+            if (chk_weekly_3.isChecked())
+                getModel().getCustomWeeks().add(2);
+            if (chk_weekly_4.isChecked())
+                getModel().getCustomWeeks().add(3);
+            if (chk_weekly_5.isChecked())
+                getModel().getCustomWeeks().add(4);
+            getModel().setEnabled(true);
+            getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM);
+            getListener().setCustomRepeatDialogModel(getModel());
+        }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
 
-            }
         });
 
         return builder.create();

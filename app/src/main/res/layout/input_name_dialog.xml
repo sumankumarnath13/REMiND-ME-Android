@@ -19,21 +19,22 @@
             android:layout_weight="1"
             android:inputType="textCapSentences"
             android:autofillHints="@string/hint_reminder_name"
-            android:backgroundTint="@color/bg_success"
+            app:backgroundTint="?attr/themeSuccessColor"
             android:hint="@string/hint_reminder_name" />
 
         <ImageView
             android:id="@+id/img_reminder_name_voice_input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_mic"
-            app:tint="@color/bg_success" />
+            app:srcCompat="@drawable/ic_mic"
+            android:contentDescription="@string/missingImageDesc" />
+
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_reminder_name_limit_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="?attr/dimText" />
+        android:textColor="?attr/themeDimText" />
 
 </LinearLayout>

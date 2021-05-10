@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="themeBackground" format="reference" />
-    <attr name="borderColor" format="reference" />
-    <attr name="brightText" format="reference" />
-    <attr name="accentColor" format="reference" />
-    <attr name="dimText" format="reference" />
-    <attr name="soothingText" format="reference" />
+
+    <attr name="themeSuccessColor" format="reference" />
+    <attr name="themeCuriosityColor" format="reference" />
+    <attr name="themeWarningColor" format="reference" />
+    <attr name="themeDangerColor" format="reference" />
+
+    <attr name="themeAccentColor" format="reference" />
+    <attr name="themeBackgroundColor" format="reference" />
+    <attr name="themeDialogBackgroundColor" format="reference" />
+    <attr name="themeBorderColor" format="reference" />
+    <attr name="themeDisabledControlColor" format="reference" />
+    <attr name="themeControlNormalColor" format="reference" />
+
+    <attr name="themeBrightText" format="reference" />
+    <attr name="themeDimText" format="reference" />
+    <attr name="themeSoothingText" format="reference" />
+
+
 </resources>

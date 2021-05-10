@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -62,41 +61,37 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             return;
         }
 
-        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Context context = view.getContext();
-                if (context == null) return;
+        holder.linearLayout.setOnClickListener(view -> {
+            final Context context = view.getContext();
+            if (context == null)
+                return;
 
-                final Intent intent = new Intent(context, ReminderView.class);
-                intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminder.id);
-                context.startActivity(intent);
-            }
+            final Intent intent = new Intent(context, ReminderView.class);
+            intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminder.id);
+            context.startActivity(intent);
         });
 
-        enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        enabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
-                if (isRefreshing) return;
+            if (isRefreshing)
+                return;
 
-                if (AppSettingsHelper.getInstance().isDisableAllReminders()) {
-                    buttonView.setChecked(false);
-                    ToastHelper.showShort(buttonView.getContext(), "All reminders are disabled in settings");
-                    return;
-                }
+            if (AppSettingsHelper.getInstance().isDisableAllReminders()) {
+                buttonView.setChecked(false);
+                ToastHelper.showShort(buttonView.getContext(), "All reminders are disabled in settings");
+                return;
+            }
 
-                ReminderModel reminderModel = ReminderModel.getInstance(reminder);
+            ReminderModel reminderModel = ReminderModel.getInstance(reminder);
 
-                final Context context = buttonView.getContext();
+            final Context context = buttonView.getContext();
 
-                if (reminderModel.trySetEnabled(context, isChecked)) {
-                    reminderModel.saveAndSetAlert(context, true);
-                    buttonView.setChecked(isChecked);
-                    if (isChecked) {
-                        time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
-                        date.setText(StringHelper.toWeekdayDate(context, reminderModel.getTimeModel().getTime()));
-                    }
+            if (reminderModel.trySetEnabled(context, isChecked)) {
+                reminderModel.saveAndSetAlert(context, true);
+                buttonView.setChecked(isChecked);
+                if (isChecked) {
+                    time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
+                    date.setText(StringHelper.toWeekdayDate(context, reminderModel.getTimeModel().getTime()));
                 }
             }
         });
@@ -135,7 +130,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
         }
 
         if (reminderModel.isExpired()) {
-            time.setTextColor(holder.linearLayout.getResources().getColor(R.color.text_danger));
+            time.setTextColor(holder.linearLayout.getResources().getColor(R.color.colorDanger));
             enabled.setVisibility(View.GONE);
         } else {
             enabled.setChecked(reminderModel.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());

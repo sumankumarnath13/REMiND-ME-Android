@@ -69,7 +69,7 @@ public class FragmentDismissedReminder extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        final RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(ReminderModel.getDismissedReminders(null));
+        final AdapterRecyclerReminder mAdapter = new AdapterRecyclerReminder(ReminderModel.getDismissedReminders(null));
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -88,7 +88,7 @@ public class FragmentDismissedReminder extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                RecyclerView.Adapter mAdapter = new AdapterRecyclerReminder(ReminderModel.getDismissedReminders(newText));
+                AdapterRecyclerReminder mAdapter = new AdapterRecyclerReminder(ReminderModel.getDismissedReminders(newText));
                 recyclerView.setAdapter(mAdapter);
                 return true;
             }

@@ -139,7 +139,8 @@ public class ReminderModel extends ViewModel {
     }
 
     public void setRepeatModel(final RepeatModel repeatModel) {
-        if (repeatModel == null) return;
+        if (repeatModel == null)
+            return;
         this.repeatModel = repeatModel;
     }
 
@@ -474,7 +475,8 @@ public class ReminderModel extends ViewModel {
 
     public boolean canSnooze() {
 
-        if (!getSnoozeModel().isEnable()) return false;
+        if (!getSnoozeModel().isEnable())
+            return false;
 
         final Calendar currentTime = Calendar.getInstance();
 
@@ -567,17 +569,17 @@ public class ReminderModel extends ViewModel {
             cancelPendingIntent(context);
         }
 
-        Realm realm = Realm.getDefaultInstance();
-        final Reminder reminder = realm.where(Reminder.class).equalTo("id", id).findFirst();
-        if (reminder != null) {
-            realm.executeTransaction(new Realm.Transaction() {
-                @ParametersAreNonnullByDefault
-                @Override
-                public void execute(Realm realm) {
+        final Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @ParametersAreNonnullByDefault
+            @Override
+            public void execute(Realm realm) {
+                final Reminder reminder = realm.where(Reminder.class).equalTo("id", id).findFirst();
+                if (reminder != null) {
                     reminder.deleteFromRealm();
                 }
-            });
-        }
+            }
+        }, realm::close);
     }
 
     private void saveAsExpired() {
@@ -640,14 +642,14 @@ public class ReminderModel extends ViewModel {
         entity.snoozeLimit = SnoozeModel.getIntegerOfSnoozeLimit(getSnoozeModel().getLimit());
 
 
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
+        final Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction() {
             @ParametersAreNonnullByDefault
             @Override
             public void execute(Realm realm) {
                 realm.insertOrUpdate(entity);
             }
-        });
+        }, realm::close);
     }
 
     private void setInstance(final Reminder from) {

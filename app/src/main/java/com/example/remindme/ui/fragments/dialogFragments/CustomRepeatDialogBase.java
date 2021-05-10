@@ -28,7 +28,11 @@ public class CustomRepeatDialogBase extends RefreshableDialogFragmentBase {
         super.onAttach(context);
         try {
             listener = (CustomRepeatDialogBase.ICustomRepeatDialogListener) getParentFragmentManager().findFragmentByTag(RepeatDialog.TAG);
-            model = new ViewModelProvider(this, new RepeatViewModelFactory(listener.customRepeatDialogGetRepeatModel())).get(RepeatModel.class);
+            if (listener == null) {
+                dismiss();
+                return;
+            }
+            model = new ViewModelProvider(this, new RepeatViewModelFactory(listener.getCustomRepeatDialogModel())).get(RepeatModel.class);
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
         }
@@ -39,16 +43,16 @@ public class CustomRepeatDialogBase extends RefreshableDialogFragmentBase {
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
-        getListener().customRepeatDialogSetRepeatModel(getModel());
-        canceled = true;
+//        getListener().setCustomRepeatDialogModel(getModel());
+//        canceled = true;
     }
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        if (!canceled) {
-            getListener().customRepeatDialogSetRepeatModel(getModel());
-        }
+//        if (!canceled) {
+//            getListener().setCustomRepeatDialogModel(getModel());
+//        }
     }
 
     @Override
@@ -57,8 +61,9 @@ public class CustomRepeatDialogBase extends RefreshableDialogFragmentBase {
     }
 
     public interface ICustomRepeatDialogListener {
-        void customRepeatDialogSetRepeatModel(RepeatModel model);
 
-        RepeatModel customRepeatDialogGetRepeatModel();
+        void setCustomRepeatDialogModel(RepeatModel model);
+
+        RepeatModel getCustomRepeatDialogModel();
     }
 }

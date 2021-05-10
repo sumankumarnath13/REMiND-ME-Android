@@ -14,13 +14,12 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.example.remindme.R;
 import com.example.remindme.controllers.AlertService;
 import com.example.remindme.controllers.AlertServiceBinder;
-import com.example.remindme.helpers.ActivityHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
@@ -91,7 +90,7 @@ public class ReminderRinging extends ActivityBase {
         }
     };
 
-    private final int[] colors = new int[]{R.color.text_success, R.color.text_info, R.color.text_warning, R.color.text_danger, R.color.text_soothing};
+    private final int[] colors = new int[]{R.color.colorSuccess, R.color.colorCuriosity, R.color.colorWarning, R.color.colorDanger, R.color.colorSoothingText};
     private int colorIndex = 0;
     private final CountDownTimer currentTimeTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
         @Override
@@ -168,17 +167,17 @@ public class ReminderRinging extends ActivityBase {
         }
     }
 
-    private TextView tv_time_now;
-    private TextView tv_reminder_time;
-    private TextView tv_reminder_name;
-    private TextView tv_reminder_note;
-    private Button btnSnooze;
+    private AppCompatTextView tv_time_now;
+    private AppCompatTextView tv_reminder_time;
+    private AppCompatTextView tv_reminder_name;
+    private AppCompatTextView tv_reminder_note;
+    private AppCompatTextView btnSnooze;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reminder_ringing);
-        ActivityHelper.setTitle(this, null);
+        setActivitySubTitle(null);
 
         // Important: have to do the following in order to show without unlocking
         this.getWindow().addFlags(
@@ -194,26 +193,20 @@ public class ReminderRinging extends ActivityBase {
             setTurnScreenOn(true);
         }
 
-        final Button btnDismiss = findViewById(R.id.btn_reminder_dismiss);
-        btnDismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (serviceBinder != null && mServiceBound) {
-                    serviceBinder.dismiss();
-                }
-                finish();
+        final AppCompatTextView btnDismiss = findViewById(R.id.btn_reminder_dismiss);
+        btnDismiss.setOnClickListener(view -> {
+            if (serviceBinder != null && mServiceBound) {
+                serviceBinder.dismiss();
             }
+            finish();
         });
 
         btnSnooze = findViewById(R.id.btn_reminder_snooze);
-        btnSnooze.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (serviceBinder != null && mServiceBound) {
-                    serviceBinder.snoozeByUser();
-                }
-                finish();
+        btnSnooze.setOnClickListener(view -> {
+            if (serviceBinder != null && mServiceBound) {
+                serviceBinder.snoozeByUser();
             }
+            finish();
         });
 
         tv_time_now = findViewById(R.id.tv_time_now);
