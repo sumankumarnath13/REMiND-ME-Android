@@ -15,7 +15,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="63dp"
+            android:layout_height="wrap_content"
             app:menu="@menu/context_menu" />
 
         <com.google.android.material.tabs.TabLayout
@@ -34,19 +34,38 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end">
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/imgBtnAddReminder"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_117"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/dp_16"
+        app:srcCompat="@drawable/ic_add"
+        app:backgroundTint="?attr/themeDisabledControlColor"
+        android:contentDescription="@string/missingImageDesc" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_main_new_reminder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_add"
-            android:drawablePadding="@dimen/dp_3"
-            android:text="@string/add_new_reminder" />
+    <!--    <androidx.appcompat.widget.LinearLayoutCompat-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:padding="@dimen/dp_16"-->
+    <!--        android:gravity="end">-->
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    <!--&lt;!&ndash;        <androidx.appcompat.widget.AppCompatButton&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:id="@+id/btn_main_new_reminder"&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:drawableStart="@drawable/ic_add"&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:drawablePadding="@dimen/dp_3"&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:text="@string/add_new_reminder" />&ndash;&gt;-->
+
+    <!--&lt;!&ndash;        <androidx.appcompat.widget.AppCompatImageButton&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:id="@+id/imgBtnAddReminder"&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:padding="@dimen/dp_16"&ndash;&gt;-->
+    <!--&lt;!&ndash;            app:srcCompat="@drawable/ic_add" />&ndash;&gt;-->
+
+
+    <!--    </androidx.appcompat.widget.LinearLayoutCompat>-->
 
 </androidx.appcompat.widget.LinearLayoutCompat>

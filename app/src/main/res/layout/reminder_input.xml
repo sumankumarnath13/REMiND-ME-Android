@@ -568,23 +568,34 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <!-- Footer aligned to bottom -->
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/rv_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:padding="@dimen/dp_16">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_reminder_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_reminder_check"
-            android:drawablePadding="@dimen/dp_3"
-            android:gravity="start|center"
-            android:text="@string/btn_save"
-            app:drawableTint="@color/colorSuccessLight" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/imgBtnSetReminder"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_117"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/dp_16"
+        app:srcCompat="@drawable/ic_reminder_check"
+        app:backgroundTint="?attr/themeDisabledControlColor"
+        android:contentDescription="@string/missingImageDesc" />
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    <!--    <androidx.appcompat.widget.LinearLayoutCompat-->
+    <!--        android:id="@+id/rv_footer"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:gravity="end"-->
+    <!--        android:padding="@dimen/dp_16">-->
+
+    <!--        <androidx.appcompat.widget.AppCompatButton-->
+    <!--            android:id="@+id/btn_reminder_save"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:drawableStart="@drawable/ic_reminder_check"-->
+    <!--            android:drawablePadding="@dimen/dp_3"-->
+    <!--            android:gravity="start|center"-->
+    <!--            android:text="@string/btn_save"-->
+    <!--            app:drawableTint="@color/colorSuccessLight" />-->
+    <!--        -->
+    <!--    </androidx.appcompat.widget.LinearLayoutCompat>-->
 
 </androidx.appcompat.widget.LinearLayoutCompat>

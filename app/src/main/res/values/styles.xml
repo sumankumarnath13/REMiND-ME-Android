@@ -62,9 +62,6 @@
         <!--        <item name="android:textColor">-->
         <!--            ?attr/themeSoothingText-->
         <!--        </item>-->
-        <item name="android:textColorHint">
-            ?attr/themeDimText
-        </item>
         <!-- ********************************************* -->
 
         <item name="colorAccent">
@@ -84,6 +81,11 @@
         </item> <!-- This somehow affects switch off bar color -->
         <item name="actionBarStyle">
             @style/ActionBarStyle
+        </item>
+        <!-- To set all text hints including the action bar search view hint color.
+        Couldn't find any way to do the same acton bar dedicated styling -->
+        <item name="android:textColorHint">
+            ?attr/themeDimText
         </item>
         <item name="android:textViewStyle">
             @style/TextViewStyle
@@ -191,9 +193,6 @@
         <!--        <item name="android:textColor">-->
         <!--            ?attr/themeSoothingText-->
         <!--        </item>-->
-        <item name="android:textColorHint">
-            ?attr/themeDimText
-        </item>
         <!-- ********************************************* -->
 
 
@@ -214,6 +213,11 @@
         </item> <!-- This somehow affects switch off bar color -->
         <item name="actionBarStyle">
             @style/ActionBarStyle
+        </item>
+        <!-- To set all text hints including the action bar search view hint color.
+        Couldn't find any way to do the same acton bar dedicated styling -->
+        <item name="android:textColorHint">
+            ?attr/themeDimText
         </item>
         <item name="android:textViewStyle">
             @style/TextViewStyle
@@ -256,6 +260,10 @@
         <item name="android:windowContentOverlay">
             @null
         </item> <!-- Remove title bar shadow -->
+
+        <!--        <item name="height">50dp--> <!-- To increase action bar height. Not required now -->
+        <!--        </item>-->
+
         <!-- action bar background - without android prefix -->
         <item name="background">
             ?attr/themeBackgroundColor
@@ -275,6 +283,9 @@
     <style name="ActionBarSubTitleTextStyle" parent="@android:style/TextAppearance">
         <item name="android:textColor">
             ?attr/themeDimText
+        </item>
+        <item name="android:textSize"> <!-- Important! Without this the action bar height isn't calculated well and some part of the text can stay hidden under action bar height -->
+            @dimen/font_size_small
         </item>
     </style>
 

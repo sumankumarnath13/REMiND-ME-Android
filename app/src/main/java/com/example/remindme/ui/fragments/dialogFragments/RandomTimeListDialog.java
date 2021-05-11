@@ -27,7 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class CustomTimeListDialog extends TimeListDialogBase {
+public class RandomTimeListDialog extends TimeListDialogBase {
 
     public static final String TAG = "CustomTimeListDialog";
 

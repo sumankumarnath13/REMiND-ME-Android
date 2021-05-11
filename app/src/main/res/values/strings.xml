@@ -5,7 +5,7 @@
     <string name="dialog_positive">Set</string>
     <string name="dialog_negative">Cancel</string>
     <string name="btn_edit">&#160;Edit</string>
-    <string name="btn_delete">Delete</string> <!-- ending space is required to manage button right padding issues -->
+    <string name="btn_delete">Delete</string>
 
 
     <string name="tab_text_1">Active</string>
@@ -13,7 +13,7 @@
 
     <string name="hint_reminder_name">Give a name …</string>
     <string name="hint_reminder_note">Extra notes …</string>
-    <string name="btn_save">Set Reminder</string> <!-- ending space is required to manage button right padding issues -->
+    <string name="btn_save">Set Reminder</string>
     <string name="btn_time">Set Time</string>
     <string name="btn_date">Set Date</string>
     <string name="btn_repeat">Repeat</string>
@@ -69,9 +69,9 @@
     <string name="snooze_repeat_r3">3 Times</string>
     <string name="snooze_repeat_r5">5 Times</string>
     <string name="snooze_repeat_rc">Continuously</string>
-    <string name="add_new_reminder">Set New Reminder</string> <!-- ending space is required to manage button right padding issues -->
-    <string name="reminder_snooze_menu_caption">Snooze</string> <!-- ending space is required to manage button right padding issues -->
-    <string name="btn_alarm_action_dismiss">Dismiss</string> <!-- ending space is required to manage button right padding issues -->
+    <string name="add_new_reminder">Add New Reminder</string>
+    <string name="reminder_snooze_menu_caption">Snooze</string>
+    <string name="btn_alarm_action_dismiss">Dismiss</string>
 
     <string name="snooze_repeat_heading">Repeat</string>
 

@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.remindme.R;
 import com.example.remindme.ui.main.AdapterSectionsPager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 public class Main extends ActivityBase {
@@ -20,7 +20,6 @@ public class Main extends ActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
 
         final AdapterSectionsPager adapterSectionsPager = new AdapterSectionsPager(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.viewpager);
@@ -49,8 +48,20 @@ public class Main extends ActivityBase {
 
         setActivitySubTitle("");
 
-        final AppCompatButton btnNewReminder = findViewById(R.id.btn_main_new_reminder);
-        btnNewReminder.setOnClickListener(view -> {
+//        final AppCompatButton btnNewReminder = findViewById(R.id.btn_main_new_reminder);
+//        btnNewReminder.setOnClickListener(view -> {
+//            Intent addNewReminderActivity = new Intent(Main.this, ReminderInput.class);
+//            startActivity(addNewReminderActivity);
+//        });
+
+//        final AppCompatImageButton imgBtnAddReminder = findViewById(R.id.imgBtnAddReminder);
+//        imgBtnAddReminder.setOnClickListener(view -> {
+//            Intent addNewReminderActivity = new Intent(Main.this, ReminderInput.class);
+//            startActivity(addNewReminderActivity);
+//        });
+
+        final FloatingActionButton imgBtnAddReminder = findViewById(R.id.imgBtnAddReminder);
+        imgBtnAddReminder.setOnClickListener(view -> {
             Intent addNewReminderActivity = new Intent(Main.this, ReminderInput.class);
             startActivity(addNewReminderActivity);
         });

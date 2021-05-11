@@ -26,6 +26,7 @@ import com.example.remindme.viewModels.ReminderModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -153,7 +154,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
         final SimpleDateFormat selectedDateFormat = new SimpleDateFormat(AppSettingsHelper.getInstance().getDateFormat(this), Locale.getDefault());
         dateFormatTextView.setText(selectedDateFormat.format(currentDateCalendar.getTime()));
         final AppCompatSpinner dateFormatSpinner = findViewById(R.id.dateFormatSpinner);
-        final String[] datePatterns = getResources().getStringArray(R.array.date_formats);
+        final List<String> datePatterns = Arrays.asList(getResources().getStringArray(R.array.date_formats));
         final ArrayList<String> datePatternValues = new ArrayList<>();
         for (final String datePattern : datePatterns) {
             final SimpleDateFormat format = new SimpleDateFormat(datePattern, Locale.getDefault());
@@ -161,13 +162,16 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
         }
         final ArrayAdapter<String> dateFormatSpinnerAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_dropdown_item, datePatternValues);
         dateFormatSpinner.setAdapter(dateFormatSpinnerAdapter);
-        dateFormatSpinner.setSelection(dateFormatSpinnerAdapter.getPosition(settingsHelper.getDateFormat(this)));
+
+        // Finding position from adapter will be wrong as its the current time formatted values that goes inside the adapter
+        dateFormatSpinner.setSelection(datePatterns.indexOf(settingsHelper.getDateFormat(this)));
+        //-----------------------
+
         dateFormatSpinner.setOnItemSelectedListener(this);
 
 
         final AppCompatSpinner theme_spinner = findViewById(R.id.theme_spinner);
         final ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.themes, R.layout.simple_spinner_dropdown_item);
-        // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         theme_spinner.setAdapter(theme_spinner_adapter);
         if (settingsHelper.getTheme() == AppSettingsHelper.Themes.LIGHT) {
             theme_spinner.setSelection(1);

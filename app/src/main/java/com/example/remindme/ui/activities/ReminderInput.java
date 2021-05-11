@@ -36,11 +36,11 @@ import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
-import com.example.remindme.ui.fragments.dialogFragments.CustomTimeListDialog;
 import com.example.remindme.ui.fragments.dialogFragments.DateCalculatorDialog;
 import com.example.remindme.ui.fragments.dialogFragments.HourlyTimeListDialog;
 import com.example.remindme.ui.fragments.dialogFragments.NameDialog;
 import com.example.remindme.ui.fragments.dialogFragments.NoteDialog;
+import com.example.remindme.ui.fragments.dialogFragments.RandomTimeListDialog;
 import com.example.remindme.ui.fragments.dialogFragments.RepeatDialog;
 import com.example.remindme.ui.fragments.dialogFragments.SnoozeDialog;
 import com.example.remindme.ui.fragments.dialogFragments.TimeListDialogBase;
@@ -51,6 +51,7 @@ import com.example.remindme.viewModels.SnoozeModel;
 import com.example.remindme.viewModels.TimeModel;
 import com.example.remindme.viewModels.factories.ReminderViewModelFactory;
 import com.example.remindme.viewModels.factories.TimeViewModelFactory;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -265,8 +266,8 @@ public class ReminderInput
                 return;
             }
 
-            CustomTimeListDialog timeListInputHourlyDialog = new CustomTimeListDialog();
-            timeListInputHourlyDialog.show(getSupportFragmentManager(), CustomTimeListDialog.TAG);
+            RandomTimeListDialog timeListInputHourlyDialog = new RandomTimeListDialog();
+            timeListInputHourlyDialog.show(getSupportFragmentManager(), RandomTimeListDialog.TAG);
         });
 
         final LinearLayoutCompat mnu_reminder_name = findViewById(R.id.mnu_reminder_name);
@@ -321,8 +322,21 @@ public class ReminderInput
             refresh();
         });
 
-        final AppCompatButton btn_reminder_save = findViewById(R.id.btn_reminder_save);
-        btn_reminder_save.setOnClickListener(view -> {
+//        final AppCompatButton btn_reminder_save = findViewById(R.id.btn_reminder_save);
+//        btn_reminder_save.setOnClickListener(view -> {
+//            if (reminderModel.getTimeModel().getAlertTime(true).after(Calendar.getInstance().getTime())) {
+//                // the method "reminderModel.isHasDifferentTimeCalculated()" will ensure that time has not been changed than what was given.
+//                // And changes were made on other areas.
+//                // Otherwise it needs to clear snooze details.
+//                reminderModel.saveAndSetAlert(ReminderInput.this, true);
+//                finish();
+//            } else {
+//                ToastHelper.showShort(ReminderInput.this, "Cannot save reminder in past");
+//            }
+//        });
+
+        final FloatingActionButton imgBtnSetReminder = findViewById(R.id.imgBtnSetReminder);
+        imgBtnSetReminder.setOnClickListener(view -> {
             if (reminderModel.getTimeModel().getAlertTime(true).after(Calendar.getInstance().getTime())) {
                 // the method "reminderModel.isHasDifferentTimeCalculated()" will ensure that time has not been changed than what was given.
                 // And changes were made on other areas.
@@ -333,6 +347,7 @@ public class ReminderInput
                 ToastHelper.showShort(ReminderInput.this, "Cannot save reminder in past");
             }
         });
+
 
         final AppCompatImageView img_reminder_name_voice_input = findViewById(R.id.img_reminder_name_voice_input);
         img_reminder_name_voice_input.setOnClickListener(v -> {

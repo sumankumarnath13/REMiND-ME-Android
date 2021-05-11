@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,9 +27,11 @@ import java.util.List;
 public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecyclerReminder.ReminderHolder> {
 
     private final List<Reminder> _data;
+    private boolean isEnableCheck;
 
     public AdapterRecyclerReminder(List<Reminder> data) {
         this._data = data;
+        isEnableCheck = false;
     }
 
     @NonNull
@@ -43,6 +46,13 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
     @Override
     public void onBindViewHolder(@NonNull final ReminderHolder holder, int position) {
         // create a new view
+        final Reminder reminder = _data.get(position);
+
+        if (reminder == null) {
+            return;
+        }
+
+        final AppCompatCheckBox reminderSelectionCheck = holder.linearLayout.findViewById(R.id.reminderSelectionCheck);
         final TextView time = holder.linearLayout.findViewById(R.id.tv_reminder_time);
         final TextView date = holder.linearLayout.findViewById(R.id.tv_reminder_date);
 
@@ -54,12 +64,14 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
         final LinearLayout lv_reminder_last_missed_time = holder.linearLayout.findViewById(R.id.lv_reminder_last_missed_time);
         final TextView tv_reminder_last_missed_time = holder.linearLayout.findViewById(R.id.tv_reminder_last_missed_time);
-        final Reminder reminder = _data.get(position);
 
+        holder.linearLayout.setLongClickable(true);
 
-        if (reminder == null) {
-            return;
-        }
+        holder.linearLayout.setOnLongClickListener(v -> {
+            isEnableCheck = !isEnableCheck;
+            notifyDataSetChanged();
+            return true;
+        });
 
         holder.linearLayout.setOnClickListener(view -> {
             final Context context = view.getContext();
@@ -70,6 +82,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminder.id);
             context.startActivity(intent);
         });
+
 
         enabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
@@ -134,6 +147,14 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             enabled.setVisibility(View.GONE);
         } else {
             enabled.setChecked(reminderModel.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
+        }
+
+        if (isEnableCheck) {
+            enabled.setVisibility(View.GONE);
+            reminderSelectionCheck.setVisibility(View.VISIBLE);
+        } else {
+            reminderSelectionCheck.setVisibility(View.GONE);
+            enabled.setVisibility(View.VISIBLE);
         }
 
         isRefreshing = false;

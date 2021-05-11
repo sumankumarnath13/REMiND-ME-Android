@@ -147,16 +147,17 @@
                         <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/dp_8"
                             android:gravity="center_vertical"
                             android:text="@string/btn_snooze"
                             android:textSize="@dimen/font_size_medium" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tv_reminder_next_snooze"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
+                            android:layout_marginHorizontal="@dimen/dp_8"
                             android:textColor="?attr/themeWarningColor"
                             android:textSize="@dimen/font_size_medium" />
 
@@ -164,7 +165,6 @@
                             android:id="@+id/btn_reminder_dismiss"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dp_8"
                             android:drawableStart="@drawable/ic_reminder_dismiss"
                             android:text="@string/btn_alarm_action_dismiss" />
 
