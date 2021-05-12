@@ -3,9 +3,10 @@
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
-    android:viewportHeight="24">
+    android:viewportHeight="24"
+    android:tint="?attr/themeDangerColor">
     <path
-        android:fillColor="@color/colorDangerLight"
+        android:fillColor="@android:color/white"
         android:pathData="M6,6h12v12H6z"
         tools:ignore="VectorRaster" />
 </vector>

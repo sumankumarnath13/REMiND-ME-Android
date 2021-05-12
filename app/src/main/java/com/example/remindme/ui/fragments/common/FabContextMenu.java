@@ -68,9 +68,9 @@ public class FabContextMenu extends Fragment {
 
     private void setAnimation(boolean isExpand) {
         if (isExpand) {
+            fab_context_btn_root.startAnimation(rotateOpen);
             fab_context_btn_1.startAnimation(fromBottom);
             fab_context_btn_2.startAnimation(fromBottom);
-            fab_context_btn_root.startAnimation(rotateOpen);
         } else {
             fab_context_btn_1.startAnimation(toBottom);
             fab_context_btn_2.startAnimation(toBottom);
@@ -85,16 +85,54 @@ public class FabContextMenu extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_fab_context_menu, container, false);
 
         rotateOpen = AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_open_anim);
-        rotateOpen.setDuration(300);
+        rotateOpen.setDuration(150);
+//        rotateOpen.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                final ActivityBase base = (ActivityBase) getActivity();
+//                if (base != null) {
+//                    fab_context_btn_root.setBackgroundColor(getResources().getColor(base.resolveRefAttributeResourceId(R.attr.themeWarningColor)));
+//                }
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
 
         rotateClose = AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_close_anim);
-        rotateClose.setDuration(300);
+        rotateClose.setDuration(150);
+//        rotateClose.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                final ActivityBase base = (ActivityBase) getActivity();
+//                if (base != null) {
+//                    fab_context_btn_root.setBackgroundColor(getResources().getColor(base.resolveRefAttributeResourceId(R.attr.themeAccentColor)));
+//                }
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
 
         fromBottom = AnimationUtils.loadAnimation(this.getContext(), R.anim.from_bottom_anim);
-        fromBottom.setDuration(300);
+        fromBottom.setDuration(150);
 
         toBottom = AnimationUtils.loadAnimation(this.getContext(), R.anim.to_bottom_anim);
-        toBottom.setDuration(300);
+        toBottom.setDuration(150);
 
         fab_context_btn_root = view.findViewById(R.id.fab_context_btn_root);
         fab_context_btn_1 = view.findViewById(R.id.fab_context_btn_1);

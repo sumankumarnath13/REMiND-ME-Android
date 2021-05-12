@@ -14,7 +14,6 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.remindme.R;
-import com.example.remindme.dataModels.Reminder;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
@@ -26,10 +25,10 @@ import java.util.List;
 
 public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecyclerReminder.ReminderHolder> {
 
-    private final List<Reminder> _data;
+    private final List<ReminderModel> _data;
     private boolean isEnableCheck;
 
-    public AdapterRecyclerReminder(List<Reminder> data) {
+    public AdapterRecyclerReminder(final List<ReminderModel> data) {
         this._data = data;
         isEnableCheck = false;
     }
@@ -46,7 +45,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
     @Override
     public void onBindViewHolder(@NonNull final ReminderHolder holder, int position) {
         // create a new view
-        final Reminder reminder = _data.get(position);
+        final ReminderModel reminder = _data.get(position);
 
         if (reminder == null) {
             return;
@@ -69,6 +68,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
         holder.linearLayout.setOnLongClickListener(v -> {
             isEnableCheck = !isEnableCheck;
+            reminder.setSelected(!reminder.isSelected());
             notifyDataSetChanged();
             return true;
         });
@@ -79,10 +79,9 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 return;
 
             final Intent intent = new Intent(context, ReminderView.class);
-            intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminder.id);
+            intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminder.getId());
             context.startActivity(intent);
         });
-
 
         enabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
@@ -95,16 +94,14 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
                 return;
             }
 
-            ReminderModel reminderModel = ReminderModel.getInstance(reminder);
-
             final Context context = buttonView.getContext();
 
-            if (reminderModel.trySetEnabled(context, isChecked)) {
-                reminderModel.saveAndSetAlert(context, true);
+            if (reminder.trySetEnabled(context, isChecked)) {
+                reminder.saveAndSetAlert(context, true);
                 buttonView.setChecked(isChecked);
                 if (isChecked) {
-                    time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
-                    date.setText(StringHelper.toWeekdayDate(context, reminderModel.getTimeModel().getTime()));
+                    time.setText(StringHelper.toTime(reminder.getTimeModel().getTime()));
+                    date.setText(StringHelper.toWeekdayDate(context, reminder.getTimeModel().getTime()));
                 }
             }
         });
@@ -112,41 +109,41 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
         isRefreshing = true;
 
-        final ReminderModel reminderModel = ReminderModel.getInstance(reminder);
+        //final ReminderModel reminderModel = ReminderModel.getInstance(reminder);
 
-        time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
-        date.setText(StringHelper.toWeekdayDate(holder.linearLayout.getContext(), reminderModel.getTimeModel().getTime()));
-        tv_reminder_repeat_short_summary.setText(reminderModel.getRepeatSettingShortString());
+        time.setText(StringHelper.toTime(reminder.getTimeModel().getTime()));
+        date.setText(StringHelper.toWeekdayDate(holder.linearLayout.getContext(), reminder.getTimeModel().getTime()));
+        tv_reminder_repeat_short_summary.setText(reminder.getRepeatSettingShortString());
 
-        if (StringHelper.isNullOrEmpty(reminderModel.getName())) {
+        if (StringHelper.isNullOrEmpty(reminder.getName())) {
             name.setVisibility(View.GONE);
         } else {
-            name.setText(reminderModel.getName());
+            name.setText(reminder.getName());
             name.setVisibility(View.VISIBLE);
         }
 
-        if (reminderModel.getSnoozeModel().isSnoozed()) {
+        if (reminder.getSnoozeModel().isSnoozed()) {
             lv_reminder_view_snooze.setVisibility(View.VISIBLE);
             next_snooze.setText(StringHelper.toTime(
-                    reminderModel.getSnoozeModel().getSnoozedTime(
-                            reminderModel.getTimeModel().getTime()
+                    reminder.getSnoozeModel().getSnoozedTime(
+                            reminder.getTimeModel().getTime()
                     )));
         } else {
             lv_reminder_view_snooze.setVisibility(View.GONE);
 
-            if (reminderModel.getLastMissedTime() != null) {
+            if (reminder.getLastMissedTime() != null) {
                 lv_reminder_last_missed_time.setVisibility(View.VISIBLE);
-                tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(holder.linearLayout.getContext(), reminderModel.getLastMissedTime()));
+                tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(holder.linearLayout.getContext(), reminder.getLastMissedTime()));
             } else {
                 lv_reminder_last_missed_time.setVisibility(View.GONE);
             }
         }
 
-        if (reminderModel.isExpired()) {
+        if (reminder.isExpired()) {
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.colorDanger));
             enabled.setVisibility(View.GONE);
         } else {
-            enabled.setChecked(reminderModel.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
+            enabled.setChecked(reminder.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
         }
 
         if (isEnableCheck) {

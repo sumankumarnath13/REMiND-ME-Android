@@ -24,16 +24,18 @@ import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.ReminderModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Date;
 
-public class ReminderRinging extends ActivityBase {
+public class AlarmBell extends ActivityBase {
 
     private boolean isReceiverRegistered = false;
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent == null) return;
+            if (intent == null)
+                return;
 
             if (ReminderModel.ACTION_CLOSE_ALARM_ACTIVITY.equals(intent.getAction())) {
                 finish();
@@ -65,7 +67,7 @@ public class ReminderRinging extends ActivityBase {
 
             final ReminderModel reminderModel = serviceBinder.getServingReminder();
             if (reminderModel == null) {
-                ToastHelper.showLong(ReminderRinging.this, "Serious flow trouble!");
+                ToastHelper.showLong(AlarmBell.this, "Serious flow trouble!");
                 finish();
                 return;
             }
@@ -75,9 +77,9 @@ public class ReminderRinging extends ActivityBase {
             tv_reminder_note.setText(reminderModel.getNote());
 
             if (reminderModel.canSnooze()) {
-                btnSnooze.setVisibility(View.VISIBLE);
+                btnSnoozeAlarm.setVisibility(View.VISIBLE);
             } else {
-                btnSnooze.setVisibility(View.GONE);
+                btnSnoozeAlarm.setVisibility(View.GONE);
             }
 
             currentTimeTimer.start();
@@ -171,7 +173,7 @@ public class ReminderRinging extends ActivityBase {
     private AppCompatTextView tv_reminder_time;
     private AppCompatTextView tv_reminder_name;
     private AppCompatTextView tv_reminder_note;
-    private AppCompatTextView btnSnooze;
+    private FloatingActionButton btnSnoozeAlarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,16 +195,16 @@ public class ReminderRinging extends ActivityBase {
             setTurnScreenOn(true);
         }
 
-        final AppCompatTextView btnDismiss = findViewById(R.id.btn_reminder_dismiss);
-        btnDismiss.setOnClickListener(view -> {
+        final FloatingActionButton btnDismissAlarm = findViewById(R.id.btnDismissAlarm);
+        btnDismissAlarm.setOnClickListener(view -> {
             if (serviceBinder != null && mServiceBound) {
                 serviceBinder.dismiss();
             }
             finish();
         });
 
-        btnSnooze = findViewById(R.id.btn_reminder_snooze);
-        btnSnooze.setOnClickListener(view -> {
+        btnSnoozeAlarm = findViewById(R.id.btnSnoozeAlarm);
+        btnSnoozeAlarm.setOnClickListener(view -> {
             if (serviceBinder != null && mServiceBound) {
                 serviceBinder.snoozeByUser();
             }

@@ -512,4 +512,19 @@
         </item>
     </style>
 
+    <style name="AccentFab" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="rippleColor">
+            ?attr/themeWarningColor
+        </item>
+        <item name="backgroundTint">
+            ?attr/themeAccentColor
+        </item>
+        <item name="backgroundColor">
+            ?attr/themeAccentColor
+        </item>
+        <item name="tint">
+            @android:color/white
+        </item>
+    </style>
+
 </resources>

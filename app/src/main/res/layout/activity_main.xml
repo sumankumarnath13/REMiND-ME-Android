@@ -43,7 +43,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         app:srcCompat="@drawable/ic_add"
-        app:backgroundTint="?attr/themeDisabledControlColor"
+        style="@style/AccentFab"
         android:contentDescription="@string/missingImageDesc" />
 
     <!--    <androidx.appcompat.widget.LinearLayoutCompat-->

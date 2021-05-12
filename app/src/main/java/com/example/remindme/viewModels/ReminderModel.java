@@ -20,6 +20,7 @@ import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -81,6 +82,16 @@ public class ReminderModel extends ViewModel {
 
     public int getIntId() {
         return intId;
+    }
+
+    private boolean isSelected;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     private boolean isEnabled = true;
@@ -191,26 +202,24 @@ public class ReminderModel extends ViewModel {
             return; // Ignore if all reminders are disabled from settings
 
         final Calendar calendar = Calendar.getInstance();
-        List<Reminder> reminders = getActiveReminders(null);
+        final List<ReminderModel> reminders = getActiveReminders(null);
         boolean isNewAlertFound = false;
         for (int i = 0; i < reminders.size(); i++) {
-            final Reminder r = reminders.get(i);
-            final ReminderModel reminderModel = ReminderModel.getInstance(r);
-            if (reminderModel.isEnabled()) {
-                if (calendar.getTime().after(reminderModel.getTimeModel().getTime()) && isDeviceRebooted) {
+            if (reminders.get(i).isEnabled()) {
+                if (calendar.getTime().after(reminders.get(i).getTimeModel().getTime()) && isDeviceRebooted) {
                     // App getting killed after a while. But Broadcast receiver recreating app which leads to rescheduling.
                     // And for the logic below it getting dismissed before it could be snoozed from alerts.
                     // isDeviceRebooted will prevent this from happening.
-                    reminderModel.dismissByApp(context);
-                } else if (!reminderModel.isPendingIntentExists(context)) {
+                    reminders.get(i).dismissByApp(context);
+                } else if (!reminders.get(i).isPendingIntentExists(context)) {
                     isNewAlertFound = true;
 
-                    if (calendar.getTime().after(reminderModel.getTimeModel().getTime())) {
-                        NotificationHelper.notify(context, reminderModel.getIntId(), "Dismissing reminder!", reminderModel.getSignatureName(), reminderModel.note);
-                        reminderModel.dismissByApp(context);
+                    if (calendar.getTime().after(reminders.get(i).getTimeModel().getTime())) {
+                        NotificationHelper.notify(context, reminders.get(i).getIntId(), "Dismissing reminder!", reminders.get(i).getSignatureName(), reminders.get(i).note);
+                        reminders.get(i).dismissByApp(context);
                     } else {
-                        NotificationHelper.notify(context, reminderModel.getIntId(), "New reminder!", reminderModel.getSignatureName(), reminderModel.note);
-                        reminderModel.setPendingIntent(context, reminderModel.getTimeModel().getTime(), false);
+                        NotificationHelper.notify(context, reminders.get(i).getIntId(), "New reminder!", reminders.get(i).getSignatureName(), reminders.get(i).note);
+                        reminders.get(i).setPendingIntent(context, reminders.get(i).getTimeModel().getTime(), false);
                     }
                 }
             }
@@ -508,21 +517,45 @@ public class ReminderModel extends ViewModel {
 
     }
 
-    public static List<Reminder> getActiveReminders(final String name) {
+    public static List<ReminderModel> getActiveReminders(final String name) {
         final Realm realm = Realm.getDefaultInstance();
         if (StringHelper.isNullOrEmpty(name)) {
-            return realm.where(Reminder.class).equalTo("isExpired", false).sort("time").findAll();
+            final List<Reminder> dataList = realm.where(Reminder.class).equalTo("isExpired", false).sort("time").findAll();
+            final ArrayList<ReminderModel> reminderList = new ArrayList<>();
+            for (int i = 0; i < dataList.size(); i++) {
+                reminderList.add(ReminderModel.getInstance(dataList.get(i)));
+            }
+            realm.close();
+            return reminderList;
         } else {
-            return realm.where(Reminder.class).equalTo("isExpired", false).beginsWith("name", name).sort("time").findAll();
+            final List<Reminder> dataList = realm.where(Reminder.class).equalTo("isExpired", false).beginsWith("name", name).sort("time").findAll();
+            final ArrayList<ReminderModel> reminderList = new ArrayList<>();
+            for (int i = 0; i < dataList.size(); i++) {
+                reminderList.add(ReminderModel.getInstance(dataList.get(i)));
+            }
+            realm.close();
+            return reminderList;
         }
     }
 
-    public static List<Reminder> getDismissedReminders(final String name) {
+    public static List<ReminderModel> getDismissedReminders(final String name) {
         final Realm realm = Realm.getDefaultInstance();
         if (StringHelper.isNullOrEmpty(name)) {
-            return realm.where(Reminder.class).equalTo("isExpired", true).sort("time").findAll();
+            final List<Reminder> dataList = realm.where(Reminder.class).equalTo("isExpired", true).sort("time").findAll();
+            final ArrayList<ReminderModel> reminderList = new ArrayList<>();
+            for (int i = 0; i < dataList.size(); i++) {
+                reminderList.add(ReminderModel.getInstance(dataList.get(i)));
+            }
+            realm.close();
+            return reminderList;
         } else {
-            return realm.where(Reminder.class).equalTo("isExpired", true).beginsWith("name", name).sort("time").findAll();
+            final List<Reminder> dataList = realm.where(Reminder.class).equalTo("isExpired", true).beginsWith("name", name).sort("time").findAll();
+            final ArrayList<ReminderModel> reminderList = new ArrayList<>();
+            for (int i = 0; i < dataList.size(); i++) {
+                reminderList.add(ReminderModel.getInstance(dataList.get(i)));
+            }
+            realm.close();
+            return reminderList;
         }
     }
 

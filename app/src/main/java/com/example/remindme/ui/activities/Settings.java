@@ -16,7 +16,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.remindme.R;
-import com.example.remindme.dataModels.Reminder;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.DeviceHelper;
 import com.example.remindme.helpers.OsHelper;
@@ -86,18 +85,16 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
         sw_disable_all_reminders.setChecked(settingsHelper.isDisableAllReminders());
         sw_disable_all_reminders.setOnCheckedChangeListener((buttonView, isChecked) -> {
             settingsHelper.setDisableAllReminders(isChecked);
-            List<Reminder> list = ReminderModel.getActiveReminders(null);
+            final List<ReminderModel> list = ReminderModel.getActiveReminders(null);
             if (isChecked) {
                 for (int i = 0; i < list.size(); i++) {
-                    ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
-                    reminderModel.trySetEnabled(Settings.this, false);
+                    list.get(i).trySetEnabled(Settings.this, false);
                 }
             } else {
                 for (int i = 0; i < list.size(); i++) {
-                    ReminderModel reminderModel = ReminderModel.getInstance(list.get(i));
-                    if (reminderModel.isEnabled()) {
-                        if (reminderModel.trySetEnabled(Settings.this, true)) {
-                            reminderModel.saveAndSetAlert(Settings.this, false);
+                    if (list.get(i).isEnabled()) {
+                        if (list.get(i).trySetEnabled(Settings.this, true)) {
+                            list.get(i).saveAndSetAlert(Settings.this, false);
                         }
                     }
                 }

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_8"
         app:backgroundTint="?attr/themeDisabledControlColor"
-        app:srcCompat="@drawable/ic_close" />
+        app:srcCompat="@drawable/ic_delete" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_context_btn_2"
@@ -19,15 +19,14 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_8"
         app:backgroundTint="?attr/themeDisabledControlColor"
-        app:srcCompat="@drawable/ic_reminder_check" />
+        app:srcCompat="@drawable/ic_edit" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_context_btn_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_8"
-        app:backgroundTint="?attr/themeDisabledControlColor"
-        android:tint="?attr/themeSuccessColor"
+        style="@style/AccentFab"
         app:srcCompat="@drawable/ic_expand_up" />
 
 </LinearLayout>

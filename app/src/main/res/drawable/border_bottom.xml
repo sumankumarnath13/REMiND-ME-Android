@@ -1,62 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
-    <item android:state_enabled="true">
-        <layer-list>
-            <item>
-                <shape android:shape="rectangle">
-                    <stroke android:width="@dimen/dp_05" android:color="?attr/themeBorderColor" />
-                </shape>
-            </item>
-            <item android:bottom="@dimen/dp_05">
-                <shape android:shape="rectangle">
-                    <stroke android:width="@dimen/dp_05" android:color="?attr/themeBackgroundColor" />
-                    <solid android:color="?attr/themeBackgroundColor" />
-                </shape>
-                <ripple android:color="?attr/themeAccentColor" tools:targetApi="lollipop">
-                    <item android:id="@android:id/mask">
-                        <shape android:shape="rectangle">
-                            <solid android:color="?attr/themeBackgroundColor" />
-                        </shape>
-                    </item>
-                    <item>
-                        <shape android:shape="rectangle">
-                            <stroke android:width="@dimen/dp_05" android:color="?attr/themeAccentColor" />
-                        </shape>
-                    </item>
-                </ripple>
-            </item>
-        </layer-list>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <stroke
+                android:width="@dimen/dp_05"
+                android:color="?attr/themeBorderColor" />
+        </shape>
     </item>
-    <item android:state_enabled="false">
-        <layer-list>
-            <item>
-                <shape android:shape="rectangle">
-                    <stroke android:width="@dimen/dp_05" android:color="?attr/themeBorderColor" />
-                </shape>
-            </item>
-            <item android:bottom="@dimen/dp_05">
-                <shape android:shape="rectangle">
-                    <stroke android:width="@dimen/dp_05" android:color="?attr/themeBackgroundColor" />
-                    <solid android:color="?attr/themeBackgroundColor" />
-                </shape>
-            </item>
-        </layer-list>
+    <item android:bottom="@dimen/dp_05">
+        <shape android:shape="rectangle">
+            <stroke
+                android:width="@dimen/dp_05"
+                android:color="?attr/themeBackgroundColor" />
+            <solid android:color="?attr/themeBackgroundColor" />
+        </shape>
     </item>
-</selector>
-
-
-    <!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >-->
-    <!--    <item-->
-    <!--        android:bottom="1dp"-->
-    <!--        android:left="-2dp"-->
-    <!--        android:right="-2dp"-->
-    <!--        android:top="-2dp">-->
-    <!--        <shape android:shape="rectangle" >-->
-    <!--            <stroke-->
-    <!--                android:width="@dimen/dp_05"-->
-    <!--                android:color="?attr/borderColor" />-->
-    <!--            <solid android:color="?attr/themeBackground" />-->
-    <!--        </shape>-->
-    <!--    </item>-->
-
-    <!--</layer-list>-->
+</layer-list>

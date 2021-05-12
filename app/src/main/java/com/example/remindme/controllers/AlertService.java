@@ -20,7 +20,7 @@ import com.example.remindme.helpers.NotificationHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.WakeLockHelper;
-import com.example.remindme.ui.activities.ReminderRinging;
+import com.example.remindme.ui.activities.AlarmBell;
 import com.example.remindme.viewModels.ReminderModel;
 import com.example.remindme.viewModels.RingingModel;
 
@@ -122,11 +122,11 @@ public class AlertService extends Service {
     private Intent createAlarmActivityIntent(String actionName) {
         // Setting an action is important. It help distinguish between intents with other values targeting same activity
         if (OsHelper.isOreoOrLater()) {
-            return new Intent(this, ReminderRinging.class)
+            return new Intent(this, AlarmBell.class)
                     .setAction(actionName)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
         } else {
-            return new Intent(this, ReminderRinging.class)
+            return new Intent(this, AlarmBell.class)
                     .setAction(actionName)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
 
