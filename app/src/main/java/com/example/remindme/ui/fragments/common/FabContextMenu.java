@@ -85,7 +85,7 @@ public class FabContextMenu extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_fab_context_menu, container, false);
 
         rotateOpen = AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_open_anim);
-        rotateOpen.setDuration(150);
+        rotateOpen.setDuration(90);
 //        rotateOpen.setAnimationListener(new Animation.AnimationListener() {
 //            @Override
 //            public void onAnimationStart(Animation animation) {
@@ -107,7 +107,7 @@ public class FabContextMenu extends Fragment {
 //        });
 
         rotateClose = AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_close_anim);
-        rotateClose.setDuration(150);
+        rotateClose.setDuration(90);
 //        rotateClose.setAnimationListener(new Animation.AnimationListener() {
 //            @Override
 //            public void onAnimationStart(Animation animation) {
@@ -120,6 +120,7 @@ public class FabContextMenu extends Fragment {
 //                if (base != null) {
 //                    fab_context_btn_root.setBackgroundColor(getResources().getColor(base.resolveRefAttributeResourceId(R.attr.themeAccentColor)));
 //                }
+//
 //            }
 //
 //            @Override
@@ -129,10 +130,10 @@ public class FabContextMenu extends Fragment {
 //        });
 
         fromBottom = AnimationUtils.loadAnimation(this.getContext(), R.anim.from_bottom_anim);
-        fromBottom.setDuration(150);
+        fromBottom.setDuration(60);
 
         toBottom = AnimationUtils.loadAnimation(this.getContext(), R.anim.to_bottom_anim);
-        toBottom.setDuration(150);
+        toBottom.setDuration(60);
 
         fab_context_btn_root = view.findViewById(R.id.fab_context_btn_root);
         fab_context_btn_1 = view.findViewById(R.id.fab_context_btn_1);

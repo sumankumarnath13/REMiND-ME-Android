@@ -83,6 +83,9 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             context.startActivity(intent);
         });
 
+        reminderSelectionCheck.setChecked(reminder.isSelected());
+        reminderSelectionCheck.setOnCheckedChangeListener((buttonView, isChecked) -> reminder.setSelected(isChecked));
+
         enabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
             if (isRefreshing)
