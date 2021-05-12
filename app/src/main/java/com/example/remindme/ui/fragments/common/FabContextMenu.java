@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.remindme.R;
@@ -20,10 +21,10 @@ public class FabContextMenu extends Fragment {
     public class MenuItem {
         public int src;
         public int tint;
+        public String hintText;
         public int buttonTint;
         public String clickAction;
         public String clickValue;
-        public boolean isRoot;
     }
 
     public interface iFabContextMenuHost {
@@ -69,11 +70,7 @@ public class FabContextMenu extends Fragment {
     private void setAnimation(boolean isExpand) {
         if (isExpand) {
             fab_context_btn_root.startAnimation(rotateOpen);
-            fab_context_btn_1.startAnimation(fromBottom);
-            fab_context_btn_2.startAnimation(fromBottom);
         } else {
-            fab_context_btn_1.startAnimation(toBottom);
-            fab_context_btn_2.startAnimation(toBottom);
             fab_context_btn_root.startAnimation(rotateClose);
         }
     }
@@ -85,49 +82,48 @@ public class FabContextMenu extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_fab_context_menu, container, false);
 
         rotateOpen = AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_open_anim);
-        rotateOpen.setDuration(90);
-//        rotateOpen.setAnimationListener(new Animation.AnimationListener() {
-//            @Override
-//            public void onAnimationStart(Animation animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animation animation) {
-//                final ActivityBase base = (ActivityBase) getActivity();
-//                if (base != null) {
-//                    fab_context_btn_root.setBackgroundColor(getResources().getColor(base.resolveRefAttributeResourceId(R.attr.themeWarningColor)));
-//                }
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animation animation) {
-//
-//            }
-//        });
+        rotateOpen.setDuration(117);
+        rotateOpen.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                fab_context_btn_1.startAnimation(fromBottom);
+                fab_context_btn_2.startAnimation(fromBottom);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (getActivity() != null) {
+                    // ic_expand_up is required NOT ic_expand_down. Because it's rotated 180 degree by the end of the animation
+                    fab_context_btn_root.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expand_up, getActivity().getTheme()));
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
         rotateClose = AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_close_anim);
-        rotateClose.setDuration(90);
-//        rotateClose.setAnimationListener(new Animation.AnimationListener() {
-//            @Override
-//            public void onAnimationStart(Animation animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animation animation) {
-//                final ActivityBase base = (ActivityBase) getActivity();
-//                if (base != null) {
-//                    fab_context_btn_root.setBackgroundColor(getResources().getColor(base.resolveRefAttributeResourceId(R.attr.themeAccentColor)));
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animation animation) {
-//
-//            }
-//        });
+        rotateClose.setDuration(117);
+        rotateClose.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                fab_context_btn_1.startAnimation(toBottom);
+                fab_context_btn_2.startAnimation(toBottom);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (getActivity() != null) {
+                    fab_context_btn_root.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_context_menu, getActivity().getTheme()));
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
 
         fromBottom = AnimationUtils.loadAnimation(this.getContext(), R.anim.from_bottom_anim);
         fromBottom.setDuration(60);

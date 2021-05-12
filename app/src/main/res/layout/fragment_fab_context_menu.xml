@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_8"
         app:backgroundTint="?attr/themeDisabledControlColor"
-        app:srcCompat="@drawable/ic_delete" />
+        app:srcCompat="@drawable/ic_delete"
+        android:contentDescription="@string/missingImageDesc" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_context_btn_2"
@@ -19,7 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_8"
         app:backgroundTint="?attr/themeDisabledControlColor"
-        app:srcCompat="@drawable/ic_edit" />
+        app:srcCompat="@drawable/ic_edit"
+        android:contentDescription="@string/missingImageDesc" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_context_btn_root"
@@ -27,6 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_8"
         style="@style/AccentFab"
-        app:srcCompat="@drawable/ic_expand_up" />
+        app:srcCompat="@drawable/ic_context_menu"
+        android:contentDescription="@string/missingImageDesc" />
 
 </LinearLayout>

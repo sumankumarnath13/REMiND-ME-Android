@@ -526,7 +526,7 @@ public class ReminderInput
         }
 
         if (isPlayingTone) {
-            imgBtnPlayStop.setImageResource(R.drawable.ic_stop);
+            imgBtnPlayStop.setImageResource(R.drawable.ic_play_stop);
         } else {
             imgBtnPlayStop.setImageResource(R.drawable.ic_play);
         }

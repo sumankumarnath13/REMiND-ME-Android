@@ -514,7 +514,7 @@
 
     <style name="AccentFab" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="rippleColor">
-            ?attr/themeWarningColor
+            ?attr/themeBackgroundColor
         </item>
         <item name="backgroundTint">
             ?attr/themeAccentColor
