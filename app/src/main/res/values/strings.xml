@@ -98,28 +98,76 @@
         </item>
     </array>
     <array name="ring_durations">
-        <item>1 minute</item>
-        <item>2 minute</item>
-        <item>3 minute</item>
+        <item>
+            1
+            minute
+        </item>
+        <item>
+            2
+            minute
+        </item>
+        <item>
+            3
+            minute
+        </item>
     </array>
     <array name="vibration_patterns">
-        <item>Basic</item>
-        <item>Heartbeat</item>
-        <item>Ticktock</item>
-        <item>Waltz</item>
-        <item>Zig Zig Zig</item>
+        <item>
+            Basic
+        </item>
+        <item>
+            Heartbeat
+        </item>
+        <item>
+            Ticktock
+        </item>
+        <item>
+            Waltz
+        </item>
+        <item>
+            Zig
+            Zig
+            Zig
+        </item>
     </array>
     <array name="themes">
-        <item>Black</item>
-        <item>Light</item>
+        <item>
+            Black
+        </item>
+        <item>
+            Light
+        </item>
     </array>
     <array name="date_formats">
-        <item>dd LLL yy</item>
-        <item>dd LLL yyyy</item>
-        <item>LLL dd, yy</item>
-        <item>LLL dd, yyyy</item>
+        <item>
+            dd
+            LLL
+            yy
+        </item>
+        <item>
+            dd
+            LLL
+            yyyy
+        </item>
+        <item>
+            LLL
+            dd,
+            yy
+        </item>
+        <item>
+            LLL
+            dd,
+            yyyy
+        </item>
     </array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="missed_on">"Missed on : "</string>
     <string name="missingImageDesc">oops</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">
+        Hello
+        blank
+        fragment
+    </string>
+    <string name="character_limit_warning_label">%d character%s available</string>
 </resources>

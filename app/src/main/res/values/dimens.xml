@@ -24,6 +24,9 @@
     <dimen name="dp_117">
         117dp
     </dimen>
+    <dimen name="dp_clippedPaddingBottom">
+        87dp
+    </dimen>
     <dimen name="font_size_banner">
         37sp
     </dimen>

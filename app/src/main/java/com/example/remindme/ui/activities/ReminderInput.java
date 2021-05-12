@@ -141,7 +141,7 @@ public class ReminderInput
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.reminder_input);
+        setContentView(R.layout.activity_alarm_input);
 
         setUserInteracted(false);
 
@@ -427,13 +427,13 @@ public class ReminderInput
         sv_container = findViewById(R.id.sv_container);
 
         ring_duration_spinner = findViewById(R.id.ring_duration_spinner);
-        ArrayAdapter<CharSequence> ring_duration_adapter = ArrayAdapter.createFromResource(this, R.array.ring_durations, R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> ring_duration_adapter = ArrayAdapter.createFromResource(this, R.array.ring_durations, R.layout.item_dropdown_fragment_simple_spinner);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         ring_duration_spinner.setAdapter(ring_duration_adapter);
         ring_duration_spinner.setOnItemSelectedListener(this);
 
         vibrate_pattern_spinner = findViewById(R.id.vibrate_pattern_spinner);
-        ArrayAdapter<CharSequence> vibrate_pattern_adapter = ArrayAdapter.createFromResource(this, R.array.vibration_patterns, R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> vibrate_pattern_adapter = ArrayAdapter.createFromResource(this, R.array.vibration_patterns, R.layout.item_dropdown_fragment_simple_spinner);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         vibrate_pattern_spinner.setAdapter(vibrate_pattern_adapter);
         vibrate_pattern_spinner.setOnItemSelectedListener(this);

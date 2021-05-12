@@ -29,7 +29,7 @@ public class DailyCustomRepeatDialog extends CustomRepeatDialogBase {
             return builder.create();
         final LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.reminder_repeat_daily_custom_dialog, null);
+        final View view = inflater.inflate(R.layout.dialog_fragment_input_repeat_days_of_week, null);
 
         final AppCompatCheckBox chk_daily_sun = view.findViewById(R.id.chk_daily_sun);
         final AppCompatCheckBox chk_daily_mon = view.findViewById(R.id.chk_daily_mon);

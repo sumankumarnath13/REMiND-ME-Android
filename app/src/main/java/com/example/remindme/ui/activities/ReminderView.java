@@ -16,13 +16,14 @@ import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
+import com.example.remindme.ui.fragments.common.FabContextMenu;
 import com.example.remindme.viewModels.ReminderModel;
 import com.example.remindme.viewModels.RingingModel;
 
 import java.util.Locale;
 
 
-public class ReminderView extends ActivityBase {
+public class ReminderView extends ActivityBase implements FabContextMenu.iFabContextMenuHost {
     private static final String MISSED_ALERT_UI_STATE = "STATE";
     private boolean isMissedAlertsVisible;
     private AppCompatTextView tv_reminder_time;
@@ -37,6 +38,8 @@ public class ReminderView extends ActivityBase {
     private ReminderModel activeReminder;
     private AppCompatTextView tv_expired;
     private AppCompatTextView next_snooze;
+
+    private FabContextMenu reminderViewContentMenu;
     private static final String STATUS_OFF = "OFF";
 
     @Override
@@ -48,7 +51,7 @@ public class ReminderView extends ActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.reminder_view);
+        setContentView(R.layout.activity_view);
         setActivitySubTitle(getResources().getString(R.string.view_reminder_heading));
 
         if (savedInstanceState != null) {
@@ -76,19 +79,11 @@ public class ReminderView extends ActivityBase {
         ly_note_summary_header = findViewById(R.id.ly_note_summary_header);
         tv_reminder_note = findViewById(R.id.tv_reminder_note);
 
-        final AppCompatButton btnDelete = findViewById(R.id.btn_reminder_delete);
-        btnDelete.setOnClickListener(view -> {
-            activeReminder.deleteAndCancelAlert(getApplicationContext());
-            finish();
-        });
 
-        final AppCompatButton btnChange = findViewById(R.id.btn_reminder_edit);
-        btnChange.setOnClickListener(view -> {
-            Intent input_i = new Intent(getApplicationContext(), ReminderInput.class);
-            ReminderModel.setReminderIdInIntent(input_i, activeReminder.getId());
-            startActivity(input_i);
-            finish();
-        });
+        reminderViewContentMenu = (FabContextMenu) getSupportFragmentManager().findFragmentById(R.id.reminderViewContentMenu);
+        if (reminderViewContentMenu != null) {
+            reminderViewContentMenu.setHost(this);
+        }
 
         enabled = findViewById(R.id.sw_reminder_enabled);
         enabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -298,6 +293,19 @@ public class ReminderView extends ActivityBase {
                 tv_missed_alerts.setVisibility(View.GONE);
                 lv_reminder_details.setVisibility(View.VISIBLE);
             }
+        }
+    }
+
+    @Override
+    public void onFabContextMenuClick(String clickAction, String clickValue) {
+        if (clickAction.equals("del")) {
+            activeReminder.deleteAndCancelAlert(getApplicationContext());
+            finish();
+        } else if (clickAction.equals("update")) {
+            final Intent input_i = new Intent(getApplicationContext(), ReminderInput.class);
+            ReminderModel.setReminderIdInIntent(input_i, activeReminder.getId());
+            startActivity(input_i);
+            finish();
         }
     }
 }

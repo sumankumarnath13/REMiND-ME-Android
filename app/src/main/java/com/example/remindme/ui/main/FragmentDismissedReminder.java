@@ -50,7 +50,7 @@ public class FragmentDismissedReminder extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.dismissed_reminder_fragment, container, false);
+        final View view = inflater.inflate(R.layout.fragment_dismissed_reminder, container, false);
 
         // Inflate the layout for this fragment
         recyclerView = view.findViewById(R.id.recycler_reminders);

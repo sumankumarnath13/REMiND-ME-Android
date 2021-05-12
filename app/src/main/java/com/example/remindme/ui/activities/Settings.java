@@ -120,7 +120,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
         tv_expired_reminder_count.setText(String.valueOf(ReminderModel.getDismissedReminders(null).size()));
 
         final AppCompatSpinner first_day_of_week_spinner = findViewById(R.id.first_day_of_week_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.first_day_of_week_options, R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.first_day_of_week_options, R.layout.item_dropdown_fragment_simple_spinner);
         first_day_of_week_spinner.setAdapter(adapter);
         switch (settingsHelper.getFirstDayOfWeek()) {
             default:
@@ -160,7 +160,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
             final SimpleDateFormat format = new SimpleDateFormat(datePattern, Locale.getDefault());
             datePatternValues.add(format.format(currentDateCalendar.getTime()));
         }
-        final ArrayAdapter<String> dateFormatSpinnerAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_dropdown_item, datePatternValues);
+        final ArrayAdapter<String> dateFormatSpinnerAdapter = new ArrayAdapter<>(this, R.layout.item_dropdown_fragment_simple_spinner, datePatternValues);
         dateFormatSpinner.setAdapter(dateFormatSpinnerAdapter);
 
         // Finding position from adapter will be wrong as its the current time formatted values that goes inside the adapter
@@ -171,7 +171,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
 
 
         final AppCompatSpinner theme_spinner = findViewById(R.id.theme_spinner);
-        final ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.themes, R.layout.simple_spinner_dropdown_item);
+        final ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.themes, R.layout.item_dropdown_fragment_simple_spinner);
         theme_spinner.setAdapter(theme_spinner_adapter);
         if (settingsHelper.getTheme() == AppSettingsHelper.Themes.LIGHT) {
             theme_spinner.setSelection(1);

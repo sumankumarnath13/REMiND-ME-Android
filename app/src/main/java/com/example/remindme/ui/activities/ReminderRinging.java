@@ -176,7 +176,7 @@ public class ReminderRinging extends ActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.reminder_ringing);
+        setContentView(R.layout.activity_alarm_bell);
         setActivitySubTitle(null);
 
         // Important: have to do the following in order to show without unlocking

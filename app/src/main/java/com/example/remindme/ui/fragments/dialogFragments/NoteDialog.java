@@ -23,7 +23,6 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.remindme.R;
 
 import java.util.List;
-import java.util.Locale;
 
 public class NoteDialog extends DialogFragment {
     public static final String TAG = "NoteDialog";
@@ -67,7 +66,7 @@ public class NoteDialog extends DialogFragment {
             return builder.create();
         final LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.input_note_dialog, null);
+        final View view = inflater.inflate(R.layout.dialog_fragment_input_note, null);
 
         txt_reminder_note = view.findViewById(R.id.tv_reminder_note);
         tv_reminder_note_limit_msg = view.findViewById(R.id.tv_reminder_note_limit_msg);
@@ -90,9 +89,9 @@ public class NoteDialog extends DialogFragment {
                     s.delete(NOTE_MAX_LENGTH, len);
                 }
                 if (NOTE_MAX_LENGTH - len > 0) {
-                    tv_reminder_note_limit_msg.setText(String.format(Locale.getDefault(), "%d characters available", NOTE_MAX_LENGTH - len));
+                    tv_reminder_note_limit_msg.setText(getString(R.string.character_limit_warning_label, NOTE_MAX_LENGTH - len, "s"));
                 } else {
-                    tv_reminder_note_limit_msg.setText("0 character available");
+                    tv_reminder_note_limit_msg.setText(getString(R.string.character_limit_warning_label, 0, ""));
                 }
             }
         });

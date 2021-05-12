@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +59,7 @@ public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
             return builder.create();
         final LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.date_calculator_dialog, null);
+        final View view = inflater.inflate(R.layout.dialog_fragment_input_date_calculator, null);
 
         btn_reminder_date = view.findViewById(R.id.btn_reminder_date);
         btn_reminder_date.setText(StringHelper.toWeekdayDate(this.getContext(), calendar.getTime()));
@@ -119,13 +118,12 @@ public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
         // 2
         value_picker.setValue(1);
 
-        builder.setView(view).setPositiveButton("Use Result", (dialog, which) -> listener.setDateCalculatorDialogModel(resultCalendar.getTime())).setNegativeButton(getString(R.string.dialog_negative), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //DO nothing
-            }
-        });
-
+        builder.setView(view).setPositiveButton("Use Result", (dialog, which) ->
+                listener.setDateCalculatorDialogModel(resultCalendar.getTime()))
+                .setNegativeButton(getString(R.string.dialog_negative),
+                        (dialog, which) -> {
+                            //DO nothing
+                        });
         refresh();
 
         return builder.create();

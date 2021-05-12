@@ -23,7 +23,6 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.remindme.R;
 
 import java.util.List;
-import java.util.Locale;
 
 public class NameDialog extends DialogFragment {
 
@@ -68,7 +67,7 @@ public class NameDialog extends DialogFragment {
             return builder.create();
         final LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.input_name_dialog, null);
+        final View view = inflater.inflate(R.layout.dialog_fragment_input_name, null);
 
         txt_reminder_name = view.findViewById(R.id.txt_reminder_name);
         tv_reminder_name_limit_msg = view.findViewById(R.id.tv_reminder_name_limit_msg);
@@ -92,10 +91,11 @@ public class NameDialog extends DialogFragment {
                 if (len > NAME_MAX_LENGTH) {
                     s.delete(NAME_MAX_LENGTH, len);
                 }
+
                 if (NAME_MAX_LENGTH - len > 0) {
-                    tv_reminder_name_limit_msg.setText(String.format(Locale.getDefault(), "%d characters available", NAME_MAX_LENGTH - len));
+                    tv_reminder_name_limit_msg.setText(getString(R.string.character_limit_warning_label, NAME_MAX_LENGTH - len, "s"));
                 } else {
-                    tv_reminder_name_limit_msg.setText("0 character available");
+                    tv_reminder_name_limit_msg.setText(getString(R.string.character_limit_warning_label, 0, ""));
                 }
             }
         });

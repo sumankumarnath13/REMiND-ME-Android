@@ -31,7 +31,7 @@ public class HourlyTimeListDialog extends TimeListDialogBase {
             return builder.create();
         final LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.time_list_input_hourly_dialog, null);
+        final View view = inflater.inflate(R.layout.dialog_fragment_input_time_list_hourly, null);
 
         final AppCompatCheckBox chk_daily_0 = view.findViewById(R.id.chk_daily_0);
         final AppCompatCheckBox chk_daily_1 = view.findViewById(R.id.chk_daily_1);

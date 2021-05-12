@@ -71,7 +71,7 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
             return builder.create();
         final LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.reminder_repeat_dialog, null);
+        final View view = inflater.inflate(R.layout.dialog_fragment_input_reminder_repeat, null);
         builder.setView(view).setTitle("Select Repeat Option")
                 .setPositiveButton(R.string.dialog_positive, (dialog, which) -> listener.setRepeatDialogModel(model))
                 .setNegativeButton(R.string.dialog_negative, (dialog, which) -> {

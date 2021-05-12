@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     tools:context=".ui.activities.Main">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -31,15 +31,17 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appBarLayout" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/imgBtnAddReminder"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/dp_117"
+        android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/dp_16"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         app:srcCompat="@drawable/ic_add"
         app:backgroundTint="?attr/themeDisabledControlColor"
         android:contentDescription="@string/missingImageDesc" />
@@ -68,4 +70,4 @@
 
     <!--    </androidx.appcompat.widget.LinearLayoutCompat>-->
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</RelativeLayout>

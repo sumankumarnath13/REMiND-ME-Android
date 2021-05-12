@@ -53,7 +53,7 @@ public class SnoozeDialog extends RefreshableDialogFragmentBase {
             return builder.create();
         final LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.reminder_snooze_dialog, null);
+        final View view = inflater.inflate(R.layout.dialog_fragment_input_snooze, null);
 
         final SwitchCompat sw_reminder_snooze_enabled = view.findViewById(R.id.sw_reminder_snooze);
         sw_reminder_snooze_enabled.setChecked(model.isEnable());
