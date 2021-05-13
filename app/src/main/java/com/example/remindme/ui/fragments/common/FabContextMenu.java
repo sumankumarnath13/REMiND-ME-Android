@@ -1,16 +1,24 @@
 package com.example.remindme.ui.fragments.common;
 
+import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.remindme.R;
+import com.example.remindme.helpers.OsHelper;
+import com.example.remindme.helpers.StringHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -18,60 +26,187 @@ import java.util.List;
 
 public class FabContextMenu extends Fragment {
 
-    public class MenuItem {
+    private enum MenuStates {
+        New,
+        Rendered,
+    }
+
+    public final class MenuItem {
+        private MenuStates state = MenuStates.New;
         public int src;
-        public int tint;
-        public String hintText;
-        public int buttonTint;
-        public String clickAction;
+        public int imageTint;
+        public int backgroundTint;
+        private String clickAction;
+
+        public String getClickAction() {
+            return clickAction;
+        }
+
         public String clickValue;
+        public String hintText;
     }
 
     public interface iFabContextMenuHost {
         void onFabContextMenuClick(String clickAction, String clickValue);
     }
 
-
     private iFabContextMenuHost host;
-    private List<MenuItem> menuItems = new ArrayList<>();
+    private final List<Pair<MenuItem, FloatingActionButton>> menuItems = new ArrayList<>();
 
     private Animation rotateOpen;
     private Animation rotateClose;
     private Animation fromBottom;
     private Animation toBottom;
 
-    private FloatingActionButton fab_context_btn_root;
-    private FloatingActionButton fab_context_btn_1;
-    private FloatingActionButton fab_context_btn_2;
-
-    private boolean isExpand;
-
-    public FabContextMenu() {
-    }
+    private LinearLayoutCompat layoutCompat;
+    private FloatingActionButton fabRoot;
+    private boolean isHasMany;
+    private boolean isExpanded;
+    private boolean isRenderedOnce;
 
     public void setHost(iFabContextMenuHost host) {
         this.host = host;
     }
 
-    public void addMenu(final MenuItem item) {
-        this.menuItems.add((item));
+    public MenuItem getNewMenuItem(String clickAction) {
+        final MenuItem item = new MenuItem();
+        item.clickAction = clickAction;
+        return item;
     }
 
-    private void setVisibility(boolean isExpand) {
-        if (isExpand) {
-            fab_context_btn_1.setVisibility(View.VISIBLE);
-            fab_context_btn_2.setVisibility(View.VISIBLE);
-        } else {
-            fab_context_btn_1.setVisibility(View.GONE);
-            fab_context_btn_2.setVisibility(View.GONE);
+    public void addMenu(Context context, final MenuItem item) {
+        if (item == null || StringHelper.isNullOrEmpty(item.clickAction))
+            return;
+
+        for (int i = 0; i < menuItems.size(); i++) {
+            if (item.clickAction.equals(menuItems.get(i).first.clickAction)) {
+                return;
+            }
+        }
+
+        final FloatingActionButton fab = new FloatingActionButton(context);
+        menuItems.add(new Pair<>(item, fab));
+
+        if (isRenderedOnce) {
+            renderButtons(context, getView());
         }
     }
 
-    private void setAnimation(boolean isExpand) {
-        if (isExpand) {
-            fab_context_btn_root.startAnimation(rotateOpen);
-        } else {
-            fab_context_btn_root.startAnimation(rotateClose);
+    public void removeMenu(final String clickAction) {
+        if (StringHelper.isNullOrEmpty(clickAction))
+            return;
+
+        for (int i = 0; i < menuItems.size(); i++) {
+            if (clickAction.equals(menuItems.get(i).first.clickAction)) {
+                if (layoutCompat != null) {
+                    layoutCompat.recomputeViewAttributes(menuItems.get(i).second);
+                }
+                menuItems.remove(i);
+                break;
+            }
+        }
+
+        setMenuRoot(getView());
+    }
+
+    private void setMenuRoot(View view) {
+
+        if (view == null)
+            return;
+
+        if (fabRoot == null) {
+            fabRoot = view.findViewById(R.id.fabBtnRoot);
+            fabRoot.setOnClickListener(v -> {
+                switchExpansion();
+            });
+        }
+
+        if (isExpanded) {
+            switchExpansion();
+        }
+
+        if (menuItems.size() > 1) { // Root button for context menu at
+            isHasMany = true;
+            if (fabRoot != null) {
+                fabRoot.setVisibility(View.VISIBLE);
+            }
+        } else { // Just one button
+            isHasMany = false;
+            if (fabRoot != null) {
+                fabRoot.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    private void renderButtons(Context context, View view) {
+
+        if (context == null)
+            return;
+
+        if (view == null)
+            return;
+
+        if (layoutCompat == null) {
+            layoutCompat = view.findViewById(R.id.fabContextMenuLayout);
+        }
+
+        for (int i = 0; i < menuItems.size(); i++) {
+
+            final MenuItem item = menuItems.get(i).first;
+            final FloatingActionButton fab = menuItems.get(i).second;
+
+            if (item.state == MenuStates.New) {
+
+                final LinearLayout.LayoutParams layoutParams =
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(
+                        (int) getResources().getDimension(R.dimen.dp_8),
+                        (int) getResources().getDimension(R.dimen.dp_8),
+                        (int) getResources().getDimension(R.dimen.dp_8),
+                        (int) getResources().getDimension(R.dimen.dp_8));
+                //layoutParams.gravity = Gravity.RE;
+                fab.setLayoutParams(layoutParams);
+
+                fab.setVisibility(View.INVISIBLE);
+                fab.setContentDescription(getString(R.string.missingImageDesc));
+                fab.setImageDrawable(AppCompatResources.getDrawable(context, item.src));
+
+                if (OsHelper.isLollipopOrLater()) {
+                    if (item.imageTint != 0) {
+                        fab.setImageTintMode(PorterDuff.Mode.SRC_ATOP);
+                        fab.setImageTintList(AppCompatResources.getColorStateList(context, item.imageTint));
+                    }
+                }
+
+                if (item.backgroundTint != 0) {
+                    fab.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
+                    fab.setBackgroundTintList(AppCompatResources.getColorStateList(context, item.backgroundTint));
+                }
+
+                fab.setOnClickListener(v -> {
+                    if (host != null) {
+                        host.onFabContextMenuClick(item.clickAction, item.clickValue);
+                    }
+                });
+
+                layoutCompat.addView(fab, i);
+                item.state = MenuStates.Rendered;
+            }
+        }
+
+        setMenuRoot(view);
+
+        isRenderedOnce = true;
+    }
+
+    private void switchExpansion() {
+        if (isHasMany && fabRoot != null) {
+            isExpanded = !isExpanded;
+            if (isExpanded) {
+                fabRoot.startAnimation(rotateOpen);
+            } else {
+                fabRoot.startAnimation(rotateClose);
+            }
         }
     }
 
@@ -86,15 +221,21 @@ public class FabContextMenu extends Fragment {
         rotateOpen.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                fab_context_btn_1.startAnimation(fromBottom);
-                fab_context_btn_2.startAnimation(fromBottom);
+
+                for (int i = 0; i < menuItems.size(); i++) {
+                    menuItems.get(i).second.setVisibility(View.VISIBLE);
+                }
+
+                for (int i = 0; i < menuItems.size(); i++) {
+                    menuItems.get(i).second.startAnimation(fromBottom);
+                }
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if (getActivity() != null) {
+                if (getActivity() != null && fabRoot != null) {
                     // ic_expand_up is required NOT ic_expand_down. Because it's rotated 180 degree by the end of the animation
-                    fab_context_btn_root.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expand_up, getActivity().getTheme()));
+                    fabRoot.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expand_up, getActivity().getTheme()));
                 }
             }
 
@@ -109,14 +250,19 @@ public class FabContextMenu extends Fragment {
         rotateClose.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                fab_context_btn_1.startAnimation(toBottom);
-                fab_context_btn_2.startAnimation(toBottom);
+                for (int i = 0; i < menuItems.size(); i++) {
+                    menuItems.get(i).second.startAnimation(toBottom);
+                }
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if (getActivity() != null) {
-                    fab_context_btn_root.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_context_menu, getActivity().getTheme()));
+                if (getActivity() != null && fabRoot != null) {
+                    fabRoot.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_context_menu, getActivity().getTheme()));
+                }
+
+                for (int i = 0; i < menuItems.size(); i++) {
+                    menuItems.get(i).second.setVisibility(View.GONE);
                 }
             }
 
@@ -131,35 +277,7 @@ public class FabContextMenu extends Fragment {
         toBottom = AnimationUtils.loadAnimation(this.getContext(), R.anim.to_bottom_anim);
         toBottom.setDuration(60);
 
-        fab_context_btn_root = view.findViewById(R.id.fab_context_btn_root);
-        fab_context_btn_1 = view.findViewById(R.id.fab_context_btn_1);
-        fab_context_btn_1.setVisibility(View.GONE);
-        fab_context_btn_2 = view.findViewById(R.id.fab_context_btn_2);
-        fab_context_btn_2.setVisibility(View.GONE);
-
-        fab_context_btn_root.setOnClickListener(v -> {
-            isExpand = !isExpand;
-            setVisibility(isExpand);
-            setAnimation(isExpand);
-        });
-
-        fab_context_btn_1.setOnClickListener(v -> {
-            isExpand = !isExpand;
-            setVisibility(isExpand);
-            setAnimation(isExpand);
-            if (host != null) {
-                host.onFabContextMenuClick("del", "del");
-            }
-        });
-
-        fab_context_btn_2.setOnClickListener(v -> {
-            isExpand = !isExpand;
-            setVisibility(isExpand);
-            setAnimation(isExpand);
-            if (host != null) {
-                host.onFabContextMenuClick("update", "update");
-            }
-        });
+        renderButtons(this.getContext(), view);
 
         return view;
     }

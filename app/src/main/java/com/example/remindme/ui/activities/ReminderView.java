@@ -39,8 +39,12 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
     private AppCompatTextView tv_expired;
     private AppCompatTextView next_snooze;
 
-    private FabContextMenu reminderViewContentMenu;
     private static final String STATUS_OFF = "OFF";
+
+    private FabContextMenu reminderViewContentMenu;
+    private static final String C_ACTION_EDIT = "EDIT";
+    private static final String C_ACTION_DEL = "DEL";
+    private static final String C_ACTION_DISMISS = "DISMISS";
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -83,6 +87,16 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
         reminderViewContentMenu = (FabContextMenu) getSupportFragmentManager().findFragmentById(R.id.reminderViewContentMenu);
         if (reminderViewContentMenu != null) {
             reminderViewContentMenu.setHost(this);
+
+            final FabContextMenu.MenuItem editItem = reminderViewContentMenu.getNewMenuItem(C_ACTION_EDIT);
+            editItem.src = R.drawable.ic_edit;
+            editItem.backgroundTint = resolveRefAttributeResourceId(R.attr.themeDisabledControlColor);
+            reminderViewContentMenu.addMenu(this, editItem);
+
+            final FabContextMenu.MenuItem deleteItem = reminderViewContentMenu.getNewMenuItem(C_ACTION_DEL);
+            deleteItem.src = R.drawable.ic_delete;
+            deleteItem.backgroundTint = resolveRefAttributeResourceId(R.attr.themeDisabledControlColor);
+            reminderViewContentMenu.addMenu(this, deleteItem);
         }
 
         enabled = findViewById(R.id.sw_reminder_enabled);
@@ -160,9 +174,15 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
                                 activeReminder.getTimeModel().getTime())));
 
                 btn_reminder_dismiss.setVisibility(View.VISIBLE);
+
+                final FabContextMenu.MenuItem dismiss = reminderViewContentMenu.getNewMenuItem(C_ACTION_DISMISS);
+                dismiss.src = R.drawable.ic_reminder_dismiss;
+                reminderViewContentMenu.addMenu(this, dismiss);
+
             } else {
                 next_snooze.setVisibility(View.GONE);
                 btn_reminder_dismiss.setVisibility(View.GONE);
+                reminderViewContentMenu.removeMenu(C_ACTION_DISMISS);
             }
 
             if (activeReminder.isExpired()) {
@@ -298,10 +318,10 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
 
     @Override
     public void onFabContextMenuClick(String clickAction, String clickValue) {
-        if (clickAction.equals("del")) {
+        if (clickAction.equals(C_ACTION_DEL)) {
             activeReminder.deleteAndCancelAlert(getApplicationContext());
             finish();
-        } else if (clickAction.equals("update")) {
+        } else if (clickAction.equals(C_ACTION_EDIT)) {
             final Intent input_i = new Intent(getApplicationContext(), ReminderInput.class);
             ReminderModel.setReminderIdInIntent(input_i, activeReminder.getId());
             startActivity(input_i);

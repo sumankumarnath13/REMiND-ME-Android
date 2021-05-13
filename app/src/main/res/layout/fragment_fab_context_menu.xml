@@ -1,30 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fabContextMenuLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_context_btn_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_8"
-        app:backgroundTint="?attr/themeDisabledControlColor"
-        app:srcCompat="@drawable/ic_delete"
-        android:contentDescription="@string/missingImageDesc" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_context_btn_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_8"
-        app:backgroundTint="?attr/themeDisabledControlColor"
-        app:srcCompat="@drawable/ic_edit"
-        android:contentDescription="@string/missingImageDesc" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_context_btn_root"
+        android:id="@+id/fabBtnRoot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_8"
@@ -32,4 +16,4 @@
         app:srcCompat="@drawable/ic_context_menu"
         android:contentDescription="@string/missingImageDesc" />
 
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>
