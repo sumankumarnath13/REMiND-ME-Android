@@ -97,6 +97,7 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
             deleteItem.src = R.drawable.ic_delete;
             deleteItem.backgroundTint = resolveRefAttributeResourceId(R.attr.themeDisabledControlColor);
             reminderViewContentMenu.addMenu(this, deleteItem);
+
         }
 
         enabled = findViewById(R.id.sw_reminder_enabled);
@@ -177,6 +178,7 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
 
                 final FabContextMenu.MenuItem dismiss = reminderViewContentMenu.getNewMenuItem(C_ACTION_DISMISS);
                 dismiss.src = R.drawable.ic_reminder_dismiss;
+                dismiss.backgroundTint = resolveRefAttributeResourceId(R.attr.themeDisabledControlColor);
                 reminderViewContentMenu.addMenu(this, dismiss);
 
             } else {
@@ -318,14 +320,21 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
 
     @Override
     public void onFabContextMenuClick(String clickAction, String clickValue) {
-        if (clickAction.equals(C_ACTION_DEL)) {
-            activeReminder.deleteAndCancelAlert(getApplicationContext());
-            finish();
-        } else if (clickAction.equals(C_ACTION_EDIT)) {
-            final Intent input_i = new Intent(getApplicationContext(), ReminderInput.class);
-            ReminderModel.setReminderIdInIntent(input_i, activeReminder.getId());
-            startActivity(input_i);
-            finish();
+        switch (clickAction) {
+            case C_ACTION_DEL:
+                activeReminder.deleteAndCancelAlert(getApplicationContext());
+                finish();
+                break;
+            case C_ACTION_EDIT:
+                final Intent input_i = new Intent(getApplicationContext(), ReminderInput.class);
+                ReminderModel.setReminderIdInIntent(input_i, activeReminder.getId());
+                startActivity(input_i);
+                finish();
+                break;
+            case C_ACTION_DISMISS:
+                activeReminder.dismissByUser(this);
+                refresh();
+                break;
         }
     }
 }

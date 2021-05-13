@@ -75,6 +75,7 @@ public class FabContextMenu extends Fragment {
     }
 
     public void addMenu(Context context, final MenuItem item) {
+
         if (item == null || StringHelper.isNullOrEmpty(item.clickAction))
             return;
 
@@ -85,7 +86,7 @@ public class FabContextMenu extends Fragment {
         }
 
         final FloatingActionButton fab = new FloatingActionButton(context);
-        menuItems.add(new Pair<>(item, fab));
+        menuItems.add(0, new Pair<>(item, fab));
 
         if (isRenderedOnce) {
             renderButtons(context, getView());
@@ -93,13 +94,14 @@ public class FabContextMenu extends Fragment {
     }
 
     public void removeMenu(final String clickAction) {
+
         if (StringHelper.isNullOrEmpty(clickAction))
             return;
 
         for (int i = 0; i < menuItems.size(); i++) {
             if (clickAction.equals(menuItems.get(i).first.clickAction)) {
                 if (layoutCompat != null) {
-                    layoutCompat.recomputeViewAttributes(menuItems.get(i).second);
+                    layoutCompat.removeViewAt(i);
                 }
                 menuItems.remove(i);
                 break;
@@ -116,9 +118,7 @@ public class FabContextMenu extends Fragment {
 
         if (fabRoot == null) {
             fabRoot = view.findViewById(R.id.fabBtnRoot);
-            fabRoot.setOnClickListener(v -> {
-                switchExpansion();
-            });
+            fabRoot.setOnClickListener(v -> switchExpansion());
         }
 
         if (isExpanded) {
