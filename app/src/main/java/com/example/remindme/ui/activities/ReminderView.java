@@ -2,6 +2,7 @@ package com.example.remindme.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
@@ -22,9 +25,8 @@ import com.example.remindme.viewModels.RingingModel;
 
 import java.util.Locale;
 
+public class ReminderView extends ActivityBase implements FabContextMenu.iFabContextMenuListener {
 
-public class ReminderView extends ActivityBase implements FabContextMenu.iFabContextMenuHost {
-    private static final String MISSED_ALERT_UI_STATE = "STATE";
     private boolean isMissedAlertsVisible;
     private AppCompatTextView tv_reminder_time;
     private AppCompatTextView tv_reminder_date;
@@ -38,10 +40,10 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
     private ReminderModel activeReminder;
     private AppCompatTextView tv_expired;
     private AppCompatTextView next_snooze;
+    private AppCompatButton btn_reminder_dismiss;
 
+    private static final String MISSED_ALERT_UI_STATE = "STATE";
     private static final String STATUS_OFF = "OFF";
-
-    private FabContextMenu reminderViewContentMenu;
     private static final String C_ACTION_EDIT = "EDIT";
     private static final String C_ACTION_DEL = "DEL";
     private static final String C_ACTION_DISMISS = "DISMISS";
@@ -55,8 +57,9 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_view);
-        setActivitySubTitle(getResources().getString(R.string.view_reminder_heading));
+        setActivityTitle(getResources().getString(R.string.view_reminder_heading));
 
         if (savedInstanceState != null) {
             isMissedAlertsVisible = savedInstanceState.getBoolean(MISSED_ALERT_UI_STATE, false);
@@ -82,23 +85,6 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
         tv_reminder_name = findViewById(R.id.tv_reminder_name);
         ly_note_summary_header = findViewById(R.id.ly_note_summary_header);
         tv_reminder_note = findViewById(R.id.tv_reminder_note);
-
-
-        reminderViewContentMenu = (FabContextMenu) getSupportFragmentManager().findFragmentById(R.id.reminderViewContentMenu);
-        if (reminderViewContentMenu != null) {
-            reminderViewContentMenu.setHost(this);
-
-            final FabContextMenu.MenuItem editItem = reminderViewContentMenu.getNewMenuItem(C_ACTION_EDIT);
-            editItem.src = R.drawable.ic_edit;
-            editItem.backgroundTint = resolveRefAttributeResourceId(R.attr.themeDisabledControlColor);
-            reminderViewContentMenu.addMenu(this, editItem);
-
-            final FabContextMenu.MenuItem deleteItem = reminderViewContentMenu.getNewMenuItem(C_ACTION_DEL);
-            deleteItem.src = R.drawable.ic_delete;
-            deleteItem.backgroundTint = resolveRefAttributeResourceId(R.attr.themeDisabledControlColor);
-            reminderViewContentMenu.addMenu(this, deleteItem);
-
-        }
 
         enabled = findViewById(R.id.sw_reminder_enabled);
         enabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -147,7 +133,26 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
         refresh();
     }
 
-    private AppCompatButton btn_reminder_dismiss;
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        //return super.dispatchTouchEvent(ev);
+        final FabContextMenu contextMenu = (FabContextMenu) getSupportFragmentManager().findFragmentById(R.id.bottomContextMenu);
+        if (contextMenu != null && contextMenu.getView() != null) {
+            int[] leftTop = {0, 0};
+            contextMenu.getView().getLocationInWindow(leftTop);
+            int left = leftTop[0];
+            int top = leftTop[1];
+            int bottom = top + contextMenu.getView().getHeight();
+            int right = left + contextMenu.getView().getWidth();
+            if (ev.getX() > left && ev.getX() < right
+                    && ev.getY() > top && ev.getY() < bottom) {
+                // Click on the input box area, keep the event that clicks EditText
+                return super.dispatchTouchEvent(ev);
+            }
+            contextMenu.collapse();
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 
     @Override
     protected void onUIRefresh() {
@@ -156,19 +161,26 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
         if (activeReminder != null) {
 
             if (activeReminder.getTimeModel().isHasScheduledTime()) {
+
                 tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeModel().getScheduledTime()));
                 tv_reminder_date.setText(StringHelper.toWeekdayDate(this, activeReminder.getTimeModel().getScheduledTime()));
+
             } else {
+
                 tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeModel().getTime()));
                 tv_reminder_date.setText(StringHelper.toWeekdayDate(this, activeReminder.getTimeModel().getTime()));
+
             }
 
             if (!StringHelper.isNullOrEmpty(activeReminder.getName())) {
+
                 tv_reminder_name.setVisibility(View.VISIBLE);
                 tv_reminder_name.setText(activeReminder.getName());
+
             }
 
             if (activeReminder.getSnoozeModel().isSnoozed()) {
+
                 next_snooze.setVisibility(View.VISIBLE);
                 next_snooze.setText(StringHelper.toTime(
                         activeReminder.getSnoozeModel().getSnoozedTime(
@@ -176,15 +188,50 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
 
                 btn_reminder_dismiss.setVisibility(View.VISIBLE);
 
-                final FabContextMenu.MenuItem dismiss = reminderViewContentMenu.getNewMenuItem(C_ACTION_DISMISS);
+                final FragmentManager manager = getSupportFragmentManager();
+                final FragmentTransaction transaction = manager.beginTransaction().setReorderingAllowed(true);
+                final FabContextMenu contextMenu = new FabContextMenu();
+
+                final FabContextMenu.MenuItem deleteItem = contextMenu.getNewMenuItem(C_ACTION_DEL);
+                deleteItem.src = R.drawable.ic_delete;
+                deleteItem.backgroundTint = resolveRefAttributeResourceId(R.attr.themeDisabledControlColor);
+                contextMenu.addMenu(deleteItem);
+
+                final FabContextMenu.MenuItem editItem = contextMenu.getNewMenuItem(C_ACTION_EDIT);
+                editItem.src = R.drawable.ic_edit;
+                editItem.backgroundTint = resolveRefAttributeResourceId(R.attr.themeDisabledControlColor);
+                contextMenu.addMenu(editItem);
+
+                final FabContextMenu.MenuItem dismiss = contextMenu.getNewMenuItem(C_ACTION_DISMISS);
                 dismiss.src = R.drawable.ic_reminder_dismiss;
                 dismiss.backgroundTint = resolveRefAttributeResourceId(R.attr.themeDisabledControlColor);
-                reminderViewContentMenu.addMenu(this, dismiss);
+                contextMenu.addMenu(dismiss);
+
+                transaction.replace(R.id.bottomContextMenu, contextMenu);
+                transaction.commit();
 
             } else {
+
                 next_snooze.setVisibility(View.GONE);
                 btn_reminder_dismiss.setVisibility(View.GONE);
-                reminderViewContentMenu.removeMenu(C_ACTION_DISMISS);
+
+                final FragmentManager manager = getSupportFragmentManager();
+                final FragmentTransaction transaction = manager.beginTransaction().setReorderingAllowed(true);
+                final FabContextMenu contextMenu = new FabContextMenu();
+
+                final FabContextMenu.MenuItem deleteItem = contextMenu.getNewMenuItem(C_ACTION_DEL);
+                deleteItem.src = R.drawable.ic_delete;
+                deleteItem.backgroundTint = resolveRefAttributeResourceId(R.attr.themeDisabledControlColor);
+                contextMenu.addMenu(deleteItem);
+
+                final FabContextMenu.MenuItem editItem = contextMenu.getNewMenuItem(C_ACTION_EDIT);
+                editItem.src = R.drawable.ic_edit;
+                editItem.backgroundTint = resolveRefAttributeResourceId(R.attr.themeDisabledControlColor);
+                contextMenu.addMenu(editItem);
+
+                transaction.replace(R.id.bottomContextMenu, contextMenu);
+                transaction.commit();
+
             }
 
             if (activeReminder.isExpired()) {
@@ -337,4 +384,5 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
                 break;
         }
     }
+
 }

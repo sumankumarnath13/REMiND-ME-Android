@@ -34,40 +34,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/appBarLayout" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/imgBtnAddReminder"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/bottomContextMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/dp_16"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        app:srcCompat="@drawable/ic_add"
-        style="@style/AccentFab"
-        android:contentDescription="@string/missingImageDesc" />
+        android:layout_gravity="end|bottom" />
 
-    <!--    <androidx.appcompat.widget.LinearLayoutCompat-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:padding="@dimen/dp_16"-->
-    <!--        android:gravity="end">-->
-
-    <!--&lt;!&ndash;        <androidx.appcompat.widget.AppCompatButton&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:id="@+id/btn_main_new_reminder"&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:drawableStart="@drawable/ic_add"&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:drawablePadding="@dimen/dp_3"&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:text="@string/add_new_reminder" />&ndash;&gt;-->
-
-    <!--&lt;!&ndash;        <androidx.appcompat.widget.AppCompatImageButton&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:id="@+id/imgBtnAddReminder"&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:padding="@dimen/dp_16"&ndash;&gt;-->
-    <!--&lt;!&ndash;            app:srcCompat="@drawable/ic_add" />&ndash;&gt;-->
-
-
-    <!--    </androidx.appcompat.widget.LinearLayoutCompat>-->
 
 </RelativeLayout>

@@ -152,9 +152,9 @@ public class ReminderInput
         reminderModel = new ViewModelProvider(this, new ReminderViewModelFactory(getIntent())).get(ReminderModel.class);
 
         if (reminderModel.isNew()) { // First time creating the activity
-            setActivitySubTitle(getResources().getString(R.string.new_reminder_heading));
+            setActivityTitle(getResources().getString(R.string.new_reminder_heading));
         } else {
-            setActivitySubTitle(getResources().getString(R.string.edit_reminder_heading));
+            setActivityTitle(getResources().getString(R.string.edit_reminder_heading));
         }
 
         tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);

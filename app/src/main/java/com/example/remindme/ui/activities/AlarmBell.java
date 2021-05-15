@@ -179,7 +179,7 @@ public class AlarmBell extends ActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_bell);
-        setActivitySubTitle(null);
+        setActivityTitle(null);
 
         // Important: have to do the following in order to show without unlocking
         this.getWindow().addFlags(

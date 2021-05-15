@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,25 +19,124 @@ import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.ui.activities.ReminderView;
+import com.example.remindme.ui.fragments.common.iSelectionControl;
 import com.example.remindme.viewModels.ReminderModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecyclerReminder.ReminderHolder> {
+public class AdapterRecyclerReminder
+        extends RecyclerView.Adapter<AdapterRecyclerReminder.ReminderHolder>
+        implements iSelectionControl {
 
-    private final List<ReminderModel> _data;
+    private List<ReminderModel> _data;
     private boolean isEnableCheck;
 
-    public AdapterRecyclerReminder(final List<ReminderModel> data) {
-        this._data = data;
+    @Override
+    public boolean isSelectable() {
+        return isEnableCheck;
+    }
+
+    private int countSelections() {
+        int count = 0;
+        for (int i = 0; i < _data.size(); i++) {
+            if (_data.get(i).isSelected()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    @Override
+    public void selectAll() {
+        for (int i = 0; i < _data.size(); i++) {
+            _data.get(i).setSelected(true);
+        }
+    }
+
+    @Override
+    public boolean isAllSelected() {
+        return countSelections() == _data.size();
+    }
+
+    @Override
+    public void selectNone() {
+        for (int i = 0; i < _data.size(); i++) {
+            _data.get(i).setSelected(false);
+        }
+    }
+
+    @Override
+    public boolean isNoneSelected() {
+        return countSelections() == 0;
+    }
+
+    @Override
+    public void notifyChange() {
+        notifyDataSetChanged();
+        if (listener != null) {
+            listener.onSelectionChange(this);
+        }
+    }
+
+    @Override
+    public int size() {
+        return _data.size();
+    }
+
+    @Override
+    public void notifySelectedAsDeleted() {
+        setSelectable(false);
+        for (int i = _data.size() - 1; i >= 0; i--) {
+            if (_data.get(i).isSelected()) {
+                _data.remove(i);
+                notifyItemRemoved(i);
+            }
+        }
+        if (listener != null) {
+            listener.onSelectionChange(this);
+        }
+    }
+
+    @Override
+    public void setSelectable(boolean value) {
+        isEnableCheck = value;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getSelectedCount() {
+        return countSelections();
+    }
+
+    @Override
+    public List<ReminderModel> getSelected() {
+        final ArrayList<ReminderModel> selectedReminders = new ArrayList<>();
+        for (int i = 0; i < _data.size(); i++) {
+            if (_data.get(i).isSelected()) {
+                selectedReminders.add(_data.get(i));
+            }
+        }
+        return selectedReminders;
+    }
+
+    public interface iDataChangeListener {
+        void onSelectionChange(iSelectionControl selectionControl);
+    }
+
+    private final iDataChangeListener listener;
+
+    public AdapterRecyclerReminder(final List<ReminderModel> data, final iDataChangeListener listener) {
+        _data = data;
         isEnableCheck = false;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public ReminderHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext())
+        LinearLayoutCompat v = (LinearLayoutCompat) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_recycler_fragment_reminder, parent, false);
 
         return new ReminderHolder(v);
@@ -68,23 +168,42 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
         holder.linearLayout.setOnLongClickListener(v -> {
             isEnableCheck = !isEnableCheck;
-            reminder.setSelected(!reminder.isSelected());
+            if (isEnableCheck) {
+                if (!reminder.isSelected()) {
+                    reminder.setSelected(true);
+                }
+            } else {
+                selectNone();
+            }
             notifyDataSetChanged();
             return true;
         });
 
         holder.linearLayout.setOnClickListener(view -> {
-            final Context context = view.getContext();
-            if (context == null)
-                return;
+            if (!isEnableCheck) {
+                final Context context = view.getContext();
+                if (context == null)
+                    return;
 
-            final Intent intent = new Intent(context, ReminderView.class);
-            intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminder.getId());
-            context.startActivity(intent);
+                final Intent intent = new Intent(context, ReminderView.class);
+                intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminder.getId());
+                context.startActivity(intent);
+            } else {
+                reminder.setSelected(!reminder.isSelected());
+                notifyDataSetChanged();
+            }
         });
 
         reminderSelectionCheck.setChecked(reminder.isSelected());
-        reminderSelectionCheck.setOnCheckedChangeListener((buttonView, isChecked) -> reminder.setSelected(isChecked));
+        reminderSelectionCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+            reminder.setSelected(isChecked);
+
+            if (listener != null) {
+                listener.onSelectionChange(this);
+            }
+
+        });
 
         enabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
@@ -109,10 +228,7 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
             }
         });
 
-
         isRefreshing = true;
-
-        //final ReminderModel reminderModel = ReminderModel.getInstance(reminder);
 
         time.setText(StringHelper.toTime(reminder.getTimeModel().getTime()));
         date.setText(StringHelper.toWeekdayDate(holder.linearLayout.getContext(), reminder.getTimeModel().getTime()));
@@ -170,13 +286,12 @@ public class AdapterRecyclerReminder extends RecyclerView.Adapter<AdapterRecycle
 
     public static class ReminderHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public final LinearLayout linearLayout;
+        public final LinearLayoutCompat linearLayout;
         //public final EnumReminderTypes reminderType;
 
-        public ReminderHolder(LinearLayout v) {
+        public ReminderHolder(LinearLayoutCompat v) {
             super(v);
             linearLayout = v;
-            //reminderType = t;
         }
     }
 }

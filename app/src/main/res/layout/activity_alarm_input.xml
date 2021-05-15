@@ -4,25 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical"
     android:orientation="vertical"
     tools:context=".ui.activities.ReminderInput">
-
-    <!--    <androidx.appcompat.widget.LinearLayoutCompat-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:layout_weight="1"-->
-    <!--        android:gravity="center_vertical">-->
-
-    <!--        &lt;!&ndash; Scrollable Content below header and above footer &ndash;&gt;-->
-
-
-    <!--    </androidx.appcompat.widget.LinearLayoutCompat>-->
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/sv_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/dp_clippedPaddingBottom">
 
@@ -37,7 +26,7 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_16"
+                android:paddingVertical="@dimen/dp_8"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -54,7 +43,7 @@
                     android:id="@+id/btn_reminder_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_16"
+                    android:layout_marginBottom="@dimen/dp_8"
                     android:background="@null"
                     android:text="@string/btn_date"
                     android:textSize="@dimen/font_size_medium" />
@@ -106,7 +95,7 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/dp_8"
+                    android:paddingVertical="@dimen/dp_8"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
@@ -150,7 +139,7 @@
                     android:id="@+id/mnu_reminder_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_16"
+                    android:paddingVertical="@dimen/dp_8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -175,8 +164,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/missingImageDesc"
-                        app:srcCompat="@drawable/ic_mic"
-                        app:tint="@color/colorSuccessLight" />
+                        app:srcCompat="@drawable/ic_mic" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -185,7 +173,7 @@
                     android:id="@+id/mnu_reminder_note"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_16"
+                    android:paddingVertical="@dimen/dp_8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -211,7 +199,7 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/missingImageDesc"
                         app:srcCompat="@drawable/ic_mic"
-                        app:tint="@color/colorWarningLight" />
+                        app:tint="?attr/themeWarningColor" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -220,6 +208,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/dp_8"
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -240,7 +229,7 @@
                     android:id="@+id/mnu_reminder_repeat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/dp_16"
+                    android:paddingVertical="@dimen/dp_8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -303,8 +292,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:contentDescription="@string/missingImageDesc"
-                app:srcCompat="@drawable/ic_expand_down"
-                app:tint="@color/colorSuccessLight" />
+                app:srcCompat="@drawable/ic_expand_down" />
 
             <!-- EXTRA INPUTS -->
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -320,7 +308,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:background="@drawable/border_bottom"
+                    android:background="@drawable/border_vertical"
+                    android:paddingVertical="@dimen/dp_8"
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -372,7 +361,7 @@
                     android:id="@+id/mnu_reminder_tone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_16"
+                    android:paddingVertical="@dimen/dp_8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -447,7 +436,7 @@
                     android:id="@+id/alarm_volume_inputs_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_16"
+                    android:paddingVertical="@dimen/dp_8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -475,7 +464,7 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_16"
+                    android:paddingVertical="@dimen/dp_8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -499,14 +488,13 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-
                 <!--            Ring Duration-->
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_16"
                     android:gravity="center_vertical"
                     android:background="@drawable/border_bottom"
+                    android:paddingVertical="@dimen/dp_8"
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -535,8 +523,8 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_16"
                     android:background="@drawable/border_bottom"
+                    android:paddingVertical="@dimen/dp_8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -592,24 +580,5 @@
         app:srcCompat="@drawable/ic_set"
         style="@style/AccentFab"
         android:contentDescription="@string/missingImageDesc" />
-
-    <!--    <androidx.appcompat.widget.LinearLayoutCompat-->
-    <!--        android:id="@+id/rv_footer"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:gravity="end"-->
-    <!--        android:padding="@dimen/dp_16">-->
-
-    <!--        <androidx.appcompat.widget.AppCompatButton-->
-    <!--            android:id="@+id/btn_reminder_save"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:drawableStart="@drawable/ic_reminder_check"-->
-    <!--            android:drawablePadding="@dimen/dp_3"-->
-    <!--            android:gravity="start|center"-->
-    <!--            android:text="@string/btn_save"-->
-    <!--            app:drawableTint="@color/colorSuccessLight" />-->
-    <!--        -->
-    <!--    </androidx.appcompat.widget.LinearLayoutCompat>-->
 
 </RelativeLayout>

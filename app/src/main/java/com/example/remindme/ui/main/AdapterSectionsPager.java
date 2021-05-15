@@ -36,7 +36,7 @@ public class AdapterSectionsPager extends FragmentPagerAdapter {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
 
-        Fragment tabFragment;
+        final Fragment tabFragment;
 
         switch (position){
             case 0:
@@ -55,8 +55,6 @@ public class AdapterSectionsPager extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return mContext.getResources().getString(TAB_TITLES[position]);
     }
-
-
 
     @Override
     public int getCount() {

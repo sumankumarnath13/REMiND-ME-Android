@@ -42,7 +42,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        setActivitySubTitle(getResources().getString(R.string.activitySettingsTitle));
+        setActivityTitle(getResources().getString(R.string.activitySettingsTitle));
 
         setUserInteracted(false);
 

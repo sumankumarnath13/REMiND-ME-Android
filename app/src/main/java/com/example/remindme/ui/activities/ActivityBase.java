@@ -20,6 +20,7 @@ import com.example.remindme.ui.RefreshableActivity;
 public class ActivityBase extends RefreshableActivity {
 
     private boolean isThemeChangeReceiverRegistered = false;
+
     private final BroadcastReceiver themeChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -70,8 +71,10 @@ public class ActivityBase extends RefreshableActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+
         finish();
         return true;
+
     }
 
     @Override
@@ -91,12 +94,14 @@ public class ActivityBase extends RefreshableActivity {
     }
 
     public void shareText(String value) {
+
         final Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, value);
         sendIntent.setType("text/plain");
         Intent shareIntent = Intent.createChooser(sendIntent, null);
         startActivity(shareIntent);
+
     }
 
     public int resolveRefAttributeResourceId(int refAttributeId) {
@@ -112,27 +117,29 @@ public class ActivityBase extends RefreshableActivity {
         return -1;
     }
 
-    public void setActivitySubTitle(final String activityTitle) {
+    public void setActivityTitle(final String activitySubTitle) {
 
         final Spannable spannable = new SpannableString(getResources().getString(R.string.app_label));
+
         int char_pos = 0;
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorSuccess)), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorWarning)), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorCuriosity)), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor))), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeWarningColor))), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeCuriosityColor))), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeBrightText))),
                 char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorWarning)), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorDanger)), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeWarningColor))), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor))), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         ++char_pos;
 
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorSuccess)), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorDanger)), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor))), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor))), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         final ActionBar bar = getSupportActionBar();
         if (bar != null) {
             bar.setTitle(spannable);
-            bar.setSubtitle(activityTitle);
+            bar.setSubtitle(activitySubTitle);
         }
     }
 }

@@ -47,7 +47,7 @@ public class RandomTimeListDialog extends TimeListDialogBase {
             final LayoutInflater inflater = LayoutInflater.from(context);
 
             // Inflate the custom layout
-            final View contactView = inflater.inflate(R.layout.item_recycler_time_list_random, parent, false);
+            final View contactView = inflater.inflate(R.layout.item_recycler_fragment_time_list_random, parent, false);
 
             // Return a new holder instance
             return new ViewHolder(contactView);

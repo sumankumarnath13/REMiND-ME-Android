@@ -17,23 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.remindme.R;
 import com.example.remindme.viewModels.ReminderModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentActiveReminder#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentActiveReminder extends Fragment {
 
     public FragmentActiveReminder() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment UpcomingReminderFragmentActivity.
-     */
     public static FragmentActiveReminder newInstance() {
 
         return new FragmentActiveReminder();
@@ -53,7 +42,7 @@ public class FragmentActiveReminder extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_active_reminder, container, false);
 
         // Inflate the layout for this fragment
-        recyclerView = view.findViewById(R.id.recycler_reminders);
+        recyclerView = view.findViewById(R.id.active_reminders_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -70,8 +59,10 @@ public class FragmentActiveReminder extends Fragment {
     public void onResume() {
         super.onResume();
         // specify an adapter (see also next example)
-        search(null);
+        query();
     }
+
+    private String queryString;
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -89,7 +80,8 @@ public class FragmentActiveReminder extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Toast.makeText(MainActivity.this, newText, Toast.LENGTH_SHORT).show();
-                search(newText);
+                queryString = newText;
+                query();
                 //return false;
                 return true;
             }
@@ -97,8 +89,9 @@ public class FragmentActiveReminder extends Fragment {
         });
     }
 
-    public void search(String input) {
-        final AdapterRecyclerReminder mAdapter = new AdapterRecyclerReminder(ReminderModel.getActiveReminders(input));
+    public void query() {
+        final AdapterRecyclerReminder mAdapter = new AdapterRecyclerReminder(ReminderModel.getActiveReminders(queryString),
+                (AdapterRecyclerReminder.iDataChangeListener) getActivity());
         recyclerView.setAdapter(mAdapter);
     }
 }

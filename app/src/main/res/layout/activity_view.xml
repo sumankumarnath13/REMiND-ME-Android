@@ -15,7 +15,6 @@
         android:clipToPadding="false"
         android:paddingBottom="@dimen/dp_clippedPaddingBottom">
 
-
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -245,6 +244,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_vertical"
+                android:paddingVertical="@dimen/dp_8"
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -316,14 +316,11 @@
     </androidx.core.widget.NestedScrollView>
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/reminderViewContentMenu"
+        android:id="@+id/bottomContextMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/dp_8"
-        android:name="com.example.remindme.ui.fragments.common.FabContextMenu"
-        tools:layout="@layout/fragment_fab_context_menu" />
+        android:layout_gravity="end|bottom" />
 
 </RelativeLayout>
