@@ -42,7 +42,7 @@ public class SnoozeModel extends ViewModel {
         this.parent = reminderModel;
     }
 
-    private SnoozeIntervals interval = SnoozeIntervals.M5;
+    private SnoozeIntervals interval = SnoozeIntervals.M10;
 
     public SnoozeIntervals getInterval() {
         return interval;

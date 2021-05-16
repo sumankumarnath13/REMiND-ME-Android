@@ -136,20 +136,20 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
 
         final Calendar currentDateCalendar = Calendar.getInstance();
         timeFormatTextView = findViewById(R.id.timeFormatTextView);
-        timeFormatTextView.setText(StringHelper.toTime(currentDateCalendar.getTime()));
+        timeFormatTextView.setText(StringHelper.toTimeAmPm(currentDateCalendar.getTime()));
         final SwitchCompat sw_use_24_hour = findViewById(R.id.sw_use_24_hour);
         sw_use_24_hour.setChecked(settingsHelper.isUse24hourTime());
         sw_use_24_hour.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isUserInteracted()) {
                 settingsHelper.setUse24hourTime(isChecked);
-                timeFormatTextView.setText(StringHelper.toTime(Calendar.getInstance().getTime()));
+                timeFormatTextView.setText(StringHelper.toTimeAmPm(Calendar.getInstance().getTime()));
             }
         });
 
 
         dateFormatTextView = findViewById(R.id.dateFormatTextView);
-        final SimpleDateFormat selectedDateFormat = new SimpleDateFormat(AppSettingsHelper.getInstance().getDateFormat(this), Locale.getDefault());
-        dateFormatTextView.setText(selectedDateFormat.format(currentDateCalendar.getTime()));
+        dateFormatTextView.setText(StringHelper.toWeekdayDate(this, Calendar.getInstance().getTime()));
+
         final AppCompatSpinner dateFormatSpinner = findViewById(R.id.dateFormatSpinner);
         final List<String> datePatterns = Arrays.asList(getResources().getStringArray(R.array.date_formats));
         final ArrayList<String> datePatternValues = new ArrayList<>();

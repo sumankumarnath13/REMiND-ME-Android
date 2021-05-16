@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:text="@string/btn_time"
-                    android:textColor="?attr/themeBrightText"
+                    android:textColor="?attr/themeSoothingText"
                     android:textSize="@dimen/font_size_banner" />
 
                 <androidx.appcompat.widget.AppCompatButton

@@ -31,13 +31,33 @@
                 android:paddingBottom="@dimen/dp_8">
 
                 <!--    TIME-->
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_reminder_time"
-                    android:layout_width="wrap_content"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/themeBrightText"
-                    android:layout_marginBottom="@dimen/dp_16"
-                    android:textSize="@dimen/font_size_banner" />
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_reminder_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="09:00"
+                        android:textColor="?attr/themeSoothingText"
+                        android:textSize="@dimen/font_size_banner"
+                        android:includeFontPadding="false" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_reminder_AmPm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="bottom"
+                        android:paddingHorizontal="@dimen/dp_5"
+                        android:paddingBottom="@dimen/dp_5"
+                        android:text="AM"
+                        android:textColor="?attr/themeDimText"
+                        android:textSize="@dimen/font_size_medium" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <!--    DATE-->
                 <androidx.appcompat.widget.AppCompatTextView
@@ -51,8 +71,8 @@
                     android:id="@+id/tv_reminder_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_16"
-                    android:textColor="?attr/themeBrightText"
+                    android:layout_marginVertical="@dimen/dp_8"
+                    android:textColor="?attr/themeSoothingText"
                     android:textSize="@dimen/font_size_large"
                     android:visibility="gone" />
 
@@ -61,13 +81,13 @@
                     android:id="@+id/sw_reminder_enabled"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_16" />
+                    android:layout_marginVertical="@dimen/dp_8" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_expired"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_16"
+                    android:layout_marginVertical="@dimen/dp_8"
                     android:text="Expired"
                     android:textColor="?attr/themeDangerColor"
                     android:visibility="gone" />
@@ -77,7 +97,7 @@
                     android:id="@+id/lv_last_missed_alert"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_16"
+                    android:layout_marginVertical="@dimen/dp_8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:visibility="gone">
@@ -101,10 +121,10 @@
                         android:id="@+id/btn_expand_missed_alerts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_expand_down"
+                        android:contentDescription="@string/missingImageDesc"
                         android:visibility="gone"
-                        app:tint="@color/colorSuccessLight"
-                        android:contentDescription="@string/missingImageDesc" />
+                        app:srcCompat="@drawable/ic_expand_down"
+                        app:tint="@color/colorSuccessLight" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -135,7 +155,7 @@
                     android:id="@+id/mnu_reminder_snooze"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_16"
+                    android:layout_marginVertical="@dimen/dp_8"
                     android:orientation="vertical">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
@@ -154,10 +174,10 @@
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tv_reminder_next_snooze"
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
                             android:layout_marginHorizontal="@dimen/dp_8"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
                             android:textColor="?attr/themeWarningColor"
                             android:textSize="@dimen/font_size_medium" />
 
@@ -185,7 +205,7 @@
                     android:id="@+id/mnu_reminder_repeat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_16"
+                    android:layout_marginVertical="@dimen/dp_8"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
 
@@ -211,31 +231,40 @@
                     android:id="@+id/ly_note_summary_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/dp_8"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_16"
+                            android:text="Note"
+                            android:textSize="@dimen/font_size_medium" />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/imgBtnShareNote"
+                            android:layout_width="39dp"
+                            android:layout_height="25dp"
+                            android:contentDescription="@string/missingImageDesc"
+                            app:srcCompat="@drawable/ic_share" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_reminder_note"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dp_16"
-                        android:text="Note"
-                        android:textSize="@dimen/font_size_medium" />
-
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:id="@+id/imgBtnShareNote"
-                        android:layout_width="39dp"
-                        android:layout_height="25dp"
-                        app:srcCompat="@drawable/ic_share"
-                        android:contentDescription="@string/missingImageDesc" />
+                        android:layout_marginVertical="@dimen/dp_5"
+                        android:textColor="?attr/themeDimText"
+                        android:textSize="@dimen/font_size_small" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_reminder_note"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?attr/themeDimText"
-                    android:textSize="@dimen/font_size_small" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -243,9 +272,10 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/dp_8"
                 android:background="@drawable/border_vertical"
-                android:paddingVertical="@dimen/dp_8"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingVertical="@dimen/dp_8">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="wrap_content"
@@ -298,8 +328,8 @@
                         android:layout_width="72dp"
                         android:layout_height="wrap_content"
                         android:text="Vibrate : "
-                        android:textSize="@dimen/font_size_extra_small"
-                        android:textColor="?attr/themeDimText" />
+                        android:textColor="?attr/themeDimText"
+                        android:textSize="@dimen/font_size_extra_small" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_reminder_vibrate"
@@ -319,8 +349,8 @@
         android:id="@+id/bottomContextMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="end|bottom" />
 
 </RelativeLayout>

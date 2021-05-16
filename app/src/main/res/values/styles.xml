@@ -31,9 +31,6 @@
         <item name="themeBorderColor">
             @color/colorBorder
         </item>
-        <item name="themeBrightText">
-            @color/colorBrightText
-        </item>
         <item name="themeSoothingText">
             @color/colorSoothingText
         </item>
@@ -157,9 +154,6 @@
         </item>
         <item name="themeBorderColor">
             @color/colorBorderLight
-        </item>
-        <item name="themeBrightText">
-            @color/colorBrightTextLight
         </item>
         <item name="themeSoothingText">
             @color/colorSoothingTextLight

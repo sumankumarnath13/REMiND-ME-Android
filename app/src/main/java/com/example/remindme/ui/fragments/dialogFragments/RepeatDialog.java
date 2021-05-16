@@ -325,7 +325,7 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
                 lv_repeat_end_date.setVisibility(View.VISIBLE);
                 lv_repeat_end_time.setVisibility(View.VISIBLE);
                 tv_end_date_value.setText(StringHelper.toWeekdayDate(this.getContext(), model.getRepeatEndDate()));
-                tv_end_time_value.setText(StringHelper.toTime(model.getRepeatEndDate()));
+                tv_end_time_value.setText(StringHelper.toTimeAmPm(model.getRepeatEndDate()));
             } else {
                 lv_repeat_end_date.setVisibility(View.GONE);
                 lv_repeat_end_time.setVisibility(View.GONE);

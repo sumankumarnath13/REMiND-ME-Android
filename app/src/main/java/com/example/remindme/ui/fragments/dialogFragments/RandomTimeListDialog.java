@@ -58,7 +58,7 @@ public class RandomTimeListDialog extends TimeListDialogBase {
             final Date time = times.get(position);
 
             // Set item views based on your views and data model
-            holder.tv_reminder_time.setText(StringHelper.toTime(time));
+            holder.tv_reminder_time.setText(StringHelper.toTimeAmPm(time));
             holder.imgBtnRemove.setOnClickListener(v -> {
                 getModel().removeTimeListTime(time);
                 refresh();

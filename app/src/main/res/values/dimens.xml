@@ -30,6 +30,9 @@
     <dimen name="font_size_banner">
         37sp
     </dimen>
+    <dimen name="font_size_banner_small">
+        29sp
+    </dimen>
     <dimen name="font_size_extra_large">
         23sp
     </dimen>

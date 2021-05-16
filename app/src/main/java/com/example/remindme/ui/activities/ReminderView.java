@@ -28,7 +28,10 @@ import java.util.Locale;
 public class ReminderView extends ActivityBase implements FabContextMenu.iFabContextMenuListener {
 
     private boolean isMissedAlertsVisible;
+    private boolean isMenuExpanded;
+
     private AppCompatTextView tv_reminder_time;
+    private AppCompatTextView tv_reminder_AmPm;
     private AppCompatTextView tv_reminder_date;
     private AppCompatTextView tv_reminder_name;
     private LinearLayoutCompat ly_note_summary_header;
@@ -81,6 +84,7 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
         }
 
         tv_reminder_time = findViewById(R.id.tv_reminder_time);
+        tv_reminder_AmPm = findViewById(R.id.tv_reminder_AmPm);
         tv_reminder_date = findViewById(R.id.tv_reminder_date);
         tv_reminder_name = findViewById(R.id.tv_reminder_name);
         ly_note_summary_header = findViewById(R.id.ly_note_summary_header);
@@ -134,27 +138,6 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        //return super.dispatchTouchEvent(ev);
-        final FabContextMenu contextMenu = (FabContextMenu) getSupportFragmentManager().findFragmentById(R.id.bottomContextMenu);
-        if (contextMenu != null && contextMenu.getView() != null) {
-            int[] leftTop = {0, 0};
-            contextMenu.getView().getLocationInWindow(leftTop);
-            int left = leftTop[0];
-            int top = leftTop[1];
-            int bottom = top + contextMenu.getView().getHeight();
-            int right = left + contextMenu.getView().getWidth();
-            if (ev.getX() > left && ev.getX() < right
-                    && ev.getY() > top && ev.getY() < bottom) {
-                // Click on the input box area, keep the event that clicks EditText
-                return super.dispatchTouchEvent(ev);
-            }
-            contextMenu.collapse();
-        }
-        return super.dispatchTouchEvent(ev);
-    }
-
-    @Override
     protected void onUIRefresh() {
         super.onUIRefresh();
 
@@ -163,11 +146,13 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
             if (activeReminder.getTimeModel().isHasScheduledTime()) {
 
                 tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeModel().getScheduledTime()));
+                tv_reminder_AmPm.setText(StringHelper.toAmPm(activeReminder.getTimeModel().getScheduledTime()));
                 tv_reminder_date.setText(StringHelper.toWeekdayDate(this, activeReminder.getTimeModel().getScheduledTime()));
 
             } else {
 
                 tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeModel().getTime()));
+                tv_reminder_AmPm.setText(StringHelper.toAmPm(activeReminder.getTimeModel().getTime()));
                 tv_reminder_date.setText(StringHelper.toWeekdayDate(this, activeReminder.getTimeModel().getTime()));
 
             }
@@ -182,7 +167,7 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
             if (activeReminder.getSnoozeModel().isSnoozed()) {
 
                 next_snooze.setVisibility(View.VISIBLE);
-                next_snooze.setText(StringHelper.toTime(
+                next_snooze.setText(StringHelper.toTimeAmPm(
                         activeReminder.getSnoozeModel().getSnoozedTime(
                                 activeReminder.getTimeModel().getTime())));
 
@@ -366,7 +351,34 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
     }
 
     @Override
-    public void onFabContextMenuClick(String clickAction, String clickValue) {
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (isMenuExpanded) {
+            final FabContextMenu contextMenu = (FabContextMenu) getSupportFragmentManager().findFragmentById(R.id.bottomContextMenu);
+            if (contextMenu != null && contextMenu.getView() != null) {
+                int[] leftTop = {0, 0};
+                contextMenu.getView().getLocationInWindow(leftTop);
+                int left = leftTop[0];
+                int top = leftTop[1];
+                int bottom = top + contextMenu.getView().getHeight();
+                int right = left + contextMenu.getView().getWidth();
+                if (ev.getX() > left && ev.getX() < right
+                        && ev.getY() > top && ev.getY() < bottom) {
+                    // Click on the input box area, keep the event that clicks EditText
+                    return super.dispatchTouchEvent(ev);
+                }
+                contextMenu.collapse();
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public void onFabContextMenuClick(boolean isExpand) {
+        isMenuExpanded = isExpand;
+    }
+
+    @Override
+    public void onFabContextMenuAction(String clickAction, String clickValue) {
         switch (clickAction) {
             case C_ACTION_DEL:
                 activeReminder.deleteAndCancelAlert(getApplicationContext());

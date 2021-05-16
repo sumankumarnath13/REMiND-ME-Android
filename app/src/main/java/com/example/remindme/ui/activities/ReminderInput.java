@@ -3,13 +3,11 @@ package com.example.remindme.ui.activities;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -446,26 +444,22 @@ public class ReminderInput
     protected void onUIRefresh() {
         super.onUIRefresh();
 
-        btn_reminder_time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
+        btn_reminder_time.setText(StringHelper.toTimeAmPm(reminderModel.getTimeModel().getTime()));
         btn_reminder_date.setText(StringHelper.toWeekdayDate(this, reminderModel.getTimeModel().getTime()));
 
-        final Resources.Theme theme = getTheme();
-        final TypedValue typedValue = new TypedValue();
-        theme.resolveAttribute(R.attr.themeSoothingText, typedValue, true);
-        final int soothingTextColor = typedValue.resourceId;
 
-        btnTimeHours.setTextColor(getResources().getColor(soothingTextColor));
-        btnTimeList.setTextColor(getResources().getColor(soothingTextColor));
+        btnTimeHours.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDimText)));
+        btnTimeList.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDimText)));
 
         if (reminderModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.HOURLY) {
-            btnTimeHours.setTextColor(getResources().getColor(R.color.colorSuccess));
+            btnTimeHours.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor)));
         } else if (reminderModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.CUSTOM) {
-            btnTimeList.setTextColor(getResources().getColor(R.color.colorSuccess));
+            btnTimeList.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor)));
         }
 
         if (reminderModel.getTimeModel().isHasScheduledTime()) {
             lvc_diff_next_reminder_trigger.setVisibility(View.VISIBLE);
-            tv_reminder_trigger_time.setText(StringHelper.toTime(reminderModel.getTimeModel().getScheduledTime()));
+            tv_reminder_trigger_time.setText(StringHelper.toTimeAmPm(reminderModel.getTimeModel().getScheduledTime()));
             tv_reminder_trigger_date.setText(StringHelper.toWeekdayDate(this, reminderModel.getTimeModel().getScheduledTime()));
         } else {
             lvc_diff_next_reminder_trigger.setVisibility(View.GONE);

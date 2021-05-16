@@ -134,7 +134,7 @@ public class AlertService extends Service {
     }
 
     public Notification getAlarmHeadsUp(ReminderModel model) {
-        String timeStamp = StringHelper.toTime(model.getTimeModel().getTime());
+        String timeStamp = StringHelper.toTimeAmPm(model.getTimeModel().getTime());
 
         //ALERT_INTENT_DISMISS_ALERT
         PendingIntent dismissPendingIntent = PendingIntent
@@ -273,7 +273,7 @@ public class AlertService extends Service {
             final ReminderModel newReminder = ReminderModel.getInstance(intent);
             if (newReminder != null) {
                 newReminder.snoozeByApp(this.getApplicationContext());
-                NotificationHelper.notify(this.getApplicationContext(), newReminder.getIntId(), "Missed alarm " + StringHelper.toTime(newReminder.getTimeModel().getTime()), newReminder.getName(), newReminder.getNote());
+                NotificationHelper.notify(this.getApplicationContext(), newReminder.getIntId(), "Missed alarm " + StringHelper.toTimeAmPm(newReminder.getTimeModel().getTime()), newReminder.getName(), newReminder.getNote());
             }
             return START_NOT_STICKY;
         }

@@ -126,7 +126,7 @@ public class ActivityBase extends RefreshableActivity {
         spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor))), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeWarningColor))), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeCuriosityColor))), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeBrightText))),
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDimText))),
                 char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeWarningColor))), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor))), char_pos, ++char_pos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

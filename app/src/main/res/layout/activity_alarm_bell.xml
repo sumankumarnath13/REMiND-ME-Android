@@ -56,7 +56,7 @@
                 android:layout_marginVertical="@dimen/dp_32"
                 android:gravity="center_horizontal"
                 android:textAlignment="center"
-                android:textColor="?attr/themeBrightText"
+                android:textColor="?attr/themeSoothingText"
                 android:textSize="@dimen/font_size_banner" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -109,7 +109,7 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="start|bottom"
         android:layout_margin="@dimen/dp_32"
-        android:backgroundTint="?attr/themeDangerColor"
+        app:backgroundTint="?attr/themeDangerColor"
         android:contentDescription="@string/missingImageDesc"
         app:srcCompat="@drawable/ic_reminder_dismiss" />
 
@@ -122,8 +122,9 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/dp_32"
-        android:backgroundTint="?attr/themeWarningColor"
+        app:backgroundTint="?attr/themeWarningColor"
         android:contentDescription="@string/missingImageDesc"
-        app:srcCompat="@drawable/ic_reminder_snooze" />
+        app:srcCompat="@drawable/ic_reminder_snooze"
+        tools:ignore="RelativeOverlap" />
 
 </RelativeLayout>

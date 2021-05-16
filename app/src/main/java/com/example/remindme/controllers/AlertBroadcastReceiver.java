@@ -45,7 +45,7 @@ public class AlertBroadcastReceiver extends BroadcastReceiver {
             case ReminderModel.ACTION_RECEIVE_NOTIFICATION:
                 final ReminderModel reminder = ReminderModel.getInstance(intent);
                 if (reminder == null) return;
-                NotificationHelper.notify(context, reminder.getIntId(), "Notification " + StringHelper.toTime(reminder.getTimeModel().getTime()), reminder.getName(), reminder.getNote());
+                NotificationHelper.notify(context, reminder.getIntId(), "Notification " + StringHelper.toTimeAmPm(reminder.getTimeModel().getTime()), reminder.getName(), reminder.getNote());
                 reminder.snoozeByApp(context);
                 break;
         }

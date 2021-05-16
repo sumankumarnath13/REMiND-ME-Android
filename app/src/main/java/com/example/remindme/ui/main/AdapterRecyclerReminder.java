@@ -1,15 +1,15 @@
 package com.example.remindme.ui.main;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +29,9 @@ import java.util.List;
 public class AdapterRecyclerReminder
         extends RecyclerView.Adapter<AdapterRecyclerReminder.ReminderHolder>
         implements iSelectionControl {
+
+    private static final long HIDE_ANIMATION_DURATION = 117;
+    private static final long SHOW_ANIMATION_DURATION = 117;
 
     private List<ReminderModel> _data;
     private boolean isEnableCheck;
@@ -152,17 +155,18 @@ public class AdapterRecyclerReminder
         }
 
         final AppCompatCheckBox reminderSelectionCheck = holder.linearLayout.findViewById(R.id.reminderSelectionCheck);
-        final TextView time = holder.linearLayout.findViewById(R.id.tv_reminder_time);
-        final TextView date = holder.linearLayout.findViewById(R.id.tv_reminder_date);
+        final AppCompatTextView time = holder.linearLayout.findViewById(R.id.tv_reminder_time);
+        final AppCompatTextView amPm = holder.linearLayout.findViewById(R.id.tv_reminder_AmPm);
+        final AppCompatTextView date = holder.linearLayout.findViewById(R.id.tv_reminder_date);
 
-        final TextView name = holder.linearLayout.findViewById(R.id.tv_reminder_name);
-        final TextView tv_reminder_repeat_short_summary = holder.linearLayout.findViewById(R.id.tv_reminder_repeat_short_summary);
+        final AppCompatTextView name = holder.linearLayout.findViewById(R.id.tv_reminder_name);
+        final AppCompatTextView tv_reminder_repeat_short_summary = holder.linearLayout.findViewById(R.id.tv_reminder_repeat_short_summary);
         final SwitchCompat enabled = holder.linearLayout.findViewById(R.id.sw_reminder_enabled);
-        final LinearLayout lv_reminder_view_snooze = holder.linearLayout.findViewById(R.id.lv_reminder_view_snooze);
-        final TextView next_snooze = holder.linearLayout.findViewById(R.id.tv_reminder_next_snooze);
+        final LinearLayoutCompat lv_reminder_view_snooze = holder.linearLayout.findViewById(R.id.lv_reminder_view_snooze);
+        final AppCompatTextView next_snooze = holder.linearLayout.findViewById(R.id.tv_reminder_next_snooze);
 
-        final LinearLayout lv_reminder_last_missed_time = holder.linearLayout.findViewById(R.id.lv_reminder_last_missed_time);
-        final TextView tv_reminder_last_missed_time = holder.linearLayout.findViewById(R.id.tv_reminder_last_missed_time);
+        final LinearLayoutCompat lv_reminder_last_missed_time = holder.linearLayout.findViewById(R.id.lv_reminder_last_missed_time);
+        final AppCompatTextView tv_reminder_last_missed_time = holder.linearLayout.findViewById(R.id.tv_reminder_last_missed_time);
 
         holder.linearLayout.setLongClickable(true);
 
@@ -222,7 +226,7 @@ public class AdapterRecyclerReminder
                 reminder.saveAndSetAlert(context, true);
                 buttonView.setChecked(isChecked);
                 if (isChecked) {
-                    time.setText(StringHelper.toTime(reminder.getTimeModel().getTime()));
+                    time.setText(StringHelper.toTimeAmPm(reminder.getTimeModel().getTime()));
                     date.setText(StringHelper.toWeekdayDate(context, reminder.getTimeModel().getTime()));
                 }
             }
@@ -231,6 +235,7 @@ public class AdapterRecyclerReminder
         isRefreshing = true;
 
         time.setText(StringHelper.toTime(reminder.getTimeModel().getTime()));
+        amPm.setText(StringHelper.toAmPm(reminder.getTimeModel().getTime()));
         date.setText(StringHelper.toWeekdayDate(holder.linearLayout.getContext(), reminder.getTimeModel().getTime()));
         tv_reminder_repeat_short_summary.setText(reminder.getRepeatSettingShortString());
 
@@ -243,7 +248,7 @@ public class AdapterRecyclerReminder
 
         if (reminder.getSnoozeModel().isSnoozed()) {
             lv_reminder_view_snooze.setVisibility(View.VISIBLE);
-            next_snooze.setText(StringHelper.toTime(
+            next_snooze.setText(StringHelper.toTimeAmPm(
                     reminder.getSnoozeModel().getSnoozedTime(
                             reminder.getTimeModel().getTime()
                     )));
@@ -265,12 +270,104 @@ public class AdapterRecyclerReminder
             enabled.setChecked(reminder.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
         }
 
+
         if (isEnableCheck) {
-            enabled.setVisibility(View.GONE);
-            reminderSelectionCheck.setVisibility(View.VISIBLE);
+
+            enabled.setAlpha(1);
+            enabled.clearAnimation();
+            enabled.animate().alpha(0).setDuration(HIDE_ANIMATION_DURATION).setListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    enabled.setVisibility(View.GONE);
+                    enabled.clearAnimation();
+
+                    reminderSelectionCheck.setVisibility(View.VISIBLE);
+                    reminderSelectionCheck.setAlpha(0);
+                    reminderSelectionCheck.clearAnimation();
+                    reminderSelectionCheck.animate().alpha(1).setDuration(SHOW_ANIMATION_DURATION).setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            reminderSelectionCheck.clearAnimation();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
+            });
+
         } else {
-            reminderSelectionCheck.setVisibility(View.GONE);
-            enabled.setVisibility(View.VISIBLE);
+
+            reminderSelectionCheck.setAlpha(1);
+            reminderSelectionCheck.clearAnimation();
+            reminderSelectionCheck.animate().alpha(0).setDuration(HIDE_ANIMATION_DURATION).setListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    reminderSelectionCheck.setVisibility(View.GONE);
+                    reminderSelectionCheck.clearAnimation();
+
+                    enabled.setVisibility(View.VISIBLE);
+                    enabled.setAlpha(0);
+                    enabled.clearAnimation();
+                    enabled.animate().alpha(1).setDuration(SHOW_ANIMATION_DURATION).setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            enabled.clearAnimation();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
+            });
         }
 
         isRefreshing = false;

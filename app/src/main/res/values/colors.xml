@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <color name="colorBrightText">
-        #cacaca
-    </color>
     <color name="colorSoothingText">
-        #A9A9A9
+        #878787
     </color>
     <color name="colorDimText">
-        #696969
+        #5f5f5f
     </color>
     <color name="colorBorder">
-        #151a1a
+        #1b1b1b
     </color>
     <color name="colorDialogBackground">
-        #0e1111
+        #0d0d0d
     </color> <!-- Because theme color is pure black and no shadow can be any more darker, dialog have to have a lighter color to appear as different window -->
     <color name="colorBackground">
-        #080808
+        #000000
     </color>
     <color name="colorThemeControlNormal">
         #696969
@@ -41,14 +37,11 @@
         #c64e58
     </color>
 
-    <color name="colorBrightTextLight">
-        #333333
-    </color>
     <color name="colorSoothingTextLight">
-        #565756
+        #595959
     </color>
     <color name="colorDimTextLight">
-        #878787
+        #8b8b8b
     </color>
     <color name="colorBorderLight">
         #e0e0e0

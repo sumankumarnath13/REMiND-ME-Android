@@ -103,7 +103,7 @@ public class AlarmBell extends ActivityBase {
                 colorIndex = 0;
             }
 
-            String coloredTimeString = StringHelper.toTime(serviceBinder.getServingReminder().getTimeModel().getTime());
+            String coloredTimeString = StringHelper.toTimeAmPm(serviceBinder.getServingReminder().getTimeModel().getTime());
             Spannable spannable = new SpannableString(coloredTimeString);
             spannable.setSpan(new ForegroundColorSpan(getResources().getColor(colors[colorIndex])), 0, coloredTimeString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             //spannable.setSpan(new RelativeSizeSpan(2.7f), 0, alertStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

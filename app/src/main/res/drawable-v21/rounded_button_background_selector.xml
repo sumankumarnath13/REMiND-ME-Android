@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--<shape xmlns:android="http://schemas.android.com/apk/res/android">-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="true">
+        <ripple android:color="?attr/themeAccentColor">
+            <item android:id="@android:id/mask">
+                <shape android:shape="rectangle">
+                    <solid android:color="?attr/themeBackgroundColor" />
+                    <corners android:radius="@dimen/dp_32" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <stroke android:width="@dimen/dp_05" android:color="?attr/themeAccentColor" />
+                    <corners android:radius="@dimen/dp_32" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+    <item android:state_enabled="false">
+        <ripple android:color="?attr/themeBorderColor">
+            <item android:id="@android:id/mask">
+                <shape android:shape="rectangle">
+                    <solid android:color="?attr/themeBackgroundColor" />
+                    <corners android:radius="@dimen/dp_32" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <stroke android:width="@dimen/dp_05" android:color="?attr/themeBorderColor" />
+                    <corners android:radius="@dimen/dp_32" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+</selector>
+

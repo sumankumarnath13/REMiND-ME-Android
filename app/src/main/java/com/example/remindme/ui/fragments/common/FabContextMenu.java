@@ -35,7 +35,9 @@ public class FabContextMenu extends Fragment {
     }
 
     public interface iFabContextMenuListener {
-        void onFabContextMenuClick(String clickAction, String clickValue);
+        void onFabContextMenuClick(boolean isExpand);
+
+        void onFabContextMenuAction(String clickAction, String clickValue);
     }
 
     private iFabContextMenuListener contextMenuListener;
@@ -119,10 +121,10 @@ public class FabContextMenu extends Fragment {
         });
 
         fromBottom = AnimationUtils.loadAnimation(this.getContext(), R.anim.from_bottom_anim);
-        fromBottom.setDuration(60);
+        fromBottom.setDuration(63);
 
         toBottom = AnimationUtils.loadAnimation(this.getContext(), R.anim.to_bottom_anim);
-        toBottom.setDuration(60);
+        toBottom.setDuration(63);
 
         layoutCompat = view.findViewById(R.id.fabContextMenuLayout);
 
@@ -180,7 +182,7 @@ public class FabContextMenu extends Fragment {
 
             item.actionButton.setOnClickListener(v -> {
                 if (contextMenuListener != null) {
-                    contextMenuListener.onFabContextMenuClick(item.clickAction, item.clickValue);
+                    contextMenuListener.onFabContextMenuAction(item.clickAction, item.clickValue);
                 }
             });
 
@@ -228,6 +230,13 @@ public class FabContextMenu extends Fragment {
             fabRoot.startAnimation(rotateClose);
 
         }
+
+        if (this.contextMenuListener != null) {
+
+            this.contextMenuListener.onFabContextMenuClick(isExpanded);
+
+        }
+
     }
 
     public void collapse() {

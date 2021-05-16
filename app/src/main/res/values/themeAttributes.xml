@@ -13,7 +13,6 @@
     <attr name="themeDisabledControlColor" format="reference" />
     <attr name="themeControlNormalColor" format="reference" />
 
-    <attr name="themeBrightText" format="reference" />
     <attr name="themeDimText" format="reference" />
     <attr name="themeSoothingText" format="reference" />
 

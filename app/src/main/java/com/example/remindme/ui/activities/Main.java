@@ -30,6 +30,7 @@ public class Main extends ActivityBase implements FabContextMenu.iFabContextMenu
     private static final String C_ACTION_SELECT_NONE = "SELECT_NONE";
 
     private iSelectionControl selectionControl;
+    private boolean isMenuExpanded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,27 +101,33 @@ public class Main extends ActivityBase implements FabContextMenu.iFabContextMenu
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        //return super.dispatchTouchEvent(ev);
-        final FabContextMenu contextMenu = (FabContextMenu) getSupportFragmentManager().findFragmentById(R.id.bottomContextMenu);
-        if (contextMenu != null && contextMenu.getView() != null) {
-            int[] leftTop = {0, 0};
-            contextMenu.getView().getLocationInWindow(leftTop);
-            int left = leftTop[0];
-            int top = leftTop[1];
-            int bottom = top + contextMenu.getView().getHeight();
-            int right = left + contextMenu.getView().getWidth();
-            if (ev.getX() > left && ev.getX() < right
-                    && ev.getY() > top && ev.getY() < bottom) {
-                // Click on the input box area, keep the event that clicks EditText
-                return super.dispatchTouchEvent(ev);
+        if (isMenuExpanded) {
+            final FabContextMenu contextMenu = (FabContextMenu) getSupportFragmentManager().findFragmentById(R.id.bottomContextMenu);
+            if (contextMenu != null && contextMenu.getView() != null) {
+                int[] leftTop = {0, 0};
+                contextMenu.getView().getLocationInWindow(leftTop);
+                int left = leftTop[0];
+                int top = leftTop[1];
+                int bottom = top + contextMenu.getView().getHeight();
+                int right = left + contextMenu.getView().getWidth();
+                if (ev.getX() > left && ev.getX() < right
+                        && ev.getY() > top && ev.getY() < bottom) {
+                    // Click on the input box area, keep the event that clicks EditText
+                    return super.dispatchTouchEvent(ev);
+                }
+                contextMenu.collapse();
             }
-            contextMenu.collapse();
         }
         return super.dispatchTouchEvent(ev);
     }
 
     @Override
-    public void onFabContextMenuClick(String clickAction, String clickValue) {
+    public void onFabContextMenuClick(boolean isExpand) {
+        isMenuExpanded = isExpand;
+    }
+
+    @Override
+    public void onFabContextMenuAction(String clickAction, String clickValue) {
         switch (clickAction) {
             case C_ACTION_NEW:
                 final Intent addNewReminderActivity = new Intent(Main.this, ReminderInput.class);
@@ -169,7 +176,7 @@ public class Main extends ActivityBase implements FabContextMenu.iFabContextMenu
             final FabContextMenu.MenuItem newItem = contextMenu.getNewMenuItem(C_ACTION_NEW);
             newItem.src = R.drawable.ic_add;
             newItem.imageTint = android.R.color.white;
-            newItem.backgroundTint = resolveRefAttributeResourceId(R.attr.themeSuccessColor);
+            newItem.backgroundTint = resolveRefAttributeResourceId(R.attr.themeAccentColor);
 
             contextMenu.addMenu(newItem);
 

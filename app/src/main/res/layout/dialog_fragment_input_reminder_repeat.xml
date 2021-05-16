@@ -155,7 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_medium"
-                android:textColor="?attr/themeBrightText" />
+                android:textColor="?attr/themeSoothingText" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
