@@ -91,9 +91,7 @@ public class Main extends ActivityBase implements FabContextMenu.iFabContextMenu
     @Override
     public void onBackPressed() {
         if (selectionControl != null && selectionControl.isSelectable()) {
-            selectionControl.setSelectable(false);
-            selectionControl.selectNone();
-            selectionControl.notifyChange();
+            selectionControl.dismissSelectable();
         } else {
             super.onBackPressed();
         }
@@ -144,19 +142,17 @@ public class Main extends ActivityBase implements FabContextMenu.iFabContextMenu
                     for (int i = 0; i < selectedReminders.size(); i++) {
                         selectedReminders.get(i).deleteAndCancelAlert(this);
                     }
-                    selectionControl.notifySelectedAsDeleted();
+                    selectionControl.removeAllSelected();
                 }
                 break;
             case C_ACTION_SELECT_ALL:
                 if (selectionControl != null) {
                     selectionControl.selectAll();
-                    selectionControl.notifyChange();
                 }
                 break;
             case C_ACTION_SELECT_NONE:
                 if (selectionControl != null) {
                     selectionControl.selectNone();
-                    selectionControl.notifyChange();
                 }
                 break;
         }

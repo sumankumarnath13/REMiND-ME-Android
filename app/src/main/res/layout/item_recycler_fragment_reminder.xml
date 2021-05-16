@@ -79,7 +79,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/dp_16"
             android:layout_height="@dimen/dp_16"
-            android:layout_marginEnd="@dimen/dp_3"
+            android:layout_marginEnd="@dimen/dp_8"
             app:srcCompat="@drawable/ic_reminder_repeat"
             android:contentDescription="@string/missingImageDesc" />
 
@@ -91,58 +91,63 @@
             android:textSize="@dimen/font_size_extra_small"
             android:text="@string/repeat_daily" />
 
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/dp_3"
+        android:orientation="horizontal">
+
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/lv_reminder_view_snooze"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:layout_gravity="end|center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="visible">
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/lv_reminder_view_snooze"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_8"
+                app:srcCompat="@drawable/ic_reminder_snooze"
+                android:contentDescription="@string/missingImageDesc" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_reminder_next_snooze"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:textColor="?attr/themeDimText"
+                android:textSize="@dimen/font_size_extra_small"
+                android:text="09:00 AM" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="@dimen/dp_16"
-                    android:layout_height="@dimen/dp_16"
-                    android:layout_marginEnd="@dimen/dp_3"
-                    app:srcCompat="@drawable/ic_reminder_snooze"
-                    android:contentDescription="@string/missingImageDesc" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_reminder_next_snooze"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="?attr/themeWarningColor"
-                    android:textSize="@dimen/font_size_extra_small" />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/lv_reminder_last_missed_time"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end|center_vertical"
+            android:visibility="visible">
 
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/lv_reminder_last_missed_time"
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:textColor="?attr/themeDangerColor"
+                android:text="@string/missed_on"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:textSize="@dimen/font_size_extra_small" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="?attr/themeDangerColor"
-                    android:text="@string/missed_on"
-                    android:textSize="@dimen/font_size_extra_small" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_reminder_last_missed_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="?attr/themeDimText"
-                    android:textSize="@dimen/font_size_extra_small" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_reminder_last_missed_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/themeDimText"
+                android:textSize="@dimen/font_size_extra_small"
+                android:text="9:00 AM Wed, 12 May 2021" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

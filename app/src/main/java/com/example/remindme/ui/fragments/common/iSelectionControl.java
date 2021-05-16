@@ -7,7 +7,7 @@ import java.util.List;
 public interface iSelectionControl {
     boolean isSelectable();
 
-    void setSelectable(boolean value);
+    void dismissSelectable();
 
     boolean isAllSelected();
 
@@ -21,9 +21,9 @@ public interface iSelectionControl {
 
     List<ReminderModel> getSelected();
 
-    void notifyChange();
+    void notifySelectionChange();
 
     int size();
 
-    void notifySelectedAsDeleted();
+    void removeAllSelected();
 }
