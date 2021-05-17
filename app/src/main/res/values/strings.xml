@@ -161,7 +161,7 @@
         </item>
     </array>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="missed_on">"Missed on : "</string>
+    <string name="missed_on">Missed on</string>
     <string name="missingImageDesc">oops</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">

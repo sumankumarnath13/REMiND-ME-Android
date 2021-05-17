@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.R;
+import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.viewModels.RepeatModel;
@@ -197,7 +198,8 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
             mYear = alertTime.get(Calendar.YEAR);
             mMonth = alertTime.get(Calendar.MONTH);
             mDay = alertTime.get(Calendar.DAY_OF_MONTH);
-            final DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(), R.style.DatePickerStyle,
+            final DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),
+                    AppSettingsHelper.getInstance().getDatePickerDialogStyleId(),
                     (view12, year, monthOfYear, dayOfMonth) -> {
                         alertTime.set(Calendar.YEAR, year);
                         alertTime.set(Calendar.MONTH, monthOfYear);
@@ -227,7 +229,8 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
             final int mHour, mMinute;
             mHour = alertTime.get(Calendar.HOUR_OF_DAY);
             mMinute = alertTime.get(Calendar.MINUTE);
-            final TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), R.style.TimePickerStyle,
+            final TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),
+                    AppSettingsHelper.getInstance().getTimePickerDialogStyleId(),
                     (view1, hourOfDay, minute) -> {
                         alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         alertTime.set(Calendar.MINUTE, minute);

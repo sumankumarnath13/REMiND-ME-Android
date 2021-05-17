@@ -110,7 +110,8 @@ public class RandomTimeListDialog extends TimeListDialogBase {
             mHour = alertTime.get(Calendar.HOUR_OF_DAY);
             mMinute = alertTime.get(Calendar.MINUTE);
 
-            final TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), R.style.TimePickerStyle,
+            final TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),
+                    AppSettingsHelper.getInstance().getTimePickerDialogStyleId(),
                     (view1, hourOfDay, minute) -> {
                         alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         alertTime.set(Calendar.MINUTE, minute);

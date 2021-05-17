@@ -197,7 +197,8 @@ public class ReminderInput
             mYear = alertTime.get(Calendar.YEAR);
             mMonth = alertTime.get(Calendar.MONTH);
             mDay = alertTime.get(Calendar.DAY_OF_MONTH);
-            final DatePickerDialog datePickerDialog = new DatePickerDialog(ReminderInput.this, R.style.DatePickerStyle,
+            final DatePickerDialog datePickerDialog = new DatePickerDialog(ReminderInput.this,
+                    AppSettingsHelper.getInstance().getDatePickerDialogStyleId(),
                     (view12, year, monthOfYear, dayOfMonth) -> {
                         alertTime.set(Calendar.YEAR, year);
                         alertTime.set(Calendar.MONTH, monthOfYear);
@@ -225,7 +226,8 @@ public class ReminderInput
             mHour = alertTime.get(Calendar.HOUR_OF_DAY);
             mMinute = alertTime.get(Calendar.MINUTE);
 
-            final TimePickerDialog timePickerDialog = new TimePickerDialog(ReminderInput.this, R.style.TimePickerStyle,
+            final TimePickerDialog timePickerDialog = new TimePickerDialog(ReminderInput.this,
+                    AppSettingsHelper.getInstance().getTimePickerDialogStyleId(),
                     (view1, hourOfDay, minute) -> {
                         alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         alertTime.set(Calendar.MINUTE, minute);

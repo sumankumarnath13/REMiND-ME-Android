@@ -42,6 +42,12 @@
         android:clipToPadding="false"
         android:paddingBottom="@dimen/dp_clippedPaddingBottom">
 
+        <!--        <DatePicker-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:theme="@style/DatePickerStyle"/>-->
+
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,34 +77,6 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.core.widget.NestedScrollView>
-
-    <!-- Footer aligned to bottom -->
-    <!--    <androidx.appcompat.widget.LinearLayoutCompat-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        android:paddingVertical="@dimen/dp_32"-->
-    <!--        android:gravity="center_horizontal">-->
-
-    <!--        <androidx.appcompat.widget.AppCompatButton-->
-    <!--            android:id="@+id/btn_reminder_dismiss"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_marginEnd="@dimen/dp_32"-->
-    <!--            android:drawableStart="@drawable/ic_reminder_dismiss"-->
-    <!--            android:text="@string/btn_alarm_action_dismiss"-->
-    <!--            android:textSize="@dimen/font_size_medium" />-->
-
-    <!--        <androidx.appcompat.widget.AppCompatButton-->
-    <!--            android:id="@+id/btn_reminder_snooze"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:visibility="visible"-->
-    <!--            android:drawableStart="@drawable/ic_reminder_snooze"-->
-    <!--            android:text="@string/reminder_snooze_menu_caption"-->
-    <!--            android:textSize="@dimen/font_size_medium" />-->
-
-    <!--    </androidx.appcompat.widget.LinearLayoutCompat>-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnDismissAlarm"

@@ -67,6 +67,7 @@
         android:id="@+id/tv_reminder_name"
         android:layout_width="match_parent"
         android:paddingVertical="@dimen/dp_3"
+        android:textSize="@dimen/font_size_small"
         android:layout_height="wrap_content" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -101,7 +102,8 @@
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/lv_reminder_view_snooze"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -126,8 +128,7 @@
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/lv_reminder_last_missed_time"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="end|center_vertical"

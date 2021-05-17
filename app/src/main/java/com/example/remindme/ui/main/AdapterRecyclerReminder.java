@@ -371,9 +371,9 @@ public class AdapterRecyclerReminder
 
             final Context context = buttonView.getContext();
 
-            if (isChecked && reminder.trySetEnabled(context, true)) {
+            if (reminder.trySetEnabled(context, isChecked)) {
                 reminder.saveAndSetAlert(context, true);
-                buttonView.setChecked(true);
+                buttonView.setChecked(isChecked);
                 time.setText(StringHelper.toTimeAmPm(reminder.getTimeModel().getTime()));
                 date.setText(StringHelper.toWeekdayDate(context, reminder.getTimeModel().getTime()));
             } else {

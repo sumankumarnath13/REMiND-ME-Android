@@ -114,14 +114,14 @@
             @style/switchStyle
         </item>
         <item name="android:alertDialogTheme">
-            @style/DialogStyle
+            @style/AlertDialogStyle
         </item>
-        <item name="android:timePickerStyle" tools:targetApi="lollipop">
-            @style/TimePickerStyle
-        </item>
-        <item name="android:datePickerStyle" tools:targetApi="lollipop">
-            @style/DatePickerStyle
-        </item>
+        <!--        <item name="android:timePickerDialogTheme" tools:targetApi="lollipop">-->
+        <!--            @style/TimePickerStyle-->
+        <!--        </item>-->
+        <!--        <item name="android:datePickerStyle" tools:targetApi="lollipop">-->
+        <!--            @style/DatePickerStyle-->
+        <!--        </item>-->
     </style>
 
     <style name="LightTheme" parent="Theme.AppCompat">
@@ -240,20 +240,24 @@
             @style/switchStyle
         </item>
         <item name="android:alertDialogTheme">
-            @style/DialogStyle
+            @style/AlertDialogStyle
         </item>
-        <item name="android:timePickerStyle" tools:targetApi="lollipop">
-            @style/TimePickerStyle
-        </item>
-        <item name="android:datePickerStyle" tools:targetApi="lollipop">
-            @style/DatePickerStyle
-        </item>
+        <!--        <item name="android:timePickerStyle" tools:targetApi="lollipop">-->
+        <!--            @style/TimePickerStyle-->
+        <!--        </item>-->
+        <!--        <item name="android:datePickerStyle" tools:targetApi="lollipop">-->
+        <!--            @style/DatePickerStyle-->
+        <!--        </item>-->
     </style>
 
     <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:windowContentOverlay">
             @null
         </item> <!-- Remove title bar shadow -->
+        <!-- action bar elevation - without android prefix -->
+        <item name="elevation">
+            0dp
+        </item>
 
         <!--        <item name="height">50dp--> <!-- To increase action bar height. Not required now -->
         <!--        </item>-->
@@ -261,10 +265,6 @@
         <!-- action bar background - without android prefix -->
         <item name="background">
             ?attr/themeBackgroundColor
-        </item>
-        <!-- action bar elevation - without android prefix -->
-        <item name="elevation">
-            0dp
         </item>
         <item name="subtitleTextStyle">
             @style/ActionBarSubTitleTextStyle
@@ -298,39 +298,6 @@
         </item>
         <item name="windowNoTitle">
             true
-        </item>
-    </style>
-
-    <style name="DialogStyle" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="android:windowBackground">
-            ?attr/themeDialogBackgroundColor
-        </item> <!-- Changes background color -->
-        <item name="colorControlHighlight">
-            ?attr/themeAccentColor
-        </item>
-        <item name="colorControlNormal">
-            ?attr/themeDisabledControlColor
-        </item>
-        <item name="android:windowTitleStyle">
-            @style/DialogTitleTextStyle
-        </item>
-        <item name="android:textSize">
-            @dimen/font_size_medium
-        </item>
-        <item name="android:textColor">
-            ?attr/themeSoothingText
-        </item>
-        <item name="dialogCornerRadius">
-            @dimen/dp_8
-        </item>
-    </style>
-
-    <style name="DialogTitleTextStyle" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textSize">
-            @dimen/font_size_medium
-        </item>
-        <item name="android:textColor">
-            ?attr/themeDimText
         </item>
     </style>
 
@@ -467,45 +434,6 @@
         </item>
     </style>
 
-    <style name="TimePickerStyle" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowBackground">
-            ?attr/themeDialogBackgroundColor
-        </item> <!-- Changes background color -->
-        <item name="colorControlActivated">
-            ?attr/themeSuccessColor
-        </item> <!-- Change selection/cursor color -->
-        <item name="tint">
-            ?attr/themeAccentColor
-        </item> <!-- Change mode switch color for time picker-->
-        <item name="colorAccent">
-            ?attr/themeAccentColor
-        </item> <!-- Change OK/Cancel button color -->
-        <item name="android:textColorPrimary">
-            ?attr/themeSoothingText
-        </item>
-        <item name="android:textColorSecondary">
-            ?attr/themeDimText
-        </item>
-    </style>
-
-    <style name="DatePickerStyle" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="android:windowBackground">
-            ?attr/themeDialogBackgroundColor
-        </item> <!-- Changes background color -->
-        <item name="colorControlActivated">
-            ?attr/themeSuccessColor
-        </item> <!-- Change selection/cursor color -->
-        <item name="colorAccent">
-            ?attr/themeAccentColor
-        </item> <!-- Change OK/Cancel button color -->
-        <item name="android:textColorPrimary">
-            ?attr/themeSoothingText
-        </item>
-        <item name="android:textColorSecondary">
-            ?attr/themeDimText
-        </item>
-    </style>
-
     <style name="AccentFab" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="rippleColor">
             ?attr/themeBackgroundColor
@@ -519,6 +447,148 @@
         <item name="tint">
             @android:color/white
         </item>
+    </style>
+
+    <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">
+            ?attr/themeDialogBackgroundColor
+        </item> <!-- Changes background color -->
+        <item name="colorControlHighlight">
+            ?attr/themeAccentColor
+        </item>
+        <item name="colorControlNormal">
+            ?attr/themeDisabledControlColor
+        </item>
+        <item name="dialogCornerRadius">
+            @dimen/dp_8
+        </item>
+    </style>
+
+    <!--    <style name="DialogButtonBarStyle" parent="Widget.AppCompat.ButtonBar.AlertDialog">-->
+    <!--        <item name="android:textSize">@dimen/font_size_large</item>-->
+    <!--        <item name="android:windowBackground">?attr/themeDangerColor</item>-->
+    <!--        <item name="buttonBarPositiveButtonStyle">@style/ButtonBarOkButtonStyle</item>-->
+    <!--        <item name="buttonBarNegativeButtonStyle">@style/ButtonBarCancelButtonStyle</item>-->
+    <!--    </style>-->
+
+    <!--    <style name="ButtonBarOkButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">-->
+    <!--        <item name="android:textColor">?attr/themeSuccessColor</item>-->
+    <!--        <item name="android:textSize">@dimen/font_size_small</item>-->
+    <!--    </style>-->
+
+    <!--    <style name="ButtonBarCancelButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">-->
+    <!--        <item name="android:textColor">?attr/themeDimText</item>-->
+    <!--        <item name="android:textSize">@dimen/font_size_medium</item>-->
+    <!--    </style>-->
+
+    <style name="AlertDialogStyle" parent="DialogStyle">
+        <!--        <item name="android:windowBackground">-->
+        <!--            ?attr/themeDialogBackgroundColor-->
+        <!--        </item> &lt;!&ndash; Changes background color &ndash;&gt;-->
+        <!--        <item name="colorControlHighlight">-->
+        <!--            ?attr/themeAccentColor-->
+        <!--        </item>-->
+        <!--        <item name="colorControlNormal">-->
+        <!--            ?attr/themeDisabledControlColor-->
+        <!--        </item>-->
+        <item name="android:windowTitleStyle">
+            @style/AlertDialogTitleTextStyle
+        </item>
+        <item name="android:textSize">
+            @dimen/font_size_medium
+        </item>
+        <item name="android:textColor">
+            ?attr/themeSoothingText
+        </item>
+    </style>
+
+    <style name="AlertDialogTitleTextStyle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">
+            @dimen/font_size_medium
+        </item>
+        <item name="android:textColor">
+            ?attr/themeDimText
+        </item>
+    </style>
+
+    <style name="TimePickerStyle" parent="DialogStyle">
+        <item name="colorAccent">
+            ?attr/themeDialogBackgroundColor
+        </item> <!-- Change Header background. Also Changes OK/Cancel button color if not overridden by android:textColor-->
+        <item name="android:windowBackground">
+            ?attr/themeDialogBackgroundColor
+        </item> <!-- Changes background color -->
+        <item name="android:textColor">
+            ?attr/themeSoothingText
+        </item> <!-- Dialog OK, cancel button colors -->
+        <item name="colorControlActivated">
+            ?attr/themeAccentColor
+        </item> <!-- Selected item/date color/cursor color -->
+        <item name="android:textColorPrimary">
+            ?attr/themeSoothingText
+        </item> <!-- month Hour/Min selected color controls -->
+        <item name="android:textColorPrimaryInverse">
+            ?attr/themeSoothingText
+        </item> <!-- Title's year/date color when selected -->
+
+        <item name="android:textColorSecondary">
+            ?attr/themeDimText
+        </item> <!-- 24 mode hour color -->
+
+        <item name="android:textColorSecondaryInverse">
+            ?attr/themeDimText
+        </item> <!-- month Hour/Min not selected color controls -->
+
+        <!--        <item name="colorControlNormal">-->
+        <!--            ?attr/themeSuccessColor-->
+        <!--        </item> &lt;!&ndash; digital time mode AM/PM drop down arrow color &ndash;&gt;-->
+
+        <item name="android:colorBackground">
+            ?attr/themeBackgroundColor
+        </item> <!-- digital time mode AM/PM drop down background color -->
+
+        <item name="tint">
+            ?attr/themeAccentColor
+        </item> <!-- Analog to digital mode change button color -->
+    </style>
+
+    <style name="DatePickerStyle" parent="DialogStyle">
+        <item name="colorAccent">
+            ?attr/themeDialogBackgroundColor
+        </item> <!-- Change Header background -->
+        <item name="android:windowBackground">
+            ?attr/themeDialogBackgroundColor
+        </item> <!-- Changes background color -->
+        <item name="android:textColor">
+            ?attr/themeSoothingText
+        </item> <!-- Dialog OK, cancel button colors -->
+        <item name="colorControlActivated">
+            ?attr/themeSuccessColor
+        </item> <!-- Selected item/date color -->
+        <item name="android:textColorPrimary">
+            ?attr/themeSoothingText
+        </item> <!-- month heading/dates/pagination controls -->
+        <item name="android:textColorSecondary">
+            ?attr/themeControlNormalColor
+        </item> <!-- Week color -->
+        <item name="android:textColorPrimaryInverse">
+            ?attr/themeSoothingText
+        </item> <!-- Title's year/date color when selected. Also works as selected date text color -->
+        <item name="android:textColorSecondaryInverse">
+            ?attr/themeDimText
+        </item> <!-- Title's year/date color when not selected -->
+        <item name="colorControlNormal">
+            ?attr/themeDisabledControlColor
+        </item> <!-- Year selection scroll color -->
+    </style>
+
+    <style name="DatePickerStyleLight" parent="DatePickerStyle">
+        <item name="android:headerBackground">
+            ?attr/themeDialogBackgroundColor
+        </item> <!-- Change Header background -->
+        <item name="colorControlActivated">
+            ?attr/themeWarningColor
+        </item> <!-- Selected item/date color -->
     </style>
 
 </resources>

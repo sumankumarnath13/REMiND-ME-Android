@@ -75,7 +75,8 @@ public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
             mYear = calendar.get(Calendar.YEAR);
             mMonth = calendar.get(Calendar.MONTH);
             mDay = calendar.get(Calendar.DAY_OF_MONTH);
-            final DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), R.style.DatePickerStyle,
+            final DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                    AppSettingsHelper.getInstance().getDatePickerDialogStyleId(),
                     (view1, year, monthOfYear, dayOfMonth) -> {
                         calendar.set(Calendar.YEAR, year);
                         calendar.set(Calendar.MONTH, monthOfYear);
