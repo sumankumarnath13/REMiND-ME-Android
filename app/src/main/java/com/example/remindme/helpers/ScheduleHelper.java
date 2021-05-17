@@ -138,6 +138,21 @@ public class ScheduleHelper {
 
     }
 
+    public Date getNextNoRepeat() {
+//        calculator.set(Calendar.HOUR_OF_DAY, alertHourOfDay);
+//        calculator.set(Calendar.MINUTE, alertMinute);
+
+        scheduleListTime(); // Try to find if any tme available from time list for the day
+
+        if (calculator.getTime().compareTo(currentTime) <= 0) { // Then no time found
+
+            return null;
+
+        }
+
+        return calculator.getTime();
+    }
+
     public Date getNextHour() {
         calculator.set(Calendar.MINUTE, alertMinute);
 

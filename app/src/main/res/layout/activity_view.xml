@@ -106,6 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/missed_on"
+                        android:layout_marginEnd="@dimen/dp_8"
                         android:textColor="?attr/themeDangerColor"
                         android:textSize="@dimen/font_size_small" />
 

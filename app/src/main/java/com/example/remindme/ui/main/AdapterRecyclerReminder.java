@@ -374,7 +374,8 @@ public class AdapterRecyclerReminder
             if (reminder.trySetEnabled(context, isChecked)) {
                 reminder.saveAndSetAlert(context, true);
                 buttonView.setChecked(isChecked);
-                time.setText(StringHelper.toTimeAmPm(reminder.getTimeModel().getTime()));
+                time.setText(StringHelper.toTime(reminder.getTimeModel().getTime()));
+                amPm.setText(StringHelper.toAmPm(reminder.getTimeModel().getTime()));
                 date.setText(StringHelper.toWeekdayDate(context, reminder.getTimeModel().getTime()));
             } else {
                 buttonView.setChecked(false);
@@ -407,6 +408,7 @@ public class AdapterRecyclerReminder
 
         if (reminder.isExpired()) {
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.colorDanger));
+            amPm.setTextColor(holder.linearLayout.getResources().getColor(R.color.colorDanger));
         }
 
         isRefreshing = false;

@@ -285,9 +285,12 @@ public class RepeatModel extends ViewModel {
          * This method will return a non null value only if there is a dat can reached in future.
          * */
 
-        if (timeModel.getTime() == null) return null;
+        if (timeModel.getTime() == null)
+            return null;
 
-        if (!isEnabled()) return null;
+        if (!isEnabled()) { // If repeat is off then check if the time already passed the current time
+            return new ScheduleHelper(timeModel).getNextNoRepeat();
+        }
 
         Date nextScheduleTime = null;
 
