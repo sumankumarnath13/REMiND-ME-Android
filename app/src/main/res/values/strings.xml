@@ -12,7 +12,7 @@
     <string name="tab_text_3">Finished</string>
 
     <string name="hint_reminder_name">Give a name …</string>
-    <string name="hint_reminder_note">Extra notes …</string>
+    <string name="hint_reminder_note">Extra notes for reminder …</string>
     <string name="btn_save">Set Reminder</string>
     <string name="btn_time">Set Time</string>
     <string name="btn_date">Set Date</string>
@@ -170,4 +170,7 @@
         fragment
     </string>
     <string name="character_limit_warning_label">%d character%s available</string>
+    <string name="time_list_label">Other Times of day</string>
+    <string name="reminder_expired_label">Expired</string>
+    <string name="reminder_input_ring_duration_label">Ring duration</string>
 </resources>

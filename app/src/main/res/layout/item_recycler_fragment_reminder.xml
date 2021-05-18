@@ -97,7 +97,6 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/dp_3"
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -106,6 +105,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:paddingVertical="@dimen/dp_3"
             android:orientation="horizontal"
             android:visibility="visible">
 
@@ -131,6 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:paddingVertical="@dimen/dp_3"
             android:gravity="end|center_vertical"
             android:visibility="visible">
 

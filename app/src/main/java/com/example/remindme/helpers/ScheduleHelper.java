@@ -122,25 +122,9 @@ public class ScheduleHelper {
 
             }
         }
-
-//        else {
-//            calculator.set(Calendar.HOUR_OF_DAY, alertHourOfDay);
-//            calculator.set(Calendar.MINUTE, alertMinute);
-//        }
-
-        final String year = String.valueOf(calculator.get(Calendar.YEAR));
-        final String month = String.valueOf(calculator.get(Calendar.MONTH));
-        final String day = String.valueOf(calculator.get(Calendar.DAY_OF_YEAR));
-        final String hour = String.valueOf(calculator.get(Calendar.HOUR_OF_DAY));
-        final String min = String.valueOf(calculator.get(Calendar.MINUTE));
-
-        String x = "";
-
     }
 
     public Date getNextNoRepeat() {
-//        calculator.set(Calendar.HOUR_OF_DAY, alertHourOfDay);
-//        calculator.set(Calendar.MINUTE, alertMinute);
 
         scheduleListTime(); // Try to find if any tme available from time list for the day
 
@@ -287,12 +271,6 @@ public class ScheduleHelper {
 
         }
 
-//        final String year = String.valueOf(calculator.get(Calendar.YEAR));
-//        final String month = String.valueOf(calculator.get(Calendar.MONTH));
-//        final String day = String.valueOf(calculator.get(Calendar.DAY_OF_YEAR));
-//        final String hour = String.valueOf(calculator.get(Calendar.HOUR_OF_DAY));
-//        final String min = String.valueOf(calculator.get(Calendar.MINUTE));
-
         return calculator.getTime();
     }
 
@@ -331,12 +309,6 @@ public class ScheduleHelper {
             }
         }
 
-//        final String year = String.valueOf(calculator.get(Calendar.YEAR));
-//        final String month = String.valueOf(calculator.get(Calendar.MONTH));
-//        final String day = String.valueOf(calculator.get(Calendar.DAY_OF_YEAR));
-//        final String hour = String.valueOf(calculator.get(Calendar.HOUR_OF_DAY));
-//        final String min = String.valueOf(calculator.get(Calendar.MINUTE));
-
         return calculator.getTime();
     }
 
@@ -355,12 +327,6 @@ public class ScheduleHelper {
             scheduleListTime();
 
         }
-
-//        final String year = String.valueOf(calculator.get(Calendar.YEAR));
-//        final String month = String.valueOf(calculator.get(Calendar.MONTH));
-//        final String day = String.valueOf(calculator.get(Calendar.DAY_OF_YEAR));
-//        final String hour = String.valueOf(calculator.get(Calendar.HOUR_OF_DAY));
-//        final String min = String.valueOf(calculator.get(Calendar.MINUTE));
 
         return calculator.getTime();
     }
@@ -393,12 +359,6 @@ public class ScheduleHelper {
             scheduleListTime();
 
         }
-
-//        final String year = String.valueOf(calculator.get(Calendar.YEAR));
-//        final String month = String.valueOf(calculator.get(Calendar.MONTH));
-//        final String day = String.valueOf(calculator.get(Calendar.DAY_OF_YEAR));
-//        final String hour = String.valueOf(calculator.get(Calendar.HOUR_OF_DAY));
-//        final String min = String.valueOf(calculator.get(Calendar.MINUTE));
 
         return calculator.getTime();
     }

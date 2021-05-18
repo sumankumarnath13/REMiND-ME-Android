@@ -449,7 +449,7 @@
         </item>
     </style>
 
-    <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">
             ?attr/themeDialogBackgroundColor
         </item> <!-- Changes background color -->
@@ -550,6 +550,17 @@
         <item name="tint">
             ?attr/themeAccentColor
         </item> <!-- Analog to digital mode change button color -->
+
+
+        <item name="backgroundOverlayColorAlpha">
+            0.5
+        </item>
+
+
+        <item name="android:headerBackground">
+            ?attr/themeSuccessColor
+        </item>
+
     </style>
 
     <style name="DatePickerStyle" parent="DialogStyle">

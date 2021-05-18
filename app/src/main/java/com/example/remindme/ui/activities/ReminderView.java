@@ -144,7 +144,6 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
         if (activeReminder != null) {
 
             if (activeReminder.getTimeModel().isHasScheduledTime()) {
-
                 tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeModel().getScheduledTime()));
                 tv_reminder_AmPm.setText(StringHelper.toAmPm(activeReminder.getTimeModel().getScheduledTime()));
                 tv_reminder_date.setText(StringHelper.toWeekdayDate(this, activeReminder.getTimeModel().getScheduledTime()));
@@ -154,8 +153,11 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
                 tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeModel().getTime()));
                 tv_reminder_AmPm.setText(StringHelper.toAmPm(activeReminder.getTimeModel().getTime()));
                 tv_reminder_date.setText(StringHelper.toWeekdayDate(this, activeReminder.getTimeModel().getTime()));
-
             }
+
+            final AppCompatTextView tv_reminder_time_list_summary = findViewById(R.id.tv_reminder_time_list_summary);
+            tv_reminder_time_list_summary.setText(activeReminder.getTimeModel().toSpannableString(
+                    getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor))));
 
             if (!StringHelper.isNullOrEmpty(activeReminder.getName())) {
 
@@ -338,12 +340,14 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
 
             if (isMissedAlertsVisible) {
                 btn_expand_missed_alerts.setImageResource(R.drawable.ic_expand_up);
-                btn_expand_missed_alerts.setColorFilter(getResources().getColor(R.color.colorDangerLight), android.graphics.PorterDuff.Mode.SRC_IN);
+                btn_expand_missed_alerts.setColorFilter(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor)),
+                        android.graphics.PorterDuff.Mode.SRC_IN);
                 lv_reminder_details.setVisibility(View.GONE);
                 tv_missed_alerts.setVisibility(View.VISIBLE);
             } else {
                 btn_expand_missed_alerts.setImageResource(R.drawable.ic_expand_down);
-                btn_expand_missed_alerts.setColorFilter(getResources().getColor(R.color.colorSuccessLight), android.graphics.PorterDuff.Mode.SRC_IN);
+                btn_expand_missed_alerts.setColorFilter(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor)),
+                        android.graphics.PorterDuff.Mode.SRC_IN);
                 tv_missed_alerts.setVisibility(View.GONE);
                 lv_reminder_details.setVisibility(View.VISIBLE);
             }

@@ -18,7 +18,7 @@ import com.example.remindme.viewModels.TimeModel;
 
 import java.util.Calendar;
 
-public class HourlyTimeListDialog extends TimeListDialogBase {
+public class TimeListHourlyDialog extends TimeListDialogBase {
 
     public static final String TAG = "TimeListInputHourlyDialog";
 

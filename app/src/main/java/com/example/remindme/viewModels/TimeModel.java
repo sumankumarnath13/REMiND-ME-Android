@@ -1,6 +1,14 @@
 package com.example.remindme.viewModels;
 
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
+
+import com.example.remindme.helpers.AppSettingsHelper;
+import com.example.remindme.helpers.StringHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,7 +61,8 @@ public class TimeModel extends ViewModel {
 
     public void setTime(final Date value, final boolean isReadFromDb) {
 
-        if (value == null) return;
+        if (value == null)
+            return;
 
         if (isReadFromDb) {
 
@@ -123,7 +132,6 @@ public class TimeModel extends ViewModel {
         return isTimeChanged;
     }
 
-
     public Date getAlertTime(final boolean isIncludeSnooze) {
 
         if (isIncludeSnooze && getParent().getSnoozeModel().isEnable() && getParent().getSnoozeModel().isSnoozed()) { // If snoozed then next alert time will use it
@@ -138,7 +146,6 @@ public class TimeModel extends ViewModel {
 
     }
 
-
     private TimeListModes timeListMode = TimeListModes.NONE;
 
     public TimeListModes getTimeListMode() {
@@ -148,7 +155,6 @@ public class TimeModel extends ViewModel {
     public void setTimeListMode(TimeListModes timeListMode) {
         this.timeListMode = timeListMode;
     }
-
 
     private final ArrayList<Date> timeListTimes = new ArrayList<>();
 
@@ -172,7 +178,6 @@ public class TimeModel extends ViewModel {
         timeListTimes.addAll(times);
     }
 
-
     private final ArrayList<Integer> timeListHours = new ArrayList<>();
 
     public ArrayList<Integer> getTimeListHours() {
@@ -191,6 +196,73 @@ public class TimeModel extends ViewModel {
         timeListHours.addAll(values);
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        if (getTimeListMode() == TimeListModes.NONE) {
+            return "NONE";
+        }
+
+        final StringBuilder builder = new StringBuilder();
+
+        if (getTimeListMode() == TimeListModes.HOURLY) {
+
+            final Calendar c = Calendar.getInstance();
+            c.setTime(getTime());
+            final int min = c.get(Calendar.MINUTE);
+
+            if (AppSettingsHelper.getInstance().isUse24hourTime()) {
+                for (int i = 0; i < getTimeListHours().size(); i++) {
+                    builder.append(StringHelper.get24(getTimeListHours().get(i), min)).append(", ");
+                }
+            } else {
+                for (int i = 0; i < getTimeListHours().size(); i++) {
+                    builder.append(StringHelper.get12(getTimeListHours().get(i), min)).append(", ");
+                }
+            }
+        } else if (getTimeListMode() == TimeListModes.CUSTOM) {
+
+            final Calendar c = Calendar.getInstance();
+
+            if (AppSettingsHelper.getInstance().isUse24hourTime()) {
+                for (int i = 0; i < getTimeListTimes().size(); i++) {
+                    c.setTime(getTimeListTimes().get(i));
+                    builder.append(StringHelper.get24(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE))).append(", ");
+                }
+            } else {
+                for (int i = 0; i < getTimeListTimes().size(); i++) {
+                    c.setTime(getTimeListTimes().get(i));
+                    builder.append(StringHelper.get12(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE))).append(", ");
+                }
+            }
+        }
+
+        return StringHelper.trimEnd(builder.toString(), ", ");
+    }
+
+    public Spannable toSpannableString(int highlightColor) {
+        final Calendar c = Calendar.getInstance();
+        c.setTime(isHasScheduledTime() ? getScheduledTime() : getTime());
+
+        String foFind;
+        if (AppSettingsHelper.getInstance().isUse24hourTime()) {
+            foFind = StringHelper.get24(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
+        } else {
+            foFind = StringHelper.get12(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
+        }
+
+        final String timeList = toString();
+        final Spannable spannable = new SpannableString(timeList);
+
+        final int startIndex = timeList.indexOf(foFind);
+        if (startIndex < 0) {
+            return spannable;
+        }
+
+        final int endIndex = startIndex + foFind.length();
+        spannable.setSpan(new ForegroundColorSpan(highlightColor), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
 
     public static int getIntegerOfTimeListMode(TimeListModes mode) {
         switch (mode) {

@@ -18,6 +18,7 @@ import android.widget.SeekBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSeekBar;
@@ -35,13 +36,13 @@ import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.ui.fragments.dialogFragments.DateCalculatorDialog;
-import com.example.remindme.ui.fragments.dialogFragments.HourlyTimeListDialog;
 import com.example.remindme.ui.fragments.dialogFragments.NameDialog;
 import com.example.remindme.ui.fragments.dialogFragments.NoteDialog;
-import com.example.remindme.ui.fragments.dialogFragments.RandomTimeListDialog;
 import com.example.remindme.ui.fragments.dialogFragments.RepeatDialog;
 import com.example.remindme.ui.fragments.dialogFragments.SnoozeDialog;
+import com.example.remindme.ui.fragments.dialogFragments.TimeListAnyTimeDialog;
 import com.example.remindme.ui.fragments.dialogFragments.TimeListDialogBase;
+import com.example.remindme.ui.fragments.dialogFragments.TimeListHourlyDialog;
 import com.example.remindme.viewModels.ReminderModel;
 import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.RingingModel;
@@ -80,8 +81,9 @@ public class ReminderInput
     private AppCompatTextView tv_reminder_trigger_date;
     private AppCompatButton btn_reminder_time;
     private AppCompatButton btn_reminder_date;
-    private AppCompatButton btnTimeHours;
-    private AppCompatButton btnTimeList;
+    private AppCompatCheckBox chk_time_list_hours;
+    private AppCompatCheckBox chk_time_list_anytime;
+    private AppCompatTextView tv_reminder_time_list_summary;
 
     private AppCompatTextView tv_reminder_tone_summary;
     private AppCompatTextView tv_reminder_name_summary;
@@ -237,7 +239,6 @@ public class ReminderInput
                         refresh();
                     }, mHour, mMinute, AppSettingsHelper.getInstance().isUse24hourTime());
             timePickerDialog.show();
-            //timePickerDialog.;
         });
 
         final AppCompatButton btnCalculate = findViewById(R.id.btnCalculate);
@@ -246,28 +247,40 @@ public class ReminderInput
             calculatorDialog.show(getSupportFragmentManager(), DateCalculatorDialog.TAG);
         });
 
-        btnTimeHours = findViewById(R.id.btnTimeHours);
-        btnTimeHours.setOnClickListener(v -> {
+        tv_reminder_time_list_summary = findViewById(R.id.tv_reminder_time_list_summary);
 
-            if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
-                ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
-                return;
+        chk_time_list_hours = findViewById(R.id.chk_time_list_hours);
+        chk_time_list_hours.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isRefreshing() && isUserInteracted()) {
+
+                buttonView.setChecked(!buttonView.isChecked()); // Keep the check status as it is here. Real changes will occur once user return from dialog
+                setUserInteracted(false); // This is very important. Because its just making a dialog visible and is no real interaction.
+
+                if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
+                    ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
+                    return;
+                }
+
+                final TimeListHourlyDialog timeListHourlyDialog = new TimeListHourlyDialog();
+                timeListHourlyDialog.show(getSupportFragmentManager(), TimeListHourlyDialog.TAG);
             }
-
-            HourlyTimeListDialog hourlyTimeListDialog = new HourlyTimeListDialog();
-            hourlyTimeListDialog.show(getSupportFragmentManager(), HourlyTimeListDialog.TAG);
         });
 
-        btnTimeList = findViewById(R.id.btnTimeList);
-        btnTimeList.setOnClickListener(v -> {
+        chk_time_list_anytime = findViewById(R.id.chk_time_list_anytime);
+        chk_time_list_anytime.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isRefreshing() && isUserInteracted()) {
 
-            if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
-                ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
-                return;
+                buttonView.setChecked(!buttonView.isChecked()); // Keep the check status as it is here. Real changes will occur once user return from dialog
+                setUserInteracted(false); // This is very important. Because its just making a dialog visible and is no real interaction.
+
+                if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
+                    ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
+                    return;
+                }
+
+                final TimeListAnyTimeDialog timeListInputHourlyDialog = new TimeListAnyTimeDialog();
+                timeListInputHourlyDialog.show(getSupportFragmentManager(), TimeListAnyTimeDialog.TAG);
             }
-
-            RandomTimeListDialog timeListInputHourlyDialog = new RandomTimeListDialog();
-            timeListInputHourlyDialog.show(getSupportFragmentManager(), RandomTimeListDialog.TAG);
         });
 
         final LinearLayoutCompat mnu_reminder_name = findViewById(R.id.mnu_reminder_name);
@@ -296,7 +309,6 @@ public class ReminderInput
 
         final LinearLayoutCompat mnu_reminder_tone = findViewById(R.id.mnu_reminder_tone);
         mnu_reminder_tone.setOnClickListener(v -> {
-
             Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select alarm tone:");
@@ -321,19 +333,6 @@ public class ReminderInput
             reminderModel.getRingingModel().setVibrationEnabled(isChecked);
             refresh();
         });
-
-//        final AppCompatButton btn_reminder_save = findViewById(R.id.btn_reminder_save);
-//        btn_reminder_save.setOnClickListener(view -> {
-//            if (reminderModel.getTimeModel().getAlertTime(true).after(Calendar.getInstance().getTime())) {
-//                // the method "reminderModel.isHasDifferentTimeCalculated()" will ensure that time has not been changed than what was given.
-//                // And changes were made on other areas.
-//                // Otherwise it needs to clear snooze details.
-//                reminderModel.saveAndSetAlert(ReminderInput.this, true);
-//                finish();
-//            } else {
-//                ToastHelper.showShort(ReminderInput.this, "Cannot save reminder in past");
-//            }
-//        });
 
         final FloatingActionButton imgBtnSetReminder = findViewById(R.id.imgBtnSetReminder);
         imgBtnSetReminder.setOnClickListener(view -> {
@@ -449,14 +448,15 @@ public class ReminderInput
         btn_reminder_time.setText(StringHelper.toTimeAmPm(reminderModel.getTimeModel().getTime()));
         btn_reminder_date.setText(StringHelper.toWeekdayDate(this, reminderModel.getTimeModel().getTime()));
 
-
-        btnTimeHours.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDimText)));
-        btnTimeList.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDimText)));
+        chk_time_list_hours.setChecked(false);
+        chk_time_list_anytime.setChecked(false);
+        tv_reminder_time_list_summary.setText(reminderModel.getTimeModel().toSpannableString(
+                getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor))));
 
         if (reminderModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.HOURLY) {
-            btnTimeHours.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor)));
+            chk_time_list_hours.setChecked(true);
         } else if (reminderModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.CUSTOM) {
-            btnTimeList.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor)));
+            chk_time_list_anytime.setChecked(true);
         }
 
         if (reminderModel.getTimeModel().isHasScheduledTime()) {
@@ -540,14 +540,16 @@ public class ReminderInput
         if (isExtraInputsVisible) {
 
             btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_up);
-            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(R.color.colorDangerLight), android.graphics.PorterDuff.Mode.SRC_IN);
+            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor)),
+                    android.graphics.PorterDuff.Mode.SRC_IN);
 
             lv_reminder_extra_inputs.setVisibility(View.VISIBLE);
 
         } else {
 
             btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_down);
-            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(R.color.colorSuccessLight), android.graphics.PorterDuff.Mode.SRC_IN);
+            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor)),
+                    android.graphics.PorterDuff.Mode.SRC_IN);
             lv_reminder_extra_inputs.setVisibility(View.GONE);
 
         }
@@ -580,7 +582,8 @@ public class ReminderInput
 
     @Override
     public void setDateCalculatorDialogModel(Date newTime) {
-        if (newTime == null) return;
+        if (newTime == null)
+            return;
         reminderModel.getTimeModel().setTime(newTime);
         refresh();
     }
