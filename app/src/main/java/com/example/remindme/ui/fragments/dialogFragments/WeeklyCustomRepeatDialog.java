@@ -5,14 +5,15 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
 import com.example.remindme.helpers.StringHelper;
+import com.example.remindme.ui.fragments.dialogFragments.common.CustomRepeatDialogBase;
 import com.example.remindme.viewModels.RepeatModel;
 
 public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
@@ -22,18 +23,19 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        FragmentActivity activity = getActivity();
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        if (activity == null) return builder.create();
-        LayoutInflater inflater = activity.getLayoutInflater();
+        final FragmentActivity activity = getActivity();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        if (activity == null)
+            return builder.create();
+        final LayoutInflater inflater = activity.getLayoutInflater();
 
         final View view = inflater.inflate(R.layout.dialog_fragment_input_repeat_weeks_of_month, null);
 
-        final CheckBox chk_weekly_1 = view.findViewById(R.id.chk_weekly_1);
-        final CheckBox chk_weekly_2 = view.findViewById(R.id.chk_weekly_2);
-        final CheckBox chk_weekly_3 = view.findViewById(R.id.chk_weekly_3);
-        final CheckBox chk_weekly_4 = view.findViewById(R.id.chk_weekly_4);
-        final CheckBox chk_weekly_5 = view.findViewById(R.id.chk_weekly_5);
+        final AppCompatCheckBox chk_weekly_1 = view.findViewById(R.id.chk_weekly_1);
+        final AppCompatCheckBox chk_weekly_2 = view.findViewById(R.id.chk_weekly_2);
+        final AppCompatCheckBox chk_weekly_3 = view.findViewById(R.id.chk_weekly_3);
+        final AppCompatCheckBox chk_weekly_4 = view.findViewById(R.id.chk_weekly_4);
+        final AppCompatCheckBox chk_weekly_5 = view.findViewById(R.id.chk_weekly_5);
 
         final String weekDayName = StringHelper.toWeekday(getModel().getParent().getTimeModel().getAlertTime(false));
 
@@ -79,7 +81,7 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
                 getModel().getCustomWeeks().add(4);
             getModel().setEnabled(true);
             getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM);
-            getListener().setCustomRepeatDialogModel(getModel());
+            ((ICustomRepeatDialogListener) getListener()).setCustomRepeatDialogModel(getModel());
         }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
 
         });

@@ -2,7 +2,6 @@ package com.example.remindme.ui.fragments.dialogFragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +14,15 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.R;
+import com.example.remindme.helpers.ToastHelper;
+import com.example.remindme.ui.fragments.dialogFragments.common.DialogFragmentBase;
 import com.example.remindme.viewModels.SnoozeModel;
 import com.example.remindme.viewModels.factories.SnoozeViewModelFactory;
 
-public class SnoozeDialog extends RefreshableDialogFragmentBase {
+public class SnoozeDialog extends DialogFragmentBase {
+
     public static final String TAG = "SnoozeDialog";
 
-    private ISnoozeInputDialogListener listener;
     private SnoozeModel model;
     private AppCompatRadioButton rdo_reminder_snooze_m5;
     private AppCompatRadioButton rdo_reminder_snooze_m10;
@@ -31,17 +32,17 @@ public class SnoozeDialog extends RefreshableDialogFragmentBase {
     private AppCompatRadioButton rdo_reminder_snooze_r5;
     private AppCompatRadioButton rdo_reminder_snooze_rc;
 
-
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        try {
-            listener = (ISnoozeInputDialogListener) context;
-            model = new ViewModelProvider(this, new SnoozeViewModelFactory(listener.getSnoozeDialogModel())).get(SnoozeModel.class);
-        } catch (ClassCastException e) {
-            throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement ISnoozeInputDialogListener");
+        if ((ISnoozeInputDialogListener) getListener() == null) {
+            ToastHelper.showError(getContext(), "Listener incompatible!");
+            dismiss();
+            return;
         }
+
+        model = new ViewModelProvider(this, new SnoozeViewModelFactory(((ISnoozeInputDialogListener) getListener()).getSnoozeDialogModel())).get(SnoozeModel.class);
     }
 
     @NonNull
@@ -116,7 +117,7 @@ public class SnoozeDialog extends RefreshableDialogFragmentBase {
 
 
         builder.setView(view)
-                .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> listener.setSnoozeDialogModel(model))
+                .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> ((ISnoozeInputDialogListener) getListener()).setSnoozeDialogModel(model))
                 .setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
 
                 });

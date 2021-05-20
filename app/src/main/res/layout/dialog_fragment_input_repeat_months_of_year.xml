@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_16"
         android:layout_gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:minWidth="320dp">
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_monthly_jan"

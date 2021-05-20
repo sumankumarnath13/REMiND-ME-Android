@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.activities.Main">
+    tools:context=".ui.activities.ActivityMain">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"

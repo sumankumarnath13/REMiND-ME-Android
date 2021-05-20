@@ -1,14 +1,10 @@
 package com.example.remindme.ui.fragments.dialogFragments;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.RadioButton;
 
 import androidx.annotation.NonNull;
@@ -24,16 +20,26 @@ import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
+import com.example.remindme.ui.fragments.dialogFragments.common.CustomRepeatDialogBase;
+import com.example.remindme.ui.fragments.dialogFragments.common.DialogFragmentBase;
+import com.example.remindme.ui.fragments.dialogFragments.common.IDateTimePickerListener;
+import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeDatePickerDialog;
+import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerBlackDialog;
+import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerLightDialog;
 import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.TimeModel;
 import com.example.remindme.viewModels.factories.RepeatViewModelFactory;
 
 import java.util.Calendar;
+import java.util.Date;
 
-public class RepeatDialog extends RefreshableDialogFragmentBase implements CustomRepeatDialogBase.ICustomRepeatDialogListener {
+public class RepeatDialog extends DialogFragmentBase
+        implements
+        CustomRepeatDialogBase.ICustomRepeatDialogListener,
+        IDateTimePickerListener {
+
     public static final String TAG = "RepeatDialog";
 
-    private IRepeatInputDialogListener listener;
     private RepeatModel model;
     private RadioButton rdo_reminder_repeat_off;
 
@@ -53,14 +59,16 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
     private LinearLayoutCompat lv_repeat_end_time;
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            listener = (IRepeatInputDialogListener) context;
-            model = new ViewModelProvider(this, new RepeatViewModelFactory(listener.getRepeatDialogModel())).get(RepeatModel.class);
-        } catch (ClassCastException e) {
-            throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderRepeatListener");
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if ((IRepeatInputDialogListener) getListener() == null) {
+            ToastHelper.showError(getContext(), "Listener incompatible!");
+            dismiss();
+            return;
         }
+
+        model = new ViewModelProvider(this, new RepeatViewModelFactory(((IRepeatInputDialogListener) getListener()).getRepeatDialogModel())).get(RepeatModel.class);
     }
 
     @NonNull
@@ -74,7 +82,7 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
 
         final View view = inflater.inflate(R.layout.dialog_fragment_input_reminder_repeat, null);
         builder.setView(view).setTitle("Select Repeat Option")
-                .setPositiveButton(R.string.dialog_positive, (dialog, which) -> listener.setRepeatDialogModel(model))
+                .setPositiveButton(R.string.dialog_positive, (dialog, which) -> ((IRepeatInputDialogListener) getListener()).setRepeatDialogModel(model))
                 .setNegativeButton(R.string.dialog_negative, (dialog, which) -> {
 
                 });
@@ -185,61 +193,74 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
 
         tv_end_date_value = view.findViewById(R.id.tv_end_date_value);
         tv_end_date_value.setOnClickListener(v -> {
-            final Calendar alertTime = Calendar.getInstance();
+            final RemindMeDatePickerDialog dialog = new RemindMeDatePickerDialog();
+            dialog.show(getParentFragmentManager(), RemindMeDatePickerDialog.TAG);
 
-            if (model.isHasRepeatEnd()) {
-                alertTime.setTime(model.getRepeatEndDate());
-            } else {
-                //alertTime.setTime(model.getParent().getTimeModel().getAlertTime(false));
-                alertTime.set(Calendar.MONTH, 6);
-            }
-
-            final int mYear, mMonth, mDay;
-            mYear = alertTime.get(Calendar.YEAR);
-            mMonth = alertTime.get(Calendar.MONTH);
-            mDay = alertTime.get(Calendar.DAY_OF_MONTH);
-            final DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),
-                    AppSettingsHelper.getInstance().getDatePickerDialogStyleId(),
-                    (view12, year, monthOfYear, dayOfMonth) -> {
-                        alertTime.set(Calendar.YEAR, year);
-                        alertTime.set(Calendar.MONTH, monthOfYear);
-                        alertTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        alertTime.set(Calendar.SECOND, 0);
-                        alertTime.set(Calendar.MILLISECOND, 0);
-                        model.setRepeatEndDate(alertTime.getTime());
-                        refresh();
-                    }, mYear, mMonth, mDay);
-            datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis()); // This will cause extra title on the top of the regular date picker
-            datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
-            datePickerDialog.setTitle(null); // This line will try to solve the issue above
-            datePickerDialog.show();
+//            final Calendar alertTime = Calendar.getInstance();
+//
+//            if (model.isHasRepeatEnd()) {
+//                alertTime.setTime(model.getRepeatEndDate());
+//            } else {
+//                //alertTime.setTime(model.getParent().getTimeModel().getAlertTime(false));
+//                alertTime.set(Calendar.MONTH, 6);
+//            }
+//
+//            final int mYear, mMonth, mDay;
+//            mYear = alertTime.get(Calendar.YEAR);
+//            mMonth = alertTime.get(Calendar.MONTH);
+//            mDay = alertTime.get(Calendar.DAY_OF_MONTH);
+//            final DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),
+//                    AppSettingsHelper.getInstance().getDatePickerDialogStyleId(),
+//                    (view12, year, monthOfYear, dayOfMonth) -> {
+//                        alertTime.set(Calendar.YEAR, year);
+//                        alertTime.set(Calendar.MONTH, monthOfYear);
+//                        alertTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+//                        alertTime.set(Calendar.SECOND, 0);
+//                        alertTime.set(Calendar.MILLISECOND, 0);
+//                        model.setRepeatEndDate(alertTime.getTime());
+//                        refresh();
+//                    }, mYear, mMonth, mDay);
+//
+//            datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis()); // This will cause extra title on the top of the regular date picker
+//            datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
+//            datePickerDialog.setTitle(null); // This line will try to solve the issue above
+//            datePickerDialog.show();
         });
 
         tv_end_time_value = view.findViewById(R.id.tv_end_time_value);
         tv_end_time_value.setOnClickListener(v -> {
-            final Calendar alertTime = Calendar.getInstance();
 
-            if (model.isHasRepeatEnd()) {
-                alertTime.setTime(model.getRepeatEndDate());
+            if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.BLACK) {
+                final RemindMeTimePickerBlackDialog dialog = new RemindMeTimePickerBlackDialog();
+                dialog.show(getParentFragmentManager(), RemindMeTimePickerBlackDialog.TAG);
             } else {
-                //alertTime.setTime(model.getParent().getTimeModel().getAlertTime(false));
-                alertTime.set(Calendar.MONTH, 6);
+                final RemindMeTimePickerLightDialog dialog = new RemindMeTimePickerLightDialog();
+                dialog.show(getParentFragmentManager(), RemindMeTimePickerLightDialog.TAG);
             }
 
-            final int mHour, mMinute;
-            mHour = alertTime.get(Calendar.HOUR_OF_DAY);
-            mMinute = alertTime.get(Calendar.MINUTE);
-            final TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),
-                    AppSettingsHelper.getInstance().getTimePickerDialogStyleId(),
-                    (view1, hourOfDay, minute) -> {
-                        alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        alertTime.set(Calendar.MINUTE, minute);
-                        alertTime.set(Calendar.SECOND, 0); // Setting second to 0 is important.
-                        alertTime.set(Calendar.MILLISECOND, 0);
-                        model.setRepeatEndDate(alertTime.getTime());
-                        refresh();
-                    }, mHour, mMinute, false);
-            timePickerDialog.show();
+//            final Calendar alertTime = Calendar.getInstance();
+//
+//            if (model.isHasRepeatEnd()) {
+//                alertTime.setTime(model.getRepeatEndDate());
+//            } else {
+//                //alertTime.setTime(model.getParent().getTimeModel().getAlertTime(false));
+//                alertTime.set(Calendar.MONTH, 6);
+//            }
+//
+//            final int mHour, mMinute;
+//            mHour = alertTime.get(Calendar.HOUR_OF_DAY);
+//            mMinute = alertTime.get(Calendar.MINUTE);
+//            final TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),
+//                    AppSettingsHelper.getInstance().getTimePickerDialogStyleId(),
+//                    (view1, hourOfDay, minute) -> {
+//                        alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+//                        alertTime.set(Calendar.MINUTE, minute);
+//                        alertTime.set(Calendar.SECOND, 0); // Setting second to 0 is important.
+//                        alertTime.set(Calendar.MILLISECOND, 0);
+//                        model.setRepeatEndDate(alertTime.getTime());
+//                        refresh();
+//                    }, mHour, mMinute, false);
+//            timePickerDialog.show();
         });
 
         lv_repeat_end_date = view.findViewById(R.id.lv_repeat_end_date);
@@ -346,6 +367,22 @@ public class RepeatDialog extends RefreshableDialogFragmentBase implements Custo
     @Override
     public RepeatModel getCustomRepeatDialogModel() {
         return model;
+    }
+
+    @Override
+    public void setDateTimePicker(String tag, Date dateTime) {
+        model.setRepeatEndDate(dateTime);
+        refresh();
+    }
+
+    @Override
+    public Date getDateTimePicker(String tag) {
+        return model.getRepeatEndDate();
+    }
+
+    @Override
+    public Date getMinimumDateTime(String tag) {
+        return model.getParent().getTimeModel().getTime();
     }
 
     public interface IRepeatInputDialogListener {

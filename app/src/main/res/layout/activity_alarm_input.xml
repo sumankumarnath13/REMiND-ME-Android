@@ -251,6 +251,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingVertical="@dimen/dp_16"
+                    android:background="@drawable/border_vertical"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -284,7 +285,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:background="@drawable/border_vertical"
+                    android:background="@drawable/border_bottom_with_ripple"
                     android:paddingVertical="@dimen/dp_8"
                     android:orientation="vertical">
 
@@ -546,7 +547,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
-
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <!-- VIBRATE -->
@@ -598,7 +598,6 @@
     </androidx.core.widget.NestedScrollView>
 
     <!-- Footer aligned to bottom -->
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/imgBtnSetReminder"
         android:layout_width="wrap_content"

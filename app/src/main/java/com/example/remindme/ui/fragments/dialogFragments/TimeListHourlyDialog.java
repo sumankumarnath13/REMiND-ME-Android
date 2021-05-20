@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
+import com.example.remindme.ui.fragments.dialogFragments.common.TimeListDialogBase;
 import com.example.remindme.viewModels.TimeModel;
 
 import java.util.Calendar;
@@ -266,7 +267,7 @@ public class TimeListHourlyDialog extends TimeListDialogBase {
                         getModel().setTimeListMode(TimeModel.TimeListModes.NONE);
                     }
 
-                    getListener().setTimeListDialogModel(getModel());
+                    ((ITimeListListener) getListener()).setTimeListDialogModel(getModel());
 
                 }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
 

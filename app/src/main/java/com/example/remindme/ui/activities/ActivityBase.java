@@ -33,7 +33,7 @@ public class ActivityBase extends RefreshableActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if (this instanceof Main) {
+        if (this instanceof ActivityMain) {
 
             final IntentFilter intentFilter = new IntentFilter(Settings.THEME_CHANGE_INTENT_ACTION);
             registerReceiver(themeChangeReceiver, intentFilter);

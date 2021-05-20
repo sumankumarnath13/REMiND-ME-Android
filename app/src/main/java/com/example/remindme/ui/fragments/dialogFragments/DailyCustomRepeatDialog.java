@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
+import com.example.remindme.ui.fragments.dialogFragments.common.CustomRepeatDialogBase;
 import com.example.remindme.viewModels.RepeatModel;
 
 import java.util.Calendar;
@@ -87,7 +88,7 @@ public class DailyCustomRepeatDialog extends CustomRepeatDialogBase {
                         getModel().getCustomDays().add(Calendar.SATURDAY);
                     getModel().setEnabled(true);
                     getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.DAILY_CUSTOM);
-                    getListener().setCustomRepeatDialogModel(getModel());
+                    ((ICustomRepeatDialogListener) getListener()).setCustomRepeatDialogModel(getModel());
 
                 }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
 

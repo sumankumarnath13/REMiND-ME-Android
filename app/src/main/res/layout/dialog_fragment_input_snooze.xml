@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_16"
+        android:minWidth="320dp"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.SwitchCompat
@@ -59,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="?attr/themeDimText"
-            android:text="@string/snooze_repeat_heading"></androidx.appcompat.widget.AppCompatTextView>
+            android:text="@string/snooze_repeat_heading" />
 
         <RadioGroup
             android:id="@+id/rg_snooze_repeat_options"

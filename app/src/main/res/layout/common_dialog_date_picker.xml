@@ -3,21 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:orientation="horizontal"
-    android:minWidth="320dp">
+    android:orientation="vertical">
 
-    <NumberPicker
-        android:id="@+id/value_picker"
-        android:textSize="@dimen/font_size_large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <NumberPicker
-        android:id="@+id/unit_picker"
-        android:textSize="@dimen/font_size_large"
+    <DatePicker
+        android:id="@+id/date_picker"
+        android:theme="@style/DatePickerStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
-
-

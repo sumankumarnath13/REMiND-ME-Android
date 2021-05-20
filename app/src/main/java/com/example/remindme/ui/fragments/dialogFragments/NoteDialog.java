@@ -3,7 +3,6 @@ package com.example.remindme.ui.fragments.dialogFragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -17,17 +16,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
+import com.example.remindme.helpers.ToastHelper;
+import com.example.remindme.ui.fragments.dialogFragments.common.DialogFragmentBase;
 
 import java.util.List;
 
-public class NoteDialog extends DialogFragment {
+public class NoteDialog extends DialogFragmentBase {
     public static final String TAG = "NoteDialog";
 
-    private INoteInputDialogListener listener;
     private String note;
     private static final int SPEECH_REQUEST_CODE = 117;
     private AppCompatEditText txt_reminder_note;
@@ -35,15 +34,21 @@ public class NoteDialog extends DialogFragment {
     private static final int NOTE_MAX_LENGTH = 500;
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        try {
-            listener = (INoteInputDialogListener) context;
-            note = listener.getNoteDialogModel();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement IReminderNoteListener");
+        if ((INoteInputDialogListener) getListener() == null) {
+            ToastHelper.showError(getContext(), "Listener incompatible!");
+            dismiss();
+            return;
         }
+
+        note = ((INoteInputDialogListener) getListener()).getNoteDialogModel();
+    }
+
+    @Override
+    protected void onUIRefresh() {
+
     }
 
     @Override
@@ -105,7 +110,7 @@ public class NoteDialog extends DialogFragment {
         });
 
         builder.setView(view).setTitle("Reminder Note").setPositiveButton("OK", (dialog, which) ->
-                listener.setNoteDialogModel(
+                ((INoteInputDialogListener) getListener()).setNoteDialogModel(
                         txt_reminder_note.getText() == null ? null : txt_reminder_note.getText().toString()))
                 .setNegativeButton("CANCEL", (dialog, which) -> {
                 });

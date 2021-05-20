@@ -132,12 +132,4 @@ public class AppSettingsHelper {
         }, realm::close);
     }
 
-    public int getDatePickerDialogStyleId() {
-        return getTheme() == Themes.BLACK ? R.style.DatePickerStyle : R.style.DatePickerStyleLight;
-    }
-
-    public int getTimePickerDialogStyleId() {
-        return getTheme() == Themes.BLACK ? R.style.TimePickerStyle : R.style.TimePickerStyle;
-    }
-
 }

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="@dimen/dp_16"
+        android:minWidth="320dp"
         android:gravity="center">
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -35,49 +36,49 @@
             <!--                android:layout_marginVertical="@dimen/dp_3"-->
             <!--                android:background="?attr/borderColor" />-->
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeSuccessColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeSuccessColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeSuccessColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeSuccessColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeSuccessColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeSuccessColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -91,37 +92,37 @@
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeSuccessColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeSuccessColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeSuccessColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeSuccessColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeSuccessColor" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -144,93 +145,93 @@
             <!--                android:layout_marginVertical="@dimen/dp_3"-->
             <!--                android:background="?attr/borderColor" />-->
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeDangerColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeDangerColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeDangerColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeDangerColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeDangerColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_17"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeDangerColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeDangerColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_19"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeDangerColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeDangerColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_21"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeDangerColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_22"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeDangerColor" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chk_daily_23"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
                 app:buttonTint="?attr/themeDangerColor" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
 

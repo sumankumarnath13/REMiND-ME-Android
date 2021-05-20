@@ -1,13 +1,10 @@
 package com.example.remindme.ui.fragments.dialogFragments;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.NumberPicker;
 
 import androidx.annotation.NonNull;
@@ -17,19 +14,20 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
-import com.example.remindme.helpers.AppSettingsHelper;
-import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
+import com.example.remindme.helpers.ToastHelper;
+import com.example.remindme.ui.fragments.dialogFragments.common.DialogFragmentBase;
+import com.example.remindme.ui.fragments.dialogFragments.common.IDateTimePickerListener;
+import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeDatePickerDialog;
 import com.example.remindme.viewModels.RepeatModel;
 
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
+public class DateCalculatorDialog extends DialogFragmentBase implements IDateTimePickerListener {
 
     public static final String TAG = "DateCalculatorDialog";
 
-    private ITimeCalculatorListener listener;
     private final Calendar calendar = Calendar.getInstance();
     private final Calendar resultCalendar = Calendar.getInstance();
     private AppCompatButton btn_reminder_date;
@@ -37,17 +35,17 @@ public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
     private NumberPicker unit_picker;
     private AppCompatTextView tv_reminder_date;
 
-
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            listener = (ITimeCalculatorListener) context;
-            if (listener.getDateCalculatorDialogModel() == null) return;
-            calendar.setTime(listener.getDateCalculatorDialogModel());
-        } catch (ClassCastException e) {
-            throw new ClassCastException(e.toString() + " : " + context.toString() + " must implement ITimeCalculatorListener");
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if ((ITimeCalculatorListener) getListener() == null) {
+            ToastHelper.showError(getContext(), "Listener incompatible!");
+            dismiss();
+            return;
         }
+
+        calendar.setTime(((ITimeCalculatorListener) getListener()).getDateCalculatorDialogModel());
     }
 
     @NonNull
@@ -65,32 +63,8 @@ public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
         btn_reminder_date.setText(StringHelper.toWeekdayDate(this.getContext(), calendar.getTime()));
 
         btn_reminder_date.setOnClickListener(view12 -> {
-            // This calculator suppose to help user getting their target time by adding days/months from their recalled date.
-            // So, its allowed to go backward up to return value of "getMaxForTimeUnit" to eventually get result of present after adding time.
-            // Its expected that remembering an event 3 years (getMaxForTimeUnit return for YEAR unit) back is more than sufficient.
-            final Calendar minDateCalendar = Calendar.getInstance();
-            minDateCalendar.add(Calendar.YEAR, -1 * RepeatModel.getMaxForTimeUnit(RepeatModel.TimeUnits.YEARS)); // (-1) to gho backward.
-
-            final int mYear, mMonth, mDay;
-            mYear = calendar.get(Calendar.YEAR);
-            mMonth = calendar.get(Calendar.MONTH);
-            mDay = calendar.get(Calendar.DAY_OF_MONTH);
-            final DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                    AppSettingsHelper.getInstance().getDatePickerDialogStyleId(),
-                    (view1, year, monthOfYear, dayOfMonth) -> {
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, monthOfYear);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        refresh();
-                    }, mYear, mMonth, mDay);
-            datePickerDialog.getDatePicker().setMinDate(minDateCalendar.getTimeInMillis()); // This will cause extra title on the top of the regular date picker
-            datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
-            datePickerDialog.setTitle(null); // This line will try to solve the issue above
-            datePickerDialog.show();
-
-            if (OsHelper.isLollipopOrLater()) {
-                datePickerDialog.getDatePicker().setFirstDayOfWeek(AppSettingsHelper.getInstance().getFirstDayOfWeek());
-            }
+            final RemindMeDatePickerDialog dialog = new RemindMeDatePickerDialog();
+            dialog.show(getParentFragmentManager(), RemindMeDatePickerDialog.TAG);
         });
 
         value_picker = view.findViewById(R.id.value_picker);
@@ -120,7 +94,7 @@ public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
         value_picker.setValue(1);
 
         builder.setView(view).setPositiveButton("Use Result", (dialog, which) ->
-                listener.setDateCalculatorDialogModel(resultCalendar.getTime()))
+                ((ITimeCalculatorListener) getListener()).setDateCalculatorDialogModel(resultCalendar.getTime()))
                 .setNegativeButton(getString(R.string.dialog_negative),
                         (dialog, which) -> {
                             //DO nothing
@@ -155,6 +129,27 @@ public class DateCalculatorDialog extends RefreshableDialogFragmentBase {
 
         tv_reminder_date.setText(StringHelper.toWeekdayDate(this.getContext(), resultCalendar.getTime()));
 
+    }
+
+    @Override
+    public void setDateTimePicker(String tag, Date dateTime) {
+        calendar.setTime(dateTime);
+        refresh();
+    }
+
+    @Override
+    public Date getDateTimePicker(String tag) {
+        return calendar.getTime();
+    }
+
+    @Override
+    public Date getMinimumDateTime(String tag) {
+        // This calculator suppose to help user getting their target time by adding days/months from their recalled date.
+        // So, its allowed to go backward up to return value of "getMaxForTimeUnit" to eventually get result of present after adding time.
+        // Its expected that remembering an event 3 years (getMaxForTimeUnit return for YEAR unit) back is more than sufficient.
+        final Calendar minDateCalendar = Calendar.getInstance();
+        minDateCalendar.add(Calendar.YEAR, -1 * RepeatModel.getMaxForTimeUnit(RepeatModel.TimeUnits.YEARS)); // (-1) to gho backward.
+        return minDateCalendar.getTime();
     }
 
     public interface ITimeCalculatorListener {

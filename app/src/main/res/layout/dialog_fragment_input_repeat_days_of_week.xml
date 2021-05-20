@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -9,52 +9,53 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_16"
+        android:minWidth="320dp"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical">
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_sun"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
             android:text="@string/repeat_daily_custom_sun" />
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_mon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
             android:text="@string/repeat_daily_custom_mon" />
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_tue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
             android:text="@string/repeat_daily_custom_tue" />
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_wed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
             android:text="@string/repeat_daily_custom_wed" />
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_thu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
             android:text="@string/repeat_daily_custom_thu" />
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_fri"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
             android:text="@string/repeat_daily_custom_fri" />
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_sat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,5 +64,5 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
 

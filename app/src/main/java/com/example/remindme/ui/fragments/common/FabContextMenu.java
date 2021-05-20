@@ -63,7 +63,7 @@ public class FabContextMenu extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        final View view = inflater.inflate(R.layout.menu_fragment_fab_context_menu, container, false);
+        final View view = inflater.inflate(R.layout.common_fragment_fab_context_menu, container, false);
 
         rotateOpen = AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_open_anim);
         rotateOpen.setDuration(117);

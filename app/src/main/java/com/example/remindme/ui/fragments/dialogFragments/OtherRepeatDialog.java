@@ -12,12 +12,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
+import com.example.remindme.ui.fragments.dialogFragments.common.CustomRepeatDialogBase;
 import com.example.remindme.viewModels.RepeatModel;
 
 public class OtherRepeatDialog extends CustomRepeatDialogBase {
 
     public static final String TAG = "OtherRepeatDialog";
-
 
     @NonNull
     @Override
@@ -52,7 +52,7 @@ public class OtherRepeatDialog extends CustomRepeatDialogBase {
             getModel().setRepeatCustom(unit_picker.getValue(), value_picker.getValue());
 
             getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.OTHER);
-            getListener().setCustomRepeatDialogModel(getModel());
+            ((ICustomRepeatDialogListener) getListener()).setCustomRepeatDialogModel(getModel());
 
         }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
 

@@ -21,7 +21,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
 
-public class Main extends ActivityBase implements FabContextMenu.iFabContextMenuListener, AdapterRecyclerReminder.iDataChangeListener {
+public class ActivityMain extends ActivityBase implements FabContextMenu.iFabContextMenuListener, AdapterRecyclerReminder.iDataChangeListener {
 
     private static final String C_ACTION_NEW = "NEW";
     private static final String C_ACTION_EDIT = "EDIT";
@@ -128,7 +128,7 @@ public class Main extends ActivityBase implements FabContextMenu.iFabContextMenu
     public void onFabContextMenuAction(String clickAction, String clickValue) {
         switch (clickAction) {
             case C_ACTION_NEW:
-                final Intent addNewReminderActivity = new Intent(Main.this, ReminderInput.class);
+                final Intent addNewReminderActivity = new Intent(ActivityMain.this, ReminderInput.class);
                 startActivity(addNewReminderActivity);
                 break;
             case C_ACTION_EDIT:

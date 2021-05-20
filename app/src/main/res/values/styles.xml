@@ -459,9 +459,6 @@
         <item name="colorControlNormal">
             ?attr/themeDisabledControlColor
         </item>
-        <item name="dialogCornerRadius">
-            @dimen/dp_8
-        </item>
     </style>
 
     <!--    <style name="DialogButtonBarStyle" parent="Widget.AppCompat.ButtonBar.AlertDialog">-->
@@ -511,59 +508,137 @@
         </item>
     </style>
 
-    <style name="TimePickerStyle" parent="DialogStyle">
-        <item name="colorAccent">
-            ?attr/themeDialogBackgroundColor
-        </item> <!-- Change Header background. Also Changes OK/Cancel button color if not overridden by android:textColor-->
-        <item name="android:windowBackground">
-            ?attr/themeDialogBackgroundColor
-        </item> <!-- Changes background color -->
+    <style name="DialogButtonStyle" parent="android:TextAppearance">
         <item name="android:textColor">
             ?attr/themeSoothingText
+        </item>
+        <item name="android:textSize">
+            @dimen/font_size_medium
+        </item>
+    </style>
+
+    <style name="TimePickerStyleBlack" parent="Theme.AppCompat.Dialog">
+
+        <item name="buttonStyle">
+            @style/DialogButtonStyle
+        </item> <!-- *** WORKED -->
+
+        <!--        <item name="buttonBarButtonStyle">@style/xxx</item> *** NOT WORKED -->
+        <!--        <item name="buttonBarStyle">@style/xxx</item> *** NOT WORKED -->
+        <!--        <item name="buttonBarNegativeButtonStyle">@style/xxx</item> *** NOT WORKED -->
+        <!--        <item name="buttonBarPositiveButtonStyle">@style/xxx</item> *** NOT WORKED -->
+
+        <!--        <item name="editTextStyle">-->
+        <!--            @style/xxx-->
+        <!--        </item>&lt;!&ndash; The hour:min text input boxes for digital input mode &ndash;&gt;-->
+
+        <item name="colorControlHighlight">
+            @color/colorAccent
+        </item>
+
+        <item name="colorControlNormal">
+            @color/colorDisabledControl
+        </item><!-- digital time mode AM/PM drop down arrow color -->
+
+        <!--        <item name="colorAccent">@color/colorDialogBackground-->
+        <!--        </item> &lt;!&ndash; Change Header background. Also Changes OK/Cancel button color if not overridden by android:textColor&ndash;&gt;-->
+
+        <!--        <item name="android:windowBackground">@color/colorDialogBackground-->
+        <!--        </item> &lt;!&ndash; Changes background color &ndash;&gt;-->
+
+        <item name="android:textColor">
+            @color/colorSoothingText
         </item> <!-- Dialog OK, cancel button colors -->
+
         <item name="colorControlActivated">
-            ?attr/themeAccentColor
+            @color/colorSuccess
         </item> <!-- Selected item/date color/cursor color -->
+
         <item name="android:textColorPrimary">
-            ?attr/themeSoothingText
-        </item> <!-- month Hour/Min selected color controls -->
+            @color/colorSoothingText
+        </item> <!-- month Hour/Min selected color controls in header /  -->
+
         <item name="android:textColorPrimaryInverse">
-            ?attr/themeSoothingText
-        </item> <!-- Title's year/date color when selected -->
+            @color/colorSoothingText
+        </item> <!-- Number selected text color in dial/  -->
 
         <item name="android:textColorSecondary">
-            ?attr/themeDimText
+            @color/colorSoothingText
         </item> <!-- 24 mode hour color -->
 
         <item name="android:textColorSecondaryInverse">
-            ?attr/themeDimText
-        </item> <!-- month Hour/Min not selected color controls -->
-
-        <!--        <item name="colorControlNormal">-->
-        <!--            ?attr/themeSuccessColor-->
-        <!--        </item> &lt;!&ndash; digital time mode AM/PM drop down arrow color &ndash;&gt;-->
+            @color/colorDimText
+        </item> <!-- month Hour/Min/AM/PM not selected color controls in header -->
 
         <item name="android:colorBackground">
-            ?attr/themeBackgroundColor
+            @color/colorBackground
         </item> <!-- digital time mode AM/PM drop down background color -->
 
         <item name="tint">
-            ?attr/themeAccentColor
+            @color/colorAccent
         </item> <!-- Analog to digital mode change button color -->
-
-
-        <item name="backgroundOverlayColorAlpha">
-            0.5
-        </item>
-
-
-        <item name="android:headerBackground">
-            ?attr/themeSuccessColor
-        </item>
 
     </style>
 
+    <style name="TimePickerStyleLight" parent="Theme.AppCompat.Light.Dialog">
+
+        <item name="buttonStyle">
+            @style/DialogButtonStyle
+        </item> <!-- *** WORKED -->
+
+        <item name="colorControlHighlight">
+            @color/colorAccentLight
+        </item>
+
+        <item name="colorControlNormal">
+            @color/colorDisabledControlLight
+        </item><!-- digital time mode AM/PM drop down arrow color -->
+
+        <item name="colorAccent">
+            @color/colorDialogBackgroundLight
+        </item> <!-- Change Header background. Also Changes OK/Cancel button color if not overridden by android:textColor-->
+
+        <item name="android:windowBackground">
+            @color/colorDialogBackgroundLight
+        </item> <!-- Changes background color -->
+
+        <item name="android:textColor">
+            @color/colorSoothingTextLight
+        </item> <!-- Dialog OK, cancel button colors -->
+
+        <item name="colorControlActivated">
+            @color/colorSuccessLight
+        </item> <!-- Selected item/date color/cursor color -->
+
+        <item name="android:textColorPrimary">
+            @color/colorSoothingTextLight
+        </item> <!-- month Hour/Min selected color controls -->
+
+        <item name="android:textColorPrimaryInverse">
+            @color/colorSoothingTextLight
+        </item> <!-- Title's year/date color when selected -->
+
+        <item name="android:textColorSecondary">
+            @color/colorDimTextLight
+        </item> <!-- 24 mode hour color -->
+
+        <item name="android:textColorSecondaryInverse">
+            @color/colorDimTextLight
+        </item> <!-- month Hour/Min not selected color controls -->
+
+        <item name="android:colorBackground">
+            @color/colorBackgroundLight
+        </item> <!-- digital time mode AM/PM drop down background color -->
+
+        <item name="tint">
+            @color/colorAccentLight
+        </item> <!-- Analog to digital mode change button color -->
+
+    </style>
+
+
     <style name="DatePickerStyle" parent="DialogStyle">
+
         <item name="colorAccent">
             ?attr/themeDialogBackgroundColor
         </item> <!-- Change Header background -->
@@ -591,15 +666,7 @@
         <item name="colorControlNormal">
             ?attr/themeDisabledControlColor
         </item> <!-- Year selection scroll color -->
-    </style>
 
-    <style name="DatePickerStyleLight" parent="DatePickerStyle">
-        <item name="android:headerBackground">
-            ?attr/themeDialogBackgroundColor
-        </item> <!-- Change Header background -->
-        <item name="colorControlActivated">
-            ?attr/themeWarningColor
-        </item> <!-- Selected item/date color -->
     </style>
 
 </resources>

@@ -1,7 +1,5 @@
 package com.example.remindme.ui.activities;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -9,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ScrollView;
@@ -41,8 +38,12 @@ import com.example.remindme.ui.fragments.dialogFragments.NoteDialog;
 import com.example.remindme.ui.fragments.dialogFragments.RepeatDialog;
 import com.example.remindme.ui.fragments.dialogFragments.SnoozeDialog;
 import com.example.remindme.ui.fragments.dialogFragments.TimeListAnyTimeDialog;
-import com.example.remindme.ui.fragments.dialogFragments.TimeListDialogBase;
 import com.example.remindme.ui.fragments.dialogFragments.TimeListHourlyDialog;
+import com.example.remindme.ui.fragments.dialogFragments.common.IDateTimePickerListener;
+import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeDatePickerDialog;
+import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerBlackDialog;
+import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerLightDialog;
+import com.example.remindme.ui.fragments.dialogFragments.common.TimeListDialogBase;
 import com.example.remindme.viewModels.ReminderModel;
 import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.RingingModel;
@@ -61,6 +62,7 @@ public class ReminderInput
         ActivityBase
         implements
         AdapterView.OnItemSelectedListener,
+        IDateTimePickerListener,
         TimeListDialogBase.ITimeListListener,
         NameDialog.INameInputDialogListener,
         NoteDialog.INoteInputDialogListener,
@@ -72,6 +74,9 @@ public class ReminderInput
     private static final int NOTE_SPEECH_REQUEST_CODE = 113;
     private static final int RINGTONE_DIALOG_REQ_CODE = 117;
     private static final String MORE_INPUT_UI_STATE = "MORE_INPUT";
+
+    private static final String REMINDER_CALENDAR = "REMINDER_CALENDAR";
+    private static final String REMINDER_CALCULATOR = "REMINDER_CALCULATOR";
 
     private boolean isExtraInputsVisible;
     private ReminderModel reminderModel = null;
@@ -192,58 +197,27 @@ public class ReminderInput
         });
 
         btn_reminder_date.setOnClickListener(view -> {
-            final Calendar alertTime = Calendar.getInstance();
-            //final Calendar currentTime = Calendar.getInstance();
-            alertTime.setTime(reminderModel.getTimeModel().getTime());
-            final int mYear, mMonth, mDay;
-            mYear = alertTime.get(Calendar.YEAR);
-            mMonth = alertTime.get(Calendar.MONTH);
-            mDay = alertTime.get(Calendar.DAY_OF_MONTH);
-            final DatePickerDialog datePickerDialog = new DatePickerDialog(ReminderInput.this,
-                    AppSettingsHelper.getInstance().getDatePickerDialogStyleId(),
-                    (view12, year, monthOfYear, dayOfMonth) -> {
-                        alertTime.set(Calendar.YEAR, year);
-                        alertTime.set(Calendar.MONTH, monthOfYear);
-                        alertTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        alertTime.set(Calendar.SECOND, 0);
-                        alertTime.set(Calendar.MILLISECOND, 0);
-                        reminderModel.getTimeModel().setTime(alertTime.getTime());
-                        refresh();
-                    }, mYear, mMonth, mDay);
-            datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis()); // This will cause extra title on the top of the regular date picker
-            datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
-            datePickerDialog.setTitle(null); // This line will try to solve the issue above
-            datePickerDialog.show();
 
-            if (OsHelper.isLollipopOrLater()) {
-                datePickerDialog.getDatePicker().setFirstDayOfWeek(AppSettingsHelper.getInstance().getFirstDayOfWeek());
-            }
+            final RemindMeDatePickerDialog dialog = new RemindMeDatePickerDialog();
+            dialog.show(getSupportFragmentManager(), REMINDER_CALENDAR);
+
         });
 
         btn_reminder_time.setOnClickListener(view -> {
-            final Calendar alertTime = Calendar.getInstance();
-            //final Calendar currentTime = Calendar.getInstance();
-            alertTime.setTime(reminderModel.getTimeModel().getTime());
-            final int mHour, mMinute;
-            mHour = alertTime.get(Calendar.HOUR_OF_DAY);
-            mMinute = alertTime.get(Calendar.MINUTE);
 
-            final TimePickerDialog timePickerDialog = new TimePickerDialog(ReminderInput.this,
-                    AppSettingsHelper.getInstance().getTimePickerDialogStyleId(),
-                    (view1, hourOfDay, minute) -> {
-                        alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        alertTime.set(Calendar.MINUTE, minute);
-                        alertTime.set(Calendar.SECOND, 0);
-                        alertTime.set(Calendar.MILLISECOND, 0);
-                        reminderModel.getTimeModel().setTime(alertTime.getTime());
-                        refresh();
-                    }, mHour, mMinute, AppSettingsHelper.getInstance().isUse24hourTime());
-            timePickerDialog.show();
+            if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.BLACK) {
+                final RemindMeTimePickerBlackDialog dialog = new RemindMeTimePickerBlackDialog();
+                dialog.show(getSupportFragmentManager(), REMINDER_CALCULATOR);
+            } else {
+                final RemindMeTimePickerLightDialog dialog = new RemindMeTimePickerLightDialog();
+                dialog.show(getSupportFragmentManager(), REMINDER_CALCULATOR);
+            }
+
         });
 
         final AppCompatButton btnCalculate = findViewById(R.id.btnCalculate);
         btnCalculate.setOnClickListener(v -> {
-            DateCalculatorDialog calculatorDialog = new DateCalculatorDialog();
+            final DateCalculatorDialog calculatorDialog = new DateCalculatorDialog();
             calculatorDialog.show(getSupportFragmentManager(), DateCalculatorDialog.TAG);
         });
 
@@ -285,31 +259,31 @@ public class ReminderInput
 
         final LinearLayoutCompat mnu_reminder_name = findViewById(R.id.mnu_reminder_name);
         mnu_reminder_name.setOnClickListener(v -> {
-            NameDialog nameInput = new NameDialog();
+            final NameDialog nameInput = new NameDialog();
             nameInput.show(getSupportFragmentManager(), NameDialog.TAG);
         });
 
         final LinearLayoutCompat mnu_reminder_note = findViewById(R.id.mnu_reminder_note);
         mnu_reminder_note.setOnClickListener(v -> {
-            NoteDialog noteInput = new NoteDialog();
+            final NoteDialog noteInput = new NoteDialog();
             noteInput.show(getSupportFragmentManager(), NoteDialog.TAG);
         });
 
         final LinearLayoutCompat mnu_reminder_repeat = findViewById(R.id.mnu_reminder_repeat);
         mnu_reminder_repeat.setOnClickListener(v -> {
-            RepeatDialog repeatInput = new RepeatDialog();
+            final RepeatDialog repeatInput = new RepeatDialog();
             repeatInput.show(getSupportFragmentManager(), RepeatDialog.TAG);
         });
 
         final LinearLayoutCompat mnu_reminder_snooze = findViewById(R.id.mnu_reminder_snooze);
         mnu_reminder_snooze.setOnClickListener(v -> {
-            SnoozeDialog snoozeInput = new SnoozeDialog();
+            final SnoozeDialog snoozeInput = new SnoozeDialog();
             snoozeInput.show(getSupportFragmentManager(), SnoozeDialog.TAG);
         });
 
         final LinearLayoutCompat mnu_reminder_tone = findViewById(R.id.mnu_reminder_tone);
         mnu_reminder_tone.setOnClickListener(v -> {
-            Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+            final Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select alarm tone:");
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, reminderModel.getRingingModel().getRingToneUri());
@@ -347,10 +321,9 @@ public class ReminderInput
             }
         });
 
-
         final AppCompatImageView img_reminder_name_voice_input = findViewById(R.id.img_reminder_name_voice_input);
         img_reminder_name_voice_input.setOnClickListener(v -> {
-            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             // This starts the activity and populates the intent with the speech text.
             startActivityForResult(intent, NAME_SPEECH_REQUEST_CODE);
@@ -358,7 +331,7 @@ public class ReminderInput
 
         final AppCompatImageView img_reminder_note_voice_input = findViewById(R.id.img_reminder_note_voice_input);
         img_reminder_note_voice_input.setOnClickListener(v -> {
-            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             // This starts the activity and populates the intent with the speech text.
             startActivityForResult(intent, NOTE_SPEECH_REQUEST_CODE);
@@ -689,6 +662,22 @@ public class ReminderInput
             ringingController.stopRinging(); // Stop ring stops both tone and vibration if is playing.
         }
         isPlayingTone = false;
+    }
+
+    @Override
+    public void setDateTimePicker(String tag, Date dateTime) {
+        reminderModel.getTimeModel().setTime(dateTime);
+    }
+
+    @Override
+    public Date getDateTimePicker(String tag) {
+        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
+        return reminderModel.getTimeModel().getTime();
+    }
+
+    @Override
+    public Date getMinimumDateTime(String tag) {
+        return reminderModel.getTimeModel().getTime();
     }
 
 }

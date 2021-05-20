@@ -2,13 +2,11 @@ package com.example.remindme.ui.fragments.dialogFragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,15 +19,34 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
+import com.example.remindme.ui.fragments.dialogFragments.common.IDateTimePickerListener;
+import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerBlackDialog;
+import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerLightDialog;
+import com.example.remindme.ui.fragments.dialogFragments.common.TimeListDialogBase;
 import com.example.remindme.viewModels.TimeModel;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class TimeListAnyTimeDialog extends TimeListDialogBase {
+public class TimeListAnyTimeDialog extends TimeListDialogBase implements IDateTimePickerListener {
 
     public static final String TAG = "CustomTimeListDialog";
+
+    @Override
+    public void setDateTimePicker(String tag, Date dateTime) {
+        getModel().addTimeListTime(dateTime);
+        refresh();
+    }
+
+    @Override
+    public Date getDateTimePicker(String tag) {
+        return getModel().getTime();
+    }
+
+    @Override
+    public Date getMinimumDateTime(String tag) {
+        return getModel().getTime();
+    }
 
     public class CustomTimeListAdapter extends RecyclerView.Adapter<CustomTimeListAdapter.ViewHolder> {
 
@@ -89,6 +106,7 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase {
 
     private RecyclerView timeListRecycler;
 
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -102,36 +120,44 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase {
 
         timeListRecycler = view.findViewById(R.id.timeListRecycler);
 
-        final ImageButton imgBtnAddCustomTime = view.findViewById(R.id.imgBtnAddCustomTime);
+        final AppCompatImageButton imgBtnAddCustomTime = view.findViewById(R.id.imgBtnAddCustomTime);
         imgBtnAddCustomTime.setOnClickListener(v -> {
-            final Calendar alertTime = Calendar.getInstance();
-            alertTime.setTime(getModel().getTime());
-            final int mHour, mMinute;
-            mHour = alertTime.get(Calendar.HOUR_OF_DAY);
-            mMinute = alertTime.get(Calendar.MINUTE);
+//            final Calendar alertTime = Calendar.getInstance();
+//            alertTime.setTime(getModel().getTime());
+//            final int mHour, mMinute;
+//            mHour = alertTime.get(Calendar.HOUR_OF_DAY);
+//            mMinute = alertTime.get(Calendar.MINUTE);
+//
+//            final TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),
+//                    AppSettingsHelper.getInstance().getTimePickerDialogStyleId(),
+//                    (view1, hourOfDay, minute) -> {
+//                        alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+//                        alertTime.set(Calendar.MINUTE, minute);
+//                        alertTime.set(Calendar.SECOND, 0);
+//                        alertTime.set(Calendar.MILLISECOND, 0);
+//
+//                        getModel().addTimeListTime(alertTime.getTime());
+//                        refresh();
+//
+//                    }, mHour, mMinute, AppSettingsHelper.getInstance().isUse24hourTime());
+//            timePickerDialog.show();
 
-            final TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),
-                    AppSettingsHelper.getInstance().getTimePickerDialogStyleId(),
-                    (view1, hourOfDay, minute) -> {
-                        alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        alertTime.set(Calendar.MINUTE, minute);
-                        alertTime.set(Calendar.SECOND, 0);
-                        alertTime.set(Calendar.MILLISECOND, 0);
+            if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.BLACK) {
+                final RemindMeTimePickerBlackDialog dialog = new RemindMeTimePickerBlackDialog();
+                dialog.show(getParentFragmentManager(), RemindMeTimePickerBlackDialog.TAG);
+            } else {
+                final RemindMeTimePickerLightDialog dialog = new RemindMeTimePickerLightDialog();
+                dialog.show(getParentFragmentManager(), RemindMeTimePickerLightDialog.TAG);
+            }
 
-                        getModel().addTimeListTime(alertTime.getTime());
-                        refresh();
-
-                    }, mHour, mMinute, AppSettingsHelper.getInstance().isUse24hourTime());
-            timePickerDialog.show();
         });
-
 
         builder.setView(view)
                 .setTitle("Select hours to Repeat")
                 .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
                     if (getModel().getTimeListTimes().size() > 0) {
                         getModel().setTimeListMode(TimeModel.TimeListModes.CUSTOM);
-                        getListener().setTimeListDialogModel(getModel());
+                        ((ITimeListListener) getListener()).setTimeListDialogModel(getModel());
                     } else {
                         getModel().setTimeListMode(TimeModel.TimeListModes.NONE);
                     }
