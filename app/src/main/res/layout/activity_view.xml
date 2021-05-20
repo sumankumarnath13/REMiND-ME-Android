@@ -201,7 +201,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:text="@string/btn_snooze"
+                            android:text="@string/snooze_settings_label"
                             android:textSize="@dimen/font_size_medium" />
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -246,7 +246,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="@string/btn_repeat"
+                        android:text="@string/repeat_settings_label"
                         android:textSize="@dimen/font_size_medium" />
 
                     <androidx.appcompat.widget.AppCompatTextView

@@ -51,6 +51,7 @@ public class RemindMeDatePickerDialog extends DateTimePickerDialogBase {
         builder.setView(view)
                 .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
 
+                    calendar.setTime(getDateTime());
                     calendar.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
                     calendar.set(Calendar.MONTH, datePicker.getMonth());
                     calendar.set(Calendar.YEAR, datePicker.getYear());

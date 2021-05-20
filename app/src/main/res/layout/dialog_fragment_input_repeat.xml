@@ -8,13 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_16"
-        android:minWidth="320dp"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/dp_8"
+            android:paddingVertical="@dimen/dp_8"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatRadioButton
@@ -118,13 +117,14 @@
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
+            android:layout_height="@dimen/dp_05"
+            android:layout_marginHorizontal="@dimen/dp_8"
             android:background="?attr/themeBorderColor" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_8"
+            android:padding="@dimen/dp_8"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.SwitchCompat
@@ -140,8 +140,7 @@
             android:id="@+id/lv_repeat_end_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_8"
-            android:layout_marginHorizontal="@dimen/dp_8"
+            android:padding="@dimen/dp_8"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -164,8 +163,7 @@
             android:id="@+id/lv_repeat_end_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_8"
-            android:layout_marginHorizontal="@dimen/dp_8"
+            android:padding="@dimen/dp_8"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 

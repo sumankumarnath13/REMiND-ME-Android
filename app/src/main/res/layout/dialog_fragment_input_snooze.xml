@@ -7,7 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_16"
-        android:minWidth="320dp"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.SwitchCompat
@@ -15,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_marginBottom="@dimen/dp_16"
-            android:text="@string/snooze_heading" />
+            android:text="@string/snooze_settings_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"

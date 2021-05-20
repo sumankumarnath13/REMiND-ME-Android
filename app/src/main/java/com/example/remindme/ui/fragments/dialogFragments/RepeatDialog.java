@@ -80,8 +80,8 @@ public class RepeatDialog extends DialogFragmentBase
             return builder.create();
         final LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.dialog_fragment_input_reminder_repeat, null);
-        builder.setView(view).setTitle("Select Repeat Option")
+        final View view = inflater.inflate(R.layout.dialog_fragment_input_repeat, null);
+        builder.setView(view).setTitle("Select " + getString(R.string.repeat_settings_label))
                 .setPositiveButton(R.string.dialog_positive, (dialog, which) -> ((IRepeatInputDialogListener) getListener()).setRepeatDialogModel(model))
                 .setNegativeButton(R.string.dialog_negative, (dialog, which) -> {
 
@@ -358,7 +358,8 @@ public class RepeatDialog extends DialogFragmentBase
     }
 
     public void setCustomRepeatDialogModel(RepeatModel m) {
-        if (m.isValid(model.getParent().getTimeModel())) {
+
+        if (m != null && m.isValid(model.getParent().getTimeModel())) { // m will be  null to  that
             model = m;
         }
         refresh();

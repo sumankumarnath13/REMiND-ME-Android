@@ -69,7 +69,7 @@ public class DailyCustomRepeatDialog extends CustomRepeatDialogBase {
         }
 
         builder.setView(view)
-                .setTitle("Select hours to Repeat")
+                .setTitle("Select " + getString(R.string.repeat_daily_custom))
                 .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
                     getModel().getCustomDays().clear();
                     if (chk_daily_sun.isChecked())

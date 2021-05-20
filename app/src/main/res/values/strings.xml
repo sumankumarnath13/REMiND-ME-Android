@@ -16,12 +16,12 @@
     <string name="btn_save">Set Reminder</string>
     <string name="btn_time">Set Time</string>
     <string name="btn_date">Set Date</string>
-    <string name="btn_repeat">Repeat</string>
+    <string name="repeat_settings_label">Repeat settings</string>
 
     <string name="repeat_off">Off</string>
     <string name="repeat_hourly">Hourly</string>
     <string name="repeat_daily">Daily</string>
-    <string name="repeat_daily_custom">Weekdays</string>
+    <string name="repeat_daily_custom">Days of week</string>
     <string name="repeat_weekly">Weekly</string>
     <string name="repeat_weekly_custom">Weeks of month</string>
     <string name="repeat_monthly">Monthly</string>
@@ -57,9 +57,8 @@
 
     <string name="btn_vibrate">Vibrate</string>
     <string name="btn_alarm_sound">Alarm tone</string>
-    <string name="btn_snooze">Snooze</string>
+    <string name="snooze_settings_label">Snooze setting</string>
 
-    <string name="snooze_heading">Reminder Snooze</string>
     <string name="snooze_interval_heading">Interval</string>
     <string name="snooze_interval_m5">5 Minutes</string>
     <string name="snooze_interval_m10">10 Minutes</string>
@@ -160,15 +159,8 @@
             yyyy
         </item>
     </array>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="missed_on">Missed on</string>
     <string name="missingImageDesc">oops</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">
-        Hello
-        blank
-        fragment
-    </string>
     <string name="character_limit_warning_label">%d character%s available</string>
     <string name="time_list_label">Other Times of day</string>
     <string name="reminder_expired_label">Expired</string>

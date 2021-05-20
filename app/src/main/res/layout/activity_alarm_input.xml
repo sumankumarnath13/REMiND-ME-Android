@@ -205,7 +205,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center_vertical"
-                                android:text="@string/btn_repeat" />
+                                android:text="@string/repeat_settings_label" />
 
                             <androidx.appcompat.widget.SwitchCompat
                                 android:id="@+id/sw_reminder_repeat"
@@ -365,7 +365,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center_vertical"
-                                android:text="@string/btn_snooze" />
+                                android:text="@string/snooze_settings_label" />
 
                             <androidx.appcompat.widget.SwitchCompat
                                 android:id="@+id/sw_reminder_snooze"

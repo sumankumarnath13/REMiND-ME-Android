@@ -1,7 +1,9 @@
 package com.example.remindme.ui.fragments.dialogFragments.common;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -15,6 +17,23 @@ public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
 
     protected RepeatModel getModel() {
         return model;
+    }
+
+    boolean isCanceled;
+
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        ((ICustomRepeatDialogListener) getListener()).setCustomRepeatDialogModel(null);
+        isCanceled = true;
+        super.onCancel(dialog);
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        if (!isCanceled) {
+            ((ICustomRepeatDialogListener) getListener()).setCustomRepeatDialogModel(null);
+        }
+        super.onDismiss(dialog);
     }
 
     @Override

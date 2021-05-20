@@ -76,7 +76,7 @@ public abstract class DialogFragmentBase extends DialogFragment {
     }
 
     @Override
-    public final void onDismiss(@NonNull DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (!dialogStack.isEmpty() && isStackChanged) {
             dialogStack.pop();

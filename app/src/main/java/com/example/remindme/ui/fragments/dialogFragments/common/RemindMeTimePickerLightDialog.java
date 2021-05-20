@@ -41,6 +41,7 @@ public class RemindMeTimePickerLightDialog extends DateTimePickerDialogBase {
 
             final Calendar calendar = Calendar.getInstance();
 
+            calendar.setTime(getDateTime());
             calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
             calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
 

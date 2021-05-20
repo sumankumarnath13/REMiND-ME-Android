@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="@dimen/dp_16"
-        android:minWidth="320dp"
         android:gravity="center">
 
         <androidx.appcompat.widget.LinearLayoutCompat

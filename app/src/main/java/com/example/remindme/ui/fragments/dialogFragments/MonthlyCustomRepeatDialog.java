@@ -88,7 +88,7 @@ public class MonthlyCustomRepeatDialog extends CustomRepeatDialogBase {
             }
         }
 
-        builder.setView(view).setTitle("Select months to Repeat").setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
+        builder.setView(view).setTitle("Select " + getString(R.string.repeat_monthly_custom)).setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
             getModel().getCustomMonths().clear();
             if (chk_monthly_jan.isChecked())
                 getModel().getCustomMonths().add(Calendar.JANUARY);
