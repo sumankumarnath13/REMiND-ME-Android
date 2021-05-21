@@ -3,6 +3,8 @@ package com.example.remindme.ui.fragments.dialogFragments.common;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -78,18 +80,18 @@ public abstract class DialogFragmentBase extends DialogFragment {
         }
     }
 
-//    private int resolveRefAttributeResourceId(int refAttributeId) {
-//
-//        if (getActivity() != null) {
-//            final Resources.Theme theme = getActivity().getTheme();
-//            final TypedValue typedValue = new TypedValue();
-//            if (theme.resolveAttribute(refAttributeId, typedValue, true)) {
-//                return typedValue.resourceId;
-//            }
-//        }
-//
-//        return -1;
-//    }
+    protected int resolveRefAttributeResourceId(int refAttributeId) {
+
+        if (getActivity() != null) {
+            final Resources.Theme theme = getActivity().getTheme();
+            final TypedValue typedValue = new TypedValue();
+            if (theme.resolveAttribute(refAttributeId, typedValue, true)) {
+                return typedValue.resourceId;
+            }
+        }
+
+        return -1;
+    }
 
     @Override
     public void onStart() {

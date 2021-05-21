@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.NumberPicker;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,7 @@ public class DateCalculatorDialog extends DialogFragmentBase implements IDateTim
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if ((ITimeCalculatorListener) getListener() == null) {
+        if (getListener() == null) {
             ToastHelper.showError(getContext(), "Listener incompatible!");
             dismiss();
             return;
@@ -93,7 +94,7 @@ public class DateCalculatorDialog extends DialogFragmentBase implements IDateTim
         // 2
         value_picker.setValue(1);
 
-        builder.setView(view).setPositiveButton("Use Result", (dialog, which) ->
+        builder.setView(view).setPositiveButton(getString(R.string.dialog_positive), (dialog, which) ->
                 ((ITimeCalculatorListener) getListener()).setDateCalculatorDialogModel(resultCalendar.getTime()))
                 .setNegativeButton(getString(R.string.dialog_negative),
                         (dialog, which) -> {
@@ -126,9 +127,21 @@ public class DateCalculatorDialog extends DialogFragmentBase implements IDateTim
         }
 
         btn_reminder_date.setText(StringHelper.toWeekdayDate(this.getContext(), calendar.getTime()));
-
         tv_reminder_date.setText(StringHelper.toWeekdayDate(this.getContext(), resultCalendar.getTime()));
 
+        if (getDialog() != null) {
+            Button positiveButton = ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE);
+            final Calendar currentTime = Calendar.getInstance();
+            if (currentTime.getTime().before(resultCalendar.getTime())) {
+                positiveButton.setText(getResources().getString(R.string.dialog_positive));
+                positiveButton.setEnabled(true);
+                positiveButton.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSoothingText)));
+            } else {
+                positiveButton.setText("Date expired");
+                positiveButton.setEnabled(false);
+                positiveButton.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDisabledControlColor)));
+            }
+        }
     }
 
     @Override

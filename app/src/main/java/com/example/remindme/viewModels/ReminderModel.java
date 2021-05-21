@@ -494,22 +494,22 @@ public class ReminderModel extends ViewModel {
             final Date nextSnoozeTime = getSnoozeModel().getNextSnoozeTime(getTimeModel().getTime());
 
             if (nextSnoozeTime == null) { // Next snooze time null means there is no more alarms and it has reached its EOF:
+
                 return false;
+
+            } else { // Check next snooze comes after next schedule or not.
+
+                final Date nextScheduledTime = getRepeatModel().schedule(getTimeModel());
+
+                if (nextScheduledTime == null) {
+                    // No next schedule found so proceed with snoozing only if its not passed current time
+                    return currentTime.getTime().before(nextSnoozeTime);
+                }
+
+                // If next schedule comes first then it will take priority. IN this case snoozing further isn't required.
+                return nextScheduledTime.after(nextSnoozeTime);
+
             }
-
-            if (currentTime.getTime().after(nextSnoozeTime)) { // Snooze makes no sense if its in past!
-                return false;
-            }
-
-            final Date nextScheduledTime = getRepeatModel().schedule(getTimeModel());
-
-            // proceed with snoozing
-            if (nextScheduledTime == null) { // Reached EOF
-                return false;
-            }
-
-            return nextScheduledTime.compareTo(nextSnoozeTime) > 0; // This means next schedule will arrive sooner or same time than next snooze off time. In this case snoozing further isn't possible
-
         } else { // Else dismiss the alarm
 
             return false;
