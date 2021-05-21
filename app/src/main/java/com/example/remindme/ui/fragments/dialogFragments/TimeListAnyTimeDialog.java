@@ -153,7 +153,7 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements IDateTi
         });
 
         builder.setView(view)
-                .setTitle("Select hours to Repeat")
+                .setTitle(getString(R.string.time_list_header, "Select", "time"))
                 .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
                     if (getModel().getTimeListTimes().size() > 0) {
                         getModel().setTimeListMode(TimeModel.TimeListModes.CUSTOM);

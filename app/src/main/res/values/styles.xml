@@ -578,6 +578,25 @@
             @color/colorAccent
         </item> <!-- Analog to digital mode change button color -->
 
+
+    </style>
+
+    <style name="text" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColorPrimary">
+            @color/colorWarning
+        </item>
+        <item name="android:editTextColor">
+            @color/colorWarning
+        </item>
+        <item name="android:textColor">
+            @color/colorWarning
+        </item>
+        <item name="android:textColorSecondary">
+            @color/colorWarning
+        </item>
+        <item name="titleTextColor">
+            @color/colorWarning
+        </item>
     </style>
 
     <style name="TimePickerStyleLight" parent="Theme.AppCompat.Light.Dialog">

@@ -1,17 +1,12 @@
 package com.example.remindme.ui.fragments.dialogFragments.common;
 
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.util.TypedValue;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.remindme.R;
 import com.example.remindme.helpers.ToastHelper;
 
 import java.util.Stack;
@@ -83,39 +78,38 @@ public abstract class DialogFragmentBase extends DialogFragment {
         }
     }
 
-    private int resolveRefAttributeResourceId(int refAttributeId) {
-
-        if (getActivity() != null) {
-            final Resources.Theme theme = getActivity().getTheme();
-            final TypedValue typedValue = new TypedValue();
-            if (theme.resolveAttribute(refAttributeId, typedValue, true)) {
-                return typedValue.resourceId;
-            }
-        }
-
-        return -1;
-    }
-
+//    private int resolveRefAttributeResourceId(int refAttributeId) {
+//
+//        if (getActivity() != null) {
+//            final Resources.Theme theme = getActivity().getTheme();
+//            final TypedValue typedValue = new TypedValue();
+//            if (theme.resolveAttribute(refAttributeId, typedValue, true)) {
+//                return typedValue.resourceId;
+//            }
+//        }
+//
+//        return -1;
+//    }
 
     @Override
     public void onStart() {
         super.onStart();
-        final AlertDialog alertDialog = (AlertDialog) getDialog();
-
-        if (alertDialog != null) {
-
-            final Button positive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            if (positive != null) {
-                positive.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSoothingText)));
-                //positive.setTextSize(getResources().getDimensionPixelSize(R.dimen.font_size_medium));
-            }
-
-            final Button negative = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-            if (negative != null) {
-                negative.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDimText)));
-                //negative.setTextSize(getResources().getDimension(R.dimen.font_size_medium));
-            }
-
-        }
+//        final AlertDialog alertDialog = (AlertDialog) getDialog();
+//
+//        if (alertDialog != null) {
+//
+//            final Button positive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+//            if (positive != null) {
+//                positive.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSoothingText)));
+//                //positive.setTextSize(getResources().getDimensionPixelSize(R.dimen.font_size_medium));
+//            }
+//
+//            final Button negative = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+//            if (negative != null) {
+//                negative.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDimText)));
+//                //negative.setTextSize(getResources().getDimension(R.dimen.font_size_medium));
+//            }
+//
+//        }
     }
 }

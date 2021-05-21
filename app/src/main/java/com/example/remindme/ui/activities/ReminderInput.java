@@ -85,6 +85,7 @@ public class ReminderInput
     private AppCompatTextView tv_reminder_trigger_time;
     private AppCompatTextView tv_reminder_trigger_date;
     private AppCompatButton btn_reminder_time;
+    private AppCompatTextView tv_reminder_AmPm;
     private AppCompatButton btn_reminder_date;
     private AppCompatCheckBox chk_time_list_hours;
     private AppCompatCheckBox chk_time_list_anytime;
@@ -93,7 +94,9 @@ public class ReminderInput
     private AppCompatTextView tv_reminder_tone_summary;
     private AppCompatTextView tv_reminder_name_summary;
     private AppCompatTextView tv_reminder_note_summary;
-    private SwitchCompat sw_notification;
+    //private SwitchCompat sw_notification;
+    private AppCompatCheckBox chk_reminder;
+    private AppCompatCheckBox chk_alarm;
     private SwitchCompat sw_reminder_repeat;
     private SwitchCompat sw_reminder_snooze;
     private AppCompatTextView tv_reminder_repeat_summary;
@@ -166,13 +169,29 @@ public class ReminderInput
         tv_reminder_name_summary = findViewById(R.id.tv_reminder_name_summary);
         tv_reminder_note_summary = findViewById(R.id.tv_reminder_note_summary);
         tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
-        sw_notification = findViewById(R.id.sw_notification);
-        sw_notification.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+        chk_reminder = findViewById(R.id.chk_reminder);
+        chk_reminder.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isUserInteracted()) {
                 reminderModel.setNotification(isChecked);
                 refresh();
             }
         });
+        chk_alarm = findViewById(R.id.chk_alarm);
+        chk_alarm.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isUserInteracted()) {
+                reminderModel.setNotification(!isChecked);
+                refresh();
+            }
+        });
+
+        //sw_notification = findViewById(R.id.sw_notification);
+//        sw_notification.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (isUserInteracted()) {
+//                reminderModel.setNotification(isChecked);
+//                refresh();
+//            }
+//        });
         sw_reminder_repeat = findViewById(R.id.sw_reminder_repeat);
         tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
         sw_reminder_snooze = findViewById(R.id.sw_reminder_snooze);
@@ -180,6 +199,7 @@ public class ReminderInput
         tv_reminder_trigger_date = findViewById(R.id.tv_reminder_trigger_date);
         btn_reminder_date = findViewById(R.id.btn_reminder_date);
         btn_reminder_time = findViewById(R.id.btn_reminder_time);
+        tv_reminder_AmPm = findViewById(R.id.tv_reminder_AmPm);
         lvc_diff_next_reminder_trigger = findViewById(R.id.lvc_diff_next_reminder_trigger);
 
         sw_reminder_repeat.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -418,7 +438,8 @@ public class ReminderInput
     protected void onUIRefresh() {
         super.onUIRefresh();
 
-        btn_reminder_time.setText(StringHelper.toTimeAmPm(reminderModel.getTimeModel().getTime()));
+        btn_reminder_time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
+        tv_reminder_AmPm.setText(StringHelper.toAmPm(reminderModel.getTimeModel().getTime()));
         btn_reminder_date.setText(StringHelper.toWeekdayDate(this, reminderModel.getTimeModel().getTime()));
 
         chk_time_list_hours.setChecked(false);
@@ -443,7 +464,9 @@ public class ReminderInput
         tv_reminder_name_summary.setText(reminderModel.getName());
         tv_reminder_note_summary.setText(reminderModel.getNote());
 
-        sw_notification.setChecked(reminderModel.isNotification());
+        //sw_notification.setChecked(reminderModel.isNotification());
+        chk_reminder.setChecked(reminderModel.isNotification());
+        chk_alarm.setChecked(!reminderModel.isNotification());
 
         tv_reminder_repeat_summary.setText(reminderModel.getRepeatModel().toString(this));
         tv_reminder_snooze_summary.setText(reminderModel.getSnoozeModel().toString());
@@ -667,6 +690,7 @@ public class ReminderInput
     @Override
     public void setDateTimePicker(String tag, Date dateTime) {
         reminderModel.getTimeModel().setTime(dateTime);
+        refresh();
     }
 
     @Override

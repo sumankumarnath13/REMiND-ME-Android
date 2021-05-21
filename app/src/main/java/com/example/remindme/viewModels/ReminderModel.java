@@ -617,6 +617,7 @@ public class ReminderModel extends ViewModel {
 
     private void saveAsExpired() {
         isExpired = true;
+        isEnabled = false;
         getSnoozeModel().clearCount();
         save();
     }

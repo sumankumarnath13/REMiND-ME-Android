@@ -14,8 +14,6 @@
     <string name="hint_reminder_name">Give a name …</string>
     <string name="hint_reminder_note">Extra notes for reminder …</string>
     <string name="btn_save">Set Reminder</string>
-    <string name="btn_time">Set Time</string>
-    <string name="btn_date">Set Date</string>
     <string name="repeat_settings_label">Repeat settings</string>
 
     <string name="repeat_off">Off</string>
@@ -162,7 +160,8 @@
     <string name="missed_on">Missed on</string>
     <string name="missingImageDesc">oops</string>
     <string name="character_limit_warning_label">%d character%s available</string>
-    <string name="time_list_label">Other Times of day</string>
+    <string name="time_list_label">Multiple time of day</string>
+    <string name="time_list_header">%s Multiple %s of day</string>
     <string name="reminder_expired_label">Expired</string>
     <string name="reminder_input_ring_duration_label">Ring duration</string>
 </resources>

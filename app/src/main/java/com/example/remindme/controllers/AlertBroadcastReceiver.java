@@ -44,9 +44,10 @@ public class AlertBroadcastReceiver extends BroadcastReceiver {
 
             case ReminderModel.ACTION_RECEIVE_NOTIFICATION:
                 final ReminderModel reminder = ReminderModel.getInstance(intent);
-                if (reminder == null) return;
-                NotificationHelper.notify(context, reminder.getIntId(), "Notification " + StringHelper.toTimeAmPm(reminder.getTimeModel().getTime()), reminder.getName(), reminder.getNote());
-                reminder.snoozeByApp(context);
+                if (reminder == null)
+                    return;
+                NotificationHelper.notify(context, reminder.getIntId(), reminder.getName(), reminder.getNote(), null);
+                reminder.dismissByUser(context); // Notification dose not requires any user interaction thus it will always assume action taken by user.
                 break;
         }
     }

@@ -101,10 +101,20 @@ public class AdapterRecyclerReminder
     public void removeAllSelected() {
         for (int i = _data.size() - 1; i >= 0; i--) {
             if (_data.get(i).isSelected()) {
+                notifyItemRemoved(i);
                 _data.remove(i);
             }
         }
-        dismissSelectable();
+
+        initAnimation();
+
+        isEnableSelection = false;
+
+        //notifyDataSetChanged();
+
+        notifySelectionChange();
+
+        //dismissSelectable();
     }
 
     private void initAnimation() {

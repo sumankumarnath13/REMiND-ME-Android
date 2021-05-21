@@ -208,7 +208,7 @@ public class TimeListHourlyDialog extends TimeListDialogBase {
         }
 
         builder.setView(view)
-                .setTitle("Select hours to Repeat")
+                .setTitle(getString(R.string.time_list_header, "Select", "hours"))
                 .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
                     getModel().getTimeListHours().clear();
                     //int day = 0;
