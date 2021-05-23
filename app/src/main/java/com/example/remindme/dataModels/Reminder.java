@@ -12,7 +12,7 @@ public class Reminder extends RealmObject implements RealmModel {
     @PrimaryKey
     public String id;
     @Index
-    public int stateValue;
+    public boolean isExpired;
 
     public boolean isEnabled;
     public boolean isNotification;

@@ -24,7 +24,6 @@ public class SnoozeDialog extends DialogFragmentBase {
     public static final String TAG = "SnoozeDialog";
 
     private ISnoozeInputDialogListener listener;
-
     protected ISnoozeInputDialogListener getListener() {
         return listener;
     }

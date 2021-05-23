@@ -41,7 +41,6 @@ public class RepeatDialog extends DialogFragmentBase
     public static final String TAG = "RepeatDialog";
 
     private IRepeatInputDialogListener listener;
-
     protected IRepeatInputDialogListener getListener() {
         return listener;
     }

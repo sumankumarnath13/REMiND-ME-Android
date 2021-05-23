@@ -426,7 +426,7 @@ public class AdapterRecyclerReminder
             lv_reminder_last_missed_time.setVisibility(View.GONE);
         }
 
-        if (reminder.getState() == ReminderModel.States.DISMISSED) {
+        if (reminder.isExpired()) {
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.colorDanger));
             amPm.setTextColor(holder.linearLayout.getResources().getColor(R.color.colorDanger));
         }

@@ -95,7 +95,7 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
             if (!isUserInteracted())
                 return;
 
-            if (activeReminder != null && activeReminder.getState() != ReminderModel.States.DISMISSED) {
+            if (activeReminder != null && !activeReminder.isExpired()) {
 
                 if (AppSettingsHelper.getInstance().isDisableAllReminders()) { // Ignore if its blocked globally
 
@@ -222,7 +222,7 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
 
             }
 
-            if (activeReminder.getState() == ReminderModel.States.DISMISSED) {
+            if (activeReminder.isExpired()) {
                 enabled.setVisibility(View.GONE);
                 tv_expired.setVisibility(View.VISIBLE);
             } else {

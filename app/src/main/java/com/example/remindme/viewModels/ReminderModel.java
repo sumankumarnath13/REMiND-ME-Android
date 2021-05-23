@@ -66,40 +66,10 @@ public class ReminderModel extends ViewModel {
         return id;
     }
 
-    public enum States {
-        ACTIVE,
-        REMINDED,
-        DISMISSED,
-    }
+    private boolean isExpired;
 
-    private States state;
-
-    public States getState() {
-        return state;
-    }
-
-    private static int getStateInt(States state) {
-        switch (state) {
-            default:
-            case ACTIVE:
-                return 0;
-            case REMINDED:
-                return 1;
-            case DISMISSED:
-                return -1;
-        }
-    }
-
-    private static States setStateInt(int stateValue) {
-        switch (stateValue) {
-            default:
-            case 0:
-                return States.ACTIVE;
-            case 1:
-                return States.REMINDED;
-            case -1:
-                return States.DISMISSED;
-        }
+    public boolean isExpired() {
+        return isExpired;
     }
 
     private int intId;
@@ -539,11 +509,7 @@ public class ReminderModel extends ViewModel {
     public static List<ReminderModel> getActiveReminders(final String name) {
         final Realm realm = Realm.getDefaultInstance();
         if (StringHelper.isNullOrEmpty(name)) {
-            final List<Reminder> dataList = realm.where(Reminder.class)
-                    .equalTo("stateValue", getStateInt(States.ACTIVE))
-                    .or()
-                    .equalTo("stateValue", getStateInt(States.REMINDED))
-                    .sort("time").findAll();
+            final List<Reminder> dataList = realm.where(Reminder.class).equalTo("isExpired", false).sort("time").findAll();
             final ArrayList<ReminderModel> reminderList = new ArrayList<>();
             for (int i = 0; i < dataList.size(); i++) {
                 reminderList.add(ReminderModel.getInstance(dataList.get(i)));
@@ -551,12 +517,7 @@ public class ReminderModel extends ViewModel {
             realm.close();
             return reminderList;
         } else {
-            List<Reminder> dataList = realm.where(Reminder.class)
-                    .equalTo("stateValue", getStateInt(States.ACTIVE))
-                    .or()
-                    .equalTo("stateValue", getStateInt(States.REMINDED))
-                    .beginsWith("name", name)
-                    .sort("time").findAll();
+            final List<Reminder> dataList = realm.where(Reminder.class).equalTo("isExpired", false).beginsWith("name", name).sort("time").findAll();
             final ArrayList<ReminderModel> reminderList = new ArrayList<>();
             for (int i = 0; i < dataList.size(); i++) {
                 reminderList.add(ReminderModel.getInstance(dataList.get(i)));
@@ -569,9 +530,7 @@ public class ReminderModel extends ViewModel {
     public static List<ReminderModel> getDismissedReminders(final String name) {
         final Realm realm = Realm.getDefaultInstance();
         if (StringHelper.isNullOrEmpty(name)) {
-            final List<Reminder> dataList = realm.where(Reminder.class)
-                    .equalTo("stateValue", getStateInt(States.DISMISSED))
-                    .sort("time").findAll();
+            final List<Reminder> dataList = realm.where(Reminder.class).equalTo("isExpired", true).sort("time").findAll();
             final ArrayList<ReminderModel> reminderList = new ArrayList<>();
             for (int i = 0; i < dataList.size(); i++) {
                 reminderList.add(ReminderModel.getInstance(dataList.get(i)));
@@ -579,10 +538,7 @@ public class ReminderModel extends ViewModel {
             realm.close();
             return reminderList;
         } else {
-            final List<Reminder> dataList = realm.where(Reminder.class)
-                    .equalTo("stateValue", getStateInt(States.DISMISSED))
-                    .beginsWith("name", name)
-                    .sort("time").findAll();
+            final List<Reminder> dataList = realm.where(Reminder.class).equalTo("isExpired", true).beginsWith("name", name).sort("time").findAll();
             final ArrayList<ReminderModel> reminderList = new ArrayList<>();
             for (int i = 0; i < dataList.size(); i++) {
                 reminderList.add(ReminderModel.getInstance(dataList.get(i)));
@@ -619,7 +575,7 @@ public class ReminderModel extends ViewModel {
             }
         }
 
-        state = States.ACTIVE;
+        isExpired = false;
 
         save();
 
@@ -631,7 +587,7 @@ public class ReminderModel extends ViewModel {
 
     public void deleteAndCancelAlert(final Context context) {
 
-        if (state != States.DISMISSED) {
+        if (!isExpired) {
             cancelPendingIntent(context);
         }
 
@@ -649,7 +605,7 @@ public class ReminderModel extends ViewModel {
     }
 
     private void saveAsExpired() {
-        state = States.DISMISSED;
+        isExpired = true;
         isEnabled = false;
         getSnoozeModel().clearCount();
         save();
@@ -667,7 +623,7 @@ public class ReminderModel extends ViewModel {
 
         entity.id = getId();
         entity.isEnabled = isEnabled();
-        entity.stateValue = getStateInt(state);
+        entity.isExpired = isExpired();
         entity.alarmIntentId = getIntId();
         entity.name = getName();
         entity.note = getNote();
@@ -723,7 +679,7 @@ public class ReminderModel extends ViewModel {
 
         id = from.id;
         isEnabled = from.isEnabled;
-        state = setStateInt(from.stateValue);
+        isExpired = from.isExpired;
         intId = from.alarmIntentId;
         setName(from.name);
         setNote(from.note);
