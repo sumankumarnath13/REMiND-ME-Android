@@ -39,11 +39,11 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
 
         final String weekDayName = StringHelper.toWeekday(getModel().getParent().getTimeModel().getAlertTime(false));
 
-        chk_weekly_1.setText(getString(R.string.repeat_weekly_custom_week1, weekDayName));
-        chk_weekly_2.setText(getString(R.string.repeat_weekly_custom_week2, weekDayName));
-        chk_weekly_3.setText(getString(R.string.repeat_weekly_custom_week3, weekDayName));
-        chk_weekly_4.setText(getString(R.string.repeat_weekly_custom_week4, weekDayName));
-        chk_weekly_5.setText(getString(R.string.repeat_weekly_custom_week5, weekDayName));
+        chk_weekly_1.setText(getString(R.string.caption_week1, weekDayName));
+        chk_weekly_2.setText(getString(R.string.caption_week2, weekDayName));
+        chk_weekly_3.setText(getString(R.string.caption_week3, weekDayName));
+        chk_weekly_4.setText(getString(R.string.caption_week4, weekDayName));
+        chk_weekly_5.setText(getString(R.string.caption_week5, weekDayName));
 
         for (int i = 0; i < getModel().getCustomWeeks().size(); i++) {
             int value = getModel().getCustomWeeks().get(i);
@@ -67,8 +67,8 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
             }
         }
 
-        builder.setView(view).setTitle("Select " + getString(R.string.repeat_weekly_custom))
-                .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
+        builder.setView(view).setTitle("Select " + getString(R.string.caption_repeat_option_weeks_of_month))
+                .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
                     getModel().getCustomWeeks().clear();
                     if (chk_weekly_1.isChecked())
                         getModel().getCustomWeeks().add(0);
@@ -82,8 +82,8 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
                         getModel().getCustomWeeks().add(4);
                     getModel().setEnabled(true);
                     getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM);
-                    ((ICustomRepeatDialogListener) getListener()).setCustomRepeatDialogModel(getModel());
-                }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
+                    getListener().setCustomRepeatDialogModel(getModel());
+                }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
 
         });
 

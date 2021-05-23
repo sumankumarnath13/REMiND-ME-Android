@@ -15,35 +15,35 @@
             android:id="@+id/chk_weekly_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/repeat_weekly_custom_week1"
+            android:text="@string/caption_week1"
             app:buttonTint="?attr/themeWarningColor" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_weekly_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/repeat_weekly_custom_week2"
+            android:text="@string/caption_week2"
             app:buttonTint="?attr/themeWarningColor" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_weekly_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/repeat_weekly_custom_week3"
+            android:text="@string/caption_week3"
             app:buttonTint="?attr/themeWarningColor" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_weekly_4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/repeat_weekly_custom_week4"
+            android:text="@string/caption_week4"
             app:buttonTint="?attr/themeWarningColor" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_weekly_5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/repeat_weekly_custom_week5"
+            android:text="@string/caption_week5"
             app:buttonTint="?attr/themeWarningColor" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

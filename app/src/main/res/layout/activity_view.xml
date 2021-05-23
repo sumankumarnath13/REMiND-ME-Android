@@ -87,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/dp_8"
-                    android:text="@string/reminder_expired_label"
+                    android:text="@string/label_expired"
                     android:textColor="?attr/themeDangerColor"
                     android:visibility="gone" />
 
@@ -104,7 +104,7 @@
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/missed_on"
+                        android:text="@string/label_missed_on"
                         android:layout_marginEnd="@dimen/dp_8"
                         android:textColor="?attr/themeDangerColor"
                         android:textSize="@dimen/font_size_small" />
@@ -121,7 +121,7 @@
                         android:id="@+id/btn_expand_missed_alerts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/missingImageDesc"
+                        android:contentDescription="@string/missing_image_desc"
                         android:visibility="gone"
                         app:srcCompat="@drawable/ic_expand_down"
                         app:tint="?attr/themeSuccessColor" />
@@ -168,7 +168,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:text="@string/time_list_label"
+                            android:text="@string/caption_time_list"
                             android:textSize="@dimen/font_size_medium" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -185,7 +185,7 @@
 
                 <!-- SNOOZE SUMMARY -->
                 <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/mnu_reminder_snooze"
+                    android:id="@+id/snooze_input_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/dp_8"
@@ -201,7 +201,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:text="@string/snooze_settings_label"
+                            android:text="@string/heading_snooze_settings"
                             android:textSize="@dimen/font_size_medium" />
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -219,7 +219,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:drawableStart="@drawable/ic_reminder_dismiss"
-                            android:text="@string/btn_alarm_action_dismiss" />
+                            android:text="@string/action_label_dismiss" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -246,7 +246,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="@string/repeat_settings_label"
+                        android:text="@string/heading_repeat_settings"
                         android:textSize="@dimen/font_size_medium" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -284,7 +284,7 @@
                             android:id="@+id/imgBtnShareNote"
                             android:layout_width="39dp"
                             android:layout_height="25dp"
-                            android:contentDescription="@string/missingImageDesc"
+                            android:contentDescription="@string/missing_image_desc"
                             app:srcCompat="@drawable/ic_share" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>

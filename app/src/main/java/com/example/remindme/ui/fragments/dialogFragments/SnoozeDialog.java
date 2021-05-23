@@ -23,6 +23,12 @@ public class SnoozeDialog extends DialogFragmentBase {
 
     public static final String TAG = "SnoozeDialog";
 
+    private ISnoozeInputDialogListener listener;
+
+    protected ISnoozeInputDialogListener getListener() {
+        return listener;
+    }
+
     private SnoozeModel model;
     private AppCompatRadioButton rdo_reminder_snooze_m5;
     private AppCompatRadioButton rdo_reminder_snooze_m10;
@@ -36,13 +42,15 @@ public class SnoozeDialog extends DialogFragmentBase {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if ((ISnoozeInputDialogListener) getListener() == null) {
+        listener = super.getListener(ISnoozeInputDialogListener.class);
+
+        if (getListener() == null) {
             ToastHelper.showError(getContext(), "Listener incompatible!");
             dismiss();
             return;
         }
 
-        model = new ViewModelProvider(this, new SnoozeViewModelFactory(((ISnoozeInputDialogListener) getListener()).getSnoozeDialogModel())).get(SnoozeModel.class);
+        model = new ViewModelProvider(this, new SnoozeViewModelFactory(getListener().getSnoozeDialogModel())).get(SnoozeModel.class);
     }
 
     @NonNull
@@ -117,8 +125,8 @@ public class SnoozeDialog extends DialogFragmentBase {
 
 
         builder.setView(view)
-                .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> ((ISnoozeInputDialogListener) getListener()).setSnoozeDialogModel(model))
-                .setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
+                .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> getListener().setSnoozeDialogModel(model))
+                .setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
 
                 });
 

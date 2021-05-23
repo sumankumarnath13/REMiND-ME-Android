@@ -165,7 +165,7 @@ public class FabContextMenu extends Fragment {
 
             final MenuItem item = menuItems.get(i);
             item.actionButton = new FloatingActionButton(context);
-            item.actionButton.setContentDescription(getString(R.string.missingImageDesc));
+            item.actionButton.setContentDescription(getString(R.string.missing_image_desc));
             item.actionButton.setImageDrawable(AppCompatResources.getDrawable(context, item.src));
 
             if (OsHelper.isLollipopOrLater()) {

@@ -43,22 +43,22 @@ public class RemindMeDatePickerDialog extends DateTimePickerDialogBase {
 
                 });
         final Calendar calendar = Calendar.getInstance();
-        if (((IDateTimePickerListener) getListener()).getMinimumDateTime(getTag()) != null) {
-            calendar.setTime(((IDateTimePickerListener) getListener()).getMinimumDateTime(getTag()));
+        if (getListener().getMinimumDateTime(getTag()) != null) {
+            calendar.setTime(getListener().getMinimumDateTime(getTag()));
             datePicker.setMinDate(calendar.getTimeInMillis());
         }
 
         builder.setView(view)
-                .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
+                .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
 
                     calendar.setTime(getDateTime());
                     calendar.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
                     calendar.set(Calendar.MONTH, datePicker.getMonth());
                     calendar.set(Calendar.YEAR, datePicker.getYear());
 
-                    ((IDateTimePickerListener) getListener()).setDateTimePicker(getTag(), calendar.getTime());
+                    getListener().setDateTimePicker(getTag(), calendar.getTime());
 
-                }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
+                }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
         });
 
         return builder.create();

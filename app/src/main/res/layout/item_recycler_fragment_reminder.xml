@@ -82,7 +82,7 @@
             android:layout_height="@dimen/dp_16"
             android:layout_marginEnd="@dimen/dp_8"
             app:srcCompat="@drawable/ic_reminder_repeat"
-            android:contentDescription="@string/missingImageDesc" />
+            android:contentDescription="@string/missing_image_desc" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_reminder_repeat_short_summary"
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/themeDimText"
             android:textSize="@dimen/font_size_extra_small"
-            android:text="@string/repeat_daily" />
+            android:text="@string/caption_repeat_option_daily" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -114,7 +114,7 @@
                 android:layout_height="@dimen/dp_16"
                 android:layout_marginEnd="@dimen/dp_8"
                 app:srcCompat="@drawable/ic_reminder_snooze"
-                android:contentDescription="@string/missingImageDesc" />
+                android:contentDescription="@string/missing_image_desc" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_reminder_next_snooze"
@@ -139,7 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/themeDangerColor"
-                android:text="@string/missed_on"
+                android:text="@string/label_missed_on"
                 android:layout_marginEnd="@dimen/dp_8"
                 android:textSize="@dimen/font_size_extra_small" />
 

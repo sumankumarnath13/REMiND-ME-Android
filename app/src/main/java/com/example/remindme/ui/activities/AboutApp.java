@@ -18,7 +18,7 @@ public class AboutApp extends ActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_app);
-        setActivityTitle(getResources().getString(R.string.activityAboutAppTitle));
+        setActivityTitle(getResources().getString(R.string.menu_label_app_about));
 
         final AppCompatButton btn_send_feedback = findViewById(R.id.btn_send_feedback);
         btn_send_feedback.setOnClickListener(v -> {

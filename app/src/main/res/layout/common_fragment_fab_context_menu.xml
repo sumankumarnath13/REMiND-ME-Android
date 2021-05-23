@@ -23,6 +23,6 @@
         style="@style/AccentFab"
         android:layout_marginBottom="@dimen/dp_8"
         app:srcCompat="@drawable/ic_context_menu"
-        android:contentDescription="@string/missingImageDesc" />
+        android:contentDescription="@string/missing_image_desc" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

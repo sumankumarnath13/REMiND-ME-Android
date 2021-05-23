@@ -57,9 +57,8 @@ public class AdapterRecyclerReminder
     public void selectAll() {
         for (int i = 0; i < _data.size(); i++) {
             _data.get(i).setSelected(true);
+            notifyItemChanged(i);
         }
-
-        notifyDataSetChanged();
 
         notifySelectionChange();
     }
@@ -73,9 +72,8 @@ public class AdapterRecyclerReminder
     public void selectNone() {
         for (int i = 0; i < _data.size(); i++) {
             _data.get(i).setSelected(false);
+            notifyItemChanged(i);
         }
-
-        notifyDataSetChanged();
 
         notifySelectionChange();
     }
@@ -99,22 +97,18 @@ public class AdapterRecyclerReminder
 
     @Override
     public void removeAllSelected() {
+        isEnableSelection = false;
+
         for (int i = _data.size() - 1; i >= 0; i--) {
             if (_data.get(i).isSelected()) {
                 notifyItemRemoved(i);
                 _data.remove(i);
+            } else {
+                notifyItemChanged(i);
             }
         }
 
-        initAnimation();
-
-        isEnableSelection = false;
-
-        //notifyDataSetChanged();
-
         notifySelectionChange();
-
-        //dismissSelectable();
     }
 
     private void initAnimation() {
@@ -135,7 +129,9 @@ public class AdapterRecyclerReminder
         for (int i = _data.size() - 1; i >= 0; i--) {
             _data.get(i).setSelected(false);
         }
+
         initAnimation();
+
         isEnableSelection = false;
 
         notifyDataSetChanged();
@@ -150,12 +146,15 @@ public class AdapterRecyclerReminder
 
     @Override
     public List<ReminderModel> getSelected() {
+
         final ArrayList<ReminderModel> selectedReminders = new ArrayList<>();
+
         for (int i = 0; i < _data.size(); i++) {
             if (_data.get(i).isSelected()) {
                 selectedReminders.add(_data.get(i));
             }
         }
+
         return selectedReminders;
     }
 
@@ -237,7 +236,7 @@ public class AdapterRecyclerReminder
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 reminderSelectionCheck.clearAnimation();
-                                itemAnimationCompleted();
+                                itemAnimationCompleted(); // Track for each animation and mark completed once entire dataset is reached
                             }
 
                             @Override
@@ -286,7 +285,7 @@ public class AdapterRecyclerReminder
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 switchEnabled.clearAnimation();
-                                itemAnimationCompleted();
+                                itemAnimationCompleted(); // Track for each animation and mark completed once entire dataset is reached
                             }
 
                             @Override
@@ -311,6 +310,7 @@ public class AdapterRecyclerReminder
                 });
             }
         } else {
+
             reminderSelectionCheck.setChecked(reminder.isSelected());
 
             if (isEnableSelection) {
@@ -325,18 +325,28 @@ public class AdapterRecyclerReminder
         holder.linearLayout.setLongClickable(true);
 
         holder.linearLayout.setOnLongClickListener(v -> {
+
             isEnableSelection = !isEnableSelection;
+
+            // The long click happen after initial render is completed.
+            // So it helps determine if is to animate changes or not.
+            // Call this function only when explicit animation required outside of recycler natural animations.
             initAnimation();
+
             if (isEnableSelection) {
+
                 if (!reminder.isSelected()) {
                     reminder.setSelected(true);
                 }
+
                 notifyDataSetChanged();
 
                 notifySelectionChange();
+
             } else {
                 selectNone();
             }
+
             return true;
         });
 
@@ -416,7 +426,7 @@ public class AdapterRecyclerReminder
             lv_reminder_last_missed_time.setVisibility(View.GONE);
         }
 
-        if (reminder.isExpired()) {
+        if (reminder.getState() == ReminderModel.States.DISMISSED) {
             time.setTextColor(holder.linearLayout.getResources().getColor(R.color.colorDanger));
             amPm.setTextColor(holder.linearLayout.getResources().getColor(R.color.colorDanger));
         }

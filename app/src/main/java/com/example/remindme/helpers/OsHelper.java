@@ -104,5 +104,4 @@ public class OsHelper {
         return (int) ((maxVolume / 100F) * percentValue);
     }
 
-
 }

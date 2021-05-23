@@ -208,8 +208,8 @@ public class TimeListHourlyDialog extends TimeListDialogBase {
         }
 
         builder.setView(view)
-                .setTitle(getString(R.string.time_list_header, "Select", "hours"))
-                .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
+                .setTitle(getString(R.string.format_heading_time_list, "Select", "hours"))
+                .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
                     getModel().getTimeListHours().clear();
                     //int day = 0;
                     if (chk_daily_0.isChecked())
@@ -267,9 +267,9 @@ public class TimeListHourlyDialog extends TimeListDialogBase {
                         getModel().setTimeListMode(TimeModel.TimeListModes.NONE);
                     }
 
-                    ((ITimeListListener) getListener()).setTimeListDialogModel(getModel());
+                    getListener().setTimeListDialogModel(getModel());
 
-                }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
+                }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
 
         });
 

@@ -59,16 +59,24 @@ public abstract class DateTimePickerDialogBase
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
     }
 
+    private IDateTimePickerListener listener;
+
+    protected IDateTimePickerListener getListener() {
+        return listener;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if ((IDateTimePickerListener) getListener() == null) {
+        listener = getListener(IDateTimePickerListener.class);
+
+        if (listener == null) {
             ToastHelper.showError(getContext(), "Listener incompatible!");
             dismiss();
         }
 
-        final Date x = ((IDateTimePickerListener) getListener()).getDateTimePicker(getTag());
+        final Date x = getListener().getDateTimePicker(getTag());
         setDateTime(x);
     }
 

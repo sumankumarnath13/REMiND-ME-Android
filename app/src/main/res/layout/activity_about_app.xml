@@ -22,7 +22,7 @@
                 android:layout_width="@dimen/dp_117"
                 android:layout_height="@dimen/dp_117"
                 app:srcCompat="@drawable/ic_brand"
-                android:contentDescription="@string/missingImageDesc" />
+                android:contentDescription="@string/missing_image_desc" />
 
             <TextView
                 android:layout_width="wrap_content"

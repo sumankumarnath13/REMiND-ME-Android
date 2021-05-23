@@ -94,7 +94,7 @@ public class AppSettingsHelper {
 
     public String getDateFormat(Context context) {
         if (dateFormat == null) {
-            return context.getResources().getStringArray(R.array.date_formats)[0];
+            return context.getResources().getStringArray(R.array.values_date_format)[0];
         }
         return dateFormat;
     }

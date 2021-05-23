@@ -34,7 +34,7 @@
             android:layout_height="25dp"
             android:background="@null"
             app:srcCompat="@drawable/ic_add"
-            android:contentDescription="@string/missingImageDesc" />
+            android:contentDescription="@string/missing_image_desc" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

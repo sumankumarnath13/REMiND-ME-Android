@@ -27,7 +27,12 @@ import java.util.List;
 public class NoteDialog extends DialogFragmentBase {
     public static final String TAG = "NoteDialog";
 
-    private String note;
+    private INoteInputDialogListener listener;
+
+    protected INoteInputDialogListener getListener() {
+        return listener;
+    }
+
     private static final int SPEECH_REQUEST_CODE = 117;
     private AppCompatEditText txt_reminder_note;
     private AppCompatTextView tv_reminder_note_limit_msg;
@@ -37,13 +42,12 @@ public class NoteDialog extends DialogFragmentBase {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if ((INoteInputDialogListener) getListener() == null) {
+        listener = getListener(INoteInputDialogListener.class);
+
+        if (getListener() == null) {
             ToastHelper.showError(getContext(), "Listener incompatible!");
             dismiss();
-            return;
         }
-
-        note = ((INoteInputDialogListener) getListener()).getNoteDialogModel();
     }
 
     @Override
@@ -76,7 +80,7 @@ public class NoteDialog extends DialogFragmentBase {
         txt_reminder_note = view.findViewById(R.id.tv_reminder_note);
         tv_reminder_note_limit_msg = view.findViewById(R.id.tv_reminder_note_limit_msg);
 
-        txt_reminder_note.setText(note);
+        txt_reminder_note.setText(getListener().getNoteDialogModel());
         txt_reminder_note.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -94,9 +98,9 @@ public class NoteDialog extends DialogFragmentBase {
                     s.delete(NOTE_MAX_LENGTH, len);
                 }
                 if (NOTE_MAX_LENGTH - len > 0) {
-                    tv_reminder_note_limit_msg.setText(getString(R.string.character_limit_warning_label, NOTE_MAX_LENGTH - len, "s"));
+                    tv_reminder_note_limit_msg.setText(getString(R.string.format_label_character_limit_warning, NOTE_MAX_LENGTH - len, "s"));
                 } else {
-                    tv_reminder_note_limit_msg.setText(getString(R.string.character_limit_warning_label, 0, ""));
+                    tv_reminder_note_limit_msg.setText(getString(R.string.format_label_character_limit_warning, 0, ""));
                 }
             }
         });
@@ -110,7 +114,7 @@ public class NoteDialog extends DialogFragmentBase {
         });
 
         builder.setView(view).setTitle("Reminder Note").setPositiveButton("OK", (dialog, which) ->
-                ((INoteInputDialogListener) getListener()).setNoteDialogModel(
+                getListener().setNoteDialogModel(
                         txt_reminder_note.getText() == null ? null : txt_reminder_note.getText().toString()))
                 .setNegativeButton("CANCEL", (dialog, which) -> {
                 });

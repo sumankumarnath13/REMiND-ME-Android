@@ -21,7 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:buttonTint="?attr/themeDangerColor"
-                android:text="@string/repeat_off" />
+                android:text="@string/caption_repeat_option_off" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
                     android:checked="false"
-                    android:text="@string/repeat_hourly" />
+                    android:text="@string/caption_repeat_option_hourly" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -48,7 +48,7 @@
                     android:id="@+id/rdo_reminder_repeat_daily"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/repeat_daily" />
+                    android:text="@string/caption_repeat_option_daily" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rdo_reminder_repeat_daily_custom"
@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     app:buttonTint="?attr/themeSuccessColor"
                     android:layout_weight="1"
-                    android:text="@string/repeat_daily_custom" />
+                    android:text="@string/caption_repeat_option_days_of_week" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -69,7 +69,7 @@
                     android:id="@+id/rdo_reminder_repeat_weekly"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/repeat_weekly" />
+                    android:text="@string/caption_repeat_option_weekly" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rdo_reminder_repeat_weekly_custom"
@@ -77,7 +77,7 @@
                     android:layout_height="wrap_content"
                     app:buttonTint="?attr/themeWarningColor"
                     android:layout_weight="1"
-                    android:text="@string/repeat_weekly_custom" />
+                    android:text="@string/caption_repeat_option_weeks_of_month" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -90,7 +90,7 @@
                     android:id="@+id/rdo_reminder_repeat_monthly"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/repeat_monthly" />
+                    android:text="@string/caption_repeat_option_monthly" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rdo_reminder_repeat_monthly_custom"
@@ -98,20 +98,20 @@
                     android:layout_height="wrap_content"
                     app:buttonTint="?attr/themeCuriosityColor"
                     android:layout_weight="1"
-                    android:text="@string/repeat_monthly_custom" />
+                    android:text="@string/caption_repeat_option_months_of_year" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rdo_reminder_repeat_yearly"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/repeat_yearly" />
+                android:text="@string/caption_repeat_option_yearly" />
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rdo_reminder_repeat_other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/repeat_other" />
+                android:text="@string/caption_repeat_option_other" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -12,6 +12,11 @@ import com.example.remindme.viewModels.factories.TimeViewModelFactory;
 public abstract class TimeListDialogBase extends DialogFragmentBase {
 
     private TimeModel model;
+    private ITimeListListener listener;
+
+    protected ITimeListListener getListener() {
+        return listener;
+    }
 
     protected TimeModel getModel() {
         return model;
@@ -21,13 +26,15 @@ public abstract class TimeListDialogBase extends DialogFragmentBase {
     public final void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if ((ITimeListListener) getListener() == null) {
+        listener = getListener(ITimeListListener.class);
+
+        if (listener == null) {
             ToastHelper.showError(getContext(), "Listener incompatible!");
             dismiss();
             return;
         }
 
-        model = new ViewModelProvider(this, new TimeViewModelFactory(((ITimeListListener) getListener()).getTimeListDialogModel().getParent())).get(TimeModel.class);
+        model = new ViewModelProvider(this, new TimeViewModelFactory(getListener().getTimeListDialogModel().getParent())).get(TimeModel.class);
     }
 
     @Override

@@ -17,84 +17,84 @@
             android:layout_width="match_parent"
             app:buttonTint="?attr/themeCuriosityColor"
             android:layout_height="wrap_content"
-            android:text="@string/repeat_monthly_custom_jan" />
+            android:text="@string/caption_january" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_monthly_feb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeCuriosityColor"
-            android:text="@string/repeat_monthly_custom_feb" />
+            android:text="@string/caption_february" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_monthly_mar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeCuriosityColor"
-            android:text="@string/repeat_monthly_custom_mar" />
+            android:text="@string/caption_march" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_monthly_apr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeCuriosityColor"
-            android:text="@string/repeat_monthly_custom_apr" />
+            android:text="@string/caption_april" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_monthly_may"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeCuriosityColor"
-            android:text="@string/repeat_monthly_custom_may" />
+            android:text="@string/caption_may" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_monthly_jun"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeCuriosityColor"
-            android:text="@string/repeat_monthly_custom_jun" />
+            android:text="@string/caption_june" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_monthly_jul"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="@color/colorCuriosityLight"
-            android:text="@string/repeat_monthly_custom_jul" />
+            android:text="@string/caption_july" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_monthly_aug"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeCuriosityColor"
-            android:text="@string/repeat_monthly_custom_aug" />
+            android:text="@string/caption_august" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_monthly_sep"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeCuriosityColor"
-            android:text="@string/repeat_monthly_custom_sep" />
+            android:text="@string/caption_september" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_monthly_oct"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeCuriosityColor"
-            android:text="@string/repeat_monthly_custom_oct" />
+            android:text="@string/caption_october" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_monthly_nov"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeCuriosityColor"
-            android:text="@string/repeat_monthly_custom_nov" />
+            android:text="@string/caption_november" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_monthly_dec"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeCuriosityColor"
-            android:text="@string/repeat_monthly_custom_dec" />
+            android:text="@string/caption_december" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

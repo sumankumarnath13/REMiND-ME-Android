@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.remindme.dataModels.Reminder;
 import com.example.remindme.helpers.AppSettingsHelper;
-import com.example.remindme.helpers.NotificationHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
@@ -35,6 +34,8 @@ import io.realm.exceptions.RealmMigrationNeededException;
 
 public class ReminderModel extends ViewModel {
 
+    public static final String SERVICE_TYPE = "SERVICE_TYPE";
+    public static final int DEFAULT_NOTIFICATION_GROUP_ID = 13;
     public static final String DEFAULT_NOTIFICATION_GROUP_KEY = "ÆjËèúÒ+·_²";
     private static final String DEFAULT_NOTIFICATION_GROUP_NAME = "Default notification group";
     public static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "RxLwKNdHEL";
@@ -42,8 +43,8 @@ public class ReminderModel extends ViewModel {
 
 
     public static final int ALARM_NOTIFICATION_ID = 117;
-    public static final String ACTION_SNOOZE_ALARM = "com.example.remindme.SNOOZE.ALARM";
-    public static final String ACTION_DISMISS_ALARM = "com.example.remindme.DISMISS.ALARM";
+    public static final String ACTION_ALARM_SNOOZE = "com.example.remindme.SNOOZE.ALARM";
+    public static final String ACTION_ALARM_DISMISS = "com.example.remindme.DISMISS.ALARM";
     public static final String ACTION_ALERT_NOTIFICATION_CONTENT_FULLSCREEN = "com.example.remindme.DISMISS.ALARM";
     public static final String ACTION_ALERT_NOTIFICATION_CONTENT = "com.example.remindme.£fcEB]¬B9æ";
     public static final String ACTION_ALERT_FULLSCREEN = "com.example.remindme.ALERT.FULLSCREEN";
@@ -51,20 +52,13 @@ public class ReminderModel extends ViewModel {
     public static final String ALARM_NOTIFICATION_CHANNEL_ID = "z_0EdcKpGP";
     public static final String ALARM_NOTIFICATION_CHANNEL_NAME = "Alarm notifications";
 
-    public static final int DEFAULT_NOTIFICATION_GROUP_ID = 13;
-    public static final String ACTION_RECEIVE_ALARM = "com.example.remindme.2eXXCW2ZrH.RECEIVE.ALARM";
-    public static final String ACTION_RECEIVE_NOTIFICATION = "com.example.remindme.2eXXCW2ZrH.RECEIVE.NOTIFICATION";
+
+    public static final String BROADCAST_FILTER_ALARM = "com.example.remindme.2eXXCW2ZrH.RECEIVE.ALARM";
+    public static final String BROADCAST_FILTER_REMINDER = "com.example.remindme.2eXXCW2ZrH.RECEIVE.REMINDER";
+    public static final String BROADCAST_FILTER_REMINDER_DISMISS = "com.example.remindme.2eXXCW2ZrH.RECEIVE.REMINDER.DISMISS";
     public static final String REMINDER_ID_INTENT = "uNX¯3Á×MòP";
 
     private static Class<? extends BroadcastReceiver> externalBroadcastReceiverClass;
-
-//    private final LogModel logger = new LogModel();
-//
-//    public String getLogs() {
-//        return logger.toString();
-//    }
-
-    // region variables & accessors
 
     private String id;
 
@@ -72,10 +66,40 @@ public class ReminderModel extends ViewModel {
         return id;
     }
 
-    private boolean isExpired;
+    public enum States {
+        ACTIVE,
+        REMINDED,
+        DISMISSED,
+    }
 
-    public boolean isExpired() {
-        return isExpired;
+    private States state;
+
+    public States getState() {
+        return state;
+    }
+
+    private static int getStateInt(States state) {
+        switch (state) {
+            default:
+            case ACTIVE:
+                return 0;
+            case REMINDED:
+                return 1;
+            case DISMISSED:
+                return -1;
+        }
+    }
+
+    private static States setStateInt(int stateValue) {
+        switch (stateValue) {
+            default:
+            case 0:
+                return States.ACTIVE;
+            case 1:
+                return States.REMINDED;
+            case -1:
+                return States.DISMISSED;
+        }
     }
 
     private int intId;
@@ -138,9 +162,6 @@ public class ReminderModel extends ViewModel {
 
     public void setNotification(final boolean value) {
         isNotification = value;
-        if (value && snoozeModel.isEnable()) {
-            snoozeModel.setEnable(false); // Snooze cannot be enabled if its a notification
-        }
     }
 
     private RepeatModel repeatModel;
@@ -185,9 +206,6 @@ public class ReminderModel extends ViewModel {
         return missedTimes;
     }
 
-    // endregion
-
-
     public static String getReminderIdFromIntent(final Intent intent) {
         return intent.getStringExtra(ReminderModel.REMINDER_ID_INTENT);
     }
@@ -203,7 +221,7 @@ public class ReminderModel extends ViewModel {
 
         final Calendar calendar = Calendar.getInstance();
         final List<ReminderModel> reminders = getActiveReminders(null);
-        boolean isNewAlertFound = false;
+        // boolean isNewAlertFound = false;
         for (int i = 0; i < reminders.size(); i++) {
             if (reminders.get(i).isEnabled()) {
                 if (calendar.getTime().after(reminders.get(i).getTimeModel().getTime()) && isDeviceRebooted) {
@@ -212,21 +230,20 @@ public class ReminderModel extends ViewModel {
                     // isDeviceRebooted will prevent this from happening.
                     reminders.get(i).dismissByApp(context);
                 } else if (!reminders.get(i).isPendingIntentExists(context)) {
-                    isNewAlertFound = true;
-
+                    // isNewAlertFound = true;
                     if (calendar.getTime().after(reminders.get(i).getTimeModel().getTime())) {
-                        NotificationHelper.notify(context, reminders.get(i).getIntId(), "Dismissing reminder!", reminders.get(i).getSignatureName(), reminders.get(i).note);
+                        // NotificationHelper.notify(context, reminders.get(i).getIntId(), "Dismissing reminder!", reminders.get(i).getSignatureName(), reminders.get(i).note);
                         reminders.get(i).dismissByApp(context);
                     } else {
-                        NotificationHelper.notify(context, reminders.get(i).getIntId(), "New reminder!", reminders.get(i).getSignatureName(), reminders.get(i).note);
+                        // NotificationHelper.notify(context, reminders.get(i).getIntId(), "New reminder!", reminders.get(i).getSignatureName(), reminders.get(i).note);
                         reminders.get(i).setPendingIntent(context, reminders.get(i).getTimeModel().getTime(), false);
                     }
                 }
             }
         }
-        if (isNewAlertFound) {
-            NotificationHelper.notifySummary(context, "Rescheduling reminders", null, null);
-        }
+        //    if (isNewAlertFound) {
+        //        NotificationHelper.notifySummary(context, "Rescheduling reminders", null, null);
+        //    }
     }
 
     public static boolean tryAppCreate(Class<? extends BroadcastReceiver> broadcastReceiverClass, Context context) {
@@ -281,14 +298,11 @@ public class ReminderModel extends ViewModel {
         return true;
     }
 
-
     public String getSignatureName() {
         if (StringHelper.isNullOrEmpty(name)) {
-            return String.valueOf(getIntId());
+            return StringHelper.toTimeAmPm(getTimeModel().getTime());
         } else {
-            return getIntId() +
-                    " - " +
-                    name;
+            return getName();
         }
     }
 
@@ -324,14 +338,14 @@ public class ReminderModel extends ViewModel {
         if (getIntId() == 0) {
             return false;
         } else {
-            PendingIntent pendingIntent = getReminderPendingIntent(context, false);
+            final PendingIntent pendingIntent = getReminderPendingIntent(context, false);
             return pendingIntent != null;
         }
     }
 
     private void cancelPendingIntent(final Context context) {
         if (getIntId() != 0) {
-            PendingIntent pendingIntent = getReminderPendingIntent(context, false);
+            final PendingIntent pendingIntent = getReminderPendingIntent(context, false);
             if (pendingIntent != null) {
                 OsHelper.getAlarmManager(context).cancel(pendingIntent);
             }
@@ -412,22 +426,18 @@ public class ReminderModel extends ViewModel {
     }
 
     private Intent createReminderIntent(final Context context) {
-        return new Intent(context, externalBroadcastReceiverClass)
-                .setAction(isNotification ? ACTION_RECEIVE_NOTIFICATION : ACTION_RECEIVE_ALARM)
+        return new Intent(context.getApplicationContext(), externalBroadcastReceiverClass)
+                .setAction(isNotification() ? BROADCAST_FILTER_REMINDER : BROADCAST_FILTER_ALARM)
                 .putExtra(REMINDER_ID_INTENT, id);
     }
 
     private PendingIntent getReminderPendingIntent(final Context context, boolean isCreateNew) {
-        Intent intent = createReminderIntent(context);
+        final Intent intent = createReminderIntent(context);
         PendingIntent pendingIntent;
         if (isCreateNew) {
-            if (isNotification) {
-                pendingIntent = PendingIntent.getBroadcast(context, getIntId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else {
-                pendingIntent = PendingIntent.getBroadcast(context, getIntId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
-            }
+            pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), getIntId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
         } else {
-            pendingIntent = PendingIntent.getBroadcast(context, getIntId(), intent, PendingIntent.FLAG_NO_CREATE);
+            pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), getIntId(), intent, PendingIntent.FLAG_NO_CREATE);
         }
         return pendingIntent;
     }
@@ -447,10 +457,19 @@ public class ReminderModel extends ViewModel {
 
     public void dismissByApp(final Context context) {
         final Date nextTime = getRepeatModel().schedule(getTimeModel());
-        if (nextTime == null) { // EOF situation
-            saveAsExpired();
+        if (isNotification()) {
+            if (nextTime != null) { // EOF situation
+                getTimeModel().setScheduledTime(nextTime);
+                saveAndSetAlert(context, false); // Save changes. // Set alarm for next trigger time.
+            }
         } else {
-            saveAsMissed(context, nextTime);
+
+            if (nextTime == null) { // EOF situation
+                missedTimes.add(getTimeModel().getTime()); // Register as missed. Because its missed and expired altogether.
+                saveAsExpired();
+            } else {
+                saveAsMissed(context, nextTime);
+            }
         }
     }
 
@@ -520,7 +539,11 @@ public class ReminderModel extends ViewModel {
     public static List<ReminderModel> getActiveReminders(final String name) {
         final Realm realm = Realm.getDefaultInstance();
         if (StringHelper.isNullOrEmpty(name)) {
-            final List<Reminder> dataList = realm.where(Reminder.class).equalTo("isExpired", false).sort("time").findAll();
+            final List<Reminder> dataList = realm.where(Reminder.class)
+                    .equalTo("stateValue", getStateInt(States.ACTIVE))
+                    .or()
+                    .equalTo("stateValue", getStateInt(States.REMINDED))
+                    .sort("time").findAll();
             final ArrayList<ReminderModel> reminderList = new ArrayList<>();
             for (int i = 0; i < dataList.size(); i++) {
                 reminderList.add(ReminderModel.getInstance(dataList.get(i)));
@@ -528,7 +551,12 @@ public class ReminderModel extends ViewModel {
             realm.close();
             return reminderList;
         } else {
-            final List<Reminder> dataList = realm.where(Reminder.class).equalTo("isExpired", false).beginsWith("name", name).sort("time").findAll();
+            List<Reminder> dataList = realm.where(Reminder.class)
+                    .equalTo("stateValue", getStateInt(States.ACTIVE))
+                    .or()
+                    .equalTo("stateValue", getStateInt(States.REMINDED))
+                    .beginsWith("name", name)
+                    .sort("time").findAll();
             final ArrayList<ReminderModel> reminderList = new ArrayList<>();
             for (int i = 0; i < dataList.size(); i++) {
                 reminderList.add(ReminderModel.getInstance(dataList.get(i)));
@@ -541,7 +569,9 @@ public class ReminderModel extends ViewModel {
     public static List<ReminderModel> getDismissedReminders(final String name) {
         final Realm realm = Realm.getDefaultInstance();
         if (StringHelper.isNullOrEmpty(name)) {
-            final List<Reminder> dataList = realm.where(Reminder.class).equalTo("isExpired", true).sort("time").findAll();
+            final List<Reminder> dataList = realm.where(Reminder.class)
+                    .equalTo("stateValue", getStateInt(States.DISMISSED))
+                    .sort("time").findAll();
             final ArrayList<ReminderModel> reminderList = new ArrayList<>();
             for (int i = 0; i < dataList.size(); i++) {
                 reminderList.add(ReminderModel.getInstance(dataList.get(i)));
@@ -549,7 +579,10 @@ public class ReminderModel extends ViewModel {
             realm.close();
             return reminderList;
         } else {
-            final List<Reminder> dataList = realm.where(Reminder.class).equalTo("isExpired", true).beginsWith("name", name).sort("time").findAll();
+            final List<Reminder> dataList = realm.where(Reminder.class)
+                    .equalTo("stateValue", getStateInt(States.DISMISSED))
+                    .beginsWith("name", name)
+                    .sort("time").findAll();
             final ArrayList<ReminderModel> reminderList = new ArrayList<>();
             for (int i = 0; i < dataList.size(); i++) {
                 reminderList.add(ReminderModel.getInstance(dataList.get(i)));
@@ -586,7 +619,7 @@ public class ReminderModel extends ViewModel {
             }
         }
 
-        isExpired = false;
+        state = States.ACTIVE;
 
         save();
 
@@ -598,7 +631,7 @@ public class ReminderModel extends ViewModel {
 
     public void deleteAndCancelAlert(final Context context) {
 
-        if (!isExpired) {
+        if (state != States.DISMISSED) {
             cancelPendingIntent(context);
         }
 
@@ -616,7 +649,7 @@ public class ReminderModel extends ViewModel {
     }
 
     private void saveAsExpired() {
-        isExpired = true;
+        state = States.DISMISSED;
         isEnabled = false;
         getSnoozeModel().clearCount();
         save();
@@ -634,7 +667,7 @@ public class ReminderModel extends ViewModel {
 
         entity.id = getId();
         entity.isEnabled = isEnabled();
-        entity.isExpired = isExpired();
+        entity.stateValue = getStateInt(state);
         entity.alarmIntentId = getIntId();
         entity.name = getName();
         entity.note = getNote();
@@ -690,7 +723,7 @@ public class ReminderModel extends ViewModel {
 
         id = from.id;
         isEnabled = from.isEnabled;
-        isExpired = from.isExpired;
+        state = setStateInt(from.stateValue);
         intId = from.alarmIntentId;
         setName(from.name);
         setNote(from.note);

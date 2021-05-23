@@ -24,9 +24,9 @@ public abstract class DialogFragmentBase extends DialogFragment {
 
     private Object listener;
 
-    protected <T> T getListener() {
+    protected <T> T getListener(Class<T> type) {
         try {
-            return (T) listener;
+            return type.cast(listener);
         } catch (Exception ex) {
             return null;
         }

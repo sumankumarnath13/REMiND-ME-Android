@@ -62,7 +62,7 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_view);
-        setActivityTitle(getResources().getString(R.string.view_reminder_heading));
+        setActivityTitle(getResources().getString(R.string.heading_label_view_reminder));
 
         if (savedInstanceState != null) {
             isMissedAlertsVisible = savedInstanceState.getBoolean(MISSED_ALERT_UI_STATE, false);
@@ -95,7 +95,7 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
             if (!isUserInteracted())
                 return;
 
-            if (activeReminder != null && !activeReminder.isExpired()) {
+            if (activeReminder != null && activeReminder.getState() != ReminderModel.States.DISMISSED) {
 
                 if (AppSettingsHelper.getInstance().isDisableAllReminders()) { // Ignore if its blocked globally
 
@@ -106,6 +106,7 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
 
                     if (activeReminder.trySetEnabled(getApplicationContext(), isChecked)) {
                         activeReminder.saveAndSetAlert(ReminderView.this, true);
+                        refresh();
                     } else {
                         buttonView.setChecked(false);
                     }
@@ -221,7 +222,7 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
 
             }
 
-            if (activeReminder.isExpired()) {
+            if (activeReminder.getState() == ReminderModel.States.DISMISSED) {
                 enabled.setVisibility(View.GONE);
                 tv_expired.setVisibility(View.VISIBLE);
             } else {
@@ -273,7 +274,7 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
             final AppCompatTextView tv_reminder_vibrate = findViewById(R.id.tv_reminder_vibrate);
 
             if (activeReminder.getRingingModel().isVibrationEnabled()) {
-                tv_reminder_vibrate.setText(getResources().getStringArray(R.array.vibration_patterns)[RingingModel.convertToVibratePattern(activeReminder.getRingingModel().getVibratePattern())]);
+                tv_reminder_vibrate.setText(getResources().getStringArray(R.array.values_vibration_pattern)[RingingModel.convertToVibratePattern(activeReminder.getRingingModel().getVibratePattern())]);
             } else {
                 tv_reminder_vibrate.setText(STATUS_OFF);
             }

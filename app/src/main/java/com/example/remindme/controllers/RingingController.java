@@ -28,13 +28,10 @@ public class RingingController {
     private int ringingVolumeIndex = 0;
     private boolean isIncreaseVolume;
 
-    private final AudioManager.OnAudioFocusChangeListener audioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-        @Override
-        public void onAudioFocusChange(int focusChange) {
+    private final AudioManager.OnAudioFocusChangeListener audioFocusChangeListener = focusChange -> {
 //            if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 //
 //            }
-        }
     };
 
     private final CountDownTimer volumeUpTimer = new CountDownTimer(Integer.MAX_VALUE, volumeIncreaseInterval) {

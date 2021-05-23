@@ -29,7 +29,9 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="com.example.remindme.2eXXCW2ZrH.RECEIVE.ALARM" />
-                <action android:name="com.example.remindme.2eXXCW2ZrH.RECEIVE.NOTIFICATION" />
+                <action android:name="com.example.remindme.2eXXCW2ZrH.RECEIVE.REMINDER" />
+                <action android:name="com.example.remindme.2eXXCW2ZrH.RECEIVE.REMINDER.DISMISS" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>

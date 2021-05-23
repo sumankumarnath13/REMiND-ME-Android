@@ -1,46 +1,87 @@
 package com.example.remindme.helpers;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.remindme.R;
+import com.example.remindme.controllers.AlertBroadcastReceiver;
 import com.example.remindme.viewModels.ReminderModel;
+
+import java.util.Locale;
 
 public class NotificationHelper {
 
-    public static void notify(Context context, int Id, String title, String text, String bigText) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, ReminderModel.DEFAULT_NOTIFICATION_CHANNEL_ID)
+    public static void notifyMissed(Context context, ReminderModel model) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                context.getApplicationContext(),
+                ReminderModel.DEFAULT_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_brand)
                 .setLocalOnly(true)
                 .setGroup(ReminderModel.DEFAULT_NOTIFICATION_GROUP_KEY)
-                .setContentTitle(title)
-                .setContentText(text);
+                .setContentTitle(model.getSignatureName())
+                .setContentText(String.format(Locale.getDefault(), "Missed %s on %s",
+                        model.isNotification() ? "Reminder" : "Alarm",
+                        StringHelper.toTimeWeekdayDate(context, model.getTimeModel().getTime())));
 
-        if (!StringHelper.isNullOrEmpty(bigText)) {
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
+        if (!StringHelper.isNullOrEmpty(model.getNote())) {
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(model.getNote()));
         }
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(Id, builder.build());
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context.getApplicationContext());
+        notificationManager.notify(model.getIntId(), builder.build());
     }
 
-    public static void notifySummary(Context context, String title, String text, String bigText) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, ReminderModel.DEFAULT_NOTIFICATION_CHANNEL_ID)
+    public static void notifyReminder(Context context, ReminderModel model) {
+
+        final Intent closeReminder = new Intent(context.getApplicationContext(), AlertBroadcastReceiver.class)
+                .setAction(ReminderModel.BROADCAST_FILTER_REMINDER_DISMISS)
+                .putExtra(ReminderModel.REMINDER_ID_INTENT, model.getId());
+
+        final PendingIntent closeReminderPendingIntent = PendingIntent
+                .getBroadcast(context, model.getIntId(),
+                        closeReminder,
+                        PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                context.getApplicationContext(),
+                ReminderModel.ALARM_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_brand)
+                .setOngoing(true)
+                .setAutoCancel(false)
                 .setLocalOnly(true)
-                .setGroup(ReminderModel.DEFAULT_NOTIFICATION_GROUP_KEY)
-                .setGroupSummary(true)
-                .setContentTitle(title)
-                .setContentText(text);
+                .setWhen(0)
+                .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
+                .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                .addAction(R.drawable.ic_set, context.getString(R.string.action_label_dismiss), closeReminderPendingIntent)
+                .setContentTitle(model.getSignatureName());
 
-        if (!StringHelper.isNullOrEmpty(bigText)) {
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
+        if (!StringHelper.isNullOrEmpty(model.getNote())) {
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(model.getNote()));
         }
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(ReminderModel.DEFAULT_NOTIFICATION_GROUP_ID, builder.build());
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context.getApplicationContext());
+        notificationManager.notify(model.getIntId(), builder.build());
     }
+
+//    public static void notifySummary(Context context, String title, String text, String bigText) {
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, ReminderModel.DEFAULT_NOTIFICATION_CHANNEL_ID)
+//                .setSmallIcon(R.drawable.ic_brand)
+//                .setLocalOnly(true)
+//                .setGroup(ReminderModel.DEFAULT_NOTIFICATION_GROUP_KEY)
+//                .setGroupSummary(true)
+//                .setContentTitle(title)
+//                .setContentText(text);
+//
+//        if (!StringHelper.isNullOrEmpty(bigText)) {
+//            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
+//        }
+//
+//        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+//        notificationManager.notify(ReminderModel.DEFAULT_NOTIFICATION_GROUP_ID, builder.build());
+//    }
 
 }

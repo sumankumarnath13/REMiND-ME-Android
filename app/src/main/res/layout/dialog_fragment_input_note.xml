@@ -18,9 +18,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:autofillHints="@string/hint_reminder_note"
+            android:autofillHints="@string/caption_hint_reminder_note"
             app:backgroundTint="?attr/themeWarningColor"
-            android:hint="@string/hint_reminder_note"
+            android:hint="@string/caption_hint_reminder_note"
             android:inputType="textLongMessage|textMultiLine|textCapSentences" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_mic"
             app:tint="?attr/themeWarningColor"
-            android:contentDescription="@string/missingImageDesc" />
+            android:contentDescription="@string/missing_image_desc" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.AppCompatTextView

@@ -18,7 +18,6 @@ import androidx.core.app.NotificationManagerCompat;
 import com.example.remindme.R;
 import com.example.remindme.helpers.NotificationHelper;
 import com.example.remindme.helpers.OsHelper;
-import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.WakeLockHelper;
 import com.example.remindme.ui.activities.AlarmBell;
 import com.example.remindme.viewModels.ReminderModel;
@@ -52,10 +51,10 @@ public class AlertService extends Service {
             }
 
             switch (intent.getAction()) {
-                case ReminderModel.ACTION_SNOOZE_ALARM:
+                case ReminderModel.ACTION_ALARM_SNOOZE:
                     snoozeByUser();
                     break;
-                case ReminderModel.ACTION_DISMISS_ALARM:
+                case ReminderModel.ACTION_ALARM_DISMISS:
                     dismiss();
                     break;
             }
@@ -134,39 +133,44 @@ public class AlertService extends Service {
     }
 
     public Notification getAlarmHeadsUp(ReminderModel model) {
-        String timeStamp = StringHelper.toTimeAmPm(model.getTimeModel().getTime());
-
         //ALERT_INTENT_DISMISS_ALERT
-        PendingIntent dismissPendingIntent = PendingIntent
-                .getBroadcast(this, model.getIntId(), createNotificationActionBroadcastIntent(ReminderModel.ACTION_DISMISS_ALARM), PendingIntent.FLAG_CANCEL_CURRENT);
+        final PendingIntent dismissPendingIntent = PendingIntent
+                .getBroadcast(this, model.getIntId(), createNotificationActionBroadcastIntent(ReminderModel.ACTION_ALARM_DISMISS), PendingIntent.FLAG_CANCEL_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, ReminderModel.ALARM_NOTIFICATION_CHANNEL_ID)
-
-                .addAction(R.drawable.ic_reminder_dismiss, getString(R.string.btn_alarm_action_dismiss), dismissPendingIntent)
-                .setContentTitle(model.getName())
-                .setContentText(timeStamp)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(model.getName()))
-                //.setSubText(note)
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                this.getApplicationContext(),
+                ReminderModel.ALARM_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_brand)
                 .setOngoing(true)
                 .setAutoCancel(false)
-                .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
+                .setLocalOnly(true)
                 .setWhen(0)
-                .setCategory(NotificationCompat.CATEGORY_ALARM);
+                .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(model.getName()))
+                .addAction(R.drawable.ic_reminder_dismiss, getString(R.string.action_label_dismiss), dismissPendingIntent)
+                .setContentTitle(model.getSignatureName());
+        //.setSubText(note)
 
         //ALERT_INTENT_SNOOZE_ALERT
         if (model.canSnooze()) {
             final PendingIntent snoozePendingIntent = PendingIntent
-                    .getBroadcast(this, model.getIntId(), createNotificationActionBroadcastIntent(ReminderModel.ACTION_SNOOZE_ALARM), PendingIntent.FLAG_CANCEL_CURRENT);
-            builder.addAction(R.drawable.ic_reminder_snooze, getString(R.string.snooze_settings_label), snoozePendingIntent);
+                    .getBroadcast(this, model.getIntId(),
+                            createNotificationActionBroadcastIntent(ReminderModel.ACTION_ALARM_SNOOZE),
+                            PendingIntent.FLAG_CANCEL_CURRENT);
+            builder.addAction(R.drawable.ic_reminder_snooze,
+                    getString(R.string.action_label_snooze), snoozePendingIntent);
         }
 
         builder.setContentIntent(PendingIntent
-                .getActivity(this, model.getIntId(), createAlarmActivityIntent(ReminderModel.ACTION_ALERT_NOTIFICATION_CONTENT), PendingIntent.FLAG_UPDATE_CURRENT));
+                .getActivity(this, model.getIntId(),
+                        createAlarmActivityIntent(ReminderModel.ACTION_ALERT_NOTIFICATION_CONTENT),
+                        PendingIntent.FLAG_UPDATE_CURRENT));
 
         builder.setFullScreenIntent(PendingIntent
-                        .getActivity(this, model.getIntId(), createAlarmActivityIntent(ReminderModel.ACTION_ALERT_NOTIFICATION_CONTENT_FULLSCREEN), PendingIntent.FLAG_UPDATE_CURRENT),
-                true);
+                .getActivity(this, model.getIntId(),
+                        createAlarmActivityIntent(ReminderModel.ACTION_ALERT_NOTIFICATION_CONTENT_FULLSCREEN),
+                        PendingIntent.FLAG_UPDATE_CURRENT), true);
 
         builder.setLocalOnly(true);
         builder.setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -252,8 +256,8 @@ public class AlertService extends Service {
 
         if (!isInternalBroadcastReceiverRegistered) {
             IntentFilter filter = new IntentFilter();
-            filter.addAction(ReminderModel.ACTION_SNOOZE_ALARM);
-            filter.addAction(ReminderModel.ACTION_DISMISS_ALARM);
+            filter.addAction(ReminderModel.ACTION_ALARM_SNOOZE);
+            filter.addAction(ReminderModel.ACTION_ALARM_DISMISS);
             registerReceiver(receiver, filter);
             isInternalBroadcastReceiverRegistered = true;
         }
@@ -272,8 +276,8 @@ public class AlertService extends Service {
             // snooze concurrent calls if already serving
             final ReminderModel newReminder = ReminderModel.getInstance(intent);
             if (newReminder != null) {
-                newReminder.snoozeByApp(this.getApplicationContext());
-                NotificationHelper.notify(this.getApplicationContext(), newReminder.getIntId(), "Missed alarm " + StringHelper.toTimeAmPm(newReminder.getTimeModel().getTime()), newReminder.getName(), newReminder.getNote());
+                newReminder.snoozeByApp(this);
+                NotificationHelper.notifyMissed(this, newReminder);
             }
             return START_NOT_STICKY;
         }
@@ -289,22 +293,17 @@ public class AlertService extends Service {
         telephonyManager.getCallState();
         telephonyManager.listen(phoneStateChangeListener, PhoneStateListener.LISTEN_CALL_STATE);
 
-        if (OsHelper.isOreoOrLater()) {
-
+        if (intent.getIntExtra(ReminderModel.SERVICE_TYPE, 0) == 1) {
             //Oreo and onwards won't allow service to just run without notification.
             startForeground(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
-
-            if (isIdle) startRinging();
-
-        } else if (OsHelper.isLollipopOrLater()) {
-
+            if (isIdle)
+                startRinging();
+        } else if (intent.getIntExtra(ReminderModel.SERVICE_TYPE, 0) == 0) {
             notificationManager.notify(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
-
             if (!OsHelper.isInteractive(this) && isIdle) { // show heads up
                 startRinging();
                 openAlarmActivity();
             }
-
         } else if (isIdle) {
 
             startRinging();

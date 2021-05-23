@@ -17,49 +17,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
-            android:text="@string/repeat_daily_custom_sun" />
+            android:text="@string/caption_sunday" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_mon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
-            android:text="@string/repeat_daily_custom_mon" />
+            android:text="@string/caption_monday" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_tue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
-            android:text="@string/repeat_daily_custom_tue" />
+            android:text="@string/caption_tuesday" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_wed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
-            android:text="@string/repeat_daily_custom_wed" />
+            android:text="@string/caption_wednesday" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_thu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
-            android:text="@string/repeat_daily_custom_thu" />
+            android:text="@string/caption_thursday" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_fri"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
-            android:text="@string/repeat_daily_custom_fri" />
+            android:text="@string/caption_friday" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chk_daily_sat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:buttonTint="?attr/themeSuccessColor"
-            android:text="@string/repeat_daily_custom_sat" />
+            android:text="@string/caption_saturday" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

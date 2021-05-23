@@ -42,7 +42,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        setActivityTitle(getResources().getString(R.string.activitySettingsTitle));
+        setActivityTitle(getResources().getString(R.string.menu_label_app_settings));
 
         setUserInteracted(false);
 
@@ -117,7 +117,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
         tv_expired_reminder_count.setText(String.valueOf(ReminderModel.getDismissedReminders(null).size()));
 
         final AppCompatSpinner first_day_of_week_spinner = findViewById(R.id.first_day_of_week_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.first_day_of_week_options, R.layout.item_dropdown_fragment_simple_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.values_first_day_of_week, R.layout.item_dropdown_fragment_simple_spinner);
         first_day_of_week_spinner.setAdapter(adapter);
         switch (settingsHelper.getFirstDayOfWeek()) {
             default:
@@ -151,7 +151,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
         dateFormatTextView.setText(StringHelper.toWeekdayDate(this, Calendar.getInstance().getTime()));
 
         final AppCompatSpinner dateFormatSpinner = findViewById(R.id.dateFormatSpinner);
-        final List<String> datePatterns = Arrays.asList(getResources().getStringArray(R.array.date_formats));
+        final List<String> datePatterns = Arrays.asList(getResources().getStringArray(R.array.values_date_format));
         final ArrayList<String> datePatternValues = new ArrayList<>();
         for (final String datePattern : datePatterns) {
             final SimpleDateFormat format = new SimpleDateFormat(datePattern, Locale.getDefault());
@@ -168,7 +168,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
 
 
         final AppCompatSpinner theme_spinner = findViewById(R.id.theme_spinner);
-        final ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.themes, R.layout.item_dropdown_fragment_simple_spinner);
+        final ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.values_theme, R.layout.item_dropdown_fragment_simple_spinner);
         theme_spinner.setAdapter(theme_spinner_adapter);
         if (settingsHelper.getTheme() == AppSettingsHelper.Themes.LIGHT) {
             theme_spinner.setSelection(1);
@@ -201,7 +201,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
                     break;
             }
         } else if (parent.getId() == R.id.dateFormatSpinner) {
-            settingsHelper.setDateFormat(getResources().getStringArray(R.array.date_formats)[position]);
+            settingsHelper.setDateFormat(getResources().getStringArray(R.array.values_date_format)[position]);
             dateFormatTextView.setText(StringHelper.toWeekdayDate(this, Calendar.getInstance().getTime()));
         } else {
 

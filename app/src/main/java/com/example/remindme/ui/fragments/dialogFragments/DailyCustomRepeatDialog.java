@@ -69,8 +69,8 @@ public class DailyCustomRepeatDialog extends CustomRepeatDialogBase {
         }
 
         builder.setView(view)
-                .setTitle("Select " + getString(R.string.repeat_daily_custom))
-                .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
+                .setTitle("Select " + getString(R.string.caption_repeat_option_days_of_week))
+                .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
                     getModel().getCustomDays().clear();
                     if (chk_daily_sun.isChecked())
                         getModel().getCustomDays().add(Calendar.SUNDAY);
@@ -88,9 +88,9 @@ public class DailyCustomRepeatDialog extends CustomRepeatDialogBase {
                         getModel().getCustomDays().add(Calendar.SATURDAY);
                     getModel().setEnabled(true);
                     getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.DAILY_CUSTOM);
-                    ((ICustomRepeatDialogListener) getListener()).setCustomRepeatDialogModel(getModel());
+                    getListener().setCustomRepeatDialogModel(getModel());
 
-                }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
+                }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
 
         });
 

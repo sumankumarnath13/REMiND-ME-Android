@@ -36,9 +36,17 @@ public class DateCalculatorDialog extends DialogFragmentBase implements IDateTim
     private NumberPicker unit_picker;
     private AppCompatTextView tv_reminder_date;
 
+    private ITimeCalculatorListener listener;
+
+    protected ITimeCalculatorListener getListener() {
+        return listener;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        listener = super.getListener(ITimeCalculatorListener.class);
 
         if (getListener() == null) {
             ToastHelper.showError(getContext(), "Listener incompatible!");
@@ -46,7 +54,7 @@ public class DateCalculatorDialog extends DialogFragmentBase implements IDateTim
             return;
         }
 
-        calendar.setTime(((ITimeCalculatorListener) getListener()).getDateCalculatorDialogModel());
+        calendar.setTime(getListener().getDateCalculatorDialogModel());
     }
 
     @NonNull
@@ -94,9 +102,9 @@ public class DateCalculatorDialog extends DialogFragmentBase implements IDateTim
         // 2
         value_picker.setValue(1);
 
-        builder.setView(view).setPositiveButton(getString(R.string.dialog_positive), (dialog, which) ->
-                ((ITimeCalculatorListener) getListener()).setDateCalculatorDialogModel(resultCalendar.getTime()))
-                .setNegativeButton(getString(R.string.dialog_negative),
+        builder.setView(view).setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) ->
+                getListener().setDateCalculatorDialogModel(resultCalendar.getTime()))
+                .setNegativeButton(getString(R.string.acton_dialog_negative),
                         (dialog, which) -> {
                             //DO nothing
                         });
@@ -133,7 +141,7 @@ public class DateCalculatorDialog extends DialogFragmentBase implements IDateTim
             Button positiveButton = ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE);
             final Calendar currentTime = Calendar.getInstance();
             if (currentTime.getTime().before(resultCalendar.getTime())) {
-                positiveButton.setText(getResources().getString(R.string.dialog_positive));
+                positiveButton.setText(getResources().getString(R.string.acton_dialog_positive));
                 positiveButton.setEnabled(true);
                 positiveButton.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSoothingText)));
             } else {

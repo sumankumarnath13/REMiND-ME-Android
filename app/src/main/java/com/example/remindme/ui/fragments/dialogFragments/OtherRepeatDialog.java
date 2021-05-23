@@ -48,13 +48,13 @@ public class OtherRepeatDialog extends CustomRepeatDialogBase {
         // 2
         value_picker.setValue(Math.max(getModel().getCustomTimeValue(), 1));
 
-        builder.setView(view).setTitle("Customize time to Repeat").setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
+        builder.setView(view).setTitle("Customize time to Repeat").setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
             getModel().setRepeatCustom(unit_picker.getValue(), value_picker.getValue());
 
             getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.OTHER);
-            ((ICustomRepeatDialogListener) getListener()).setCustomRepeatDialogModel(getModel());
+            getListener().setCustomRepeatDialogModel(getModel());
 
-        }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
+        }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
 
         });
 

@@ -1,89 +1,9 @@
 <resources>
+
     <string name="app_name">Remind Me</string>
     <string name="app_label">Remind Me</string>
 
-    <string name="dialog_positive">Set</string>
-    <string name="dialog_negative">Cancel</string>
-    <string name="btn_edit">&#160;Edit</string>
-    <string name="btn_delete">Delete</string>
-
-
-    <string name="tab_text_1">Active</string>
-    <string name="tab_text_3">Finished</string>
-
-    <string name="hint_reminder_name">Give a name …</string>
-    <string name="hint_reminder_note">Extra notes for reminder …</string>
-    <string name="btn_save">Set Reminder</string>
-    <string name="repeat_settings_label">Repeat settings</string>
-
-    <string name="repeat_off">Off</string>
-    <string name="repeat_hourly">Hourly</string>
-    <string name="repeat_daily">Daily</string>
-    <string name="repeat_daily_custom">Days of week</string>
-    <string name="repeat_weekly">Weekly</string>
-    <string name="repeat_weekly_custom">Weeks of month</string>
-    <string name="repeat_monthly">Monthly</string>
-    <string name="repeat_monthly_custom">Months of year</string>
-    <string name="repeat_yearly">Yearly</string>
-
-    <string name="repeat_daily_custom_mon">Monday</string>
-    <string name="repeat_daily_custom_tue">Tuesday</string>
-    <string name="repeat_daily_custom_wed">Wednesday</string>
-    <string name="repeat_daily_custom_thu">Thursday</string>
-    <string name="repeat_daily_custom_fri">Friday</string>
-    <string name="repeat_daily_custom_sat">Saturday</string>
-    <string name="repeat_daily_custom_sun">Sunday</string>
-
-    <string name="repeat_weekly_custom_week1">On 1st %s of month</string>
-    <string name="repeat_weekly_custom_week2">On 2nd %s of month</string>
-    <string name="repeat_weekly_custom_week3">On 3rd %s of month</string>
-    <string name="repeat_weekly_custom_week4">On 4th %s of month</string>
-    <string name="repeat_weekly_custom_week5">On 5th %s of month</string>
-
-    <string name="repeat_monthly_custom_jan">January</string>
-    <string name="repeat_monthly_custom_feb">February</string>
-    <string name="repeat_monthly_custom_mar">March</string>
-    <string name="repeat_monthly_custom_apr">April</string>
-    <string name="repeat_monthly_custom_may">May</string>
-    <string name="repeat_monthly_custom_jun">June</string>
-    <string name="repeat_monthly_custom_jul">July</string>
-    <string name="repeat_monthly_custom_aug">August</string>
-    <string name="repeat_monthly_custom_sep">September</string>
-    <string name="repeat_monthly_custom_oct">October</string>
-    <string name="repeat_monthly_custom_nov">November</string>
-    <string name="repeat_monthly_custom_dec">December</string>
-
-    <string name="btn_vibrate">Vibrate</string>
-    <string name="btn_alarm_sound">Alarm tone</string>
-    <string name="snooze_settings_label">Snooze setting</string>
-
-    <string name="snooze_interval_heading">Interval</string>
-    <string name="snooze_interval_m5">5 Minutes</string>
-    <string name="snooze_interval_m10">10 Minutes</string>
-    <string name="snooze_interval_m15">15 Minutes</string>
-    <string name="snooze_interval_m30">30 Minutes</string>
-
-    <string name="snooze_repeat_r3">3 Times</string>
-    <string name="snooze_repeat_r5">5 Times</string>
-    <string name="snooze_repeat_rc">Continuously</string>
-    <string name="add_new_reminder">Add New Reminder</string>
-    <string name="reminder_snooze_menu_caption">Snooze</string>
-    <string name="btn_alarm_action_dismiss">Dismiss</string>
-
-    <string name="snooze_repeat_heading">Repeat</string>
-
-    <string name="new_reminder_heading">Set New Reminder</string>
-    <string name="view_reminder_heading">Viewing Reminder</string>
-    <string name="edit_reminder_heading">Updating Reminder</string>
-    <string name="heading_calculated_alarm_time">First alert will raise on</string>
-    <string name="increase_volume_gradually_label">Auto increase volume</string>
-    <string name="alarm_volume_label">Alarm volume</string>
-    <string name="repeat_other">Other</string>
-    <string name="search_bar_hint">Search</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="activitySettingsTitle">Settings</string>
-    <string name="activityAboutAppTitle">About App</string>
-    <array name="first_day_of_week_options">
+    <array name="values_first_day_of_week">
         <item>
             Sunday
         </item>
@@ -94,7 +14,7 @@
             Saturday
         </item>
     </array>
-    <array name="ring_durations">
+    <array name="values_ring_duration">
         <item>
             1
             minute
@@ -108,7 +28,7 @@
             minute
         </item>
     </array>
-    <array name="vibration_patterns">
+    <array name="values_vibration_pattern">
         <item>
             Basic
         </item>
@@ -127,7 +47,7 @@
             Zig
         </item>
     </array>
-    <array name="themes">
+    <array name="values_theme">
         <item>
             Black
         </item>
@@ -135,7 +55,7 @@
             Light
         </item>
     </array>
-    <array name="date_formats">
+    <array name="values_date_format">
         <item>
             dd
             LLL
@@ -157,11 +77,91 @@
             yyyy
         </item>
     </array>
-    <string name="missed_on">Missed on</string>
-    <string name="missingImageDesc">oops</string>
-    <string name="character_limit_warning_label">%d character%s available</string>
-    <string name="time_list_label">Multiple time of day</string>
-    <string name="time_list_header">%s Multiple %s of day</string>
-    <string name="reminder_expired_label">Expired</string>
-    <string name="reminder_input_ring_duration_label">Ring duration</string>
+
+    <string name="acton_dialog_positive">Set</string>
+    <string name="acton_dialog_negative">Cancel</string>
+
+    <string name="action_label_snooze">Snooze</string>
+    <string name="action_label_dismiss">Dismiss</string>
+
+    <string name="menu_search_input_hint">Search</string>
+    <string name="menu_label_app_settings">Settings</string>
+    <string name="menu_label_app_about">About App</string>
+
+    <string name="heading_repeat_settings">Repeat settings</string>
+    <string name="heading_snooze_settings">Snooze setting &#160; &#160;</string>
+    <string name="heading_label_new_reminder">Set New Reminder</string>
+    <string name="heading_label_view_reminder">Viewing Reminder</string>
+    <string name="heading_label_edit_reminder">Updating Reminder</string>
+
+    <string name="caption_tab_active">Active</string>
+    <string name="caption_tab_finished">Finished</string>
+
+    <string name="label_has_calculated_time">First alert will raise on</string>
+    <string name="label_missed_on">Missed on</string>
+    <string name="label_expired">Expired</string>
+
+    <string name="caption_hint_reminder_name">Give a name …</string>
+    <string name="caption_hint_reminder_note">Extra notes for reminder …</string>
+
+    <string name="caption_repeat_option_off">Off</string>
+    <string name="caption_repeat_option_hourly">Hourly</string>
+    <string name="caption_repeat_option_daily">Daily</string>
+    <string name="caption_repeat_option_days_of_week">Days of week</string>
+    <string name="caption_repeat_option_weekly">Weekly</string>
+    <string name="caption_repeat_option_weeks_of_month">Weeks of month</string>
+    <string name="caption_repeat_option_monthly">Monthly</string>
+    <string name="caption_repeat_option_months_of_year">Months of year</string>
+    <string name="caption_repeat_option_yearly">Yearly</string>
+    <string name="caption_repeat_option_other">Other</string>
+
+    <string name="caption_monday">Monday</string>
+    <string name="caption_tuesday">Tuesday</string>
+    <string name="caption_wednesday">Wednesday</string>
+    <string name="caption_thursday">Thursday</string>
+    <string name="caption_friday">Friday</string>
+    <string name="caption_saturday">Saturday</string>
+    <string name="caption_sunday">Sunday</string>
+
+    <string name="caption_week1">On 1st %s of month</string>
+    <string name="caption_week2">On 2nd %s of month</string>
+    <string name="caption_week3">On 3rd %s of month</string>
+    <string name="caption_week4">On 4th %s of month</string>
+    <string name="caption_week5">On 5th %s of month</string>
+
+    <string name="caption_january">January</string>
+    <string name="caption_february">February</string>
+    <string name="caption_march">March</string>
+    <string name="caption_april">April</string>
+    <string name="caption_may">May</string>
+    <string name="caption_june">June</string>
+    <string name="caption_july">July</string>
+    <string name="caption_august">August</string>
+    <string name="caption_september">September</string>
+    <string name="caption_october">October</string>
+    <string name="caption_november">November</string>
+    <string name="caption_december">December</string>
+
+    <string name="caption_time_list">Multiple time of day</string>
+
+    <string name="caption_snooze_interval_group">Interval</string>
+    <string name="caption_snooze_interval_m5">5 Minutes</string>
+    <string name="caption_snooze_interval_m10">10 Minutes</string>
+    <string name="caption_snooze_interval_m15">15 Minutes</string>
+    <string name="caption_snooze_interval_m30">30 Minutes</string>
+    <string name="caption_snooze_repeat_group">Repeat</string>
+    <string name="caption_snooze_repeat_r3">3 Times</string>
+    <string name="caption_snooze_repeat_r5">5 Times</string>
+    <string name="caption_snooze_repeat_rc">Continuously</string>
+
+    <string name="caption_tone">Alarm tone</string>
+    <string name="caption_tone_auto_volume">Auto increase volume</string>
+    <string name="caption_tone_volume">Alarm volume</string>
+    <string name="caption_tone_duration">Ring duration</string>
+
+    <string name="caption_vibrate">Vibrate</string>
+
+    <string name="format_label_character_limit_warning">%d character%s available</string>
+    <string name="format_heading_time_list">%s Multiple %s of day</string>
+    <string name="missing_image_desc">oops</string>
 </resources>

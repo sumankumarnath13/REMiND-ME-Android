@@ -37,7 +37,7 @@ public class RemindMeTimePickerLightDialog extends DateTimePickerDialogBase {
         timePicker.setCurrentMinute(getMin());
         timePicker.setIs24HourView(AppSettingsHelper.getInstance().isUse24hourTime());
 
-        builder.setView(view).setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
+        builder.setView(view).setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
 
             final Calendar calendar = Calendar.getInstance();
 
@@ -45,9 +45,9 @@ public class RemindMeTimePickerLightDialog extends DateTimePickerDialogBase {
             calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
             calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
 
-            ((IDateTimePickerListener) getListener()).setDateTimePicker(getTag(), calendar.getTime());
+            getListener().setDateTimePicker(getTag(), calendar.getTime());
 
-        }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
+        }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
         });
 
 

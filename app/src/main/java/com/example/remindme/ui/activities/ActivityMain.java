@@ -2,6 +2,7 @@ package com.example.remindme.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 
@@ -31,6 +32,7 @@ public class ActivityMain extends ActivityBase implements FabContextMenu.iFabCon
 
     private iSelectionControl selectionControl;
     private boolean isMenuExpanded;
+    private boolean isTabMoving;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,21 +42,39 @@ public class ActivityMain extends ActivityBase implements FabContextMenu.iFabCon
         final AdapterSectionsPager adapterSectionsPager = new AdapterSectionsPager(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.viewpager);
         viewPager.setAdapter(adapterSectionsPager);
-        TabLayout tabs = findViewById(R.id.tabs);
+        final TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                if (isTabMoving) {
+                    isTabMoving = false;
+                    final CountDownTimer timer = new CountDownTimer(300, 300) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            if (selectionControl != null && selectionControl.isSelectable()) {
+                                selectionControl.dismissSelectable();
+                            }
+                        }
+                    };
+                    timer.start();
+                }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                if (selectionControl != null && selectionControl.isSelectable()) {
+                    isTabMoving = true;
+                }
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
 

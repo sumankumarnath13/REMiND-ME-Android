@@ -40,6 +40,12 @@ public class RepeatDialog extends DialogFragmentBase
 
     public static final String TAG = "RepeatDialog";
 
+    private IRepeatInputDialogListener listener;
+
+    protected IRepeatInputDialogListener getListener() {
+        return listener;
+    }
+
     private RepeatModel model;
     private RadioButton rdo_reminder_repeat_off;
 
@@ -62,13 +68,15 @@ public class RepeatDialog extends DialogFragmentBase
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if ((IRepeatInputDialogListener) getListener() == null) {
+        listener = super.getListener(IRepeatInputDialogListener.class);
+
+        if (getListener() == null) {
             ToastHelper.showError(getContext(), "Listener incompatible!");
             dismiss();
             return;
         }
 
-        model = new ViewModelProvider(this, new RepeatViewModelFactory(((IRepeatInputDialogListener) getListener()).getRepeatDialogModel())).get(RepeatModel.class);
+        model = new ViewModelProvider(this, new RepeatViewModelFactory(getListener().getRepeatDialogModel())).get(RepeatModel.class);
     }
 
     @NonNull
@@ -81,9 +89,9 @@ public class RepeatDialog extends DialogFragmentBase
         final LayoutInflater inflater = activity.getLayoutInflater();
 
         final View view = inflater.inflate(R.layout.dialog_fragment_input_repeat, null);
-        builder.setView(view).setTitle("Select " + getString(R.string.repeat_settings_label))
-                .setPositiveButton(R.string.dialog_positive, (dialog, which) -> ((IRepeatInputDialogListener) getListener()).setRepeatDialogModel(model))
-                .setNegativeButton(R.string.dialog_negative, (dialog, which) -> {
+        builder.setView(view).setTitle("Select " + getString(R.string.heading_repeat_settings))
+                .setPositiveButton(R.string.acton_dialog_positive, (dialog, which) -> getListener().setRepeatDialogModel(model))
+                .setNegativeButton(R.string.acton_dialog_negative, (dialog, which) -> {
 
                 });
 
@@ -195,36 +203,6 @@ public class RepeatDialog extends DialogFragmentBase
         tv_end_date_value.setOnClickListener(v -> {
             final RemindMeDatePickerDialog dialog = new RemindMeDatePickerDialog();
             dialog.show(getParentFragmentManager(), RemindMeDatePickerDialog.TAG);
-
-//            final Calendar alertTime = Calendar.getInstance();
-//
-//            if (model.isHasRepeatEnd()) {
-//                alertTime.setTime(model.getRepeatEndDate());
-//            } else {
-//                //alertTime.setTime(model.getParent().getTimeModel().getAlertTime(false));
-//                alertTime.set(Calendar.MONTH, 6);
-//            }
-//
-//            final int mYear, mMonth, mDay;
-//            mYear = alertTime.get(Calendar.YEAR);
-//            mMonth = alertTime.get(Calendar.MONTH);
-//            mDay = alertTime.get(Calendar.DAY_OF_MONTH);
-//            final DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),
-//                    AppSettingsHelper.getInstance().getDatePickerDialogStyleId(),
-//                    (view12, year, monthOfYear, dayOfMonth) -> {
-//                        alertTime.set(Calendar.YEAR, year);
-//                        alertTime.set(Calendar.MONTH, monthOfYear);
-//                        alertTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-//                        alertTime.set(Calendar.SECOND, 0);
-//                        alertTime.set(Calendar.MILLISECOND, 0);
-//                        model.setRepeatEndDate(alertTime.getTime());
-//                        refresh();
-//                    }, mYear, mMonth, mDay);
-//
-//            datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis()); // This will cause extra title on the top of the regular date picker
-//            datePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // This line will try to solve the issue above
-//            datePickerDialog.setTitle(null); // This line will try to solve the issue above
-//            datePickerDialog.show();
         });
 
         tv_end_time_value = view.findViewById(R.id.tv_end_time_value);
@@ -237,30 +215,6 @@ public class RepeatDialog extends DialogFragmentBase
                 final RemindMeTimePickerLightDialog dialog = new RemindMeTimePickerLightDialog();
                 dialog.show(getParentFragmentManager(), RemindMeTimePickerLightDialog.TAG);
             }
-
-//            final Calendar alertTime = Calendar.getInstance();
-//
-//            if (model.isHasRepeatEnd()) {
-//                alertTime.setTime(model.getRepeatEndDate());
-//            } else {
-//                //alertTime.setTime(model.getParent().getTimeModel().getAlertTime(false));
-//                alertTime.set(Calendar.MONTH, 6);
-//            }
-//
-//            final int mHour, mMinute;
-//            mHour = alertTime.get(Calendar.HOUR_OF_DAY);
-//            mMinute = alertTime.get(Calendar.MINUTE);
-//            final TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),
-//                    AppSettingsHelper.getInstance().getTimePickerDialogStyleId(),
-//                    (view1, hourOfDay, minute) -> {
-//                        alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-//                        alertTime.set(Calendar.MINUTE, minute);
-//                        alertTime.set(Calendar.SECOND, 0); // Setting second to 0 is important.
-//                        alertTime.set(Calendar.MILLISECOND, 0);
-//                        model.setRepeatEndDate(alertTime.getTime());
-//                        refresh();
-//                    }, mHour, mMinute, false);
-//            timePickerDialog.show();
         });
 
         lv_repeat_end_date = view.findViewById(R.id.lv_repeat_end_date);
@@ -289,18 +243,6 @@ public class RepeatDialog extends DialogFragmentBase
         // Time list and hourly repeat cannot coexists.
         rdo_reminder_repeat_hourly.setEnabled(model.getParent().getTimeModel().getTimeListMode() == TimeModel.TimeListModes.NONE);
 
-//        if (OsHelper.isLollipopOrLater()) {
-//            if (model.getParent().getTimeModel().getTimeListMode() == TimeModel.TimeListModes.NONE) {
-//                rdo_reminder_repeat_hourly.setButtonTintList(AppCompatResources.getColorStateList(getActivity(), R.color.bg_warning));
-//            } else {
-//
-//                if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.LIGHT) {
-//                    rdo_reminder_repeat_hourly.setButtonTintList(AppCompatResources.getColorStateList(getActivity(), R.color.border_color_light));
-//                } else {
-//                    rdo_reminder_repeat_hourly.setButtonTintList(AppCompatResources.getColorStateList(getActivity(), R.color.border_color));
-//                }
-//            }
-//        }
 
         if (!model.isEnabled()) {
             //model.setEnabled(true);

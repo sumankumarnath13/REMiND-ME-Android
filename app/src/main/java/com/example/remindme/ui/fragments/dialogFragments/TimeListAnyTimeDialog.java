@@ -106,7 +106,6 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements IDateTi
 
     private RecyclerView timeListRecycler;
 
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -122,25 +121,6 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements IDateTi
 
         final AppCompatImageButton imgBtnAddCustomTime = view.findViewById(R.id.imgBtnAddCustomTime);
         imgBtnAddCustomTime.setOnClickListener(v -> {
-//            final Calendar alertTime = Calendar.getInstance();
-//            alertTime.setTime(getModel().getTime());
-//            final int mHour, mMinute;
-//            mHour = alertTime.get(Calendar.HOUR_OF_DAY);
-//            mMinute = alertTime.get(Calendar.MINUTE);
-//
-//            final TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),
-//                    AppSettingsHelper.getInstance().getTimePickerDialogStyleId(),
-//                    (view1, hourOfDay, minute) -> {
-//                        alertTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-//                        alertTime.set(Calendar.MINUTE, minute);
-//                        alertTime.set(Calendar.SECOND, 0);
-//                        alertTime.set(Calendar.MILLISECOND, 0);
-//
-//                        getModel().addTimeListTime(alertTime.getTime());
-//                        refresh();
-//
-//                    }, mHour, mMinute, AppSettingsHelper.getInstance().isUse24hourTime());
-//            timePickerDialog.show();
 
             if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.BLACK) {
                 final RemindMeTimePickerBlackDialog dialog = new RemindMeTimePickerBlackDialog();
@@ -153,15 +133,15 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements IDateTi
         });
 
         builder.setView(view)
-                .setTitle(getString(R.string.time_list_header, "Select", "time"))
-                .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
+                .setTitle(getString(R.string.format_heading_time_list, "Select", "time"))
+                .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
                     if (getModel().getTimeListTimes().size() > 0) {
                         getModel().setTimeListMode(TimeModel.TimeListModes.CUSTOM);
-                        ((ITimeListListener) getListener()).setTimeListDialogModel(getModel());
+                        getListener().setTimeListDialogModel(getModel());
                     } else {
                         getModel().setTimeListMode(TimeModel.TimeListModes.NONE);
                     }
-                }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
+                }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
 
         });
 

@@ -88,7 +88,7 @@ public class MonthlyCustomRepeatDialog extends CustomRepeatDialogBase {
             }
         }
 
-        builder.setView(view).setTitle("Select " + getString(R.string.repeat_monthly_custom)).setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
+        builder.setView(view).setTitle("Select " + getString(R.string.caption_repeat_option_months_of_year)).setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
             getModel().getCustomMonths().clear();
             if (chk_monthly_jan.isChecked())
                 getModel().getCustomMonths().add(Calendar.JANUARY);
@@ -117,9 +117,9 @@ public class MonthlyCustomRepeatDialog extends CustomRepeatDialogBase {
 
             getModel().setEnabled(true);
             getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM);
-            ((ICustomRepeatDialogListener) getListener()).setCustomRepeatDialogModel(getModel());
+            getListener().setCustomRepeatDialogModel(getModel());
 
-        }).setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
+        }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
 
         });
 

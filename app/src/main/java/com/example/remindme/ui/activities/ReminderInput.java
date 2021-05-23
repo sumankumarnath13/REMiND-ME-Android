@@ -73,8 +73,8 @@ public class ReminderInput
     private static final int NAME_SPEECH_REQUEST_CODE = 119;
     private static final int NOTE_SPEECH_REQUEST_CODE = 113;
     private static final int RINGTONE_DIALOG_REQ_CODE = 117;
-    private static final String MORE_INPUT_UI_STATE = "MORE_INPUT";
 
+    private static final String MORE_INPUT_UI_STATE = "MORE_INPUT";
     private static final String REMINDER_CALENDAR = "REMINDER_CALENDAR";
     private static final String REMINDER_CALCULATOR = "REMINDER_CALCULATOR";
 
@@ -94,7 +94,6 @@ public class ReminderInput
     private AppCompatTextView tv_reminder_tone_summary;
     private AppCompatTextView tv_reminder_name_summary;
     private AppCompatTextView tv_reminder_note_summary;
-    //private SwitchCompat sw_notification;
     private AppCompatCheckBox chk_reminder;
     private AppCompatCheckBox chk_alarm;
     private SwitchCompat sw_reminder_repeat;
@@ -103,7 +102,6 @@ public class ReminderInput
     private AppCompatTextView tv_reminder_snooze_summary;
     private AppCompatSeekBar seeker_alarm_volume;
     private SwitchCompat sw_gradually_increase_volume;
-    private LinearLayoutCompat lvc_diff_next_reminder_trigger;
 
     private SwitchCompat sw_reminder_tone;
     private SwitchCompat sw_reminder_vibrate;
@@ -117,6 +115,10 @@ public class ReminderInput
     private AppCompatButton btnSetDefaultTone;
     private boolean isPlayingTone;
     private int deviceAlarmVolume;
+
+    private LinearLayoutCompat lvc_diff_next_reminder_trigger;
+
+    private LinearLayoutCompat alarm_only_layout;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -160,11 +162,12 @@ public class ReminderInput
         reminderModel = new ViewModelProvider(this, new ReminderViewModelFactory(getIntent())).get(ReminderModel.class);
 
         if (reminderModel.isNew()) { // First time creating the activity
-            setActivityTitle(getResources().getString(R.string.new_reminder_heading));
+            setActivityTitle(getResources().getString(R.string.heading_label_new_reminder));
         } else {
-            setActivityTitle(getResources().getString(R.string.edit_reminder_heading));
+            setActivityTitle(getResources().getString(R.string.heading_label_edit_reminder));
         }
 
+        alarm_only_layout = findViewById(R.id.alarm_only_layout);
         tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
         tv_reminder_name_summary = findViewById(R.id.tv_reminder_name_summary);
         tv_reminder_note_summary = findViewById(R.id.tv_reminder_note_summary);
@@ -185,13 +188,6 @@ public class ReminderInput
             }
         });
 
-        //sw_notification = findViewById(R.id.sw_notification);
-//        sw_notification.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//            if (isUserInteracted()) {
-//                reminderModel.setNotification(isChecked);
-//                refresh();
-//            }
-//        });
         sw_reminder_repeat = findViewById(R.id.sw_reminder_repeat);
         tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
         sw_reminder_snooze = findViewById(R.id.sw_reminder_snooze);
@@ -217,14 +213,11 @@ public class ReminderInput
         });
 
         btn_reminder_date.setOnClickListener(view -> {
-
             final RemindMeDatePickerDialog dialog = new RemindMeDatePickerDialog();
             dialog.show(getSupportFragmentManager(), REMINDER_CALENDAR);
-
         });
 
         btn_reminder_time.setOnClickListener(view -> {
-
             if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.BLACK) {
                 final RemindMeTimePickerBlackDialog dialog = new RemindMeTimePickerBlackDialog();
                 dialog.show(getSupportFragmentManager(), REMINDER_CALCULATOR);
@@ -232,7 +225,6 @@ public class ReminderInput
                 final RemindMeTimePickerLightDialog dialog = new RemindMeTimePickerLightDialog();
                 dialog.show(getSupportFragmentManager(), REMINDER_CALCULATOR);
             }
-
         });
 
         final AppCompatButton btnCalculate = findViewById(R.id.btnCalculate);
@@ -295,13 +287,13 @@ public class ReminderInput
             repeatInput.show(getSupportFragmentManager(), RepeatDialog.TAG);
         });
 
-        final LinearLayoutCompat mnu_reminder_snooze = findViewById(R.id.mnu_reminder_snooze);
+        final LinearLayoutCompat mnu_reminder_snooze = findViewById(R.id.snooze_input_layout);
         mnu_reminder_snooze.setOnClickListener(v -> {
             final SnoozeDialog snoozeInput = new SnoozeDialog();
             snoozeInput.show(getSupportFragmentManager(), SnoozeDialog.TAG);
         });
 
-        final LinearLayoutCompat mnu_reminder_tone = findViewById(R.id.mnu_reminder_tone);
+        final LinearLayoutCompat mnu_reminder_tone = findViewById(R.id.tone_input_layout);
         mnu_reminder_tone.setOnClickListener(v -> {
             final Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
@@ -404,7 +396,6 @@ public class ReminderInput
             }
         });
 
-
         lv_reminder_extra_inputs = findViewById(R.id.lv_reminder_extra_inputs);
         btn_reminder_extra_inputs = findViewById(R.id.btn_reminder_extra_inputs);
         btn_reminder_extra_inputs.setOnClickListener(v -> {
@@ -419,13 +410,13 @@ public class ReminderInput
         sv_container = findViewById(R.id.sv_container);
 
         ring_duration_spinner = findViewById(R.id.ring_duration_spinner);
-        ArrayAdapter<CharSequence> ring_duration_adapter = ArrayAdapter.createFromResource(this, R.array.ring_durations, R.layout.item_dropdown_fragment_simple_spinner);
+        ArrayAdapter<CharSequence> ring_duration_adapter = ArrayAdapter.createFromResource(this, R.array.values_ring_duration, R.layout.item_dropdown_fragment_simple_spinner);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         ring_duration_spinner.setAdapter(ring_duration_adapter);
         ring_duration_spinner.setOnItemSelectedListener(this);
 
         vibrate_pattern_spinner = findViewById(R.id.vibrate_pattern_spinner);
-        ArrayAdapter<CharSequence> vibrate_pattern_adapter = ArrayAdapter.createFromResource(this, R.array.vibration_patterns, R.layout.item_dropdown_fragment_simple_spinner);
+        ArrayAdapter<CharSequence> vibrate_pattern_adapter = ArrayAdapter.createFromResource(this, R.array.values_vibration_pattern, R.layout.item_dropdown_fragment_simple_spinner);
         // adapter.setDropDownViewResource(R.layout.spinner_item_layout);
         vibrate_pattern_spinner.setAdapter(vibrate_pattern_adapter);
         vibrate_pattern_spinner.setOnItemSelectedListener(this);
@@ -464,9 +455,14 @@ public class ReminderInput
         tv_reminder_name_summary.setText(reminderModel.getName());
         tv_reminder_note_summary.setText(reminderModel.getNote());
 
-        //sw_notification.setChecked(reminderModel.isNotification());
         chk_reminder.setChecked(reminderModel.isNotification());
         chk_alarm.setChecked(!reminderModel.isNotification());
+
+        if (reminderModel.isNotification()) {
+            alarm_only_layout.setVisibility(View.GONE);
+        } else {
+            alarm_only_layout.setVisibility(View.VISIBLE);
+        }
 
         tv_reminder_repeat_summary.setText(reminderModel.getRepeatModel().toString(this));
         tv_reminder_snooze_summary.setText(reminderModel.getSnoozeModel().toString());
@@ -701,7 +697,7 @@ public class ReminderInput
 
     @Override
     public Date getMinimumDateTime(String tag) {
-        return reminderModel.getTimeModel().getTime();
+        return Calendar.getInstance().getTime(); //Today's time
     }
 
 }

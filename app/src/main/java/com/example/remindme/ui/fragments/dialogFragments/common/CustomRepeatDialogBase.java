@@ -13,6 +13,12 @@ import com.example.remindme.viewModels.factories.RepeatViewModelFactory;
 
 public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
 
+    private ICustomRepeatDialogListener listener;
+
+    protected ICustomRepeatDialogListener getListener() {
+        return listener;
+    }
+
     private RepeatModel model;
 
     protected RepeatModel getModel() {
@@ -23,7 +29,7 @@ public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
 
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
-        ((ICustomRepeatDialogListener) getListener()).setCustomRepeatDialogModel(null);
+        getListener().setCustomRepeatDialogModel(null);
         isCanceled = true;
         super.onCancel(dialog);
     }
@@ -31,7 +37,7 @@ public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         if (!isCanceled) {
-            ((ICustomRepeatDialogListener) getListener()).setCustomRepeatDialogModel(null);
+            getListener().setCustomRepeatDialogModel(null);
         }
         super.onDismiss(dialog);
     }
@@ -40,14 +46,16 @@ public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if ((ICustomRepeatDialogListener) getListener() == null) {
+        listener = getListener(ICustomRepeatDialogListener.class);
+
+        if (getListener() == null) {
             ToastHelper.showError(getContext(), "Listener incompatible!");
             dismiss();
             return;
         }
 
         model = new ViewModelProvider(this,
-                new RepeatViewModelFactory(((ICustomRepeatDialogListener) getListener())
+                new RepeatViewModelFactory(getListener()
                         .getCustomRepeatDialogModel())).get(RepeatModel.class);
     }
 

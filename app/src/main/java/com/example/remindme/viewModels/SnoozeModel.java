@@ -87,10 +87,6 @@ public class SnoozeModel extends ViewModel {
     }
 
     public void setEnable(boolean value) {
-        if (value) {
-            getParent().setNotification(false);
-        }
-
         isEnable = value;
     }
 
@@ -131,8 +127,6 @@ public class SnoozeModel extends ViewModel {
     }
 
     public Date getNextSnoozeTime(Date fromTime) {
-
-        Date nextTime = null;
 
         int iteration = 0;
 
@@ -175,10 +169,10 @@ public class SnoozeModel extends ViewModel {
                     break;
             }
 
-            nextTime = nextSnoozeOff.getTime();
+            return nextSnoozeOff.getTime();
         }
 
-        return nextTime;
+        return null;
     }
 
 
