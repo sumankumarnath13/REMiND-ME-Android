@@ -115,7 +115,7 @@ public class MonthlyCustomRepeatDialog extends CustomRepeatDialogBase {
             if (chk_monthly_dec.isChecked())
                 getModel().getCustomMonths().add(Calendar.DECEMBER);
 
-            getModel().setEnabled(true);
+            getModel().setEnable(true);
             getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM);
             getListener().setCustomRepeatDialogModel(getModel());
 

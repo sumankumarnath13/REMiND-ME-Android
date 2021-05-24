@@ -5,7 +5,7 @@ import android.content.Intent;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.AlertModel;
 
 public class ReminderViewModelFactory implements ViewModelProvider.Factory {
 
@@ -17,9 +17,9 @@ public class ReminderViewModelFactory implements ViewModelProvider.Factory {
 
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        ReminderModel m = ReminderModel.getInstance(intent);
+        AlertModel m = AlertModel.getInstance(intent);
         if (m == null) {
-            m = new ReminderModel();
+            m = new AlertModel();
         }
         return (T) m;
     }

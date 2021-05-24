@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.remindme.R;
-import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.AlertModel;
 
 public class FragmentDismissedReminder extends Fragment {
 
@@ -58,7 +58,7 @@ public class FragmentDismissedReminder extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        final AdapterRecyclerReminder mAdapter = new AdapterRecyclerReminder(ReminderModel.getDismissedReminders(null),
+        final AdapterRecyclerReminder mAdapter = new AdapterRecyclerReminder(AlertModel.getDismissedReminders(null),
                 (AdapterRecyclerReminder.iDataChangeListener) getActivity());
         recyclerView.setAdapter(mAdapter);
     }
@@ -88,7 +88,7 @@ public class FragmentDismissedReminder extends Fragment {
     }
 
     public void query() {
-        final AdapterRecyclerReminder mAdapter = new AdapterRecyclerReminder(ReminderModel.getDismissedReminders(queryString),
+        final AdapterRecyclerReminder mAdapter = new AdapterRecyclerReminder(AlertModel.getDismissedReminders(queryString),
                 (AdapterRecyclerReminder.iDataChangeListener) getActivity());
         recyclerView.setAdapter(mAdapter);
     }

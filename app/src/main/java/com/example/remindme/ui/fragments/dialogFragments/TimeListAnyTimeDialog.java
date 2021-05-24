@@ -136,7 +136,7 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements IDateTi
                 .setTitle(getString(R.string.format_heading_time_list, "Select", "time"))
                 .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
                     if (getModel().getTimeListTimes().size() > 0) {
-                        getModel().setTimeListMode(TimeModel.TimeListModes.CUSTOM);
+                        getModel().setTimeListMode(TimeModel.TimeListModes.ANYTIME);
                         getListener().setTimeListDialogModel(getModel());
                     } else {
                         getModel().setTimeListMode(TimeModel.TimeListModes.NONE);

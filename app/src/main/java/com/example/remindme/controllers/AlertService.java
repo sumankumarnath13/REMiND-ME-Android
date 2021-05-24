@@ -20,11 +20,11 @@ import com.example.remindme.helpers.NotificationHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.WakeLockHelper;
 import com.example.remindme.ui.activities.AlarmBell;
-import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.AlertModel;
 import com.example.remindme.viewModels.RingingModel;
 
 public class AlertService extends Service {
-    private ReminderModel servingReminder;
+    private AlertModel servingReminder;
     private NotificationManagerCompat notificationManager;
     private boolean isBusy = false;
     private boolean isChanged = false;
@@ -51,10 +51,10 @@ public class AlertService extends Service {
             }
 
             switch (intent.getAction()) {
-                case ReminderModel.ACTION_ALARM_SNOOZE:
+                case AlertModel.ACTION_ALARM_SNOOZE:
                     snoozeByUser();
                     break;
-                case ReminderModel.ACTION_ALARM_DISMISS:
+                case AlertModel.ACTION_ALARM_DISMISS:
                     dismiss();
                     break;
             }
@@ -132,14 +132,14 @@ public class AlertService extends Service {
         }
     }
 
-    public Notification getAlarmHeadsUp(ReminderModel model) {
+    public Notification getAlarmHeadsUp(AlertModel model) {
         //ALERT_INTENT_DISMISS_ALERT
         final PendingIntent dismissPendingIntent = PendingIntent
-                .getBroadcast(this, model.getIntId(), createNotificationActionBroadcastIntent(ReminderModel.ACTION_ALARM_DISMISS), PendingIntent.FLAG_CANCEL_CURRENT);
+                .getBroadcast(this, model.getIntId(), createNotificationActionBroadcastIntent(AlertModel.ACTION_ALARM_DISMISS), PendingIntent.FLAG_CANCEL_CURRENT);
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 this.getApplicationContext(),
-                ReminderModel.ALARM_NOTIFICATION_CHANNEL_ID)
+                AlertModel.ALARM_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_brand)
                 .setOngoing(true)
                 .setAutoCancel(false)
@@ -156,7 +156,7 @@ public class AlertService extends Service {
         if (model.canSnooze()) {
             final PendingIntent snoozePendingIntent = PendingIntent
                     .getBroadcast(this, model.getIntId(),
-                            createNotificationActionBroadcastIntent(ReminderModel.ACTION_ALARM_SNOOZE),
+                            createNotificationActionBroadcastIntent(AlertModel.ACTION_ALARM_SNOOZE),
                             PendingIntent.FLAG_CANCEL_CURRENT);
             builder.addAction(R.drawable.ic_reminder_snooze,
                     getString(R.string.action_label_snooze), snoozePendingIntent);
@@ -164,12 +164,12 @@ public class AlertService extends Service {
 
         builder.setContentIntent(PendingIntent
                 .getActivity(this, model.getIntId(),
-                        createAlarmActivityIntent(ReminderModel.ACTION_ALERT_NOTIFICATION_CONTENT),
+                        createAlarmActivityIntent(AlertModel.ACTION_ALERT_NOTIFICATION_CONTENT),
                         PendingIntent.FLAG_UPDATE_CURRENT));
 
         builder.setFullScreenIntent(PendingIntent
                 .getActivity(this, model.getIntId(),
-                        createAlarmActivityIntent(ReminderModel.ACTION_ALERT_NOTIFICATION_CONTENT_FULLSCREEN),
+                        createAlarmActivityIntent(AlertModel.ACTION_ALERT_NOTIFICATION_CONTENT_FULLSCREEN),
                         PendingIntent.FLAG_UPDATE_CURRENT), true);
 
         builder.setLocalOnly(true);
@@ -201,7 +201,7 @@ public class AlertService extends Service {
         }
     }
 
-    public ReminderModel getServingReminder() {
+    public AlertModel getServingReminder() {
         return servingReminder;
     }
 
@@ -233,12 +233,12 @@ public class AlertService extends Service {
     }
 
     private void openAlarmActivity() {
-        Intent ringingActivity = createAlarmActivityIntent(ReminderModel.ACTION_ALERT_FULLSCREEN);
+        Intent ringingActivity = createAlarmActivityIntent(AlertModel.ACTION_ALERT_FULLSCREEN);
         startActivity(ringingActivity);
     }
 
     private void broadcastCloseAlarmActivity() {
-        Intent stopServiceBroadcast = new Intent(ReminderModel.ACTION_CLOSE_ALARM_ACTIVITY);
+        Intent stopServiceBroadcast = new Intent(AlertModel.ACTION_CLOSE_ALARM_ACTIVITY);
         sendBroadcast(stopServiceBroadcast);
     }
 
@@ -256,8 +256,8 @@ public class AlertService extends Service {
 
         if (!isInternalBroadcastReceiverRegistered) {
             IntentFilter filter = new IntentFilter();
-            filter.addAction(ReminderModel.ACTION_ALARM_SNOOZE);
-            filter.addAction(ReminderModel.ACTION_ALARM_DISMISS);
+            filter.addAction(AlertModel.ACTION_ALARM_SNOOZE);
+            filter.addAction(AlertModel.ACTION_ALARM_DISMISS);
             registerReceiver(receiver, filter);
             isInternalBroadcastReceiverRegistered = true;
         }
@@ -274,7 +274,7 @@ public class AlertService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (isBusy) {
             // snooze concurrent calls if already serving
-            final ReminderModel newReminder = ReminderModel.getInstance(intent);
+            final AlertModel newReminder = AlertModel.getInstance(intent);
             if (newReminder != null) {
                 newReminder.snoozeByApp(this);
                 NotificationHelper.notifyMissed(this, newReminder);
@@ -282,7 +282,7 @@ public class AlertService extends Service {
             return START_NOT_STICKY;
         }
 
-        servingReminder = ReminderModel.getInstance(intent);
+        servingReminder = AlertModel.getInstance(intent);
         if (servingReminder == null) {
             // Reminder not found!
             stopService();
@@ -293,13 +293,13 @@ public class AlertService extends Service {
         telephonyManager.getCallState();
         telephonyManager.listen(phoneStateChangeListener, PhoneStateListener.LISTEN_CALL_STATE);
 
-        if (intent.getIntExtra(ReminderModel.SERVICE_TYPE, 0) == 1) {
+        if (intent.getIntExtra(AlertModel.SERVICE_TYPE, 0) == 1) {
             //Oreo and onwards won't allow service to just run without notification.
-            startForeground(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
+            startForeground(AlertModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
             if (isIdle)
                 startRinging();
-        } else if (intent.getIntExtra(ReminderModel.SERVICE_TYPE, 0) == 0) {
-            notificationManager.notify(ReminderModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
+        } else if (intent.getIntExtra(AlertModel.SERVICE_TYPE, 0) == 0) {
+            notificationManager.notify(AlertModel.ALARM_NOTIFICATION_ID, getAlarmHeadsUp(servingReminder));
             if (!OsHelper.isInteractive(this) && isIdle) { // show heads up
                 startRinging();
                 openAlarmActivity();

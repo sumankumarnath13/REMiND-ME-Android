@@ -2,7 +2,7 @@ package com.example.remindme.controllers;
 
 import android.os.Binder;
 
-import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.AlertModel;
 
 public class AlertServiceBinder extends Binder {
 
@@ -12,7 +12,7 @@ public class AlertServiceBinder extends Binder {
         service = hostService;
     }
 
-    public ReminderModel getServingReminder() {
+    public AlertModel getServingReminder() {
         return service.getServingReminder();
     }
 

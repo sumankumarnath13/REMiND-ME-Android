@@ -82,14 +82,24 @@
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/dp_8" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_expired"
-                    android:layout_width="wrap_content"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/expired_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/dp_8"
-                    android:text="@string/label_expired"
-                    android:textColor="?attr/themeDangerColor"
-                    android:visibility="gone" />
+                    android:visibility="visible"
+                    android:gravity="center_vertical|center_horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_expired"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_expired"
+                        android:textSize="@dimen/font_size_small"
+                        android:textColor="?attr/themeDimText" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
 
                 <!--    LAST MISSED ALERT -->
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -97,23 +107,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/dp_8"
-                    android:gravity="center_vertical"
+                    android:gravity="center_vertical|center_horizontal"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_missed_on"
-                        android:layout_marginEnd="@dimen/dp_8"
                         android:textColor="?attr/themeDangerColor"
                         android:textSize="@dimen/font_size_small" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_reminder_last_missed_time"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_marginHorizontal="@dimen/dp_8"
                         android:textColor="?attr/themeDimText"
                         android:textSize="@dimen/font_size_small" />
 
@@ -122,7 +131,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/missing_image_desc"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:srcCompat="@drawable/ic_expand_down"
                         app:tint="?attr/themeSuccessColor" />
 
@@ -212,7 +221,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical"
                             android:textColor="?attr/themeWarningColor"
-                            android:textSize="@dimen/font_size_medium" />
+                            android:textSize="@dimen/font_size_small" />
 
                         <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/btn_reminder_dismiss"

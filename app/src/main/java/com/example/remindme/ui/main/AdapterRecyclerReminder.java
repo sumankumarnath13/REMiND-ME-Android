@@ -20,7 +20,7 @@ import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.ui.activities.ReminderView;
 import com.example.remindme.ui.fragments.common.iSelectionControl;
-import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.AlertModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class AdapterRecyclerReminder
 
     private static final long HIDE_ANIMATION_DURATION = 117;
     private static final long SHOW_ANIMATION_DURATION = 117;
-    private final List<ReminderModel> _data;
+    private final List<AlertModel> _data;
     boolean isRefreshing;
     private boolean isAnimate;
     private int animationEndCounter;
@@ -145,9 +145,9 @@ public class AdapterRecyclerReminder
     }
 
     @Override
-    public List<ReminderModel> getSelected() {
+    public List<AlertModel> getSelected() {
 
-        final ArrayList<ReminderModel> selectedReminders = new ArrayList<>();
+        final ArrayList<AlertModel> selectedReminders = new ArrayList<>();
 
         for (int i = 0; i < _data.size(); i++) {
             if (_data.get(i).isSelected()) {
@@ -164,7 +164,7 @@ public class AdapterRecyclerReminder
 
     private final iDataChangeListener listener;
 
-    public AdapterRecyclerReminder(final List<ReminderModel> data, final iDataChangeListener listener) {
+    public AdapterRecyclerReminder(final List<AlertModel> data, final iDataChangeListener listener) {
         _data = data;
         isEnableSelection = false;
         this.listener = listener;
@@ -182,7 +182,7 @@ public class AdapterRecyclerReminder
     @Override
     public void onBindViewHolder(@NonNull final ReminderHolder holder, int position) {
         // create a new view
-        final ReminderModel reminder = _data.get(position);
+        final AlertModel reminder = _data.get(position);
 
         if (reminder == null) {
             return;
@@ -357,7 +357,7 @@ public class AdapterRecyclerReminder
                     return;
 
                 final Intent intent = new Intent(context, ReminderView.class);
-                intent.putExtra(ReminderModel.REMINDER_ID_INTENT, reminder.getId());
+                intent.putExtra(AlertModel.REMINDER_ID_INTENT, reminder.getId());
                 context.startActivity(intent);
             } else {
                 reminder.setSelected(!reminder.isSelected());

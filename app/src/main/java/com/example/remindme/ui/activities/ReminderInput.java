@@ -44,7 +44,7 @@ import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeDatePick
 import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerBlackDialog;
 import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerLightDialog;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimeListDialogBase;
-import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.AlertModel;
 import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.RingingModel;
 import com.example.remindme.viewModels.SnoozeModel;
@@ -79,7 +79,7 @@ public class ReminderInput
     private static final String REMINDER_CALCULATOR = "REMINDER_CALCULATOR";
 
     private boolean isExtraInputsVisible;
-    private ReminderModel reminderModel = null;
+    private AlertModel alertModel = null;
     private RingingController ringingController;
 
     private AppCompatTextView tv_reminder_trigger_time;
@@ -126,19 +126,19 @@ public class ReminderInput
         if (requestCode == RINGTONE_DIALOG_REQ_CODE && data != null) {
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             if (uri != null) {
-                reminderModel.getRingingModel().setRingToneUri(uri);
+                alertModel.getRingingModel().setRingToneUri(uri);
             }
             refresh();
         } else if (requestCode == NAME_SPEECH_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
             tv_reminder_name_summary.setText(spokenText);
-            reminderModel.setName(spokenText);
+            alertModel.setName(spokenText);
         } else if (requestCode == NOTE_SPEECH_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
             tv_reminder_note_summary.setText(spokenText);
-            reminderModel.setNote(spokenText);
+            alertModel.setNote(spokenText);
         }
     }
 
@@ -159,9 +159,9 @@ public class ReminderInput
             isExtraInputsVisible = savedInstanceState.getBoolean(MORE_INPUT_UI_STATE, false);
         }
 
-        reminderModel = new ViewModelProvider(this, new ReminderViewModelFactory(getIntent())).get(ReminderModel.class);
+        alertModel = new ViewModelProvider(this, new ReminderViewModelFactory(getIntent())).get(AlertModel.class);
 
-        if (reminderModel.isNew()) { // First time creating the activity
+        if (alertModel.isNew()) { // First time creating the activity
             setActivityTitle(getResources().getString(R.string.heading_label_new_reminder));
         } else {
             setActivityTitle(getResources().getString(R.string.heading_label_edit_reminder));
@@ -176,14 +176,14 @@ public class ReminderInput
         chk_reminder = findViewById(R.id.chk_reminder);
         chk_reminder.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isUserInteracted()) {
-                reminderModel.setNotification(isChecked);
+                alertModel.setReminder(isChecked);
                 refresh();
             }
         });
         chk_alarm = findViewById(R.id.chk_alarm);
         chk_alarm.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isUserInteracted()) {
-                reminderModel.setNotification(!isChecked);
+                alertModel.setReminder(!isChecked);
                 refresh();
             }
         });
@@ -200,14 +200,14 @@ public class ReminderInput
 
         sw_reminder_repeat.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isUserInteracted()) {
-                reminderModel.getRepeatModel().setEnabled(isChecked);
+                alertModel.getRepeatModel().setEnable(isChecked);
                 refresh();
             }
         });
 
         sw_reminder_snooze.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isUserInteracted()) {
-                reminderModel.getSnoozeModel().setEnable(sw_reminder_snooze.isChecked());
+                alertModel.getSnoozeModel().setEnable(sw_reminder_snooze.isChecked());
                 refresh();
             }
         });
@@ -242,7 +242,7 @@ public class ReminderInput
                 buttonView.setChecked(!buttonView.isChecked()); // Keep the check status as it is here. Real changes will occur once user return from dialog
                 setUserInteracted(false); // This is very important. Because its just making a dialog visible and is no real interaction.
 
-                if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
+                if (alertModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
                     ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
                     return;
                 }
@@ -259,7 +259,7 @@ public class ReminderInput
                 buttonView.setChecked(!buttonView.isChecked()); // Keep the check status as it is here. Real changes will occur once user return from dialog
                 setUserInteracted(false); // This is very important. Because its just making a dialog visible and is no real interaction.
 
-                if (reminderModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
+                if (alertModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
                     ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
                     return;
                 }
@@ -298,7 +298,7 @@ public class ReminderInput
             final Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select alarm tone:");
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, reminderModel.getRingingModel().getRingToneUri());
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, alertModel.getRingingModel().getRingToneUri());
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
             startActivityForResult(intent, RINGTONE_DIALOG_REQ_CODE);
@@ -308,7 +308,7 @@ public class ReminderInput
         sw_reminder_tone.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (!isUserInteracted())
                 return;
-            reminderModel.getRingingModel().setToneEnabled(isChecked);
+            alertModel.getRingingModel().setToneEnabled(isChecked);
             refresh();
         });
 
@@ -316,17 +316,17 @@ public class ReminderInput
         sw_reminder_vibrate.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (!isUserInteracted())
                 return;
-            reminderModel.getRingingModel().setVibrationEnabled(isChecked);
+            alertModel.getRingingModel().setVibrationEnabled(isChecked);
             refresh();
         });
 
         final FloatingActionButton imgBtnSetReminder = findViewById(R.id.imgBtnSetReminder);
         imgBtnSetReminder.setOnClickListener(view -> {
-            if (reminderModel.getTimeModel().getAlertTime(true).after(Calendar.getInstance().getTime())) {
+            if (alertModel.getTimeModel().getAlertTime(true).after(Calendar.getInstance().getTime())) {
                 // the method "reminderModel.isHasDifferentTimeCalculated()" will ensure that time has not been changed than what was given.
                 // And changes were made on other areas.
                 // Otherwise it needs to clear snooze details.
-                reminderModel.saveAndSetAlert(ReminderInput.this, true);
+                alertModel.saveAndSetAlert(ReminderInput.this, true);
                 finish();
             } else {
                 ToastHelper.showShort(ReminderInput.this, "Cannot save reminder in past");
@@ -352,7 +352,7 @@ public class ReminderInput
         sw_gradually_increase_volume = findViewById(R.id.sw_gradually_increase_volume);
         sw_gradually_increase_volume.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isUserInteracted()) {
-                reminderModel.getRingingModel().setIncreaseVolumeGradually(sw_gradually_increase_volume.isChecked());
+                alertModel.getRingingModel().setIncreaseVolumeGradually(sw_gradually_increase_volume.isChecked());
                 refresh();
             }
         });
@@ -369,7 +369,7 @@ public class ReminderInput
 
         btnSetDefaultTone = findViewById(R.id.btnSetDefaultTone);
         btnSetDefaultTone.setOnClickListener(v -> {
-            reminderModel.getRingingModel().setDefaultRingTone();
+            alertModel.getRingingModel().setDefaultRingTone();
             refresh();
         });
 
@@ -391,8 +391,8 @@ public class ReminderInput
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                reminderModel.getRingingModel().setAlarmVolumePercentage(seekBar.getProgress());
-                ToastHelper.showShort(ReminderInput.this, "Alarm will ring at " + reminderModel.getRingingModel().getAlarmVolumePercentage() + "% volume");
+                alertModel.getRingingModel().setAlarmVolumePercentage(seekBar.getProgress());
+                ToastHelper.showShort(ReminderInput.this, "Alarm will ring at " + alertModel.getRingingModel().getAlarmVolumePercentage() + "% volume");
             }
         });
 
@@ -429,62 +429,62 @@ public class ReminderInput
     protected void onUIRefresh() {
         super.onUIRefresh();
 
-        btn_reminder_time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
-        tv_reminder_AmPm.setText(StringHelper.toAmPm(reminderModel.getTimeModel().getTime()));
-        btn_reminder_date.setText(StringHelper.toWeekdayDate(this, reminderModel.getTimeModel().getTime()));
+        btn_reminder_time.setText(StringHelper.toTime(alertModel.getTimeModel().getTime()));
+        tv_reminder_AmPm.setText(StringHelper.toAmPm(alertModel.getTimeModel().getTime()));
+        btn_reminder_date.setText(StringHelper.toWeekdayDate(this, alertModel.getTimeModel().getTime()));
 
         chk_time_list_hours.setChecked(false);
         chk_time_list_anytime.setChecked(false);
-        tv_reminder_time_list_summary.setText(reminderModel.getTimeModel().toSpannableString(
+        tv_reminder_time_list_summary.setText(alertModel.getTimeModel().toSpannableString(
                 getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor))));
 
-        if (reminderModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.HOURLY) {
+        if (alertModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.HOURLY) {
             chk_time_list_hours.setChecked(true);
-        } else if (reminderModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.CUSTOM) {
+        } else if (alertModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.ANYTIME) {
             chk_time_list_anytime.setChecked(true);
         }
 
-        if (reminderModel.getTimeModel().isHasScheduledTime()) {
+        if (alertModel.getTimeModel().isHasScheduledTime()) {
             lvc_diff_next_reminder_trigger.setVisibility(View.VISIBLE);
-            tv_reminder_trigger_time.setText(StringHelper.toTimeAmPm(reminderModel.getTimeModel().getScheduledTime()));
-            tv_reminder_trigger_date.setText(StringHelper.toWeekdayDate(this, reminderModel.getTimeModel().getScheduledTime()));
+            tv_reminder_trigger_time.setText(StringHelper.toTimeAmPm(alertModel.getTimeModel().getScheduledTime()));
+            tv_reminder_trigger_date.setText(StringHelper.toWeekdayDate(this, alertModel.getTimeModel().getScheduledTime()));
         } else {
             lvc_diff_next_reminder_trigger.setVisibility(View.GONE);
         }
 
-        tv_reminder_name_summary.setText(reminderModel.getName());
-        tv_reminder_note_summary.setText(reminderModel.getNote());
+        tv_reminder_name_summary.setText(alertModel.getName());
+        tv_reminder_note_summary.setText(alertModel.getNote());
 
-        chk_reminder.setChecked(reminderModel.isNotification());
-        chk_alarm.setChecked(!reminderModel.isNotification());
+        chk_reminder.setChecked(alertModel.isReminder());
+        chk_alarm.setChecked(!alertModel.isReminder());
 
-        if (reminderModel.isNotification()) {
+        if (alertModel.isReminder()) {
             alarm_only_layout.setVisibility(View.GONE);
         } else {
             alarm_only_layout.setVisibility(View.VISIBLE);
         }
 
-        tv_reminder_repeat_summary.setText(reminderModel.getRepeatModel().toString(this));
-        tv_reminder_snooze_summary.setText(reminderModel.getSnoozeModel().toString());
+        tv_reminder_repeat_summary.setText(alertModel.getRepeatModel().toString(this));
+        tv_reminder_snooze_summary.setText(alertModel.getSnoozeModel().toString());
 
-        sw_reminder_snooze.setChecked(reminderModel.getSnoozeModel().isEnable());
-        sw_reminder_repeat.setChecked(reminderModel.getRepeatModel().isEnabled());
-        sw_reminder_tone.setChecked(reminderModel.getRingingModel().isToneEnabled());
+        sw_reminder_snooze.setChecked(alertModel.getSnoozeModel().isEnable());
+        sw_reminder_repeat.setChecked(alertModel.getRepeatModel().isEnabled());
+        sw_reminder_tone.setChecked(alertModel.getRingingModel().isToneEnabled());
 
-        if (reminderModel.getRingingModel().getRingToneUri() == null) {
+        if (alertModel.getRingingModel().getRingToneUri() == null) {
             final Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             final Ringtone alarmTone = RingtoneManager.getRingtone(this, alarmToneUri);
             tv_reminder_tone_summary.setText(alarmTone.getTitle(this));
             btnSetDefaultTone.setVisibility(View.INVISIBLE);
         } else {
-            final Ringtone ringtone = RingtoneManager.getRingtone(this, reminderModel.getRingingModel().getRingToneUri());
+            final Ringtone ringtone = RingtoneManager.getRingtone(this, alertModel.getRingingModel().getRingToneUri());
             tv_reminder_tone_summary.setText(ringtone.getTitle(this));
             btnSetDefaultTone.setVisibility(View.VISIBLE);
         }
 
-        if (reminderModel.getRingingModel().isToneEnabled()) {
+        if (alertModel.getRingingModel().isToneEnabled()) {
             sw_gradually_increase_volume.setEnabled(true);
-            sw_gradually_increase_volume.setChecked(reminderModel.getRingingModel().isIncreaseVolumeGradually());
+            sw_gradually_increase_volume.setChecked(alertModel.getRingingModel().isIncreaseVolumeGradually());
 
             imgBtnPlayStop.setEnabled(true);
             btnSetDefaultTone.setEnabled(true);
@@ -493,7 +493,7 @@ public class ReminderInput
             tv_reminder_tone_summary.setEnabled(true);
 
             ring_duration_spinner.setEnabled(true);
-            ring_duration_spinner.setSelection(RingingModel.convertToAlarmRingDuration(reminderModel.getRingingModel().getAlarmRingDuration()));
+            ring_duration_spinner.setSelection(RingingModel.convertToAlarmRingDuration(alertModel.getRingingModel().getAlarmRingDuration()));
 
         } else {
             sw_gradually_increase_volume.setEnabled(false);
@@ -507,10 +507,10 @@ public class ReminderInput
             ring_duration_spinner.setEnabled(false);
         }
 
-        if (reminderModel.getRingingModel().getAlarmVolumePercentage() == 0) {
+        if (alertModel.getRingingModel().getAlarmVolumePercentage() == 0) {
             seeker_alarm_volume.setProgress(deviceAlarmVolume);
         } else {
-            seeker_alarm_volume.setProgress(reminderModel.getRingingModel().getAlarmVolumePercentage());
+            seeker_alarm_volume.setProgress(alertModel.getRingingModel().getAlarmVolumePercentage());
         }
 
         if (isPlayingTone) {
@@ -519,10 +519,10 @@ public class ReminderInput
             imgBtnPlayStop.setImageResource(R.drawable.ic_play);
         }
 
-        tv_reminder_tone_summary.setText(reminderModel.getRingingModel().getRingToneUriSummary(this));
-        sw_reminder_vibrate.setChecked(reminderModel.getRingingModel().isVibrationEnabled());
-        vibrate_pattern_spinner.setSelection(RingingModel.convertToVibratePattern(reminderModel.getRingingModel().getVibratePattern()));
-        vibrate_pattern_spinner.setEnabled(reminderModel.getRingingModel().isVibrationEnabled());
+        tv_reminder_tone_summary.setText(alertModel.getRingingModel().getRingToneUriSummary(this));
+        sw_reminder_vibrate.setChecked(alertModel.getRingingModel().isVibrationEnabled());
+        vibrate_pattern_spinner.setSelection(RingingModel.convertToVibratePattern(alertModel.getRingingModel().getVibratePattern()));
+        vibrate_pattern_spinner.setEnabled(alertModel.getRingingModel().isVibrationEnabled());
 
         setExtraInputs();
     }
@@ -549,16 +549,16 @@ public class ReminderInput
 
     @Override
     public TimeModel getTimeListDialogModel() {
-        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return new ViewModelProvider(this, new TimeViewModelFactory(reminderModel)).get(TimeModel.class);
+        alertModel = new ViewModelProvider(this).get(AlertModel.class);
+        return new ViewModelProvider(this, new TimeViewModelFactory(alertModel)).get(TimeModel.class);
     }
 
     @Override
     public void setTimeListDialogModel(TimeModel model) {
 
-        if (reminderModel.getRepeatModel().isValid(model)) {
-            reminderModel.setTimeModel(model);
-            reminderModel.getTimeModel().setScheduledTime(reminderModel.getRepeatModel().getValidatedScheduledTime());
+        if (alertModel.getRepeatModel().isValid(model)) {
+            alertModel.setTimeModel(model);
+            alertModel.getTimeModel().setScheduledTime(alertModel.getRepeatModel().getValidatedScheduledTime());
         } else {
             ToastHelper.showShort(this, "Please check repeat settings");
         }
@@ -568,54 +568,54 @@ public class ReminderInput
 
     @Override
     public Date getDateCalculatorDialogModel() {
-        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.getTimeModel().getTime();
+        alertModel = new ViewModelProvider(this).get(AlertModel.class);
+        return alertModel.getTimeModel().getTime();
     }
 
     @Override
     public void setDateCalculatorDialogModel(Date newTime) {
         if (newTime == null)
             return;
-        reminderModel.getTimeModel().setTime(newTime);
+        alertModel.getTimeModel().setTime(newTime);
         refresh();
     }
 
     @Override
     public String getNameInputDialogModel() {
-        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.getName();
+        alertModel = new ViewModelProvider(this).get(AlertModel.class);
+        return alertModel.getName();
     }
 
     @Override
     public void setNameInputDialogModel(String name) {
-        reminderModel.setName(name);
+        alertModel.setName(name);
         refresh();
     }
 
     @Override
     public String getNoteDialogModel() {
-        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.getNote();
+        alertModel = new ViewModelProvider(this).get(AlertModel.class);
+        return alertModel.getNote();
     }
 
     @Override
     public void setNoteDialogModel(String note) {
-        reminderModel.setNote(note);
+        alertModel.setNote(note);
         refresh();
     }
 
     @Override
     public RepeatModel getRepeatDialogModel() {
-        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.getRepeatModel();
+        alertModel = new ViewModelProvider(this).get(AlertModel.class);
+        return alertModel.getRepeatModel();
     }
 
     @Override
     public void setRepeatDialogModel(RepeatModel model) {
 
-        if (model.isValid(reminderModel.getTimeModel())) {
-            reminderModel.setRepeatModel(model);
-            reminderModel.getTimeModel().setScheduledTime(model.getValidatedScheduledTime());
+        if (model.isValid(alertModel.getTimeModel())) {
+            alertModel.setRepeatModel(model);
+            alertModel.getTimeModel().setScheduledTime(model.getValidatedScheduledTime());
         } else {
             ToastHelper.showShort(this, "Please check repeat settings");
         }
@@ -625,13 +625,13 @@ public class ReminderInput
 
     @Override
     public SnoozeModel getSnoozeDialogModel() {
-        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.getSnoozeModel();
+        alertModel = new ViewModelProvider(this).get(AlertModel.class);
+        return alertModel.getSnoozeModel();
     }
 
     @Override
     public void setSnoozeDialogModel(SnoozeModel model) {
-        reminderModel.setSnoozeModel(model);
+        alertModel.setSnoozeModel(model);
         refresh();
     }
 
@@ -648,9 +648,9 @@ public class ReminderInput
         }
 
         if (parent.getId() == R.id.ring_duration_spinner) {
-            reminderModel.getRingingModel().setAlarmRingDuration(RingingModel.convertToAlarmRingDuration(position));
+            alertModel.getRingingModel().setAlarmRingDuration(RingingModel.convertToAlarmRingDuration(position));
         } else if (parent.getId() == R.id.vibrate_pattern_spinner) {
-            reminderModel.getRingingModel().setVibratePattern(RingingModel.convertToVibratePattern(position));
+            alertModel.getRingingModel().setVibratePattern(RingingModel.convertToVibratePattern(position));
             startVibrating();
         }
     }
@@ -662,17 +662,17 @@ public class ReminderInput
 
     private RingingController getRingingController() {
         if (ringingController == null || !isPlayingTone) { // "!isPlayingTone" this condition will ensure new instance of RingingController with updated ReminderModel tone URI.
-            ringingController = new RingingController(ReminderInput.this, reminderModel.getRingingModel().getRingToneUri());
+            ringingController = new RingingController(ReminderInput.this, alertModel.getRingingModel().getRingToneUri());
         }
         return ringingController;
     }
 
     private void startVibrating() {
-        getRingingController().vibrateOnce(RingingModel.convertToVibrateFrequency(reminderModel.getRingingModel().getVibratePattern()));
+        getRingingController().vibrateOnce(RingingModel.convertToVibrateFrequency(alertModel.getRingingModel().getVibratePattern()));
     }
 
     private void startTone() {
-        getRingingController().startTone(reminderModel.getRingingModel().isIncreaseVolumeGradually(), reminderModel.getRingingModel().getAlarmVolumePercentage());
+        getRingingController().startTone(alertModel.getRingingModel().isIncreaseVolumeGradually(), alertModel.getRingingModel().getAlarmVolumePercentage());
         isPlayingTone = true;
     }
 
@@ -685,14 +685,14 @@ public class ReminderInput
 
     @Override
     public void setDateTimePicker(String tag, Date dateTime) {
-        reminderModel.getTimeModel().setTime(dateTime);
+        alertModel.getTimeModel().setTime(dateTime);
         refresh();
     }
 
     @Override
     public Date getDateTimePicker(String tag) {
-        reminderModel = new ViewModelProvider(this).get(ReminderModel.class);
-        return reminderModel.getTimeModel().getTime();
+        alertModel = new ViewModelProvider(this).get(AlertModel.class);
+        return alertModel.getTimeModel().getTime();
     }
 
     @Override

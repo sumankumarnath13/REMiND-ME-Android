@@ -17,7 +17,7 @@ import com.example.remindme.ui.fragments.common.FabContextMenu;
 import com.example.remindme.ui.fragments.common.iSelectionControl;
 import com.example.remindme.ui.main.AdapterRecyclerReminder;
 import com.example.remindme.ui.main.AdapterSectionsPager;
-import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.AlertModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
@@ -153,12 +153,12 @@ public class ActivityMain extends ActivityBase implements FabContextMenu.iFabCon
                 break;
             case C_ACTION_EDIT:
                 final Intent input_i = new Intent(getApplicationContext(), ReminderInput.class);
-                ReminderModel.setReminderIdInIntent(input_i, selectionControl.getSelected().get(0).getId());
+                AlertModel.setReminderIdInIntent(input_i, selectionControl.getSelected().get(0).getId());
                 startActivity(input_i);
                 break;
             case C_ACTION_DEL:
                 if (selectionControl != null) {
-                    final List<ReminderModel> selectedReminders = selectionControl.getSelected();
+                    final List<AlertModel> selectedReminders = selectionControl.getSelected();
                     for (int i = 0; i < selectedReminders.size(); i++) {
                         selectedReminders.get(i).deleteAndCancelAlert(this);
                     }

@@ -20,7 +20,8 @@ public class TimeModel extends ViewModel {
     public enum TimeListModes {
         NONE,
         HOURLY,
-        CUSTOM,
+        INTERVAL,
+        ANYTIME,
     }
 
     public TimeModel copy() {
@@ -35,14 +36,14 @@ public class TimeModel extends ViewModel {
         return instance;
     }
 
-    private final ReminderModel parent;
+    private final AlertModel parent;
 
-    public ReminderModel getParent() {
+    public AlertModel getParent() {
         return parent;
     }
 
-    public TimeModel(final ReminderModel reminderModel) {
-        parent = reminderModel;
+    public TimeModel(final AlertModel alertModel) {
+        parent = alertModel;
 
         final Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, 1);
@@ -220,7 +221,7 @@ public class TimeModel extends ViewModel {
                     builder.append(StringHelper.get12(getTimeListHours().get(i), min)).append(", ");
                 }
             }
-        } else if (getTimeListMode() == TimeListModes.CUSTOM) {
+        } else if (getTimeListMode() == TimeListModes.ANYTIME) {
 
             final Calendar c = Calendar.getInstance();
 
@@ -271,8 +272,10 @@ public class TimeModel extends ViewModel {
                 return 0;
             case HOURLY:
                 return 1;
-            case CUSTOM:
+            case INTERVAL:
                 return 2;
+            case ANYTIME:
+                return 3;
         }
     }
 
@@ -284,7 +287,9 @@ public class TimeModel extends ViewModel {
             case 1:
                 return TimeListModes.HOURLY;
             case 2:
-                return TimeListModes.CUSTOM;
+                return TimeListModes.INTERVAL;
+            case 3:
+                return TimeListModes.ANYTIME;
         }
     }
 

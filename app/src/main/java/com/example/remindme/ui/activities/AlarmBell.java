@@ -23,7 +23,7 @@ import com.example.remindme.controllers.AlertServiceBinder;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
-import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.AlertModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Date;
@@ -37,7 +37,7 @@ public class AlarmBell extends ActivityBase {
             if (intent == null)
                 return;
 
-            if (ReminderModel.ACTION_CLOSE_ALARM_ACTIVITY.equals(intent.getAction())) {
+            if (AlertModel.ACTION_CLOSE_ALARM_ACTIVITY.equals(intent.getAction())) {
                 finish();
             }
         }
@@ -65,18 +65,18 @@ public class AlarmBell extends ActivityBase {
 
             serviceBinder.setActivityOpen(true);
 
-            final ReminderModel reminderModel = serviceBinder.getServingReminder();
-            if (reminderModel == null) {
+            final AlertModel alertModel = serviceBinder.getServingReminder();
+            if (alertModel == null) {
                 ToastHelper.showLong(AlarmBell.this, "Serious flow trouble!");
                 finish();
                 return;
             }
 
             //tv_reminder_time.setText(StringHelper.toTime(reminderModel.getTimeModel().getTime()));
-            tv_reminder_name.setText(reminderModel.getName());
-            tv_reminder_note.setText(reminderModel.getNote());
+            tv_reminder_name.setText(alertModel.getName());
+            tv_reminder_note.setText(alertModel.getNote());
 
-            if (reminderModel.canSnooze()) {
+            if (alertModel.canSnooze()) {
                 btnSnoozeAlarm.setVisibility(View.VISIBLE);
             } else {
                 btnSnoozeAlarm.setVisibility(View.GONE);
@@ -122,7 +122,7 @@ public class AlarmBell extends ActivityBase {
 
         if (!isReceiverRegistered) {
             IntentFilter filter = new IntentFilter();
-            filter.addAction(ReminderModel.ACTION_CLOSE_ALARM_ACTIVITY);
+            filter.addAction(AlertModel.ACTION_CLOSE_ALARM_ACTIVITY);
             registerReceiver(receiver, filter);
             isReceiverRegistered = true;
         }

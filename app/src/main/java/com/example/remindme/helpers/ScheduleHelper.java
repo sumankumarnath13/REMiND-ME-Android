@@ -85,7 +85,7 @@ public class ScheduleHelper {
                     }
                 }
 
-            } else if (timeModel.getTimeListMode() == TimeModel.TimeListModes.CUSTOM && timeModel.getTimeListTimes().size() > 0) {
+            } else if (timeModel.getTimeListMode() == TimeModel.TimeListModes.ANYTIME && timeModel.getTimeListTimes().size() > 0) {
 
                 final List<Date> timeListTimes = timeModel.getTimeListTimes();
 

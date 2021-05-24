@@ -9,22 +9,22 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.remindme.R;
 import com.example.remindme.controllers.AlertBroadcastReceiver;
-import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.AlertModel;
 
 import java.util.Locale;
 
 public class NotificationHelper {
 
-    public static void notifyMissed(Context context, ReminderModel model) {
+    public static void notifyMissed(Context context, AlertModel model) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 context.getApplicationContext(),
-                ReminderModel.DEFAULT_NOTIFICATION_CHANNEL_ID)
+                AlertModel.DEFAULT_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_brand)
                 .setLocalOnly(true)
-                .setGroup(ReminderModel.DEFAULT_NOTIFICATION_GROUP_KEY)
+                .setGroup(AlertModel.DEFAULT_NOTIFICATION_GROUP_KEY)
                 .setContentTitle(model.getSignatureName())
                 .setContentText(String.format(Locale.getDefault(), "Missed %s on %s",
-                        model.isNotification() ? "Reminder" : "Alarm",
+                        model.isReminder() ? "Reminder" : "Alarm",
                         StringHelper.toTimeWeekdayDate(context, model.getTimeModel().getTime())));
 
         if (!StringHelper.isNullOrEmpty(model.getNote())) {
@@ -35,11 +35,11 @@ public class NotificationHelper {
         notificationManager.notify(model.getIntId(), builder.build());
     }
 
-    public static void notifyReminder(Context context, ReminderModel model) {
+    public static void notifyReminder(Context context, AlertModel model) {
 
         final Intent closeReminder = new Intent(context.getApplicationContext(), AlertBroadcastReceiver.class)
-                .setAction(ReminderModel.BROADCAST_FILTER_REMINDER_DISMISS)
-                .putExtra(ReminderModel.REMINDER_ID_INTENT, model.getId());
+                .setAction(AlertModel.BROADCAST_FILTER_REMINDER_DISMISS)
+                .putExtra(AlertModel.REMINDER_ID_INTENT, model.getId());
 
         final PendingIntent closeReminderPendingIntent = PendingIntent
                 .getBroadcast(context, model.getIntId(),
@@ -48,7 +48,7 @@ public class NotificationHelper {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 context.getApplicationContext(),
-                ReminderModel.ALARM_NOTIFICATION_CHANNEL_ID)
+                AlertModel.ALARM_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_brand)
                 .setOngoing(true)
                 .setAutoCancel(false)

@@ -21,7 +21,7 @@ import com.example.remindme.helpers.DeviceHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
-import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.AlertModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -85,7 +85,7 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
         sw_disable_all_reminders.setChecked(settingsHelper.isDisableAllReminders());
         sw_disable_all_reminders.setOnCheckedChangeListener((buttonView, isChecked) -> {
             settingsHelper.setDisableAllReminders(isChecked);
-            final List<ReminderModel> list = ReminderModel.getActiveReminders(null);
+            final List<AlertModel> list = AlertModel.getActiveReminders(null);
             if (isChecked) {
                 for (int i = 0; i < list.size(); i++) {
                     list.get(i).trySetEnabled(Settings.this, false);
@@ -111,10 +111,10 @@ public class Settings extends ActivityBase implements AdapterView.OnItemSelected
 
 
         final AppCompatTextView tv_active_reminder_count = findViewById(R.id.tv_active_reminder_count);
-        tv_active_reminder_count.setText(String.valueOf(ReminderModel.getActiveReminders(null).size()));
+        tv_active_reminder_count.setText(String.valueOf(AlertModel.getActiveReminders(null).size()));
 
         final AppCompatTextView tv_expired_reminder_count = findViewById(R.id.tv_expired_reminder_count);
-        tv_expired_reminder_count.setText(String.valueOf(ReminderModel.getDismissedReminders(null).size()));
+        tv_expired_reminder_count.setText(String.valueOf(AlertModel.getDismissedReminders(null).size()));
 
         final AppCompatSpinner first_day_of_week_spinner = findViewById(R.id.first_day_of_week_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.values_first_day_of_week, R.layout.item_dropdown_fragment_simple_spinner);

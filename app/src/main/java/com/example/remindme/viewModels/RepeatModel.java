@@ -48,7 +48,7 @@ public class RepeatModel extends ViewModel {
 
         RepeatModel instance = new RepeatModel(parent);
 
-        instance.setEnabled(isEnabled());
+        instance.setEnable(isEnabled());
         instance.setCustomDays(getCustomDays());
         instance.setCustomWeeks(getCustomWeeks());
         instance.setCustomMonths(getCustomMonths());
@@ -62,14 +62,14 @@ public class RepeatModel extends ViewModel {
 
     }
 
-    private final ReminderModel parent;
+    private final AlertModel parent;
 
-    public ReminderModel getParent() {
+    public AlertModel getParent() {
         return parent;
     }
 
-    public RepeatModel(final ReminderModel reminderModel) {
-        this.parent = reminderModel;
+    public RepeatModel(final AlertModel alertModel) {
+        this.parent = alertModel;
     }
 
     private boolean isEnabled;
@@ -78,7 +78,7 @@ public class RepeatModel extends ViewModel {
         return isEnabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnable(boolean enabled) {
         isEnabled = enabled;
         if (!enabled) {
             setHasRepeatEnd(false);

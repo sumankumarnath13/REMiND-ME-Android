@@ -1,6 +1,6 @@
 package com.example.remindme.ui.fragments.common;
 
-import com.example.remindme.viewModels.ReminderModel;
+import com.example.remindme.viewModels.AlertModel;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public interface iSelectionControl {
 
     int getSelectedCount();
 
-    List<ReminderModel> getSelected();
+    List<AlertModel> getSelected();
 
     void notifySelectionChange();
 

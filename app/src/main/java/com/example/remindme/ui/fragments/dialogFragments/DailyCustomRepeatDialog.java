@@ -86,7 +86,7 @@ public class DailyCustomRepeatDialog extends CustomRepeatDialogBase {
                         getModel().getCustomDays().add(Calendar.FRIDAY);
                     if (chk_daily_sat.isChecked())
                         getModel().getCustomDays().add(Calendar.SATURDAY);
-                    getModel().setEnabled(true);
+                    getModel().setEnable(true);
                     getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.DAILY_CUSTOM);
                     getListener().setCustomRepeatDialogModel(getModel());
 

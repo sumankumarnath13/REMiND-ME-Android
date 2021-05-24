@@ -80,7 +80,7 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
                         getModel().getCustomWeeks().add(3);
                     if (chk_weekly_5.isChecked())
                         getModel().getCustomWeeks().add(4);
-                    getModel().setEnabled(true);
+                    getModel().setEnable(true);
                     getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM);
                     getListener().setCustomRepeatDialogModel(getModel());
                 }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {

@@ -102,7 +102,7 @@
     <string name="label_expired">Expired</string>
 
     <string name="caption_hint_reminder_name">Give a name …</string>
-    <string name="caption_hint_reminder_note">Extra notes for reminder …</string>
+    <string name="caption_hint_reminder_note">Extra notes for alert …</string>
 
     <string name="caption_repeat_option_off">Off</string>
     <string name="caption_repeat_option_hourly">Hourly</string>

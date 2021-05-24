@@ -32,14 +32,14 @@ public class SnoozeModel extends ViewModel {
         return instance;
     }
 
-    private final ReminderModel parent;
+    private final AlertModel parent;
 
-    public ReminderModel getParent() {
+    public AlertModel getParent() {
         return parent;
     }
 
-    public SnoozeModel(final ReminderModel reminderModel) {
-        this.parent = reminderModel;
+    public SnoozeModel(final AlertModel alertModel) {
+        this.parent = alertModel;
     }
 
     private SnoozeIntervals interval = SnoozeIntervals.M10;
