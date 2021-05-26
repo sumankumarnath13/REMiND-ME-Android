@@ -227,11 +227,11 @@ public class ReminderInput
             }
         });
 
-        final AppCompatButton btnCalculate = findViewById(R.id.btnCalculate);
-        btnCalculate.setOnClickListener(v -> {
-            final DateCalculatorDialog calculatorDialog = new DateCalculatorDialog();
-            calculatorDialog.show(getSupportFragmentManager(), DateCalculatorDialog.TAG);
-        });
+//        final AppCompatButton btnCalculate = findViewById(R.id.btnCalculate);
+//        btnCalculate.setOnClickListener(v -> {
+//            final DateCalculatorDialog calculatorDialog = new DateCalculatorDialog();
+//            calculatorDialog.show(getSupportFragmentManager(), DateCalculatorDialog.TAG);
+//        });
 
         tv_reminder_time_list_summary = findViewById(R.id.tv_reminder_time_list_summary);
 

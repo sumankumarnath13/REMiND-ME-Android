@@ -248,7 +248,7 @@ public class AlertModel extends ViewModel {
             NotificationChannel defaultChannel = new NotificationChannel(
                     DEFAULT_NOTIFICATION_CHANNEL_ID,
                     DEFAULT_NOTIFICATION_CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager.IMPORTANCE_HIGH);
             defaultChannel.setGroup(DEFAULT_NOTIFICATION_GROUP_KEY);
 
             notificationManager.createNotificationChannel(alarmChannel);

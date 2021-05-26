@@ -5,6 +5,14 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/xxx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_16"
+        style="@style/SmallButtonStyle"
+        android:text="Date Calculator" />
+
     <DatePicker
         android:id="@+id/date_picker"
         android:theme="@style/DatePickerStyle"

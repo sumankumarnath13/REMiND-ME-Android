@@ -22,7 +22,8 @@
             android:id="@+id/tabs"
             app:tabTextColor="?attr/themeDimText"
             app:tabSelectedTextColor="?attr/themeWarningColor"
-            app:tabIndicatorColor="?attr/themeAccentColor"
+            app:tabIndicatorColor="?attr/themeWarningColor"
+            app:tabRippleColor="?attr/themeWarningColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
