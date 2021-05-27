@@ -23,9 +23,22 @@ public class SnoozeDialog extends DialogFragmentBase {
 
     public static final String TAG = "SnoozeDialog";
 
+    public interface ISnoozeInputDialogListener {
+
+        void onSetListenerSnoozeModel(SnoozeModel model);
+
+        SnoozeModel onGetListenerSnoozeModel();
+
+    }
+
     private ISnoozeInputDialogListener listener;
-    protected ISnoozeInputDialogListener getListener() {
+
+    private ISnoozeInputDialogListener getListener() {
         return listener;
+    }
+
+    public void setListener(ISnoozeInputDialogListener listener) {
+        this.listener = listener;
     }
 
     private SnoozeModel model;
@@ -41,15 +54,15 @@ public class SnoozeDialog extends DialogFragmentBase {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        listener = super.getListener(ISnoozeInputDialogListener.class);
+        //listener = super.getListener(ISnoozeInputDialogListener.class);
 
         if (getListener() == null) {
-            ToastHelper.showError(getContext(), "Listener incompatible!");
+            ToastHelper.showError(getContext(), "Dialog listener is not set!");
             dismiss();
             return;
         }
 
-        model = new ViewModelProvider(this, new SnoozeViewModelFactory(getListener().getSnoozeDialogModel())).get(SnoozeModel.class);
+        model = new ViewModelProvider(this, new SnoozeViewModelFactory(getListener().onGetListenerSnoozeModel())).get(SnoozeModel.class);
     }
 
     @NonNull
@@ -124,7 +137,7 @@ public class SnoozeDialog extends DialogFragmentBase {
 
 
         builder.setView(view)
-                .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> getListener().setSnoozeDialogModel(model))
+                .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> getListener().onSetListenerSnoozeModel(model))
                 .setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
 
                 });
@@ -174,11 +187,4 @@ public class SnoozeDialog extends DialogFragmentBase {
         rdo_reminder_snooze_rc.setEnabled(model.isEnable());
     }
 
-    public interface ISnoozeInputDialogListener {
-
-        void setSnoozeDialogModel(SnoozeModel model);
-
-        SnoozeModel getSnoozeDialogModel();
-
-    }
 }

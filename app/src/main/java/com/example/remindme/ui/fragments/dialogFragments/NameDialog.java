@@ -24,14 +24,26 @@ import com.example.remindme.ui.fragments.dialogFragments.common.DialogFragmentBa
 
 import java.util.List;
 
-public class NameDialog extends DialogFragmentBase {
+public final class NameDialog extends DialogFragmentBase {
 
     public static final String TAG = "NameDialog";
 
+    public interface INameInputDialogListener {
+
+        void setNameInputDialogModel(String name);
+
+        String getNameInputDialogModel();
+
+    }
+
     private INameInputDialogListener listener;
 
-    protected INameInputDialogListener getListener() {
+    private INameInputDialogListener getListener() {
         return listener;
+    }
+
+    public void setListener(INameInputDialogListener listener) {
+        this.listener = listener;
     }
 
     private static final int SPEECH_REQUEST_CODE = 117;
@@ -43,14 +55,13 @@ public class NameDialog extends DialogFragmentBase {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        listener = getListener(INameInputDialogListener.class);
+        //listener = getListener(INameInputDialogListener.class);
 
         if (getListener() == null) {
-            ToastHelper.showError(getContext(), "Listener incompatible!");
+            ToastHelper.showError(getContext(), "Dialog listener is not set!");
             dismiss();
         }
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -128,11 +139,4 @@ public class NameDialog extends DialogFragmentBase {
 
     }
 
-    public interface INameInputDialogListener {
-
-        void setNameInputDialogModel(String name);
-
-        String getNameInputDialogModel();
-
-    }
 }

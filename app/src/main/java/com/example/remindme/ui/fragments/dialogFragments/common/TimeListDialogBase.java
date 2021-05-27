@@ -12,10 +12,23 @@ import com.example.remindme.viewModels.factories.TimeViewModelFactory;
 public abstract class TimeListDialogBase extends DialogFragmentBase {
 
     private TimeModel model;
+
+    public interface ITimeListListener {
+
+        TimeModel getTimeListDialogModel();
+
+        void setTimeListDialogModel(TimeModel model);
+
+    }
+
     private ITimeListListener listener;
 
     protected ITimeListListener getListener() {
         return listener;
+    }
+
+    public void setListener(ITimeListListener listener) {
+        this.listener = listener;
     }
 
     protected TimeModel getModel() {
@@ -26,10 +39,10 @@ public abstract class TimeListDialogBase extends DialogFragmentBase {
     public final void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        listener = getListener(ITimeListListener.class);
+        //listener = getListener(ITimeListListener.class);
 
         if (listener == null) {
-            ToastHelper.showError(getContext(), "Listener incompatible!");
+            ToastHelper.showError(getContext(), "Dialog listener is not set!");
             dismiss();
             return;
         }
@@ -42,11 +55,5 @@ public abstract class TimeListDialogBase extends DialogFragmentBase {
 
     }
 
-    public interface ITimeListListener {
 
-        TimeModel getTimeListDialogModel();
-
-        void setTimeListDialogModel(TimeModel model);
-
-    }
 }

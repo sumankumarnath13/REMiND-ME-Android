@@ -21,9 +21,27 @@ import com.example.remindme.viewModels.RepeatModel;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateCalculatorDialog extends DialogFragmentBase {
+public final class DateCalculatorDialog extends DialogFragmentBase {
 
     public static final String TAG = "DateCalculatorDialog";
+
+    public interface ITimeCalculatorListener {
+
+        void setDateCalculatorDialogModel(Date newTime);
+
+        Date getDateCalculatorDialogModel();
+
+    }
+
+    private ITimeCalculatorListener listener;
+
+    private ITimeCalculatorListener getListener() {
+        return listener;
+    }
+
+    public void setListener(ITimeCalculatorListener listener) {
+        this.listener = listener;
+    }
 
     //private final Calendar calendar = Calendar.getInstance();
     private final Calendar resultCalendar = Calendar.getInstance();
@@ -31,20 +49,15 @@ public class DateCalculatorDialog extends DialogFragmentBase {
     private NumberPicker unit_picker;
     private AppCompatTextView tv_reminder_date;
 
-    private ITimeCalculatorListener listener;
-
-    protected ITimeCalculatorListener getListener() {
-        return listener;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        listener = super.getListener(ITimeCalculatorListener.class);
+        //listener = super.getListener(ITimeCalculatorListener.class);
 
         if (getListener() == null) {
-            ToastHelper.showError(getContext(), "Listener incompatible!");
+            ToastHelper.showError(getContext(), "Dialog listener is not set!");
             dismiss();
         }
 
@@ -137,33 +150,6 @@ public class DateCalculatorDialog extends DialogFragmentBase {
     }
 
 
-//    @Override
-//    public void setDateTimePicker(String tag, Date dateTime) {
-//        calendar.setTime(dateTime);
-//        refresh();
-////    }
-//
-//    @Override
-//    public Date getDateTimePicker(String tag) {
-//        return calendar.getTime();
-//    }
 
-//    @Override
-//    public Date getMinimumDateTime(String tag) {
-//        // This calculator suppose to help user getting their target time by adding days/months from their recalled date.
-//        // So, its allowed to go backward up to return value of "getMaxForTimeUnit" to eventually get result of present after adding time.
-//        // Its expected that remembering an event 3 years (getMaxForTimeUnit return for YEAR unit) back is more than sufficient.
-//        final Calendar minDateCalendar = Calendar.getInstance();
-//        minDateCalendar.add(Calendar.YEAR, -1 * RepeatModel.getMaxForTimeUnit(RepeatModel.TimeUnits.YEARS)); // (-1) to gho backward.
-//        return minDateCalendar.getTime();
-//    }
-
-    public interface ITimeCalculatorListener {
-
-        void setDateCalculatorDialogModel(Date newTime);
-
-        Date getDateCalculatorDialogModel();
-
-    }
 
 }

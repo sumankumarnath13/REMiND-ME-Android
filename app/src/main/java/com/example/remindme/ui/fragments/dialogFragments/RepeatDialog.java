@@ -22,10 +22,10 @@ import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.ui.fragments.dialogFragments.common.CustomRepeatDialogBase;
 import com.example.remindme.ui.fragments.dialogFragments.common.DialogFragmentBase;
-import com.example.remindme.ui.fragments.dialogFragments.common.IDateTimePickerListener;
 import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeDatePickerDialog;
-import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerBlackDialog;
-import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerLightDialog;
+import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBase;
+import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBlack;
+import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogLight;
 import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.TimeModel;
 import com.example.remindme.viewModels.factories.RepeatViewModelFactory;
@@ -33,16 +33,26 @@ import com.example.remindme.viewModels.factories.RepeatViewModelFactory;
 import java.util.Calendar;
 import java.util.Date;
 
-public class RepeatDialog extends DialogFragmentBase
-        implements
-        CustomRepeatDialogBase.ICustomRepeatDialogListener,
-        IDateTimePickerListener {
+public class RepeatDialog extends DialogFragmentBase {
 
     public static final String TAG = "RepeatDialog";
 
+    public interface IRepeatInputDialogListener {
+
+        void setRepeatDialogModel(RepeatModel model);
+
+        RepeatModel getRepeatDialogModel();
+
+    }
+
     private IRepeatInputDialogListener listener;
+
     protected IRepeatInputDialogListener getListener() {
         return listener;
+    }
+
+    public void setListener(IRepeatInputDialogListener listener) {
+        this.listener = listener;
     }
 
     private RepeatModel model;
@@ -67,15 +77,124 @@ public class RepeatDialog extends DialogFragmentBase
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        listener = super.getListener(IRepeatInputDialogListener.class);
+        //listener = super.getListener(IRepeatInputDialogListener.class);
 
         if (getListener() == null) {
-            ToastHelper.showError(getContext(), "Listener incompatible!");
+            ToastHelper.showError(getContext(), "Dialog listener is not set!");
             dismiss();
             return;
         }
 
         model = new ViewModelProvider(this, new RepeatViewModelFactory(getListener().getRepeatDialogModel())).get(RepeatModel.class);
+    }
+
+    private CustomRepeatDialogBase.ICustomRepeatDialogListener customRepeatDialogListener;
+
+    private CustomRepeatDialogBase.ICustomRepeatDialogListener getCustomRepeatDialogListener() {
+        if (customRepeatDialogListener == null) {
+            customRepeatDialogListener = new CustomRepeatDialogBase.ICustomRepeatDialogListener() {
+                @Override
+                public void setCustomRepeatDialogModel(RepeatModel model) {
+                    if (model != null && model.isValid(model.getParent().getTimeModel())) { // m will be  null to  that
+                        RepeatDialog.this.model = model;
+                    }
+                    refresh();
+                }
+
+                @Override
+                public RepeatModel getCustomRepeatDialogModel() {
+                    return model;
+                }
+            };
+        }
+        return customRepeatDialogListener;
+    }
+
+    private DailyCustomRepeatDialog dailyCustomRepeatDialog;
+
+    private DailyCustomRepeatDialog getDailyCustomRepeatDialog() {
+        if (this.dailyCustomRepeatDialog == null) {
+            this.dailyCustomRepeatDialog = new DailyCustomRepeatDialog();
+            this.dailyCustomRepeatDialog.setListener(getCustomRepeatDialogListener());
+        }
+        return this.dailyCustomRepeatDialog;
+    }
+
+    private WeeklyCustomRepeatDialog weeklyCustomRepeatDialog;
+
+    private WeeklyCustomRepeatDialog getWeeklyCustomRepeatDialog() {
+        if (this.weeklyCustomRepeatDialog == null) {
+            this.weeklyCustomRepeatDialog = new WeeklyCustomRepeatDialog();
+            this.weeklyCustomRepeatDialog.setListener(getCustomRepeatDialogListener());
+        }
+        return this.weeklyCustomRepeatDialog;
+    }
+
+    private MonthlyCustomRepeatDialog monthlyCustomRepeatDialog;
+
+    private MonthlyCustomRepeatDialog getMonthlyCustomRepeatDialog() {
+        if (this.monthlyCustomRepeatDialog == null) {
+            this.monthlyCustomRepeatDialog = new MonthlyCustomRepeatDialog();
+            this.monthlyCustomRepeatDialog.setListener(getCustomRepeatDialogListener());
+        }
+        return this.monthlyCustomRepeatDialog;
+    }
+
+    private OtherRepeatDialog otherRepeatDialog;
+
+    private OtherRepeatDialog getOtherRepeatDialog() {
+        if (this.otherRepeatDialog == null) {
+            this.otherRepeatDialog = new OtherRepeatDialog();
+            this.otherRepeatDialog.setListener(getCustomRepeatDialogListener());
+        }
+        return this.otherRepeatDialog;
+    }
+
+    private RemindMeDatePickerDialog datePickerDialog;
+
+    private RemindMeDatePickerDialog getDatePickerDialog() {
+        if (datePickerDialog == null) {
+            datePickerDialog = new RemindMeDatePickerDialog();
+            datePickerDialog.setListener(new RemindMeDatePickerDialog.IDatePickerListener() {
+                @Override
+                public void onSetListenerDate(Date dateTime) {
+                    model.setRepeatEndDate(dateTime);
+                    refresh();
+                }
+
+                @Override
+                public Date onGetListenerDate() {
+                    return model.getRepeatEndDate();
+                }
+            });
+        }
+
+        return datePickerDialog;
+    }
+
+    private TimePickerDialogBase timePickerDialog;
+
+    private TimePickerDialogBase getTimePickerDialog() {
+        if (timePickerDialog == null) {
+            if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.BLACK) {
+                timePickerDialog = new TimePickerDialogBlack();
+            } else {
+                timePickerDialog = new TimePickerDialogLight();
+            }
+            timePickerDialog.setListener(new TimePickerDialogBase.ITimePickerListener() {
+                @Override
+                public void onSetListenerTime(Date dateTime) {
+                    model.setRepeatEndDate(dateTime);
+                    refresh();
+                }
+
+                @Override
+                public Date onGetListenerTime() {
+                    return model.getRepeatEndDate();
+                }
+            });
+        }
+        return timePickerDialog;
     }
 
     @NonNull
@@ -122,8 +241,7 @@ public class RepeatDialog extends DialogFragmentBase
 
         rdo_reminder_repeat_daily_custom = view.findViewById(R.id.rdo_reminder_repeat_daily_custom);
         rdo_reminder_repeat_daily_custom.setOnClickListener(v -> {
-            final DailyCustomRepeatDialog ting = new DailyCustomRepeatDialog();
-            ting.show(getParentFragmentManager(), DailyCustomRepeatDialog.TAG);
+            getDailyCustomRepeatDialog().show(getParentFragmentManager(), DailyCustomRepeatDialog.TAG);
         });
 
         rdo_reminder_repeat_weekly = view.findViewById(R.id.rdo_reminder_repeat_weekly);
@@ -137,8 +255,7 @@ public class RepeatDialog extends DialogFragmentBase
 
         rdo_reminder_repeat_weekly_custom = view.findViewById(R.id.rdo_reminder_repeat_weekly_custom);
         rdo_reminder_repeat_weekly_custom.setOnClickListener(v -> {
-            final WeeklyCustomRepeatDialog ting = new WeeklyCustomRepeatDialog();
-            ting.show(getParentFragmentManager(), WeeklyCustomRepeatDialog.TAG);
+            getWeeklyCustomRepeatDialog().show(getParentFragmentManager(), WeeklyCustomRepeatDialog.TAG);
         });
 
         rdo_reminder_repeat_monthly = view.findViewById(R.id.rdo_reminder_repeat_monthly);
@@ -152,8 +269,7 @@ public class RepeatDialog extends DialogFragmentBase
 
         rdo_reminder_repeat_monthly_custom = view.findViewById(R.id.rdo_reminder_repeat_monthly_custom);
         rdo_reminder_repeat_monthly_custom.setOnClickListener(v -> {
-            final MonthlyCustomRepeatDialog ting = new MonthlyCustomRepeatDialog();
-            ting.show(getParentFragmentManager(), MonthlyCustomRepeatDialog.TAG);
+            getMonthlyCustomRepeatDialog().show(getParentFragmentManager(), MonthlyCustomRepeatDialog.TAG);
         });
 
         rdo_reminder_repeat_yearly = view.findViewById(R.id.rdo_reminder_repeat_yearly);
@@ -167,8 +283,7 @@ public class RepeatDialog extends DialogFragmentBase
 
         rdo_reminder_repeat_other = view.findViewById(R.id.rdo_reminder_repeat_other);
         rdo_reminder_repeat_other.setOnClickListener(v -> {
-            final OtherRepeatDialog ting = new OtherRepeatDialog();
-            ting.show(getParentFragmentManager(), OtherRepeatDialog.TAG);
+            getOtherRepeatDialog().show(getParentFragmentManager(), OtherRepeatDialog.TAG);
         });
 
         sw_has_repeat_end = view.findViewById(R.id.sw_has_repeat_end);
@@ -200,20 +315,12 @@ public class RepeatDialog extends DialogFragmentBase
 
         tv_end_date_value = view.findViewById(R.id.tv_end_date_value);
         tv_end_date_value.setOnClickListener(v -> {
-            final RemindMeDatePickerDialog dialog = new RemindMeDatePickerDialog();
-            dialog.show(getParentFragmentManager(), RemindMeDatePickerDialog.TAG);
+            getDatePickerDialog().show(getParentFragmentManager(), RemindMeDatePickerDialog.TAG);
         });
 
         tv_end_time_value = view.findViewById(R.id.tv_end_time_value);
         tv_end_time_value.setOnClickListener(v -> {
-
-            if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.BLACK) {
-                final RemindMeTimePickerBlackDialog dialog = new RemindMeTimePickerBlackDialog();
-                dialog.show(getParentFragmentManager(), RemindMeTimePickerBlackDialog.TAG);
-            } else {
-                final RemindMeTimePickerLightDialog dialog = new RemindMeTimePickerLightDialog();
-                dialog.show(getParentFragmentManager(), RemindMeTimePickerLightDialog.TAG);
-            }
+            getTimePickerDialog().show(getParentFragmentManager(), TimePickerDialogBlack.TAG);
         });
 
         lv_repeat_end_date = view.findViewById(R.id.lv_repeat_end_date);
@@ -289,7 +396,7 @@ public class RepeatDialog extends DialogFragmentBase
             if (model.isHasRepeatEnd()) {
                 lv_repeat_end_date.setVisibility(View.VISIBLE);
                 lv_repeat_end_time.setVisibility(View.VISIBLE);
-                tv_end_date_value.setText(StringHelper.toWeekdayDate(this.getContext(), model.getRepeatEndDate()));
+                tv_end_date_value.setText(StringHelper.toWeekdayDate(getContext(), model.getRepeatEndDate()));
                 tv_end_time_value.setText(StringHelper.toTimeAmPm(model.getRepeatEndDate()));
             } else {
                 lv_repeat_end_date.setVisibility(View.GONE);
@@ -298,40 +405,33 @@ public class RepeatDialog extends DialogFragmentBase
         }
     }
 
-    public void setCustomRepeatDialogModel(RepeatModel m) {
+//    public void setCustomRepeatDialogModel(RepeatModel m) {
+//
+//        if (m != null && m.isValid(model.getParent().getTimeModel())) { // m will be  null to  that
+//            model = m;
+//        }
+//        refresh();
+//    }
+//
+//    @Override
+//    public RepeatModel getCustomRepeatDialogModel() {
+//        return model;
+//    }
 
-        if (m != null && m.isValid(model.getParent().getTimeModel())) { // m will be  null to  that
-            model = m;
-        }
-        refresh();
-    }
+//    @Override
+//    public void setDateTimePicker(String tag, Date dateTime) {
+//        model.setRepeatEndDate(dateTime);
+//        refresh();
+//    }
+//
+//    @Override
+//    public Date getDateTimePicker(String tag) {
+//        return model.getRepeatEndDate();
+//    }
+//
+//    @Override
+//    public Date getMinimumDateTime(String tag) {
+//        return model.getParent().getTimeModel().getTime();
+//    }
 
-    @Override
-    public RepeatModel getCustomRepeatDialogModel() {
-        return model;
-    }
-
-    @Override
-    public void setDateTimePicker(String tag, Date dateTime) {
-        model.setRepeatEndDate(dateTime);
-        refresh();
-    }
-
-    @Override
-    public Date getDateTimePicker(String tag) {
-        return model.getRepeatEndDate();
-    }
-
-    @Override
-    public Date getMinimumDateTime(String tag) {
-        return model.getParent().getTimeModel().getTime();
-    }
-
-    public interface IRepeatInputDialogListener {
-
-        void setRepeatDialogModel(RepeatModel model);
-
-        RepeatModel getRepeatDialogModel();
-
-    }
 }

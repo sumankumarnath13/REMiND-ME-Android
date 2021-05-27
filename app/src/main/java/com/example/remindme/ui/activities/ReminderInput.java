@@ -32,25 +32,23 @@ import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
-import com.example.remindme.ui.fragments.dialogFragments.DateCalculatorDialog;
 import com.example.remindme.ui.fragments.dialogFragments.NameDialog;
 import com.example.remindme.ui.fragments.dialogFragments.NoteDialog;
 import com.example.remindme.ui.fragments.dialogFragments.RepeatDialog;
 import com.example.remindme.ui.fragments.dialogFragments.SnoozeDialog;
 import com.example.remindme.ui.fragments.dialogFragments.TimeListAnyTimeDialog;
 import com.example.remindme.ui.fragments.dialogFragments.TimeListHourlyDialog;
-import com.example.remindme.ui.fragments.dialogFragments.common.IDateTimePickerListener;
 import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeDatePickerDialog;
-import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerBlackDialog;
-import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerLightDialog;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimeListDialogBase;
+import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBase;
+import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBlack;
+import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogLight;
 import com.example.remindme.viewModels.AlertModel;
 import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.RingingModel;
 import com.example.remindme.viewModels.SnoozeModel;
 import com.example.remindme.viewModels.TimeModel;
 import com.example.remindme.viewModels.factories.ReminderViewModelFactory;
-import com.example.remindme.viewModels.factories.TimeViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
@@ -61,22 +59,13 @@ public class ReminderInput
         extends
         ActivityBase
         implements
-        AdapterView.OnItemSelectedListener,
-        IDateTimePickerListener,
-        TimeListDialogBase.ITimeListListener,
-        NameDialog.INameInputDialogListener,
-        NoteDialog.INoteInputDialogListener,
-        RepeatDialog.IRepeatInputDialogListener,
-        SnoozeDialog.ISnoozeInputDialogListener,
-        DateCalculatorDialog.ITimeCalculatorListener {
+        AdapterView.OnItemSelectedListener {
 
     private static final int NAME_SPEECH_REQUEST_CODE = 119;
     private static final int NOTE_SPEECH_REQUEST_CODE = 113;
     private static final int RINGTONE_DIALOG_REQ_CODE = 117;
 
     private static final String MORE_INPUT_UI_STATE = "MORE_INPUT";
-    private static final String REMINDER_CALENDAR = "REMINDER_CALENDAR";
-    private static final String REMINDER_CALCULATOR = "REMINDER_CALCULATOR";
 
     private boolean isExtraInputsVisible;
     private AlertModel alertModel = null;
@@ -117,8 +106,193 @@ public class ReminderInput
     private int deviceAlarmVolume;
 
     private LinearLayoutCompat lvc_diff_next_reminder_trigger;
-
     private LinearLayoutCompat alarm_only_layout;
+
+    private NameDialog nameDialog;
+
+    private NameDialog getNameDialog() {
+        if (nameDialog == null) {
+            nameDialog = new NameDialog();
+            nameDialog.setListener(new NameDialog.INameInputDialogListener() {
+                @Override
+                public void setNameInputDialogModel(String name) {
+                    alertModel.setName(name);
+                    refresh();
+                }
+
+                @Override
+                public String getNameInputDialogModel() {
+                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+                    return alertModel.getName();
+                }
+            });
+        }
+        return nameDialog;
+    }
+
+    private NoteDialog noteDialog;
+
+    private NoteDialog getNoteDialog() {
+        if (noteDialog == null) {
+            noteDialog = new NoteDialog();
+            noteDialog.setListener(new NoteDialog.INoteInputDialogListener() {
+                @Override
+                public void setNoteDialogModel(String note) {
+                    alertModel.setNote(note);
+                    refresh();
+                }
+
+                @Override
+                public String getNoteDialogModel() {
+                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+                    return alertModel.getNote();
+                }
+            });
+        }
+        return noteDialog;
+    }
+
+    private RepeatDialog repeatDialog;
+
+    private RepeatDialog getRepeatDialog() {
+        if (repeatDialog == null) {
+            repeatDialog = new RepeatDialog();
+            repeatDialog.setListener(new RepeatDialog.IRepeatInputDialogListener() {
+                @Override
+                public void setRepeatDialogModel(RepeatModel model) {
+                    if (model.isValid(alertModel.getTimeModel())) {
+                        alertModel.setRepeatModel(model);
+                        alertModel.getTimeModel().setScheduledTime(model.getValidatedScheduledTime());
+                    } else {
+                        ToastHelper.showShort(ReminderInput.this, "Please check repeat settings");
+                    }
+                }
+
+                @Override
+                public RepeatModel getRepeatDialogModel() {
+                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+                    return alertModel.getRepeatModel();
+                }
+            });
+        }
+        return repeatDialog;
+    }
+
+    private SnoozeDialog snoozeDialog;
+
+    private SnoozeDialog getSnoozeDialog() {
+        if (snoozeDialog == null) {
+            snoozeDialog = new SnoozeDialog();
+            snoozeDialog.setListener(new SnoozeDialog.ISnoozeInputDialogListener() {
+                @Override
+                public void onSetListenerSnoozeModel(SnoozeModel model) {
+                    alertModel.setSnoozeModel(model);
+                    refresh();
+                }
+
+                @Override
+                public SnoozeModel onGetListenerSnoozeModel() {
+                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+                    return alertModel.getSnoozeModel();
+                }
+            });
+        }
+        return snoozeDialog;
+    }
+
+    private RemindMeDatePickerDialog datePickerDialog;
+
+    private RemindMeDatePickerDialog getDatePickerDialog() {
+        if (datePickerDialog == null) {
+            datePickerDialog = new RemindMeDatePickerDialog();
+            datePickerDialog.setListener(new RemindMeDatePickerDialog.IDatePickerListener() {
+                @Override
+                public void onSetListenerDate(Date dateTime) {
+                    alertModel.getTimeModel().setTime(dateTime);
+                    refresh();
+                }
+
+                @Override
+                public Date onGetListenerDate() {
+                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+                    return alertModel.getTimeModel().getTime();
+                }
+            });
+        }
+
+        return datePickerDialog;
+    }
+
+    private TimePickerDialogBase timePickerDialog;
+
+    private TimePickerDialogBase getTimePickerDialog() {
+        if (timePickerDialog == null) {
+            if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.BLACK) {
+                timePickerDialog = new TimePickerDialogBlack();
+            } else {
+                timePickerDialog = new TimePickerDialogLight();
+            }
+            timePickerDialog.setListener(new TimePickerDialogBase.ITimePickerListener() {
+                @Override
+                public void onSetListenerTime(Date dateTime) {
+                    alertModel.getTimeModel().setTime(dateTime);
+                    refresh();
+                }
+
+                @Override
+                public Date onGetListenerTime() {
+                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+                    return alertModel.getTimeModel().getTime();
+                }
+            });
+        }
+        return timePickerDialog;
+    }
+
+    private TimeListDialogBase.ITimeListListener timeListListener;
+
+    private TimeListDialogBase.ITimeListListener getTimeListListener() {
+        if (timeListListener == null) {
+            timeListListener = new TimeListDialogBase.ITimeListListener() {
+                @Override
+                public TimeModel getTimeListDialogModel() {
+                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+                    return alertModel.getTimeModel();
+                }
+
+                @Override
+                public void setTimeListDialogModel(TimeModel model) {
+                    if (alertModel.getRepeatModel().isValid(model)) {
+                        alertModel.setTimeModel(model);
+                        alertModel.getTimeModel().setScheduledTime(alertModel.getRepeatModel().getValidatedScheduledTime());
+                    } else {
+                        ToastHelper.showShort(ReminderInput.this, "Please check repeat settings");
+                    }
+                }
+            };
+        }
+        return timeListListener;
+    }
+
+    private TimeListHourlyDialog timeListHourlyDialog;
+
+    private TimeListHourlyDialog getTimeListHourlyDialog() {
+        if (timeListHourlyDialog == null) {
+            timeListHourlyDialog = new TimeListHourlyDialog();
+            timeListHourlyDialog.setListener(getTimeListListener());
+        }
+        return timeListHourlyDialog;
+    }
+
+    private TimeListAnyTimeDialog timeListAnyTimeDialog;
+
+    private TimeListAnyTimeDialog getTimeListAnyTimeDialog() {
+        if (timeListAnyTimeDialog == null) {
+            timeListAnyTimeDialog = new TimeListAnyTimeDialog();
+            timeListAnyTimeDialog.setListener(getTimeListListener());
+        }
+        return timeListAnyTimeDialog;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -212,26 +386,9 @@ public class ReminderInput
             }
         });
 
-        btn_reminder_date.setOnClickListener(view -> {
-            final RemindMeDatePickerDialog dialog = new RemindMeDatePickerDialog();
-            dialog.show(getSupportFragmentManager(), REMINDER_CALENDAR);
-        });
+        btn_reminder_date.setOnClickListener(view -> getDatePickerDialog().show(getSupportFragmentManager(), RemindMeDatePickerDialog.TAG));
 
-        btn_reminder_time.setOnClickListener(view -> {
-            if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.BLACK) {
-                final RemindMeTimePickerBlackDialog dialog = new RemindMeTimePickerBlackDialog();
-                dialog.show(getSupportFragmentManager(), REMINDER_CALCULATOR);
-            } else {
-                final RemindMeTimePickerLightDialog dialog = new RemindMeTimePickerLightDialog();
-                dialog.show(getSupportFragmentManager(), REMINDER_CALCULATOR);
-            }
-        });
-
-//        final AppCompatButton btnCalculate = findViewById(R.id.btnCalculate);
-//        btnCalculate.setOnClickListener(v -> {
-//            final DateCalculatorDialog calculatorDialog = new DateCalculatorDialog();
-//            calculatorDialog.show(getSupportFragmentManager(), DateCalculatorDialog.TAG);
-//        });
+        btn_reminder_time.setOnClickListener(view -> getTimePickerDialog().show(getSupportFragmentManager(), TimePickerDialogBase.TAG));
 
         tv_reminder_time_list_summary = findViewById(R.id.tv_reminder_time_list_summary);
 
@@ -247,8 +404,7 @@ public class ReminderInput
                     return;
                 }
 
-                final TimeListHourlyDialog timeListHourlyDialog = new TimeListHourlyDialog();
-                timeListHourlyDialog.show(getSupportFragmentManager(), TimeListHourlyDialog.TAG);
+                getTimeListHourlyDialog().show(getSupportFragmentManager(), TimeListHourlyDialog.TAG);
             }
         });
 
@@ -264,34 +420,22 @@ public class ReminderInput
                     return;
                 }
 
-                final TimeListAnyTimeDialog timeListInputHourlyDialog = new TimeListAnyTimeDialog();
-                timeListInputHourlyDialog.show(getSupportFragmentManager(), TimeListAnyTimeDialog.TAG);
+                //final TimeListAnyTimeDialog timeListInputHourlyDialog = new TimeListAnyTimeDialog();
+                getTimeListAnyTimeDialog().show(getSupportFragmentManager(), TimeListAnyTimeDialog.TAG);
             }
         });
 
         final LinearLayoutCompat mnu_reminder_name = findViewById(R.id.mnu_reminder_name);
-        mnu_reminder_name.setOnClickListener(v -> {
-            final NameDialog nameInput = new NameDialog();
-            nameInput.show(getSupportFragmentManager(), NameDialog.TAG);
-        });
+        mnu_reminder_name.setOnClickListener(v -> getNameDialog().show(getSupportFragmentManager(), NameDialog.TAG));
 
         final LinearLayoutCompat mnu_reminder_note = findViewById(R.id.mnu_reminder_note);
-        mnu_reminder_note.setOnClickListener(v -> {
-            final NoteDialog noteInput = new NoteDialog();
-            noteInput.show(getSupportFragmentManager(), NoteDialog.TAG);
-        });
+        mnu_reminder_note.setOnClickListener(v -> getNoteDialog().show(getSupportFragmentManager(), NoteDialog.TAG));
 
         final LinearLayoutCompat mnu_reminder_repeat = findViewById(R.id.mnu_reminder_repeat);
-        mnu_reminder_repeat.setOnClickListener(v -> {
-            final RepeatDialog repeatInput = new RepeatDialog();
-            repeatInput.show(getSupportFragmentManager(), RepeatDialog.TAG);
-        });
+        mnu_reminder_repeat.setOnClickListener(v -> getRepeatDialog().show(getSupportFragmentManager(), RepeatDialog.TAG));
 
         final LinearLayoutCompat mnu_reminder_snooze = findViewById(R.id.snooze_input_layout);
-        mnu_reminder_snooze.setOnClickListener(v -> {
-            final SnoozeDialog snoozeInput = new SnoozeDialog();
-            snoozeInput.show(getSupportFragmentManager(), SnoozeDialog.TAG);
-        });
+        mnu_reminder_snooze.setOnClickListener(v -> getSnoozeDialog().show(getSupportFragmentManager(), SnoozeDialog.TAG));
 
         final LinearLayoutCompat mnu_reminder_tone = findViewById(R.id.tone_input_layout);
         mnu_reminder_tone.setOnClickListener(v -> {
@@ -548,94 +692,6 @@ public class ReminderInput
     }
 
     @Override
-    public TimeModel getTimeListDialogModel() {
-        alertModel = new ViewModelProvider(this).get(AlertModel.class);
-        return new ViewModelProvider(this, new TimeViewModelFactory(alertModel)).get(TimeModel.class);
-    }
-
-    @Override
-    public void setTimeListDialogModel(TimeModel model) {
-
-        if (alertModel.getRepeatModel().isValid(model)) {
-            alertModel.setTimeModel(model);
-            alertModel.getTimeModel().setScheduledTime(alertModel.getRepeatModel().getValidatedScheduledTime());
-        } else {
-            ToastHelper.showShort(this, "Please check repeat settings");
-        }
-
-        refresh();
-    }
-
-    @Override
-    public Date getDateCalculatorDialogModel() {
-        alertModel = new ViewModelProvider(this).get(AlertModel.class);
-        return alertModel.getTimeModel().getTime();
-    }
-
-    @Override
-    public void setDateCalculatorDialogModel(Date newTime) {
-        if (newTime == null)
-            return;
-        alertModel.getTimeModel().setTime(newTime);
-        refresh();
-    }
-
-    @Override
-    public String getNameInputDialogModel() {
-        alertModel = new ViewModelProvider(this).get(AlertModel.class);
-        return alertModel.getName();
-    }
-
-    @Override
-    public void setNameInputDialogModel(String name) {
-        alertModel.setName(name);
-        refresh();
-    }
-
-    @Override
-    public String getNoteDialogModel() {
-        alertModel = new ViewModelProvider(this).get(AlertModel.class);
-        return alertModel.getNote();
-    }
-
-    @Override
-    public void setNoteDialogModel(String note) {
-        alertModel.setNote(note);
-        refresh();
-    }
-
-    @Override
-    public RepeatModel getRepeatDialogModel() {
-        alertModel = new ViewModelProvider(this).get(AlertModel.class);
-        return alertModel.getRepeatModel();
-    }
-
-    @Override
-    public void setRepeatDialogModel(RepeatModel model) {
-
-        if (model.isValid(alertModel.getTimeModel())) {
-            alertModel.setRepeatModel(model);
-            alertModel.getTimeModel().setScheduledTime(model.getValidatedScheduledTime());
-        } else {
-            ToastHelper.showShort(this, "Please check repeat settings");
-        }
-
-        refresh();
-    }
-
-    @Override
-    public SnoozeModel getSnoozeDialogModel() {
-        alertModel = new ViewModelProvider(this).get(AlertModel.class);
-        return alertModel.getSnoozeModel();
-    }
-
-    @Override
-    public void setSnoozeDialogModel(SnoozeModel model) {
-        alertModel.setSnoozeModel(model);
-        refresh();
-    }
-
-    @Override
     protected void onDestroy() {
         stopTone();
         super.onDestroy();
@@ -681,23 +737,6 @@ public class ReminderInput
             ringingController.stopRinging(); // Stop ring stops both tone and vibration if is playing.
         }
         isPlayingTone = false;
-    }
-
-    @Override
-    public void setDateTimePicker(String tag, Date dateTime) {
-        alertModel.getTimeModel().setTime(dateTime);
-        refresh();
-    }
-
-    @Override
-    public Date getDateTimePicker(String tag) {
-        alertModel = new ViewModelProvider(this).get(AlertModel.class);
-        return alertModel.getTimeModel().getTime();
-    }
-
-    @Override
-    public Date getMinimumDateTime(String tag) {
-        return Calendar.getInstance().getTime(); //Today's time
     }
 
 }

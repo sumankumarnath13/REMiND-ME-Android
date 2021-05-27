@@ -34,6 +34,9 @@ public class FabContextMenu extends Fragment {
         public String clickValue;
     }
 
+    private static final int ROTATE_ANIM_DURATION = 117;
+    private static final int CONTEXT_OPTIONS_ANIM_DURATION = 63;
+
     public interface iFabContextMenuListener {
         void onFabContextMenuClick(boolean isExpand);
 
@@ -66,7 +69,7 @@ public class FabContextMenu extends Fragment {
         final View view = inflater.inflate(R.layout.common_fragment_fab_context_menu, container, false);
 
         rotateOpen = AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_open_anim);
-        rotateOpen.setDuration(117);
+        rotateOpen.setDuration(ROTATE_ANIM_DURATION);
         rotateOpen.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -95,7 +98,7 @@ public class FabContextMenu extends Fragment {
         });
 
         rotateClose = AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_close_anim);
-        rotateClose.setDuration(117);
+        rotateClose.setDuration(ROTATE_ANIM_DURATION);
         rotateClose.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -121,10 +124,10 @@ public class FabContextMenu extends Fragment {
         });
 
         fromBottom = AnimationUtils.loadAnimation(this.getContext(), R.anim.from_bottom_anim);
-        fromBottom.setDuration(63);
+        fromBottom.setDuration(CONTEXT_OPTIONS_ANIM_DURATION);
 
         toBottom = AnimationUtils.loadAnimation(this.getContext(), R.anim.to_bottom_anim);
-        toBottom.setDuration(63);
+        toBottom.setDuration(CONTEXT_OPTIONS_ANIM_DURATION);
 
         layoutCompat = view.findViewById(R.id.fabContextMenuLayout);
 

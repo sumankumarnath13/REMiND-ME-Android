@@ -25,12 +25,25 @@ import com.example.remindme.ui.fragments.dialogFragments.common.DialogFragmentBa
 import java.util.List;
 
 public class NoteDialog extends DialogFragmentBase {
+
     public static final String TAG = "NoteDialog";
+
+    public interface INoteInputDialogListener {
+
+        void setNoteDialogModel(String note);
+
+        String getNoteDialogModel();
+
+    }
 
     private INoteInputDialogListener listener;
 
     protected INoteInputDialogListener getListener() {
         return listener;
+    }
+
+    public void setListener(INoteInputDialogListener listener) {
+        this.listener = listener;
     }
 
     private static final int SPEECH_REQUEST_CODE = 117;
@@ -42,7 +55,7 @@ public class NoteDialog extends DialogFragmentBase {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        listener = getListener(INoteInputDialogListener.class);
+        //listener = getListener(INoteInputDialogListener.class);
 
         if (getListener() == null) {
             ToastHelper.showError(getContext(), "Listener incompatible!");
@@ -122,11 +135,5 @@ public class NoteDialog extends DialogFragmentBase {
         return builder.create();
     }
 
-    public interface INoteInputDialogListener {
 
-        void setNoteDialogModel(String note);
-
-        String getNoteDialogModel();
-
-    }
 }

@@ -9,28 +9,30 @@ import android.util.TypedValue;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.remindme.helpers.ToastHelper;
-
-import java.util.Stack;
-
 
 public abstract class DialogFragmentBase extends DialogFragment {
 
-    private boolean isStackChanged;
+//    private boolean isDismissed;
+//
+//    protected boolean isDismissed(){
+//        return isDismissed;
+//    }
 
-    private static final Stack<String> dialogStack = new Stack<>();
+    //private boolean isStackChanged;
+
+    //private static final Stack<String> dialogStack = new Stack<>();
 
     private boolean isRefreshing;
 
-    private Object listener;
-
-    protected <T> T getListener(Class<T> type) {
-        try {
-            return type.cast(listener);
-        } catch (Exception ex) {
-            return null;
-        }
-    }
+//    private Object listener;
+//
+//    protected <T> T getListener(Class<T> type) {
+//        try {
+//            return type.cast(listener);
+//        } catch (Exception ex) {
+//            return null;
+//        }
+//    }
 
     protected boolean isRefreshing() {
         return isRefreshing;
@@ -48,36 +50,38 @@ public abstract class DialogFragmentBase extends DialogFragment {
     public final void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        if (dialogStack.size() == 0) {
-            // Root level, Activity
-            listener = context;
-        } else {
-            // Dialog from dialog or Activity
-            String listenerTag = dialogStack.lastElement();
-            listener = getParentFragmentManager().findFragmentByTag(listenerTag);
-        }
+//        isDismissed = false;
+//
+//        if (dialogStack.size() == 0) {
+//            // Root level, Activity
+//            listener = context;
+//        } else {
+//            // Dialog from dialog or Activity
+//            String listenerTag = dialogStack.lastElement();
+//            listener = getParentFragmentManager().findFragmentByTag(listenerTag);
+//        }
+//
+//        if (dialogStack.contains(getTag())) {
+//            ToastHelper.showError(context, "Duplicate tag in dialog chain");
+//            dismiss();
+//            return;
+//        }
+//
+//        if (listener == null) {
+//            dismiss();
+//            return;
+//        }
 
-        if (dialogStack.contains(getTag())) {
-            ToastHelper.showError(context, "Duplicate tag in dialog chain");
-            dismiss();
-            return;
-        }
-
-        if (listener == null) {
-            dismiss();
-            return;
-        }
-
-        dialogStack.push(getTag());
-        isStackChanged = true;
+        //dialogStack.push(getTag());
+        //isStackChanged = true;
     }
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        if (!dialogStack.isEmpty() && isStackChanged) {
-            dialogStack.pop();
-        }
+//        if (!dialogStack.isEmpty() && isStackChanged) {
+//            dialogStack.pop();
+//        }
     }
 
     protected int resolveRefAttributeResourceId(int refAttributeId) {

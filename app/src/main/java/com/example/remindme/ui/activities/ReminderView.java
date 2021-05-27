@@ -104,8 +104,8 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
 
                 } else {
 
-                    if (activeReminder.trySetEnabled(getApplicationContext(), isChecked)) {
-                        activeReminder.saveAndSetAlert(ReminderView.this, true);
+                    if (activeReminder.trySetEnabled(buttonView.getContext(), isChecked)) {
+                        activeReminder.saveAndSetAlert(buttonView.getContext(), true);
                         refresh();
                     } else {
                         buttonView.setChecked(false);
@@ -117,7 +117,7 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
         next_snooze = findViewById(R.id.tv_reminder_next_snooze);
         btn_reminder_dismiss = findViewById(R.id.btn_reminder_dismiss);
         btn_reminder_dismiss.setOnClickListener(v -> {
-            activeReminder.dismissByUser(ReminderView.this);
+            activeReminder.dismissByUser(v.getContext());
             refresh();
         });
 

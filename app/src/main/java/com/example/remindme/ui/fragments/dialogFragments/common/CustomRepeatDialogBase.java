@@ -13,10 +13,21 @@ import com.example.remindme.viewModels.factories.RepeatViewModelFactory;
 
 public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
 
+    public interface ICustomRepeatDialogListener {
+
+        void setCustomRepeatDialogModel(RepeatModel model);
+
+        RepeatModel getCustomRepeatDialogModel();
+    }
+
     private ICustomRepeatDialogListener listener;
 
     protected ICustomRepeatDialogListener getListener() {
         return listener;
+    }
+
+    public void setListener(ICustomRepeatDialogListener listener) {
+        this.listener = listener;
     }
 
     private RepeatModel model;
@@ -29,7 +40,9 @@ public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
 
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
-        getListener().setCustomRepeatDialogModel(null);
+        if (getListener() != null) {
+            getListener().setCustomRepeatDialogModel(null);
+        }
         isCanceled = true;
         super.onCancel(dialog);
     }
@@ -37,7 +50,9 @@ public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         if (!isCanceled) {
-            getListener().setCustomRepeatDialogModel(null);
+            if (getListener() != null) {
+                getListener().setCustomRepeatDialogModel(null);
+            }
         }
         super.onDismiss(dialog);
     }
@@ -46,10 +61,10 @@ public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        listener = getListener(ICustomRepeatDialogListener.class);
+        //listener = getListener(ICustomRepeatDialogListener.class);
 
         if (getListener() == null) {
-            ToastHelper.showError(getContext(), "Listener incompatible!");
+            ToastHelper.showError(getContext(), "Listener not set for dialog!");
             dismiss();
             return;
         }
@@ -62,12 +77,5 @@ public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
     @Override
     protected void onUIRefresh() {
 
-    }
-
-    public interface ICustomRepeatDialogListener {
-
-        void setCustomRepeatDialogModel(RepeatModel model);
-
-        RepeatModel getCustomRepeatDialogModel();
     }
 }

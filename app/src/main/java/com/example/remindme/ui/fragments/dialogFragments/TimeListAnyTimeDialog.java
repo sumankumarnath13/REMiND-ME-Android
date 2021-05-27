@@ -19,34 +19,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
-import com.example.remindme.ui.fragments.dialogFragments.common.IDateTimePickerListener;
-import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerBlackDialog;
-import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeTimePickerLightDialog;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimeListDialogBase;
+import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBase;
+import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBlack;
+import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogLight;
 import com.example.remindme.viewModels.TimeModel;
 
 import java.util.Date;
 import java.util.List;
 
-public class TimeListAnyTimeDialog extends TimeListDialogBase implements IDateTimePickerListener {
+public class TimeListAnyTimeDialog extends TimeListDialogBase {
 
     public static final String TAG = "CustomTimeListDialog";
-
-    @Override
-    public void setDateTimePicker(String tag, Date dateTime) {
-        getModel().addTimeListTime(dateTime);
-        refresh();
-    }
-
-    @Override
-    public Date getDateTimePicker(String tag) {
-        return getModel().getTime();
-    }
-
-    @Override
-    public Date getMinimumDateTime(String tag) {
-        return getModel().getTime();
-    }
 
     public class CustomTimeListAdapter extends RecyclerView.Adapter<CustomTimeListAdapter.ViewHolder> {
 
@@ -106,6 +90,31 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements IDateTi
 
     private RecyclerView timeListRecycler;
 
+    private TimePickerDialogBase timePickerDialog;
+
+    private TimePickerDialogBase getTimePickerDialog() {
+        if (timePickerDialog == null) {
+            if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.BLACK) {
+                timePickerDialog = new TimePickerDialogBlack();
+            } else {
+                timePickerDialog = new TimePickerDialogLight();
+            }
+            timePickerDialog.setListener(new TimePickerDialogBase.ITimePickerListener() {
+                @Override
+                public void onSetListenerTime(Date dateTime) {
+                    getModel().addTimeListTime(dateTime);
+                    refresh();
+                }
+
+                @Override
+                public Date onGetListenerTime() {
+                    return getModel().getTime();
+                }
+            });
+        }
+        return timePickerDialog;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -120,17 +129,7 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements IDateTi
         timeListRecycler = view.findViewById(R.id.timeListRecycler);
 
         final AppCompatImageButton imgBtnAddCustomTime = view.findViewById(R.id.imgBtnAddCustomTime);
-        imgBtnAddCustomTime.setOnClickListener(v -> {
-
-            if (AppSettingsHelper.getInstance().getTheme() == AppSettingsHelper.Themes.BLACK) {
-                final RemindMeTimePickerBlackDialog dialog = new RemindMeTimePickerBlackDialog();
-                dialog.show(getParentFragmentManager(), RemindMeTimePickerBlackDialog.TAG);
-            } else {
-                final RemindMeTimePickerLightDialog dialog = new RemindMeTimePickerLightDialog();
-                dialog.show(getParentFragmentManager(), RemindMeTimePickerLightDialog.TAG);
-            }
-
-        });
+        imgBtnAddCustomTime.setOnClickListener(v -> getTimePickerDialog().show(getParentFragmentManager(), TimePickerDialogBase.TAG));
 
         builder.setView(view)
                 .setTitle(getString(R.string.format_heading_time_list, "Select", "time"))

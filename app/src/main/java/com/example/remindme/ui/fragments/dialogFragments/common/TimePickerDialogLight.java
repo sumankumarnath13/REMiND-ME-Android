@@ -16,9 +16,7 @@ import com.example.remindme.helpers.AppSettingsHelper;
 
 import java.util.Calendar;
 
-public class RemindMeTimePickerBlackDialog extends DateTimePickerDialogBase {
-
-    public static final String TAG = "RemindMeTimePickerBlackDialog";
+public class TimePickerDialogLight extends TimePickerDialogBase {
 
     @NonNull
     @Override
@@ -29,10 +27,10 @@ public class RemindMeTimePickerBlackDialog extends DateTimePickerDialogBase {
             return builder.create();
         final LayoutInflater inflater = activity.getLayoutInflater();
 
-        final View view = inflater.inflate(R.layout.common_dialog_time_picker_black, null);
+        final View view = inflater.inflate(R.layout.common_dialog_time_picker_light, null);
 
-        final TimePicker timePicker = view.findViewById(R.id.time_picker_black);
 
+        final TimePicker timePicker = view.findViewById(R.id.time_picker_light);
         timePicker.setCurrentHour(getHourOfDay());
         timePicker.setCurrentMinute(getMin());
         timePicker.setIs24HourView(AppSettingsHelper.getInstance().isUse24hourTime());
@@ -41,14 +39,15 @@ public class RemindMeTimePickerBlackDialog extends DateTimePickerDialogBase {
 
             final Calendar calendar = Calendar.getInstance();
 
-            calendar.setTime(getDateTime());
+            calendar.setTime(getTime());
             calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
             calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
 
-            getListener().setDateTimePicker(getTag(), calendar.getTime());
+            getListener().onSetListenerTime(calendar.getTime());
 
         }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
         });
+
 
         return builder.create();
     }
