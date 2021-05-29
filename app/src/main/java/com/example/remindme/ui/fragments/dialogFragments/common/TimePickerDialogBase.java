@@ -23,12 +23,15 @@ public abstract class TimePickerDialogBase
     private ITimePickerListener listener;
 
     protected ITimePickerListener getListener() {
+        if (listener == null) {
+            listener = super.getListener(ITimePickerListener.class);
+        }
         return listener;
     }
 
-    public void setListener(ITimePickerListener listener) {
-        this.listener = listener;
-    }
+//    public void setListener(ITimePickerListener listener) {
+//        this.listener = listener;
+//    }
 
     private Calendar calendar;
 

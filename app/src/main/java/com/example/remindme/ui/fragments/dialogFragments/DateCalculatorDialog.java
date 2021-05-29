@@ -36,12 +36,15 @@ public final class DateCalculatorDialog extends DialogFragmentBase {
     private ITimeCalculatorListener listener;
 
     private ITimeCalculatorListener getListener() {
+        if (listener == null) {
+            listener = super.getListener(ITimeCalculatorListener.class);
+        }
         return listener;
     }
-
-    public void setListener(ITimeCalculatorListener listener) {
-        this.listener = listener;
-    }
+//
+//    public void setListener(ITimeCalculatorListener listener) {
+//        this.listener = listener;
+//    }
 
     //private final Calendar calendar = Calendar.getInstance();
     private final Calendar resultCalendar = Calendar.getInstance();

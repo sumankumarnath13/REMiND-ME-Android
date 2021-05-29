@@ -164,4 +164,6 @@
     <string name="format_label_character_limit_warning">%d character%s available</string>
     <string name="format_heading_time_list">%s Multiple %s of day</string>
     <string name="missing_image_desc">oops</string>
+    <string name="hide_advance_options_label">Hide advance options</string>
+    <string name="show_advance_options_label">Show advance options</string>
 </resources>

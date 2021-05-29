@@ -39,12 +39,15 @@ public final class NameDialog extends DialogFragmentBase {
     private INameInputDialogListener listener;
 
     private INameInputDialogListener getListener() {
+        if (listener == null) {
+            listener = super.getListener(INameInputDialogListener.class);
+        }
         return listener;
     }
 
-    public void setListener(INameInputDialogListener listener) {
-        this.listener = listener;
-    }
+//    public void setListener(INameInputDialogListener listener) {
+//        this.listener = listener;
+//    }
 
     private static final int SPEECH_REQUEST_CODE = 117;
     private AppCompatEditText txt_reminder_name;

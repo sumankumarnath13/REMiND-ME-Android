@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:background="@drawable/border_bottom_dialog"
+    android:orientation="horizontal"
+    android:padding="@dimen/dp_8">
+
+    <TextView
+        android:id="@+id/tv_rank"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_small"
+        android:textColor="?attr/themeDimText"
+        android:text="1st missed on" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="81dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="textEnd"
+        android:textSize="@dimen/font_size_small"
+        android:text="09:00 AM" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="153dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="textEnd"
+        android:textSize="@dimen/font_size_small"
+        android:text="13 November 2021" />
+
+
+</LinearLayout>
+

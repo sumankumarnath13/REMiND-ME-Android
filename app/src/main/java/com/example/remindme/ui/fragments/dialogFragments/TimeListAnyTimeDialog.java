@@ -28,11 +28,22 @@ import com.example.remindme.viewModels.TimeModel;
 import java.util.Date;
 import java.util.List;
 
-public class TimeListAnyTimeDialog extends TimeListDialogBase {
+public class TimeListAnyTimeDialog extends TimeListDialogBase implements TimePickerDialogBase.ITimePickerListener {
 
     public static final String TAG = "CustomTimeListDialog";
 
-    public class CustomTimeListAdapter extends RecyclerView.Adapter<CustomTimeListAdapter.ViewHolder> {
+    @Override
+    public void onSetListenerTime(Date dateTime) {
+        getModel().addTimeListTime(dateTime);
+        refresh();
+    }
+
+    @Override
+    public Date onGetListenerTime() {
+        return getModel().getTime();
+    }
+
+    private class CustomTimeListAdapter extends RecyclerView.Adapter<CustomTimeListAdapter.ViewHolder> {
 
         private final List<Date> times;
 
@@ -83,7 +94,6 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase {
 
                 tv_reminder_time = itemView.findViewById(R.id.tv_reminder_time);
                 imgBtnRemove = itemView.findViewById(R.id.imgBtnRemove);
-
             }
         }
     }
@@ -99,18 +109,6 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase {
             } else {
                 timePickerDialog = new TimePickerDialogLight();
             }
-            timePickerDialog.setListener(new TimePickerDialogBase.ITimePickerListener() {
-                @Override
-                public void onSetListenerTime(Date dateTime) {
-                    getModel().addTimeListTime(dateTime);
-                    refresh();
-                }
-
-                @Override
-                public Date onGetListenerTime() {
-                    return getModel().getTime();
-                }
-            });
         }
         return timePickerDialog;
     }
@@ -141,7 +139,6 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase {
                         getModel().setTimeListMode(TimeModel.TimeListModes.NONE);
                     }
                 }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
-
         });
 
         refresh();

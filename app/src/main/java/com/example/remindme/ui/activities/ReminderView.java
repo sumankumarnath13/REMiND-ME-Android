@@ -5,29 +5,32 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.ui.fragments.common.FabContextMenu;
+import com.example.remindme.ui.fragments.dialogFragments.MissedAlertsDialog;
 import com.example.remindme.viewModels.AlertModel;
 import com.example.remindme.viewModels.RingingModel;
+import com.example.remindme.viewModels.factories.AlertViewModelFactory;
 
 import java.util.Locale;
 
-public class ReminderView extends ActivityBase implements FabContextMenu.iFabContextMenuListener {
+public class ReminderView extends ActivityBase
+        implements
+        FabContextMenu.iFabContextMenuListener,
+        MissedAlertsDialog.IMissedAlertsDialogListener {
 
-    private boolean isMissedAlertsVisible;
     private boolean isMenuExpanded;
 
     private AppCompatTextView tv_reminder_time;
@@ -36,25 +39,25 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
     private AppCompatTextView tv_reminder_name;
     private LinearLayoutCompat ly_note_summary_header;
     private AppCompatTextView tv_reminder_note;
-    private AppCompatImageView btn_expand_missed_alerts;
-    private LinearLayoutCompat lv_reminder_details;
-    private AppCompatTextView tv_missed_alerts;
-    private SwitchCompat enabled;
-    private AlertModel activeReminder;
+
+    private SwitchCompat switchEnabled;
+    private AlertModel alertModel;
     private AppCompatTextView tv_expired;
     private AppCompatTextView next_snooze;
     private AppCompatButton btn_reminder_dismiss;
 
-    private static final String MISSED_ALERT_UI_STATE = "STATE";
     private static final String STATUS_OFF = "OFF";
     private static final String C_ACTION_EDIT = "EDIT";
     private static final String C_ACTION_DEL = "DEL";
     private static final String C_ACTION_DISMISS = "DISMISS";
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean(MISSED_ALERT_UI_STATE, isMissedAlertsVisible);
-        super.onSaveInstanceState(outState);
+    private MissedAlertsDialog missedAlertsDialog;
+
+    private MissedAlertsDialog getMissedAlertsDialog() {
+        if (this.missedAlertsDialog == null) {
+            this.missedAlertsDialog = new MissedAlertsDialog();
+        }
+        return this.missedAlertsDialog;
     }
 
     @Override
@@ -64,10 +67,6 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
         setContentView(R.layout.activity_view);
         setActivityTitle(getResources().getString(R.string.heading_label_view_reminder));
 
-        if (savedInstanceState != null) {
-            isMissedAlertsVisible = savedInstanceState.getBoolean(MISSED_ALERT_UI_STATE, false);
-        }
-
         final Intent intent = getIntent();
         if (intent == null) {
             ToastHelper.showLong(ReminderView.this, "Reminder not found");
@@ -75,9 +74,9 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
             return;
         }
 
-        activeReminder = AlertModel.getInstance(getIntent());
+        alertModel = new ViewModelProvider(this, new AlertViewModelFactory(getIntent())).get(AlertModel.class);
 
-        if (activeReminder == null) {
+        if (alertModel.isNew()) {
             ToastHelper.showLong(ReminderView.this, "Reminder not found");
             finish();
             return;
@@ -90,12 +89,12 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
         ly_note_summary_header = findViewById(R.id.ly_note_summary_header);
         tv_reminder_note = findViewById(R.id.tv_reminder_note);
 
-        enabled = findViewById(R.id.sw_reminder_enabled);
-        enabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        switchEnabled = findViewById(R.id.sw_reminder_enabled);
+        switchEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (!isUserInteracted())
                 return;
 
-            if (activeReminder != null && !activeReminder.isExpired()) {
+            if (alertModel != null && !alertModel.isExpired()) {
 
                 if (AppSettingsHelper.getInstance().isDisableAllReminders()) { // Ignore if its blocked globally
 
@@ -104,8 +103,8 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
 
                 } else {
 
-                    if (activeReminder.trySetEnabled(buttonView.getContext(), isChecked)) {
-                        activeReminder.saveAndSetAlert(buttonView.getContext(), true);
+                    if (alertModel.trySetEnabled(buttonView.getContext(), isChecked)) {
+                        alertModel.saveAndSetAlert(buttonView.getContext(), true);
                         refresh();
                     } else {
                         buttonView.setChecked(false);
@@ -117,23 +116,16 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
         next_snooze = findViewById(R.id.tv_reminder_next_snooze);
         btn_reminder_dismiss = findViewById(R.id.btn_reminder_dismiss);
         btn_reminder_dismiss.setOnClickListener(v -> {
-            activeReminder.dismissByUser(v.getContext());
+            alertModel.dismissByUser(v.getContext());
             refresh();
         });
 
-        lv_reminder_details = findViewById(R.id.lv_reminder_details);
-        tv_missed_alerts = findViewById(R.id.tv_missed_alerts);
-        btn_expand_missed_alerts = findViewById(R.id.btn_expand_missed_alerts);
-        btn_expand_missed_alerts.setOnClickListener(v -> {
-            isMissedAlertsVisible = !isMissedAlertsVisible;
-            setUserInteracted(false); // This is very important. Because its just making a layout visible and is no real interaction.
-            refresh();
-        });
-
+        final LinearLayoutCompat lv_last_missed_alert = findViewById(R.id.lv_last_missed_alert);
+        lv_last_missed_alert.setOnClickListener(v -> getMissedAlertsDialog().show(getSupportFragmentManager(), MissedAlertsDialog.TAG));
         tv_expired = findViewById(R.id.tv_expired);
 
         final AppCompatImageButton imgBtnShareNote = findViewById(R.id.imgBtnShareNote);
-        imgBtnShareNote.setOnClickListener(v -> shareText(activeReminder.getNote()));
+        imgBtnShareNote.setOnClickListener(v -> shareText(alertModel.getNote()));
 
         refresh();
     }
@@ -142,32 +134,32 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
     protected void onUIRefresh() {
         super.onUIRefresh();
 
-        if (activeReminder != null) {
+        if (alertModel != null) {
 
-            if (activeReminder.getTimeModel().isHasScheduledTime()) {
-                tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeModel().getScheduledTime()));
-                tv_reminder_AmPm.setText(StringHelper.toAmPm(activeReminder.getTimeModel().getScheduledTime()));
-                tv_reminder_date.setText(StringHelper.toWeekdayDate(this, activeReminder.getTimeModel().getScheduledTime()));
+            if (alertModel.getTimeModel().isHasScheduledTime()) {
+                tv_reminder_time.setText(StringHelper.toTime(alertModel.getTimeModel().getScheduledTime()));
+                tv_reminder_AmPm.setText(StringHelper.toAmPm(alertModel.getTimeModel().getScheduledTime()));
+                tv_reminder_date.setText(StringHelper.toWeekdayDate(this, alertModel.getTimeModel().getScheduledTime()));
             } else {
-                tv_reminder_time.setText(StringHelper.toTime(activeReminder.getTimeModel().getTime()));
-                tv_reminder_AmPm.setText(StringHelper.toAmPm(activeReminder.getTimeModel().getTime()));
-                tv_reminder_date.setText(StringHelper.toWeekdayDate(this, activeReminder.getTimeModel().getTime()));
+                tv_reminder_time.setText(StringHelper.toTime(alertModel.getTimeModel().getTime()));
+                tv_reminder_AmPm.setText(StringHelper.toAmPm(alertModel.getTimeModel().getTime()));
+                tv_reminder_date.setText(StringHelper.toWeekdayDate(this, alertModel.getTimeModel().getTime()));
             }
 
             final AppCompatTextView tv_reminder_time_list_summary = findViewById(R.id.tv_reminder_time_list_summary);
-            tv_reminder_time_list_summary.setText(activeReminder.getTimeModel().toSpannableString(
+            tv_reminder_time_list_summary.setText(alertModel.getTimeModel().toSpannableString(
                     getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor))));
 
-            if (!StringHelper.isNullOrEmpty(activeReminder.getName())) {
+            if (!StringHelper.isNullOrEmpty(alertModel.getName())) {
                 tv_reminder_name.setVisibility(View.VISIBLE);
-                tv_reminder_name.setText(activeReminder.getName());
+                tv_reminder_name.setText(alertModel.getName());
             }
 
-            if (activeReminder.getSnoozeModel().isSnoozed()) {
+            if (alertModel.getSnoozeModel().isSnoozed()) {
                 next_snooze.setVisibility(View.VISIBLE);
                 next_snooze.setText(StringHelper.toTimeAmPm(
-                        activeReminder.getSnoozeModel().getSnoozedTime(
-                                activeReminder.getTimeModel().getTime())));
+                        alertModel.getSnoozeModel().getSnoozedTime(
+                                alertModel.getTimeModel().getTime())));
 
                 btn_reminder_dismiss.setVisibility(View.VISIBLE);
 
@@ -214,79 +206,79 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
                 transaction.commit();
             }
 
-            if (activeReminder.isReminder()) {
+            if (alertModel.isReminder()) {
 
-                enabled.setVisibility(View.VISIBLE);
+                switchEnabled.setVisibility(View.VISIBLE);
                 tv_expired.setVisibility(View.GONE);
-                enabled.setChecked(activeReminder.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
+                switchEnabled.setChecked(alertModel.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
 
-                if (activeReminder.getReminderModel().getTime() != null) {
+                if (alertModel.getReminderModel().getTime() != null) {
                     tv_expired.setVisibility(View.VISIBLE);
                     //tv_expired.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeWarningColor)));
                     tv_expired.setText(
                             String.format(Locale.getDefault(), "Reminded for %s",
                                     StringHelper.toTimeWeekdayDate(this,
-                                            activeReminder.getReminderModel().getTime())));
+                                            alertModel.getReminderModel().getTime())));
                 }
 
-                if (activeReminder.getReminderModel().isCompleted()) {
+                if (alertModel.getReminderModel().isCompleted()) {
                     tv_expired.setVisibility(View.VISIBLE);
                     //tv_expired.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor)));
                     tv_expired.setText(
                             String.format(Locale.getDefault(), "Completed for %s",
                                     StringHelper.toTimeWeekdayDate(this,
-                                            activeReminder.getReminderModel().getTime())));
+                                            alertModel.getReminderModel().getTime())));
 
-                    enabled.setVisibility(View.VISIBLE);
-                } else if (activeReminder.isExpired()) {
+                    switchEnabled.setVisibility(View.VISIBLE);
+                } else if (alertModel.isExpired()) {
                     tv_expired.setVisibility(View.VISIBLE);
                     tv_expired.setText(getString(R.string.label_expired));
                     //tv_expired.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor)));
 
-                    enabled.setVisibility(View.GONE);
+                    switchEnabled.setVisibility(View.GONE);
                 }
             } else {
-                if (activeReminder.isExpired()) {
-                    enabled.setVisibility(View.GONE);
+                if (alertModel.isExpired()) {
+                    switchEnabled.setVisibility(View.GONE);
                     tv_expired.setVisibility(View.VISIBLE);
                     //tv_expired.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor)));
                     tv_expired.setText(getString(R.string.label_expired));
                 } else {
                     tv_expired.setVisibility(View.GONE);
-                    enabled.setVisibility(View.VISIBLE);
-                    enabled.setChecked(activeReminder.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
+                    switchEnabled.setVisibility(View.VISIBLE);
+                    switchEnabled.setChecked(alertModel.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
                 }
             }
 
             final AppCompatTextView tv_reminder_snooze_summary = findViewById(R.id.tv_reminder_snooze_summary);
-            tv_reminder_snooze_summary.setText(activeReminder.getSnoozeModel().toString());
+            tv_reminder_snooze_summary.setText(alertModel.getSnoozeModel().toString());
 
             final AppCompatTextView tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
-            tv_reminder_repeat_summary.setText(activeReminder.getRepeatModel().toString(this));
+            tv_reminder_repeat_summary.setText(alertModel.getRepeatModel().toString(this));
 
             final AppCompatTextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
             final LinearLayoutCompat lv_alarm_tone_is_on = findViewById(R.id.lv_alarm_tone_is_on);
 
-            if (activeReminder.getRingingModel().isToneEnabled()) {
+            if (alertModel.getRingingModel().isToneEnabled()) {
 
                 lv_alarm_tone_is_on.setVisibility(View.VISIBLE);
-                tv_reminder_tone_summary.setText(activeReminder.getRingingModel().getRingToneUriSummary(this));
+                tv_reminder_tone_summary.setText(alertModel.getRingingModel().getRingToneUriSummary(this));
 
                 final AppCompatTextView tv_alarm_volume = findViewById(R.id.tv_alarm_volume);
 
-                if (activeReminder.getRingingModel().isIncreaseVolumeGradually()) {
+                if (alertModel.getRingingModel().isIncreaseVolumeGradually()) {
 
                     tv_alarm_volume.setText(String.format(Locale.ENGLISH, "%d to %s",
                             RingingModel.MINIMUM_INPUT_VOLUME_PERCENTAGE,
-                            activeReminder.getRingingModel().getAlarmVolumePercentage() == 0 ?
-                                    "default" : activeReminder.getRingingModel().getAlarmVolumePercentage() + "%"
+                            alertModel.getRingingModel().getAlarmVolumePercentage() == 0 ?
+                                    "default" : alertModel.getRingingModel().getAlarmVolumePercentage() + "%"
                     ));
 
                 } else {
 
                     tv_alarm_volume.setText(String.format(Locale.ENGLISH, "%s",
-                            activeReminder.getRingingModel().getAlarmVolumePercentage() == 0 ?
-                                    "default" : activeReminder.getRingingModel().getAlarmVolumePercentage() + "%")
+                            alertModel.getRingingModel().getAlarmVolumePercentage() == 0 ?
+                                    "default" : alertModel.getRingingModel().getAlarmVolumePercentage() + "%")
                     );
                 }
 
@@ -295,24 +287,24 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
                 tv_reminder_tone_summary.setText(STATUS_OFF);
             }
 
-            tv_reminder_tone_summary.setTextColor(activeReminder.getRingingModel().isToneEnabled() ?
+            tv_reminder_tone_summary.setTextColor(alertModel.getRingingModel().isToneEnabled() ?
                     getResources().getColor(R.color.colorDimText) : getResources().getColor(R.color.colorDanger));
 
             final AppCompatTextView tv_reminder_vibrate = findViewById(R.id.tv_reminder_vibrate);
 
-            if (activeReminder.getRingingModel().isVibrationEnabled()) {
-                tv_reminder_vibrate.setText(getResources().getStringArray(R.array.values_vibration_pattern)[RingingModel.convertToVibratePattern(activeReminder.getRingingModel().getVibratePattern())]);
+            if (alertModel.getRingingModel().isVibrationEnabled()) {
+                tv_reminder_vibrate.setText(getResources().getStringArray(R.array.values_vibration_pattern)[RingingModel.convertToVibratePattern(alertModel.getRingingModel().getVibratePattern())]);
             } else {
                 tv_reminder_vibrate.setText(STATUS_OFF);
             }
 
-            tv_reminder_vibrate.setTextColor(activeReminder.getRingingModel().isVibrationEnabled() ?
+            tv_reminder_vibrate.setTextColor(alertModel.getRingingModel().isVibrationEnabled() ?
                     getResources().getColor(R.color.colorDimText) : getResources().getColor(R.color.colorDanger));
 
-            if (!StringHelper.isNullOrEmpty(activeReminder.getNote())) {
+            if (!StringHelper.isNullOrEmpty(alertModel.getNote())) {
                 ly_note_summary_header.setVisibility(View.VISIBLE);
                 tv_reminder_note.setVisibility(View.VISIBLE);
-                tv_reminder_note.setText(activeReminder.getNote());
+                tv_reminder_note.setText(alertModel.getNote());
             } else {
                 ly_note_summary_header.setVisibility(View.GONE);
                 tv_reminder_note.setVisibility(View.GONE);
@@ -320,64 +312,13 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
 
             final LinearLayoutCompat lv_last_missed_alert = findViewById(R.id.lv_last_missed_alert);
 
-            btn_expand_missed_alerts.setVisibility(View.GONE);
-            if (activeReminder.getLastMissedTime() != null) {
+            //btn_expand_missed_alerts.setVisibility(View.GONE);
+            if (alertModel.getLastMissedTime() != null) {
                 lv_last_missed_alert.setVisibility(View.VISIBLE);
                 final AppCompatTextView tv_reminder_last_missed_time = findViewById(R.id.tv_reminder_last_missed_time);
-                tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(this, activeReminder.getLastMissedTime()));
-
-                if (activeReminder.getMissedTimes().size() > 1) {
-                    btn_expand_missed_alerts.setVisibility(View.VISIBLE);
-
-                    StringBuilder builder = new StringBuilder();
-                    for (int s = 0; s < activeReminder.getMissedTimes().size(); s++) { // Skip last one as that would ve visible as last missed one anyway
-
-                        int index = s + 1;
-
-                        if (index == activeReminder.getMissedTimes().size()) {
-                            builder.append("Last  miss on  ");
-                        } else {
-                            builder.append(index);
-                            switch (index) {
-                                default:
-                                    builder.append("th  miss on  ");
-                                    break;
-                                case 1:
-                                    builder.append("st  miss on  ");
-                                    break;
-                                case 2:
-                                    builder.append("nd  miss on  ");
-                                    break;
-                                case 3:
-                                    builder.append("rd  miss on  ");
-                                    break;
-                            }
-                        }
-
-                        builder.append(StringHelper.toTimeWeekdayDate(this, activeReminder.getMissedTimes().get(s)));
-                        builder.append("\n");
-                    }
-
-                    tv_missed_alerts.setText(builder.toString());
-                }
-
+                tv_reminder_last_missed_time.setText(StringHelper.toTimeWeekdayDate(this, alertModel.getLastMissedTime()));
             } else {
                 lv_last_missed_alert.setVisibility(View.GONE);
-                isMissedAlertsVisible = false; // This will let "tv_missed_alerts" hide as well using the "else" part below
-            }
-
-            if (isMissedAlertsVisible) {
-                btn_expand_missed_alerts.setImageResource(R.drawable.ic_expand_up);
-                btn_expand_missed_alerts.setColorFilter(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor)),
-                        android.graphics.PorterDuff.Mode.SRC_IN);
-                lv_reminder_details.setVisibility(View.GONE);
-                tv_missed_alerts.setVisibility(View.VISIBLE);
-            } else {
-                btn_expand_missed_alerts.setImageResource(R.drawable.ic_expand_down);
-                btn_expand_missed_alerts.setColorFilter(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor)),
-                        android.graphics.PorterDuff.Mode.SRC_IN);
-                tv_missed_alerts.setVisibility(View.GONE);
-                lv_reminder_details.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -413,20 +354,31 @@ public class ReminderView extends ActivityBase implements FabContextMenu.iFabCon
     public void onFabContextMenuAction(String clickAction, String clickValue) {
         switch (clickAction) {
             case C_ACTION_DEL:
-                activeReminder.deleteAndCancelAlert(getApplicationContext());
+                alertModel.deleteAndCancelAlert(getApplicationContext());
                 finish();
                 break;
             case C_ACTION_EDIT:
                 final Intent input_i = new Intent(getApplicationContext(), ReminderInput.class);
-                AlertModel.setReminderIdInIntent(input_i, activeReminder.getId());
+                AlertModel.setReminderIdInIntent(input_i, alertModel.getId());
                 startActivity(input_i);
                 finish();
                 break;
             case C_ACTION_DISMISS:
-                activeReminder.dismissByUser(this);
+                alertModel.dismissByUser(this);
                 refresh();
                 break;
         }
     }
 
+    @Override
+    public void onChangeMissedAlertsList(AlertModel model) {
+        alertModel = model;
+        refresh();
+    }
+
+    @Override
+    public AlertModel onGetReminderModel() {
+        alertModel = new ViewModelProvider(this, new AlertViewModelFactory(getIntent())).get(AlertModel.class);
+        return alertModel;
+    }
 }

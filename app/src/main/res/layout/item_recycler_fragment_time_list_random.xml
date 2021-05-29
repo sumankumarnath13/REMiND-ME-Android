@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
+    android:background="@drawable/border_bottom_dialog"
     android:orientation="horizontal"
-    android:paddingVertical="@dimen/dp_8">
+    android:padding="@dimen/dp_8">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -18,12 +19,13 @@
             android:id="@+id/tv_reminder_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="09:19 AM"
             android:textSize="@dimen/font_size_medium" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_05"
-            android:background="?attr/themeBorderColor" />
+        <!--        <androidx.appcompat.widget.LinearLayoutCompat-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="@dimen/dp_05"-->
+        <!--            android:background="?attr/themeBorderColor" />-->
 
     </LinearLayout>
 

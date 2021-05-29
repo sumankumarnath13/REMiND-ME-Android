@@ -42,6 +42,8 @@ public class TimePickerDialogBlack extends TimePickerDialogBase {
             calendar.setTime(getTime());
             calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
             calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
 
             getListener().onSetListenerTime(calendar.getTime());
 

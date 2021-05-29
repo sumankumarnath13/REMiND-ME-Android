@@ -639,7 +639,7 @@ public class AlertModel extends ViewModel {
         save();
     }
 
-    private void save() {
+    public void save() {
 
         final Alert entity = new Alert();
 

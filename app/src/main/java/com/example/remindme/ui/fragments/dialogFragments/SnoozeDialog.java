@@ -34,12 +34,15 @@ public class SnoozeDialog extends DialogFragmentBase {
     private ISnoozeInputDialogListener listener;
 
     private ISnoozeInputDialogListener getListener() {
+        if (listener == null) {
+            listener = super.getListener(ISnoozeInputDialogListener.class);
+        }
         return listener;
     }
-
-    public void setListener(ISnoozeInputDialogListener listener) {
-        this.listener = listener;
-    }
+//
+//    public void setListener(ISnoozeInputDialogListener listener) {
+//        this.listener = listener;
+//    }
 
     private SnoozeModel model;
     private AppCompatRadioButton rdo_reminder_snooze_m5;
@@ -53,8 +56,6 @@ public class SnoozeDialog extends DialogFragmentBase {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //listener = super.getListener(ISnoozeInputDialogListener.class);
 
         if (getListener() == null) {
             ToastHelper.showError(getContext(), "Dialog listener is not set!");

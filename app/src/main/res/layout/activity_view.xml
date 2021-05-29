@@ -23,11 +23,9 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_8"
                 android:background="@drawable/border_bottom"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/dp_8">
+                android:orientation="vertical">
 
                 <!--    TIME-->
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -100,60 +98,60 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <!--    LAST MISSED ALERT -->
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/lv_last_missed_alert"
-                    android:layout_width="match_parent"
+            <!--    LAST MISSED ALERT -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/lv_last_missed_alert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dp_16"
+                android:background="@drawable/border_bottom_with_ripple"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/dp_8"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
+                    android:text="@string/label_missed_on"
+                    android:textColor="?attr/themeDangerColor"
+                    android:textSize="@dimen/font_size_small" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_missed_on"
-                        android:textColor="?attr/themeDangerColor"
-                        android:textSize="@dimen/font_size_small" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_reminder_last_missed_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/dp_8"
+                    android:textColor="?attr/themeDimText"
+                    android:textSize="@dimen/font_size_small" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_reminder_last_missed_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/dp_8"
-                        android:textColor="?attr/themeDimText"
-                        android:textSize="@dimen/font_size_small" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/btn_expand_missed_alerts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/missing_image_desc"
-                        android:visibility="visible"
-                        app:srcCompat="@drawable/ic_expand_down"
-                        app:tint="?attr/themeSuccessColor" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                <!--                <androidx.appcompat.widget.AppCompatImageView-->
+                <!--                    android:id="@+id/btn_expand_missed_alerts"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:contentDescription="@string/missing_image_desc"-->
+                <!--                    android:visibility="visible"-->
+                <!--                    app:srcCompat="@drawable/ic_expand_down"-->
+                <!--                    app:tint="?attr/themeSuccessColor" />-->
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <!--    ALL MISSED ALERTS -->
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_missed_alerts"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:textAlignment="textEnd"
-                android:textColor="?attr/themeDimText"
-                android:textSize="@dimen/font_size_small"
-                android:visibility="visible" />
+            <!--            <androidx.appcompat.widget.AppCompatTextView-->
+            <!--                android:id="@+id/tv_missed_alerts"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="0dp"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:gravity="end"-->
+            <!--                android:textAlignment="textEnd"-->
+            <!--                android:textColor="?attr/themeDimText"-->
+            <!--                android:textSize="@dimen/font_size_small"-->
+            <!--                android:visibility="visible" />-->
+
 
             <!--    REMINDER DETAILS -->
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/lv_reminder_details"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"

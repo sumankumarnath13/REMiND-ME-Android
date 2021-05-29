@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.viewModels.AlertModel;
 
-public class ReminderViewModelFactory implements ViewModelProvider.Factory {
+public class AlertViewModelFactory implements ViewModelProvider.Factory {
 
     private final Intent intent;
 
-    public ReminderViewModelFactory(Intent intentArg) {
+    public AlertViewModelFactory(Intent intentArg) {
         this.intent = intentArg;
     }
 

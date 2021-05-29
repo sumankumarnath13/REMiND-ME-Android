@@ -269,13 +269,31 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <!-- EXTRA EXPAND BUTTON -->
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/btn_reminder_extra_inputs"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/advance_options_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:contentDescription="@string/missing_image_desc"
-                app:srcCompat="@drawable/ic_expand_down" />
+                android:background="@drawable/border_bottom_with_ripple"
+                android:paddingVertical="@dimen/dp_16"
+                android:gravity="center_vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_advance_options_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="?attr/themeDimText"
+                    android:text="@string/show_advance_options_label" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/advance_options_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/missing_image_desc"
+                    app:srcCompat="@drawable/ic_expand_down" />
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <!-- EXTRA INPUTS -->
             <androidx.appcompat.widget.LinearLayoutCompat

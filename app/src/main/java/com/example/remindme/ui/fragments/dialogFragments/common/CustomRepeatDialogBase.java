@@ -23,12 +23,15 @@ public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
     private ICustomRepeatDialogListener listener;
 
     protected ICustomRepeatDialogListener getListener() {
+        if (listener == null) {
+            listener = super.getListener(ICustomRepeatDialogListener.class);
+        }
         return listener;
     }
 
-    public void setListener(ICustomRepeatDialogListener listener) {
-        this.listener = listener;
-    }
+//    public void setListener(ICustomRepeatDialogListener listener) {
+//        this.listener = listener;
+//    }
 
     private RepeatModel model;
 
@@ -60,8 +63,6 @@ public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //listener = getListener(ICustomRepeatDialogListener.class);
 
         if (getListener() == null) {
             ToastHelper.showError(getContext(), "Listener not set for dialog!");

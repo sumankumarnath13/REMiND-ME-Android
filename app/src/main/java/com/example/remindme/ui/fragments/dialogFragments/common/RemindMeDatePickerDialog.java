@@ -23,9 +23,30 @@ import com.example.remindme.viewModels.RepeatModel;
 import java.util.Calendar;
 import java.util.Date;
 
-public final class RemindMeDatePickerDialog extends DialogFragmentBase {
+public final class RemindMeDatePickerDialog extends DialogFragmentBase implements DateCalculatorDialog.ITimeCalculatorListener {
 
     public static final String TAG = "DatePickerDialog";
+
+    @Override
+    public void setDateCalculatorDialogModel(Date newTime) {
+        final Calendar calendar = Calendar.getInstance();
+        if (getCurrentDate().compareTo(newTime) <= 0) {
+            calendar.setTime(newTime);
+            getOnDateChangeListener().onDateChanged(datePicker, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            datePicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), getOnDateChangeListener());
+        } else {
+            ToastHelper.showError(getContext(), "Selected date is in past!");
+        }
+    }
+
+    @Override
+    public Date getDateCalculatorDialogModel() {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, datePicker.getYear());
+        calendar.set(Calendar.MONTH, datePicker.getMonth());
+        calendar.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
+        return calendar.getTime();
+    }
 
     public interface IDatePickerListener {
         void onSetListenerDate(Date dateTime);
@@ -36,12 +57,15 @@ public final class RemindMeDatePickerDialog extends DialogFragmentBase {
     private IDatePickerListener listener;
 
     private IDatePickerListener getListener() {
+        if (listener == null) {
+            listener = super.getListener(IDatePickerListener.class);
+        }
         return listener;
     }
 
-    public void setListener(IDatePickerListener listener) {
-        this.listener = listener;
-    }
+//    public void setListener(IDatePickerListener listener) {
+//        this.listener = listener;
+//    }
 
     private DatePicker datePicker;
 
@@ -83,27 +107,24 @@ public final class RemindMeDatePickerDialog extends DialogFragmentBase {
 
     private DatePicker.OnDateChangedListener getOnDateChangeListener() {
         if (onDateChangeListener == null) {
-            onDateChangeListener = new DatePicker.OnDateChangedListener() {
-                @Override
-                public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    if (getDialog() != null) {
-                        final Button positiveButton = ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE);
-                        final Calendar calendar = Calendar.getInstance();
-                        final Date currentDate = calendar.getTime();
+            onDateChangeListener = (view, year, monthOfYear, dayOfMonth) -> {
+                if (getDialog() != null) {
+                    final Button positiveButton = ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE);
+                    final Calendar calendar = Calendar.getInstance();
+                    final Date currentDate = calendar.getTime();
 
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, monthOfYear);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    calendar.set(Calendar.YEAR, year);
+                    calendar.set(Calendar.MONTH, monthOfYear);
+                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                        if (calendar.getTime().compareTo(currentDate) >= 0) {
-                            positiveButton.setText(getResources().getString(R.string.acton_dialog_positive));
-                            positiveButton.setEnabled(true);
-                            positiveButton.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSoothingText)));
-                        } else {
-                            positiveButton.setText("Expired");
-                            positiveButton.setEnabled(false);
-                            positiveButton.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDisabledControlColor)));
-                        }
+                    if (calendar.getTime().compareTo(currentDate) >= 0) {
+                        positiveButton.setText(getResources().getString(R.string.acton_dialog_positive));
+                        positiveButton.setEnabled(true);
+                        positiveButton.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSoothingText)));
+                    } else {
+                        positiveButton.setText("Expired");
+                        positiveButton.setEnabled(false);
+                        positiveButton.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDisabledControlColor)));
                     }
                 }
             };
@@ -116,28 +137,6 @@ public final class RemindMeDatePickerDialog extends DialogFragmentBase {
     private DateCalculatorDialog getDateCalculatorDialog() {
         if (dateCalculatorDialog == null) {
             dateCalculatorDialog = new DateCalculatorDialog();
-            dateCalculatorDialog.setListener(new DateCalculatorDialog.ITimeCalculatorListener() {
-                @Override
-                public void setDateCalculatorDialogModel(Date newTime) {
-                    final Calendar calendar = Calendar.getInstance();
-                    if (getCurrentDate().compareTo(newTime) <= 0) {
-                        calendar.setTime(newTime);
-                        getOnDateChangeListener().onDateChanged(datePicker, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                        datePicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), getOnDateChangeListener());
-                    } else {
-                        ToastHelper.showError(getContext(), "Selected date is in past!");
-                    }
-                }
-
-                @Override
-                public Date getDateCalculatorDialogModel() {
-                    final Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.YEAR, datePicker.getYear());
-                    calendar.set(Calendar.MONTH, datePicker.getMonth());
-                    calendar.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
-                    return calendar.getTime();
-                }
-            });
         }
         return dateCalculatorDialog;
     }
@@ -172,9 +171,7 @@ public final class RemindMeDatePickerDialog extends DialogFragmentBase {
         }
 
         AppCompatButton xxx = view.findViewById(R.id.xxx);
-        xxx.setOnClickListener(v -> {
-            getDateCalculatorDialog().show(getParentFragmentManager(), DateCalculatorDialog.TAG);
-        });
+        xxx.setOnClickListener(v -> getDateCalculatorDialog().show(getParentFragmentManager(), DateCalculatorDialog.TAG));
 
         datePicker.init(getYear(), getMonthOfYear(), getDayOfMonth(), getOnDateChangeListener());
         // This calculator suppose to help user getting their target time by adding days/months from their recalled date.

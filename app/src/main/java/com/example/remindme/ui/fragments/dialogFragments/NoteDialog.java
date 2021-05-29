@@ -39,12 +39,15 @@ public class NoteDialog extends DialogFragmentBase {
     private INoteInputDialogListener listener;
 
     protected INoteInputDialogListener getListener() {
+        if (listener == null) {
+            listener = super.getListener(INoteInputDialogListener.class);
+        }
         return listener;
     }
 
-    public void setListener(INoteInputDialogListener listener) {
-        this.listener = listener;
-    }
+//    public void setListener(INoteInputDialogListener listener) {
+//        this.listener = listener;
+//    }
 
     private static final int SPEECH_REQUEST_CODE = 117;
     private AppCompatEditText txt_reminder_note;

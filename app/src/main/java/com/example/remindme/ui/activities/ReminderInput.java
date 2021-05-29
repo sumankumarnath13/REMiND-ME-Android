@@ -48,7 +48,7 @@ import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.RingingModel;
 import com.example.remindme.viewModels.SnoozeModel;
 import com.example.remindme.viewModels.TimeModel;
-import com.example.remindme.viewModels.factories.ReminderViewModelFactory;
+import com.example.remindme.viewModels.factories.AlertViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
@@ -59,7 +59,89 @@ public class ReminderInput
         extends
         ActivityBase
         implements
-        AdapterView.OnItemSelectedListener {
+        AdapterView.OnItemSelectedListener,
+        TimePickerDialogBase.ITimePickerListener,
+        RemindMeDatePickerDialog.IDatePickerListener,
+        SnoozeDialog.ISnoozeInputDialogListener,
+        RepeatDialog.IRepeatInputDialogListener,
+        NameDialog.INameInputDialogListener,
+        NoteDialog.INoteInputDialogListener {
+
+    @Override
+    public void setNoteDialogModel(String note) {
+        alertModel.setNote(note);
+        refresh();
+    }
+
+    @Override
+    public String getNoteDialogModel() {
+        alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+        return alertModel.getNote();
+    }
+
+    @Override
+    public void setNameInputDialogModel(String name) {
+        alertModel.setName(name);
+        refresh();
+    }
+
+    @Override
+    public String getNameInputDialogModel() {
+        alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+        return alertModel.getName();
+    }
+
+    @Override
+    public void setRepeatDialogModel(RepeatModel model) {
+        if (model.isValid(alertModel.getTimeModel())) {
+            alertModel.setRepeatModel(model);
+            alertModel.getTimeModel().setScheduledTime(model.getValidatedScheduledTime());
+        } else {
+            ToastHelper.showShort(ReminderInput.this, "Please check repeat settings");
+        }
+    }
+
+    @Override
+    public RepeatModel getRepeatDialogModel() {
+        alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+        return alertModel.getRepeatModel();
+    }
+
+    @Override
+    public void onSetListenerSnoozeModel(SnoozeModel model) {
+        alertModel.setSnoozeModel(model);
+        refresh();
+    }
+
+    @Override
+    public SnoozeModel onGetListenerSnoozeModel() {
+        alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+        return alertModel.getSnoozeModel();
+    }
+
+    @Override
+    public void onSetListenerDate(Date dateTime) {
+        alertModel.getTimeModel().setTime(dateTime);
+        refresh();
+    }
+
+    @Override
+    public Date onGetListenerDate() {
+        alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+        return alertModel.getTimeModel().getTime();
+    }
+
+    @Override
+    public void onSetListenerTime(Date dateTime) {
+        alertModel.getTimeModel().setTime(dateTime);
+        refresh();
+    }
+
+    @Override
+    public Date onGetListenerTime() {
+        alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
+        return alertModel.getTimeModel().getTime();
+    }
 
     private static final int NAME_SPEECH_REQUEST_CODE = 119;
     private static final int NOTE_SPEECH_REQUEST_CODE = 113;
@@ -94,8 +176,10 @@ public class ReminderInput
 
     private SwitchCompat sw_reminder_tone;
     private SwitchCompat sw_reminder_vibrate;
+    private LinearLayoutCompat advance_options_layout;
+    private AppCompatTextView tv_advance_options_status;
+    private AppCompatImageView advance_options_image_view;
     private LinearLayoutCompat lv_reminder_extra_inputs;
-    private AppCompatImageButton btn_reminder_extra_inputs;
     private NestedScrollView sv_container;
     private AppCompatSpinner ring_duration_spinner;
     private AppCompatSpinner vibrate_pattern_spinner;
@@ -113,19 +197,6 @@ public class ReminderInput
     private NameDialog getNameDialog() {
         if (nameDialog == null) {
             nameDialog = new NameDialog();
-            nameDialog.setListener(new NameDialog.INameInputDialogListener() {
-                @Override
-                public void setNameInputDialogModel(String name) {
-                    alertModel.setName(name);
-                    refresh();
-                }
-
-                @Override
-                public String getNameInputDialogModel() {
-                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
-                    return alertModel.getName();
-                }
-            });
         }
         return nameDialog;
     }
@@ -135,19 +206,6 @@ public class ReminderInput
     private NoteDialog getNoteDialog() {
         if (noteDialog == null) {
             noteDialog = new NoteDialog();
-            noteDialog.setListener(new NoteDialog.INoteInputDialogListener() {
-                @Override
-                public void setNoteDialogModel(String note) {
-                    alertModel.setNote(note);
-                    refresh();
-                }
-
-                @Override
-                public String getNoteDialogModel() {
-                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
-                    return alertModel.getNote();
-                }
-            });
         }
         return noteDialog;
     }
@@ -157,23 +215,6 @@ public class ReminderInput
     private RepeatDialog getRepeatDialog() {
         if (repeatDialog == null) {
             repeatDialog = new RepeatDialog();
-            repeatDialog.setListener(new RepeatDialog.IRepeatInputDialogListener() {
-                @Override
-                public void setRepeatDialogModel(RepeatModel model) {
-                    if (model.isValid(alertModel.getTimeModel())) {
-                        alertModel.setRepeatModel(model);
-                        alertModel.getTimeModel().setScheduledTime(model.getValidatedScheduledTime());
-                    } else {
-                        ToastHelper.showShort(ReminderInput.this, "Please check repeat settings");
-                    }
-                }
-
-                @Override
-                public RepeatModel getRepeatDialogModel() {
-                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
-                    return alertModel.getRepeatModel();
-                }
-            });
         }
         return repeatDialog;
     }
@@ -183,19 +224,6 @@ public class ReminderInput
     private SnoozeDialog getSnoozeDialog() {
         if (snoozeDialog == null) {
             snoozeDialog = new SnoozeDialog();
-            snoozeDialog.setListener(new SnoozeDialog.ISnoozeInputDialogListener() {
-                @Override
-                public void onSetListenerSnoozeModel(SnoozeModel model) {
-                    alertModel.setSnoozeModel(model);
-                    refresh();
-                }
-
-                @Override
-                public SnoozeModel onGetListenerSnoozeModel() {
-                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
-                    return alertModel.getSnoozeModel();
-                }
-            });
         }
         return snoozeDialog;
     }
@@ -205,19 +233,6 @@ public class ReminderInput
     private RemindMeDatePickerDialog getDatePickerDialog() {
         if (datePickerDialog == null) {
             datePickerDialog = new RemindMeDatePickerDialog();
-            datePickerDialog.setListener(new RemindMeDatePickerDialog.IDatePickerListener() {
-                @Override
-                public void onSetListenerDate(Date dateTime) {
-                    alertModel.getTimeModel().setTime(dateTime);
-                    refresh();
-                }
-
-                @Override
-                public Date onGetListenerDate() {
-                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
-                    return alertModel.getTimeModel().getTime();
-                }
-            });
         }
 
         return datePickerDialog;
@@ -232,19 +247,6 @@ public class ReminderInput
             } else {
                 timePickerDialog = new TimePickerDialogLight();
             }
-            timePickerDialog.setListener(new TimePickerDialogBase.ITimePickerListener() {
-                @Override
-                public void onSetListenerTime(Date dateTime) {
-                    alertModel.getTimeModel().setTime(dateTime);
-                    refresh();
-                }
-
-                @Override
-                public Date onGetListenerTime() {
-                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
-                    return alertModel.getTimeModel().getTime();
-                }
-            });
         }
         return timePickerDialog;
     }
@@ -333,7 +335,7 @@ public class ReminderInput
             isExtraInputsVisible = savedInstanceState.getBoolean(MORE_INPUT_UI_STATE, false);
         }
 
-        alertModel = new ViewModelProvider(this, new ReminderViewModelFactory(getIntent())).get(AlertModel.class);
+        alertModel = new ViewModelProvider(this, new AlertViewModelFactory(getIntent())).get(AlertModel.class);
 
         if (alertModel.isNew()) { // First time creating the activity
             setActivityTitle(getResources().getString(R.string.heading_label_new_reminder));
@@ -541,14 +543,14 @@ public class ReminderInput
         });
 
         lv_reminder_extra_inputs = findViewById(R.id.lv_reminder_extra_inputs);
-        btn_reminder_extra_inputs = findViewById(R.id.btn_reminder_extra_inputs);
-        btn_reminder_extra_inputs.setOnClickListener(v -> {
-
+        tv_advance_options_status = findViewById(R.id.tv_advance_options_status);
+        advance_options_image_view = findViewById(R.id.advance_options_image_view);
+        advance_options_layout = findViewById(R.id.advance_options_layout);
+        advance_options_layout.setOnClickListener(v -> {
             isExtraInputsVisible = !isExtraInputsVisible;
             setUserInteracted(false); // This is very important. Because its just making a layout visible and is no real interaction.
             setExtraInputs();
             sv_container.post(() -> sv_container.fullScroll(ScrollView.FOCUS_DOWN));
-
         });
 
         sv_container = findViewById(R.id.sv_container);
@@ -675,17 +677,18 @@ public class ReminderInput
 
         if (isExtraInputsVisible) {
 
-            btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_up);
-            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor)),
+            advance_options_image_view.setImageResource(R.drawable.ic_expand_up);
+            advance_options_image_view.setColorFilter(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor)),
                     android.graphics.PorterDuff.Mode.SRC_IN);
-
+            tv_advance_options_status.setText(R.string.hide_advance_options_label);
             lv_reminder_extra_inputs.setVisibility(View.VISIBLE);
 
         } else {
 
-            btn_reminder_extra_inputs.setImageResource(R.drawable.ic_expand_down);
-            btn_reminder_extra_inputs.setColorFilter(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor)),
+            advance_options_image_view.setImageResource(R.drawable.ic_expand_down);
+            advance_options_image_view.setColorFilter(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor)),
                     android.graphics.PorterDuff.Mode.SRC_IN);
+            tv_advance_options_status.setText(R.string.show_advance_options_label);
             lv_reminder_extra_inputs.setVisibility(View.GONE);
 
         }
