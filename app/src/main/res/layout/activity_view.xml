@@ -80,23 +80,23 @@
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/dp_8" />
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/expired_layout"
-                    android:layout_width="match_parent"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_alert_type"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/dp_8"
-                    android:visibility="visible"
-                    android:gravity="center_vertical|center_horizontal">
+                    android:textColor="?attr/themeAccentColor"
+                    android:textSize="@dimen/font_size_small"
+                    android:text="@string/alert_type_alarm" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_expired"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_expired"
-                        android:textSize="@dimen/font_size_small"
-                        android:textColor="?attr/themeDimText" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_expired"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/dp_8"
+                    android:text="@string/label_expired"
+                    android:textSize="@dimen/font_size_small"
+                    android:textColor="?attr/themeDimText" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

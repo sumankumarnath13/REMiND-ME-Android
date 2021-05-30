@@ -39,7 +39,8 @@ public class NotificationHelper {
 
         final Intent closeReminder = new Intent(context.getApplicationContext(), AlertBroadcastReceiver.class)
                 .setAction(AlertModel.BROADCAST_FILTER_REMINDER_DISMISS)
-                .putExtra(AlertModel.REMINDER_ID_INTENT, model.getId());
+                .putExtra(AlertModel.REMINDER_ID_INTENT, model.getId())
+                .putExtra(AlertModel.REMINDER_INT_ID_INTENT, model.getIntId());
 
         final PendingIntent closeReminderPendingIntent = PendingIntent
                 .getBroadcast(context, model.getIntId(),

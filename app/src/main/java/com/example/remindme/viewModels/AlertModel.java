@@ -62,6 +62,7 @@ public class AlertModel extends ViewModel {
     public static final String BROADCAST_FILTER_REMINDER = "com.example.remindme.2eXXCW2ZrH.RECEIVE.REMINDER";
     public static final String BROADCAST_FILTER_REMINDER_DISMISS = "com.example.remindme.2eXXCW2ZrH.RECEIVE.REMINDER.DISMISS";
     public static final String REMINDER_ID_INTENT = "uNX¯3Á×MòP";
+    public static final String REMINDER_INT_ID_INTENT = "uNX¯3Á×MòP1";
 
     private static Class<? extends BroadcastReceiver> externalBroadcastReceiverClass;
 
@@ -409,7 +410,8 @@ public class AlertModel extends ViewModel {
     private Intent createReminderIntent(final Context context) {
         return new Intent(context.getApplicationContext(), externalBroadcastReceiverClass)
                 .setAction(isReminder() ? BROADCAST_FILTER_REMINDER : BROADCAST_FILTER_ALARM)
-                .putExtra(REMINDER_ID_INTENT, id);
+                .putExtra(REMINDER_ID_INTENT, id)
+                .putExtra(REMINDER_INT_ID_INTENT, getIntId());
     }
 
     private PendingIntent getReminderPendingIntent(final Context context, boolean isCreateNew) {

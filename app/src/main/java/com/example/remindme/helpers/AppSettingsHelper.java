@@ -1,6 +1,8 @@
 package com.example.remindme.helpers;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.TypedValue;
 
 import com.example.remindme.R;
 import com.example.remindme.dataModels.AppSetting;
@@ -131,5 +133,14 @@ public class AppSettingsHelper {
             }
         }, realm::close);
     }
+
+    public int resolveAttributeColor(int refAttributeId, Resources.Theme theme) {
+        final TypedValue typedValue = new TypedValue();
+        if (theme.resolveAttribute(refAttributeId, typedValue, true)) {
+            return typedValue.resourceId;
+        }
+        return -1;
+    }
+
 
 }

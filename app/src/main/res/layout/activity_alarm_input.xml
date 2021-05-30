@@ -193,7 +193,7 @@
                         android:id="@+id/chk_reminder"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Reminder"
+                        android:text="@string/alert_type_reminder"
                         app:buttonTint="?attr/themeWarningColor" />
 
 
@@ -201,7 +201,7 @@
                         android:id="@+id/chk_alarm"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Alarm"
+                        android:text="@string/alert_type_alarm"
                         app:buttonTint="?attr/themeAccentColor" />
 
 

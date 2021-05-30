@@ -56,10 +56,15 @@ public class AlertBroadcastReceiver extends BroadcastReceiver {
                 break;
 
             case AlertModel.BROADCAST_FILTER_REMINDER_DISMISS:
-                final AlertModel actionReminder = AlertModel.getInstance(intent);
                 NotificationManagerCompat notifyMgr = NotificationManagerCompat.from(context);
-                notifyMgr.cancel(actionReminder.getIntId());
-                actionReminder.dismissByUser(context);
+                final AlertModel actionReminder = AlertModel.getInstance(intent);
+                if (actionReminder == null) {
+                    final int intId = intent.getIntExtra(AlertModel.REMINDER_INT_ID_INTENT, 0);
+                    notifyMgr.cancel(intId);
+                } else {
+                    actionReminder.dismissByUser(context);
+                    notifyMgr.cancel(actionReminder.getIntId());
+                }
                 break;
 
         }

@@ -194,7 +194,8 @@ public class AdapterRecyclerReminder
         final AppCompatTextView date = holder.linearLayout.findViewById(R.id.tv_reminder_date);
 
         final AppCompatTextView name = holder.linearLayout.findViewById(R.id.tv_reminder_name);
-        final AppCompatTextView tv_reminder_repeat_short_summary = holder.linearLayout.findViewById(R.id.tv_reminder_repeat_short_summary);
+        final AppCompatTextView tv_reminder_repeat_short_summary = holder.linearLayout.findViewById(R.id.tv_repeat_short_summary);
+        final AppCompatTextView tv_alert_type = holder.linearLayout.findViewById(R.id.tv_alert_type);
         final SwitchCompat switchEnabled = holder.linearLayout.findViewById(R.id.sw_reminder_enabled);
         final LinearLayoutCompat lv_reminder_view_snooze = holder.linearLayout.findViewById(R.id.lv_reminder_view_snooze);
         final AppCompatTextView next_snooze = holder.linearLayout.findViewById(R.id.tv_reminder_next_snooze);
@@ -208,6 +209,17 @@ public class AdapterRecyclerReminder
         amPm.setText(StringHelper.toAmPm(reminder.getTimeModel().getTime()));
         date.setText(StringHelper.toWeekdayDate(holder.linearLayout.getContext(), reminder.getTimeModel().getTime()));
         tv_reminder_repeat_short_summary.setText(reminder.getRepeatSettingShortString());
+        if (reminder.isReminder()) {
+            tv_alert_type.setTextColor(
+                    holder.linearLayout.getResources().getColor(
+                            AppSettingsHelper.getInstance().resolveAttributeColor(R.attr.themeWarningColor, holder.linearLayout.getContext().getTheme())));
+            tv_alert_type.setText(holder.linearLayout.getResources().getString(R.string.alert_type_reminder));
+        } else {
+            tv_alert_type.setTextColor(
+                    holder.linearLayout.getResources().getColor(
+                            AppSettingsHelper.getInstance().resolveAttributeColor(R.attr.themeAccentColor, holder.linearLayout.getContext().getTheme())));
+            tv_alert_type.setText(holder.linearLayout.getResources().getString(R.string.alert_type_alarm));
+        }
 
         if (isAnimate) {
             if (isEnableSelection) {

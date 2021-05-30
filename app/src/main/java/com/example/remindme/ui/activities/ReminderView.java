@@ -32,6 +32,7 @@ public class ReminderView extends ActivityBase
         MissedAlertsDialog.IMissedAlertsDialogListener {
 
     private boolean isMenuExpanded;
+    private AlertModel alertModel;
 
     private AppCompatTextView tv_reminder_time;
     private AppCompatTextView tv_reminder_AmPm;
@@ -41,7 +42,7 @@ public class ReminderView extends ActivityBase
     private AppCompatTextView tv_reminder_note;
 
     private SwitchCompat switchEnabled;
-    private AlertModel alertModel;
+    private AppCompatTextView tv_alert_type;
     private AppCompatTextView tv_expired;
     private AppCompatTextView next_snooze;
     private AppCompatButton btn_reminder_dismiss;
@@ -123,6 +124,7 @@ public class ReminderView extends ActivityBase
         final LinearLayoutCompat lv_last_missed_alert = findViewById(R.id.lv_last_missed_alert);
         lv_last_missed_alert.setOnClickListener(v -> getMissedAlertsDialog().show(getSupportFragmentManager(), MissedAlertsDialog.TAG));
         tv_expired = findViewById(R.id.tv_expired);
+        tv_alert_type = findViewById(R.id.tv_alert_type);
 
         final AppCompatImageButton imgBtnShareNote = findViewById(R.id.imgBtnShareNote);
         imgBtnShareNote.setOnClickListener(v -> shareText(alertModel.getNote()));
@@ -210,6 +212,8 @@ public class ReminderView extends ActivityBase
 
                 switchEnabled.setVisibility(View.VISIBLE);
                 tv_expired.setVisibility(View.GONE);
+                tv_alert_type.setText(getString(R.string.alert_type_reminder));
+                tv_alert_type.setTextColor(getResources().getColor(AppSettingsHelper.getInstance().resolveAttributeColor(R.attr.themeWarningColor, getTheme())));
                 switchEnabled.setChecked(alertModel.isEnabled() && !AppSettingsHelper.getInstance().isDisableAllReminders());
 
                 if (alertModel.getReminderModel().getTime() != null) {
@@ -238,6 +242,8 @@ public class ReminderView extends ActivityBase
                     switchEnabled.setVisibility(View.GONE);
                 }
             } else {
+                tv_alert_type.setText(getString(R.string.alert_type_alarm));
+                tv_alert_type.setTextColor(getResources().getColor(AppSettingsHelper.getInstance().resolveAttributeColor(R.attr.themeAccentColor, getTheme())));
                 if (alertModel.isExpired()) {
                     switchEnabled.setVisibility(View.GONE);
                     tv_expired.setVisibility(View.VISIBLE);

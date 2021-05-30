@@ -4,11 +4,11 @@ package com.example.remindme.ui.fragments.dialogFragments.common;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.ToastHelper;
 
 import java.util.Stack;
@@ -89,15 +89,10 @@ public abstract class DialogFragmentBase extends DialogFragment {
     }
 
     protected int resolveRefAttributeResourceId(int refAttributeId) {
-
         if (getActivity() != null) {
             final Resources.Theme theme = getActivity().getTheme();
-            final TypedValue typedValue = new TypedValue();
-            if (theme.resolveAttribute(refAttributeId, typedValue, true)) {
-                return typedValue.resourceId;
-            }
+            return AppSettingsHelper.getInstance().resolveAttributeColor(refAttributeId, theme);
         }
-
         return -1;
     }
 

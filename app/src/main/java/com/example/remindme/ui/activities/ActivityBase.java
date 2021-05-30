@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.TypedValue;
 
 import androidx.appcompat.app.ActionBar;
 
@@ -105,16 +104,8 @@ public class ActivityBase extends RefreshableActivity {
     }
 
     public int resolveRefAttributeResourceId(int refAttributeId) {
-
         final Resources.Theme theme = getTheme();
-
-        final TypedValue typedValue = new TypedValue();
-
-        if (theme.resolveAttribute(refAttributeId, typedValue, true)) {
-            return typedValue.resourceId;
-        }
-
-        return -1;
+        return AppSettingsHelper.getInstance().resolveAttributeColor(refAttributeId, theme);
     }
 
     public void setActivityTitle(final String activitySubTitle) {
