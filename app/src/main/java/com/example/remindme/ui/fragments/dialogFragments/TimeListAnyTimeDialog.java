@@ -23,24 +23,24 @@ import com.example.remindme.ui.fragments.dialogFragments.common.TimeListDialogBa
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBase;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBlack;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogLight;
-import com.example.remindme.viewModels.TimeModel;
+import com.example.remindme.viewModels.MultipleTimeRepeatModel;
 
 import java.util.Date;
 import java.util.List;
 
 public class TimeListAnyTimeDialog extends TimeListDialogBase implements TimePickerDialogBase.ITimePickerListener {
 
-    public static final String TAG = "CustomTimeListDialog";
+    public static final String TAG = "TimeListAnyTimeDialog";
 
     @Override
     public void onSetListenerTime(Date dateTime) {
-        getModel().addTimeListTime(dateTime);
+        getModel().getMultipleTimeRepeatModel().addTimeListTime(dateTime);
         refresh();
     }
 
     @Override
     public Date onGetListenerTime() {
-        return getModel().getTime();
+        return getModel().getParent().getTimeModel().getTime();
     }
 
     private class CustomTimeListAdapter extends RecyclerView.Adapter<CustomTimeListAdapter.ViewHolder> {
@@ -72,7 +72,7 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements TimePic
             // Set item views based on your views and data model
             holder.tv_reminder_time.setText(StringHelper.toTimeAmPm(time));
             holder.imgBtnRemove.setOnClickListener(v -> {
-                getModel().removeTimeListTime(time);
+                getModel().getMultipleTimeRepeatModel().removeTimeListTime(time);
                 refresh();
             });
         }
@@ -132,27 +132,23 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements TimePic
         builder.setView(view)
                 .setTitle(getString(R.string.format_heading_time_list, "Select", "time"))
                 .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
-                    if (getModel().getTimeListTimes().size() > 0) {
-                        getModel().setTimeListMode(TimeModel.TimeListModes.ANYTIME);
+                    if (getModel().getMultipleTimeRepeatModel().getTimeListTimes().size() > 0) {
+                        getModel().getMultipleTimeRepeatModel().setTimeListMode(MultipleTimeRepeatModel.TimeListModes.ANYTIME);
                         getListener().setTimeListDialogModel(getModel());
-                    } else {
-                        getModel().setTimeListMode(TimeModel.TimeListModes.NONE);
                     }
                 }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
         });
 
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        timeListRecycler.setLayoutManager(layoutManager);
         refresh();
-
         return builder.create();
     }
 
     @Override
     protected void onUIRefresh() {
         super.onUIRefresh();
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        final CustomTimeListAdapter timeListAdapter = new CustomTimeListAdapter(getModel().getTimeListTimes());
+        final CustomTimeListAdapter timeListAdapter = new CustomTimeListAdapter(getModel().getMultipleTimeRepeatModel().getTimeListTimes());
         timeListRecycler.setAdapter(timeListAdapter);
-        timeListRecycler.setLayoutManager(layoutManager);
     }
-
 }

@@ -13,118 +13,168 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="@dimen/dp_8"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/rdo_reminder_repeat_off"
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:buttonTint="?attr/themeDangerColor"
-                android:text="@string/caption_repeat_option_off" />
+                android:background="@drawable/border_bottom_dialog"
+                android:paddingVertical="@dimen/dp_8"
+                android:text="Multiple times in a day options" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:orientation="horizontal">
+                android:paddingVertical="@dimen/dp_8"
+                android:orientation="vertical">
 
-                <androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/rdo_reminder_repeat_hourly"
-                    android:layout_width="117dp"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="@string/caption_repeat_option_hourly" />
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/rdo_time_repeat_off"
+                        android:layout_width="117dp"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        app:buttonTint="?attr/themeDangerColor"
+                        android:text="None" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/rdo_time_repeat_hourly"
+                        android:layout_width="117dp"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="Hourly" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/rdo_time_repeat_any_time"
+                        android:layout_width="@dimen/dp_117"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="Any time" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/rdo_time_repeat_selected_hours"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="Selected hours" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/rdo_reminder_repeat_daily"
-                    android:layout_width="117dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/caption_repeat_option_daily" />
-
-                <androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/rdo_reminder_repeat_daily_custom"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:buttonTint="?attr/themeSuccessColor"
-                    android:layout_weight="1"
-                    android:text="@string/caption_repeat_option_days_of_week" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
+                android:background="@drawable/border_vertical_dialog"
+                android:paddingVertical="@dimen/dp_8"
+                android:text="Periodic repeat options" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:orientation="horizontal">
+                android:paddingVertical="@dimen/dp_8"
+                android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/rdo_reminder_repeat_weekly"
-                    android:layout_width="117dp"
+                    android:id="@+id/rdo_periodic_repeat_off"
+                    android:layout_width="@dimen/dp_117"
                     android:layout_height="wrap_content"
-                    android:text="@string/caption_repeat_option_weekly" />
+                    app:buttonTint="?attr/themeDangerColor"
+                    android:text="@string/caption_repeat_option_off" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/rdo_periodic_repeat_daily"
+                        android:layout_width="117dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/caption_repeat_option_daily" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/rdo_periodic_repeat_days_of_week"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:buttonTint="?attr/themeSuccessColor"
+                        android:layout_weight="1"
+                        android:text="@string/caption_repeat_option_days_of_week" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/rdo_periodic_repeat_weekly"
+                        android:layout_width="117dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/caption_repeat_option_weekly" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/rdo_periodic_repeat_weeks_of_month"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:buttonTint="?attr/themeWarningColor"
+                        android:layout_weight="1"
+                        android:text="@string/caption_repeat_option_weeks_of_month" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/rdo_periodic_repeat_monthly"
+                        android:layout_width="117dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/caption_repeat_option_monthly" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/rdo_periodic_repeat_months_of_year"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:buttonTint="?attr/themeCuriosityColor"
+                        android:layout_weight="1"
+                        android:text="@string/caption_repeat_option_months_of_year" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/rdo_reminder_repeat_weekly_custom"
-                    android:layout_width="0dp"
+                    android:id="@+id/rdo_periodic_repeat_yearly"
+                    android:layout_width="@dimen/dp_117"
                     android:layout_height="wrap_content"
-                    app:buttonTint="?attr/themeWarningColor"
-                    android:layout_weight="1"
-                    android:text="@string/caption_repeat_option_weeks_of_month" />
+                    android:text="@string/caption_repeat_option_yearly" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/rdo_periodic_repeat_other"
+                    android:layout_width="@dimen/dp_117"
+                    android:layout_height="wrap_content"
+                    android:text="@string/caption_repeat_option_other" />
+
             </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/rdo_reminder_repeat_monthly"
-                    android:layout_width="117dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/caption_repeat_option_monthly" />
-
-                <androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/rdo_reminder_repeat_monthly_custom"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:buttonTint="?attr/themeCuriosityColor"
-                    android:layout_weight="1"
-                    android:text="@string/caption_repeat_option_months_of_year" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/rdo_reminder_repeat_yearly"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/caption_repeat_option_yearly" />
-
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/rdo_reminder_repeat_other"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/caption_repeat_option_other" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_05"
-            android:layout_marginHorizontal="@dimen/dp_8"
-            android:background="?attr/themeBorderColor" />
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dp_8"
+            android:background="@drawable/border_vertical_dialog"
+            android:paddingVertical="@dimen/dp_8"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.SwitchCompat

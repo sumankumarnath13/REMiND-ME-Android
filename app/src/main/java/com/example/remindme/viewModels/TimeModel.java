@@ -8,30 +8,29 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
 import com.example.remindme.helpers.AppSettingsHelper;
+import com.example.remindme.helpers.ScheduleHelper;
 import com.example.remindme.helpers.StringHelper;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class TimeModel extends ViewModel {
 
-    public enum TimeListModes {
-        NONE,
-        HOURLY,
-        INTERVAL,
-        ANYTIME,
-    }
+//    public enum TimeListModes {
+//        NONE,
+//        HOURLY,
+//        INTERVAL,
+//        ANYTIME,
+//    }
 
     public TimeModel copy() {
         TimeModel instance = new TimeModel(parent);
 
         instance.time = time;
         instance.scheduledTime = scheduledTime;
-        instance.timeListMode = timeListMode;
-        instance.setTimeListTimes(getTimeListTimes());
-        instance.setTimeListHours(getTimeListHours());
+//        instance.timeListMode = timeListMode;
+//        instance.setTimeListTimes(getTimeListTimes());
+//        instance.setTimeListHours(getTimeListHours());
 
         return instance;
     }
@@ -86,7 +85,9 @@ public class TimeModel extends ViewModel {
 
             time = calendar.getTime();
 
-            setScheduledTime(getParent().getRepeatModel().schedule(this));
+            final ScheduleHelper scheduleHelper = new ScheduleHelper(this, getParent().getRepeatModel());
+
+            setScheduledTime(scheduleHelper.getNextSchedule());
 
         }
     }
@@ -147,98 +148,100 @@ public class TimeModel extends ViewModel {
 
     }
 
-    private TimeListModes timeListMode = TimeListModes.NONE;
-
-    public TimeListModes getTimeListMode() {
-        return timeListMode;
-    }
-
-    public void setTimeListMode(TimeListModes timeListMode) {
-        this.timeListMode = timeListMode;
-    }
-
-    private final ArrayList<Date> timeListTimes = new ArrayList<>();
-
-    public List<Date> getTimeListTimes() {
-        return timeListTimes;
-    }
-
-    public void addTimeListTime(final Date time) {
-        final int foundIndex = timeListTimes.indexOf(time);
-        if (foundIndex < 0) {
-            timeListTimes.add(time);
-        }
-    }
-
-    public void removeTimeListTime(final Date time) {
-        timeListTimes.remove(time);
-    }
-
-    public void setTimeListTimes(final List<Date> times) {
-        timeListTimes.clear();
-        timeListTimes.addAll(times);
-    }
-
-    private final ArrayList<Integer> timeListHours = new ArrayList<>();
-
-    public ArrayList<Integer> getTimeListHours() {
-        return timeListHours;
-    }
-
-    public void addTimeListHour(final int hour) {
-        final int foundIndex = timeListHours.indexOf(hour);
-        if (foundIndex < 0) {
-            timeListHours.add(hour);
-        }
-    }
-
-    public void setTimeListHours(final List<Integer> values) {
-        timeListHours.clear();
-        timeListHours.addAll(values);
-    }
+//    private TimeListModes timeListMode = TimeListModes.NONE;
+//
+//    public TimeListModes getTimeListMode() {
+//        return timeListMode;
+//    }
+//
+//    public void setTimeListMode(TimeListModes timeListMode) {
+//        this.timeListMode = timeListMode;
+//    }
+//
+//    private final ArrayList<Date> timeListTimes = new ArrayList<>();
+//
+//    public List<Date> getTimeListTimes() {
+//        return timeListTimes;
+//    }
+//
+//    public void addTimeListTime(final Date time) {
+//        final int foundIndex = timeListTimes.indexOf(time);
+//        if (foundIndex < 0) {
+//            timeListTimes.add(time);
+//        }
+//    }
+//
+//    public void removeTimeListTime(final Date time) {
+//        timeListTimes.remove(time);
+//    }
+//
+//    public void setTimeListTimes(final List<Date> times) {
+//        timeListTimes.clear();
+//        timeListTimes.addAll(times);
+//    }
+//
+//    private final ArrayList<Integer> timeListHours = new ArrayList<>();
+//
+//    public ArrayList<Integer> getTimeListHours() {
+//        return timeListHours;
+//    }
+//
+//    public void addTimeListHour(final int hour) {
+//        final int foundIndex = timeListHours.indexOf(hour);
+//        if (foundIndex < 0) {
+//            timeListHours.add(hour);
+//        }
+//    }
+//
+//    public void setTimeListHours(final List<Integer> values) {
+//        timeListHours.clear();
+//        timeListHours.addAll(values);
+//    }
 
     @NonNull
     @Override
     public String toString() {
-        if (getTimeListMode() == TimeListModes.NONE) {
-            return "NONE";
-        }
+//        if (getTimeListMode() == TimeListModes.NONE) {
+//            return "NONE";
+//        }
+//
+//        final StringBuilder builder = new StringBuilder();
+//
+//        if (getTimeListMode() == TimeListModes.HOURLY) {
+//
+//            final Calendar c = Calendar.getInstance();
+//            c.setTime(getTime());
+//            final int min = c.get(Calendar.MINUTE);
+//
+//            if (AppSettingsHelper.getInstance().isUse24hourTime()) {
+//                for (int i = 0; i < getTimeListHours().size(); i++) {
+//                    builder.append(StringHelper.get24(getTimeListHours().get(i), min)).append(", ");
+//                }
+//            } else {
+//                for (int i = 0; i < getTimeListHours().size(); i++) {
+//                    builder.append(StringHelper.get12(getTimeListHours().get(i), min)).append(", ");
+//                }
+//            }
+//        } else if (getTimeListMode() == TimeListModes.ANYTIME) {
+//
+//            final Calendar c = Calendar.getInstance();
+//
+//            if (AppSettingsHelper.getInstance().isUse24hourTime()) {
+//                for (int i = 0; i < getTimeListTimes().size(); i++) {
+//                    c.setTime(getTimeListTimes().get(i));
+//                    builder.append(StringHelper.get24(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE))).append(", ");
+//                }
+//            } else {
+//                for (int i = 0; i < getTimeListTimes().size(); i++) {
+//                    c.setTime(getTimeListTimes().get(i));
+//                    builder.append(StringHelper.get12(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE))).append(", ");
+//                }
+//            }
+//        }
 
-        final StringBuilder builder = new StringBuilder();
+        //return StringHelper.trimEnd(builder.toString(), ", ");
 
-        if (getTimeListMode() == TimeListModes.HOURLY) {
-
-            final Calendar c = Calendar.getInstance();
-            c.setTime(getTime());
-            final int min = c.get(Calendar.MINUTE);
-
-            if (AppSettingsHelper.getInstance().isUse24hourTime()) {
-                for (int i = 0; i < getTimeListHours().size(); i++) {
-                    builder.append(StringHelper.get24(getTimeListHours().get(i), min)).append(", ");
-                }
-            } else {
-                for (int i = 0; i < getTimeListHours().size(); i++) {
-                    builder.append(StringHelper.get12(getTimeListHours().get(i), min)).append(", ");
-                }
-            }
-        } else if (getTimeListMode() == TimeListModes.ANYTIME) {
-
-            final Calendar c = Calendar.getInstance();
-
-            if (AppSettingsHelper.getInstance().isUse24hourTime()) {
-                for (int i = 0; i < getTimeListTimes().size(); i++) {
-                    c.setTime(getTimeListTimes().get(i));
-                    builder.append(StringHelper.get24(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE))).append(", ");
-                }
-            } else {
-                for (int i = 0; i < getTimeListTimes().size(); i++) {
-                    c.setTime(getTimeListTimes().get(i));
-                    builder.append(StringHelper.get12(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE))).append(", ");
-                }
-            }
-        }
-
-        return StringHelper.trimEnd(builder.toString(), ", ");
+        return "";
     }
 
     public Spannable toSpannableString(int highlightColor) {
@@ -265,32 +268,5 @@ public class TimeModel extends ViewModel {
         return spannable;
     }
 
-    public static int getIntegerOfTimeListMode(TimeListModes mode) {
-        switch (mode) {
-            default:
-            case NONE:
-                return 0;
-            case HOURLY:
-                return 1;
-            case INTERVAL:
-                return 2;
-            case ANYTIME:
-                return 3;
-        }
-    }
-
-    public static TimeListModes getTimeListModeFromInteger(int value) {
-        switch (value) {
-            default:
-            case 0:
-                return TimeListModes.NONE;
-            case 1:
-                return TimeListModes.HOURLY;
-            case 2:
-                return TimeListModes.INTERVAL;
-            case 3:
-                return TimeListModes.ANYTIME;
-        }
-    }
 
 }

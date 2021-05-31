@@ -198,7 +198,7 @@ public class ActivityMain extends ActivityBase implements FabContextMenu.iFabCon
 
         } else {
 
-            if (selectionControl.size() > 1) {
+            if (selectionControl.size() > 0) {
 
                 if (selectionControl.isAllSelected()) {
 

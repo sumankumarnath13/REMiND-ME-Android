@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
 import com.example.remindme.ui.fragments.dialogFragments.common.CustomRepeatDialogBase;
-import com.example.remindme.viewModels.RepeatModel;
+import com.example.remindme.viewModels.PeriodicRepeatModel;
 
 import java.util.Calendar;
 
@@ -40,8 +40,8 @@ public class DailyCustomRepeatDialog extends CustomRepeatDialogBase {
         final AppCompatCheckBox chk_daily_fri = view.findViewById(R.id.chk_daily_fri);
         final AppCompatCheckBox chk_daily_sat = view.findViewById(R.id.chk_daily_sat);
 
-        for (int i = 0; i < getModel().getCustomDays().size(); i++) {
-            int value = getModel().getCustomDays().get(i);
+        for (int i = 0; i < getModel().getPeriodicRepeatModel().getCustomDays().size(); i++) {
+            int value = getModel().getPeriodicRepeatModel().getCustomDays().get(i);
             switch (value) {
                 default:
                 case Calendar.SUNDAY:
@@ -71,23 +71,23 @@ public class DailyCustomRepeatDialog extends CustomRepeatDialogBase {
         builder.setView(view)
                 .setTitle("Select " + getString(R.string.caption_repeat_option_days_of_week))
                 .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
-                    getModel().getCustomDays().clear();
+                    getModel().getPeriodicRepeatModel().getCustomDays().clear();
                     if (chk_daily_sun.isChecked())
-                        getModel().getCustomDays().add(Calendar.SUNDAY);
+                        getModel().getPeriodicRepeatModel().getCustomDays().add(Calendar.SUNDAY);
                     if (chk_daily_mon.isChecked())
-                        getModel().getCustomDays().add(Calendar.MONDAY);
+                        getModel().getPeriodicRepeatModel().getCustomDays().add(Calendar.MONDAY);
                     if (chk_daily_tue.isChecked())
-                        getModel().getCustomDays().add(Calendar.TUESDAY);
+                        getModel().getPeriodicRepeatModel().getCustomDays().add(Calendar.TUESDAY);
                     if (chk_daily_wed.isChecked())
-                        getModel().getCustomDays().add(Calendar.WEDNESDAY);
+                        getModel().getPeriodicRepeatModel().getCustomDays().add(Calendar.WEDNESDAY);
                     if (chk_daily_thu.isChecked())
-                        getModel().getCustomDays().add(Calendar.THURSDAY);
+                        getModel().getPeriodicRepeatModel().getCustomDays().add(Calendar.THURSDAY);
                     if (chk_daily_fri.isChecked())
-                        getModel().getCustomDays().add(Calendar.FRIDAY);
+                        getModel().getPeriodicRepeatModel().getCustomDays().add(Calendar.FRIDAY);
                     if (chk_daily_sat.isChecked())
-                        getModel().getCustomDays().add(Calendar.SATURDAY);
+                        getModel().getPeriodicRepeatModel().getCustomDays().add(Calendar.SATURDAY);
                     getModel().setEnable(true);
-                    getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.DAILY_CUSTOM);
+                    getModel().getPeriodicRepeatModel().setRepeatOption(PeriodicRepeatModel.PeriodicRepeatOptions.DAILY_CUSTOM);
                     getListener().setCustomRepeatDialogModel(getModel());
 
                 }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {

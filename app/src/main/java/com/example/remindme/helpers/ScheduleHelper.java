@@ -1,5 +1,7 @@
 package com.example.remindme.helpers;
 
+import com.example.remindme.viewModels.MultipleTimeRepeatModel;
+import com.example.remindme.viewModels.PeriodicRepeatModel;
 import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.TimeModel;
 
@@ -10,25 +12,46 @@ import java.util.List;
 
 public class ScheduleHelper {
 
-    final int alertYear;
-    final int alertDayOfYear;
-    final int alertDayOfWeek;
-    final int alertDayOfMonth;
-    final int alertHourOfDay;
-    final int alertMinute;
+    private final int alertYear;
+    private final int alertDayOfYear;
+    private final int alertDayOfWeek;
+    private final int alertDayOfMonth;
+    private final int alertHourOfDay;
+    private final int alertMinute;
 
-    final int currentYear;
-    final int currentDayOfYear;
-    final int currentHourOfDay;
-    final int currentMinute;
+    private final int currentYear;
+    private final int currentDayOfYear;
+    private final int currentHourOfDay;
+    private final int currentMinute;
 
-    final Calendar calculator;
-    final Date currentTime;
-    final TimeModel timeModel;
+    private final Calendar calculator;
+    private final Date currentTime;
 
-    public ScheduleHelper(final TimeModel timeModel) {
+    private final TimeModel timeModel;
+
+    private TimeModel getTimeModel() {
+        return timeModel;
+    }
+
+    private final RepeatModel repeatModel;
+
+    private RepeatModel getRepeatModel() {
+        return repeatModel;
+    }
+
+    private PeriodicRepeatModel getPeriodicRepeatModel() {
+        return getRepeatModel().getPeriodicRepeatModel();
+    }
+
+    private MultipleTimeRepeatModel getMultipleTimeRepeatModel() {
+        return getRepeatModel().getMultipleTimeRepeatModel();
+    }
+
+    public ScheduleHelper(final TimeModel timeModel, final RepeatModel repeatModel) {
 
         this.timeModel = timeModel;
+        this.repeatModel = repeatModel;
+
         calculator = Calendar.getInstance();
         currentTime = calculator.getTime();
 
@@ -59,15 +82,26 @@ public class ScheduleHelper {
 
     private void scheduleListTime() {
 
-        if (timeModel.getTimeListMode() != TimeModel.TimeListModes.NONE) {
+        if (getMultipleTimeRepeatModel().getTimeListMode() != MultipleTimeRepeatModel.TimeListModes.OFF) {
 
             Date firstTimeListTime = null;
 
-            if (timeModel.getTimeListMode() == TimeModel.TimeListModes.HOURLY && timeModel.getTimeListHours().size() > 0) {
+            if (getMultipleTimeRepeatModel().getTimeListMode() == MultipleTimeRepeatModel.TimeListModes.HOURLY) {
 
                 calculator.set(Calendar.MINUTE, alertMinute);
 
-                final List<Integer> timeListHours = timeModel.getTimeListHours();
+                if (calculator.getTime().compareTo(currentTime) <= 0) {
+                    calculator.add(Calendar.HOUR_OF_DAY, 1);
+                }
+
+                //calculator.add(Calendar.HOUR_OF_DAY, 1);
+
+            } else if (getMultipleTimeRepeatModel().getTimeListMode() == MultipleTimeRepeatModel.TimeListModes.SELECTED_HOURS
+                    && getMultipleTimeRepeatModel().getTimeListHours().size() > 0) {
+
+                calculator.set(Calendar.MINUTE, alertMinute);
+
+                final List<Integer> timeListHours = getMultipleTimeRepeatModel().getTimeListHours();
 
                 Collections.sort(timeListHours);
 
@@ -85,9 +119,10 @@ public class ScheduleHelper {
                     }
                 }
 
-            } else if (timeModel.getTimeListMode() == TimeModel.TimeListModes.ANYTIME && timeModel.getTimeListTimes().size() > 0) {
+            } else if (getMultipleTimeRepeatModel().getTimeListMode() == MultipleTimeRepeatModel.TimeListModes.ANYTIME
+                    && getMultipleTimeRepeatModel().getTimeListTimes().size() > 0) {
 
-                final List<Date> timeListTimes = timeModel.getTimeListTimes();
+                final List<Date> timeListTimes = getMultipleTimeRepeatModel().getTimeListTimes();
 
                 Collections.sort(timeListTimes);
 
@@ -124,7 +159,7 @@ public class ScheduleHelper {
         }
     }
 
-    public Date getNextNoRepeat() {
+    private Date getNextNoPeriodicRepeat() {
 
         scheduleListTime(); // Try to find if any tme available from time list for the day
 
@@ -137,18 +172,18 @@ public class ScheduleHelper {
         return calculator.getTime();
     }
 
-    public Date getNextHour() {
-        calculator.set(Calendar.MINUTE, alertMinute);
+//    private Date getNextHour() {
+//        calculator.set(Calendar.MINUTE, alertMinute);
+//
+//        // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
+//        if (calculator.getTime().compareTo(currentTime) <= 0) {
+//            calculator.add(Calendar.HOUR_OF_DAY, 1);
+//        }
+//
+//        return calculator.getTime();
+//    }
 
-        // Then check if its in past or in future. If in past then increase an unit. Else, keep the time.
-        if (calculator.getTime().compareTo(currentTime) <= 0) {
-            calculator.add(Calendar.HOUR_OF_DAY, 1);
-        }
-
-        return calculator.getTime();
-    }
-
-    public Date getNextDay() {
+    private Date getNextDay() {
         calculator.set(Calendar.HOUR_OF_DAY, alertHourOfDay);
         calculator.set(Calendar.MINUTE, alertMinute);
 
@@ -165,7 +200,7 @@ public class ScheduleHelper {
         return calculator.getTime();
     }
 
-    public Date getNextDay(final List<Integer> daysOfWeek) {
+    private Date getNextDay(final List<Integer> daysOfWeek) {
         calculator.set(Calendar.HOUR_OF_DAY, alertHourOfDay);
         calculator.set(Calendar.MINUTE, alertMinute);
 
@@ -201,7 +236,7 @@ public class ScheduleHelper {
         return calculator.getTime();
     }
 
-    public Date getNextDayOfWeek() {
+    private Date getNextDayOfWeek() {
         calculator.set(Calendar.DAY_OF_WEEK, alertDayOfWeek);
         calculator.set(Calendar.HOUR_OF_DAY, alertHourOfDay);
         calculator.set(Calendar.MINUTE, alertMinute);
@@ -218,7 +253,7 @@ public class ScheduleHelper {
         return calculator.getTime();
     }
 
-    public Date getNextDayOfWeek(final List<Integer> weeksOfMonth) {
+    private Date getNextDayOfWeek(final List<Integer> weeksOfMonth) {
 
         calculator.set(Calendar.DAY_OF_WEEK, alertDayOfWeek);
         calculator.set(Calendar.HOUR_OF_DAY, alertHourOfDay);
@@ -255,7 +290,7 @@ public class ScheduleHelper {
         return calculator.getTime();
     }
 
-    public Date getNextDayOfMonth() {
+    private Date getNextDayOfMonth() {
 
         calculator.set(Calendar.DAY_OF_MONTH, alertDayOfMonth);
         calculator.set(Calendar.HOUR_OF_DAY, alertHourOfDay);
@@ -274,7 +309,7 @@ public class ScheduleHelper {
         return calculator.getTime();
     }
 
-    public Date getNextDayOfMonth(final List<Integer> monthsOfYear) {
+    private Date getNextDayOfMonth(final List<Integer> monthsOfYear) {
 
         calculator.set(Calendar.DAY_OF_MONTH, alertDayOfMonth);
         calculator.set(Calendar.HOUR_OF_DAY, alertHourOfDay);
@@ -312,7 +347,7 @@ public class ScheduleHelper {
         return calculator.getTime();
     }
 
-    public Date getNextYear() {
+    private Date getNextYear() {
 
         //calculator.set(Calendar.DAY_OF_YEAR, alertDayOfYear);
         calculator.set(Calendar.HOUR_OF_DAY, alertHourOfDay);
@@ -331,7 +366,7 @@ public class ScheduleHelper {
         return calculator.getTime();
     }
 
-    public Date getNextDayCustom(final RepeatModel.TimeUnits unit, final int value) {
+    private Date getNextDayCustom(final PeriodicRepeatModel.TimeUnits unit, final int value) {
 
         //calculator.set(Calendar.DAY_OF_YEAR, alertDayOfYear);
         calculator.set(Calendar.HOUR_OF_DAY, alertHourOfDay);
@@ -363,5 +398,68 @@ public class ScheduleHelper {
         return calculator.getTime();
     }
 
+    public Date getNextSchedule() {
+        /*
+         * This method will look for next closest date and time to repeat from reminder set time.
+         * If the time is in past then it will bring the DAY of YEAR to present and then will look for next possible schedule based on repeat settings.
+         * This method will return a non null value only if there is a dat can reached in future.
+         * */
+
+        if (getTimeModel().getTime() == null)
+            return null;
+
+        if (!getRepeatModel().isEnabled()) {
+            // This mean repeat is off but still target time can be reached if in future
+            return getNextNoPeriodicRepeat();
+        }
+
+        Date nextScheduleTime = null;
+
+        if (getPeriodicRepeatModel().getRepeatOption() == PeriodicRepeatModel.PeriodicRepeatOptions.OFF) {
+            // This mean periodic repeat is off but multiple time repeat still can exists and can reschedule to future
+            nextScheduleTime = getNextNoPeriodicRepeat();
+
+        } else if (getPeriodicRepeatModel().getRepeatOption() == PeriodicRepeatModel.PeriodicRepeatOptions.DAILY) {
+
+            nextScheduleTime = getNextDay();
+
+        } else if (getPeriodicRepeatModel().getRepeatOption() == PeriodicRepeatModel.PeriodicRepeatOptions.WEEKLY) {
+
+            nextScheduleTime = getNextDayOfWeek();
+
+        } else if (getPeriodicRepeatModel().getRepeatOption() == PeriodicRepeatModel.PeriodicRepeatOptions.MONTHLY) {
+
+            nextScheduleTime = getNextDayOfMonth();
+
+        } else if (getPeriodicRepeatModel().getRepeatOption() == PeriodicRepeatModel.PeriodicRepeatOptions.YEARLY) {
+
+            nextScheduleTime = getNextYear();
+
+        } else if (getPeriodicRepeatModel().getRepeatOption() == PeriodicRepeatModel.PeriodicRepeatOptions.DAILY_CUSTOM) {
+
+            nextScheduleTime = getNextDay(getPeriodicRepeatModel().getCustomDays());
+
+        } else if (getPeriodicRepeatModel().getRepeatOption() == PeriodicRepeatModel.PeriodicRepeatOptions.WEEKLY_CUSTOM) {
+
+            nextScheduleTime = getNextDayOfWeek(getPeriodicRepeatModel().getCustomWeeks());
+
+        } else if (getPeriodicRepeatModel().getRepeatOption() == PeriodicRepeatModel.PeriodicRepeatOptions.MONTHLY_CUSTOM) {
+
+            nextScheduleTime = getNextDayOfMonth(getPeriodicRepeatModel().getCustomMonths());
+
+        } else if (getPeriodicRepeatModel().getRepeatOption() == PeriodicRepeatModel.PeriodicRepeatOptions.OTHER) {
+
+            nextScheduleTime = getNextDayCustom(getPeriodicRepeatModel().getCustomTimeUnit(), getPeriodicRepeatModel().getCustomTimeValue());
+
+        }
+
+        if (nextScheduleTime != null && getRepeatModel().getRepeatEndDate() != null) {
+
+            return nextScheduleTime.after(getRepeatModel().getRepeatEndDate()) ? null : nextScheduleTime;
+
+        }
+
+        return nextScheduleTime;
+    }
 }
 

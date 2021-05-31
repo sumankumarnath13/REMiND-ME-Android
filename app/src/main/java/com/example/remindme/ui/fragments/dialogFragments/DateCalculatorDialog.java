@@ -16,7 +16,7 @@ import com.example.remindme.R;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.ui.fragments.dialogFragments.common.DialogFragmentBase;
-import com.example.remindme.viewModels.RepeatModel;
+import com.example.remindme.viewModels.PeriodicRepeatModel;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -41,10 +41,6 @@ public final class DateCalculatorDialog extends DialogFragmentBase {
         }
         return listener;
     }
-//
-//    public void setListener(ITimeCalculatorListener listener) {
-//        this.listener = listener;
-//    }
 
     //private final Calendar calendar = Calendar.getInstance();
     private final Calendar resultCalendar = Calendar.getInstance();
@@ -99,7 +95,7 @@ public final class DateCalculatorDialog extends DialogFragmentBase {
         unit_picker.setMaxValue(units.length - 1);
         unit_picker.setDisplayedValues(units);
         unit_picker.setOnValueChangedListener((picker, oldVal, newVal) -> {
-            value_picker.setMaxValue(RepeatModel.getMaxForTimeUnit(RepeatModel.getTimeUnitFromInteger(newVal)));
+            value_picker.setMaxValue(PeriodicRepeatModel.getMaxForTimeUnit(PeriodicRepeatModel.getTimeUnitFromInteger(newVal)));
             refresh();
         });
 
@@ -111,7 +107,7 @@ public final class DateCalculatorDialog extends DialogFragmentBase {
         // Value of unit must set first before setting up value of time:
         // 1
         unit_picker.setValue(0);
-        value_picker.setMaxValue(RepeatModel.getMaxForTimeUnit(RepeatModel.TimeUnits.DAYS));
+        value_picker.setMaxValue(PeriodicRepeatModel.getMaxForTimeUnit(PeriodicRepeatModel.TimeUnits.DAYS));
         //unit_picker.
         // 2
         value_picker.setValue(1);
@@ -133,7 +129,7 @@ public final class DateCalculatorDialog extends DialogFragmentBase {
 
         resultCalendar.setTime(getListener().getDateCalculatorDialogModel());
 
-        switch (RepeatModel.getTimeUnitFromInteger(unit_picker.getValue())) {
+        switch (PeriodicRepeatModel.getTimeUnitFromInteger(unit_picker.getValue())) {
             case DAYS:
                 resultCalendar.add(Calendar.DAY_OF_YEAR, value_picker.getValue());
                 break;

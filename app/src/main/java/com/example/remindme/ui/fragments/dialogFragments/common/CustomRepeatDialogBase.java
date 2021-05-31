@@ -29,10 +29,6 @@ public abstract class CustomRepeatDialogBase extends DialogFragmentBase {
         return listener;
     }
 
-//    public void setListener(ICustomRepeatDialogListener listener) {
-//        this.listener = listener;
-//    }
-
     private RepeatModel model;
 
     protected RepeatModel getModel() {

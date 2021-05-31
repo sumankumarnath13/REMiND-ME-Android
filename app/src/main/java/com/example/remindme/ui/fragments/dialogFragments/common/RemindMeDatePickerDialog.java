@@ -18,7 +18,7 @@ import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.ui.fragments.dialogFragments.DateCalculatorDialog;
-import com.example.remindme.viewModels.RepeatModel;
+import com.example.remindme.viewModels.PeriodicRepeatModel;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -62,10 +62,6 @@ public final class RemindMeDatePickerDialog extends DialogFragmentBase implement
         }
         return listener;
     }
-
-//    public void setListener(IDatePickerListener listener) {
-//        this.listener = listener;
-//    }
 
     private DatePicker datePicker;
 
@@ -178,7 +174,7 @@ public final class RemindMeDatePickerDialog extends DialogFragmentBase implement
         // So, its allowed to go backward up to return value of "getMaxForTimeUnit" to eventually get result of present after adding time.
         // Its expected that remembering an event 3 years (getMaxForTimeUnit return for YEAR unit) back is more than sufficient.
         final Calendar minDateCalendar = Calendar.getInstance();
-        minDateCalendar.add(Calendar.YEAR, -1 * RepeatModel.getMaxForTimeUnit(RepeatModel.TimeUnits.YEARS)); // (-1) to go backward.
+        minDateCalendar.add(Calendar.YEAR, -1 * PeriodicRepeatModel.getMaxForTimeUnit(PeriodicRepeatModel.TimeUnits.YEARS)); // (-1) to go backward.
         datePicker.setMinDate(minDateCalendar.getTimeInMillis());
 
         builder.setView(view)

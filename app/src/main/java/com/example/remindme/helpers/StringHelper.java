@@ -20,6 +20,7 @@ public class StringHelper {
     public static final String TIME_WEEKDAY_DATE_FORMAT_24 = "HH:mm - EEE, %s";
 
     public static final String WEEKDAY_FORMAT = "EEE";
+    public static final String FULL_WEEKDAY_FORMAT = "EEEE";
     public static final String WEEKDAY_DATE_FORMAT = "EEE, %s";
 
     public static String toTime(Date value) {
@@ -48,7 +49,6 @@ public class StringHelper {
             return "null";
         }
     }
-
 
     public static String toTimeAmPm(Date value) {
         if (value != null) {
@@ -81,6 +81,15 @@ public class StringHelper {
     public static String toWeekday(Date value) {
         if (value != null) {
             final SimpleDateFormat format = new SimpleDateFormat(WEEKDAY_FORMAT, Locale.getDefault());
+            return format.format(value);
+        } else {
+            return "null";
+        }
+    }
+
+    public static String toFullWeekday(Date value) {
+        if (value != null) {
+            final SimpleDateFormat format = new SimpleDateFormat(FULL_WEEKDAY_FORMAT, Locale.getDefault());
             return format.format(value);
         } else {
             return "null";

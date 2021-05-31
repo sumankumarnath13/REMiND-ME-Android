@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.remindme.R;
 import com.example.remindme.ui.fragments.dialogFragments.common.CustomRepeatDialogBase;
-import com.example.remindme.viewModels.RepeatModel;
+import com.example.remindme.viewModels.PeriodicRepeatModel;
 
 import java.util.Calendar;
 
@@ -45,8 +45,8 @@ public class MonthlyCustomRepeatDialog extends CustomRepeatDialogBase {
         final AppCompatCheckBox chk_monthly_nov = view.findViewById(R.id.chk_monthly_nov);
         final AppCompatCheckBox chk_monthly_dec = view.findViewById(R.id.chk_monthly_dec);
 
-        for (int i = 0; i < getModel().getCustomMonths().size(); i++) {
-            int value = getModel().getCustomMonths().get(i);
+        for (int i = 0; i < getModel().getPeriodicRepeatModel().getCustomMonths().size(); i++) {
+            int value = getModel().getPeriodicRepeatModel().getCustomMonths().get(i);
             switch (value) {
                 default:
                 case Calendar.JANUARY:
@@ -89,34 +89,34 @@ public class MonthlyCustomRepeatDialog extends CustomRepeatDialogBase {
         }
 
         builder.setView(view).setTitle("Select " + getString(R.string.caption_repeat_option_months_of_year)).setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
-            getModel().getCustomMonths().clear();
+            getModel().getPeriodicRepeatModel().getCustomMonths().clear();
             if (chk_monthly_jan.isChecked())
-                getModel().getCustomMonths().add(Calendar.JANUARY);
+                getModel().getPeriodicRepeatModel().getCustomMonths().add(Calendar.JANUARY);
             if (chk_monthly_feb.isChecked())
-                getModel().getCustomMonths().add(Calendar.FEBRUARY);
+                getModel().getPeriodicRepeatModel().getCustomMonths().add(Calendar.FEBRUARY);
             if (chk_monthly_mar.isChecked())
-                getModel().getCustomMonths().add(Calendar.MARCH);
+                getModel().getPeriodicRepeatModel().getCustomMonths().add(Calendar.MARCH);
             if (chk_monthly_apr.isChecked())
-                getModel().getCustomMonths().add(Calendar.APRIL);
+                getModel().getPeriodicRepeatModel().getCustomMonths().add(Calendar.APRIL);
             if (chk_monthly_may.isChecked())
-                getModel().getCustomMonths().add(Calendar.MAY);
+                getModel().getPeriodicRepeatModel().getCustomMonths().add(Calendar.MAY);
             if (chk_monthly_jun.isChecked())
-                getModel().getCustomMonths().add(Calendar.JUNE);
+                getModel().getPeriodicRepeatModel().getCustomMonths().add(Calendar.JUNE);
             if (chk_monthly_jul.isChecked())
-                getModel().getCustomMonths().add(Calendar.JULY);
+                getModel().getPeriodicRepeatModel().getCustomMonths().add(Calendar.JULY);
             if (chk_monthly_aug.isChecked())
-                getModel().getCustomMonths().add(Calendar.AUGUST);
+                getModel().getPeriodicRepeatModel().getCustomMonths().add(Calendar.AUGUST);
             if (chk_monthly_sep.isChecked())
-                getModel().getCustomMonths().add(Calendar.SEPTEMBER);
+                getModel().getPeriodicRepeatModel().getCustomMonths().add(Calendar.SEPTEMBER);
             if (chk_monthly_oct.isChecked())
-                getModel().getCustomMonths().add(Calendar.OCTOBER);
+                getModel().getPeriodicRepeatModel().getCustomMonths().add(Calendar.OCTOBER);
             if (chk_monthly_nov.isChecked())
-                getModel().getCustomMonths().add(Calendar.NOVEMBER);
+                getModel().getPeriodicRepeatModel().getCustomMonths().add(Calendar.NOVEMBER);
             if (chk_monthly_dec.isChecked())
-                getModel().getCustomMonths().add(Calendar.DECEMBER);
+                getModel().getPeriodicRepeatModel().getCustomMonths().add(Calendar.DECEMBER);
 
             getModel().setEnable(true);
-            getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM);
+            getModel().getPeriodicRepeatModel().setRepeatOption(PeriodicRepeatModel.PeriodicRepeatOptions.MONTHLY_CUSTOM);
             getListener().setCustomRepeatDialogModel(getModel());
 
         }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {

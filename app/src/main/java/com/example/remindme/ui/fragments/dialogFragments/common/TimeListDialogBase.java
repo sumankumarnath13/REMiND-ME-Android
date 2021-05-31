@@ -1,37 +1,60 @@
 package com.example.remindme.ui.fragments.dialogFragments.common;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remindme.helpers.ToastHelper;
-import com.example.remindme.viewModels.TimeModel;
-import com.example.remindme.viewModels.factories.TimeViewModelFactory;
+import com.example.remindme.viewModels.RepeatModel;
+import com.example.remindme.viewModels.factories.RepeatViewModelFactory;
 
 public abstract class TimeListDialogBase extends DialogFragmentBase {
 
-    private TimeModel model;
+    boolean isCanceled;
+
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        if (getListener() != null) {
+            getListener().setTimeListDialogModel(null);
+        }
+        isCanceled = true;
+        super.onCancel(dialog);
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        if (!isCanceled) {
+            if (getListener() != null) {
+                getListener().setTimeListDialogModel(null);
+            }
+        }
+        super.onDismiss(dialog);
+    }
+
+
+    private RepeatModel model;
 
     public interface ITimeListListener {
 
-        TimeModel getTimeListDialogModel();
+        RepeatModel getTimeListDialogModel();
 
-        void setTimeListDialogModel(TimeModel model);
+        void setTimeListDialogModel(RepeatModel model);
 
     }
 
     private ITimeListListener listener;
 
     protected ITimeListListener getListener() {
+        if (listener == null) {
+            listener = super.getListener(ITimeListListener.class);
+        }
         return listener;
     }
 
-    public void setListener(ITimeListListener listener) {
-        this.listener = listener;
-    }
-
-    protected TimeModel getModel() {
+    protected RepeatModel getModel() {
         return model;
     }
 
@@ -39,15 +62,15 @@ public abstract class TimeListDialogBase extends DialogFragmentBase {
     public final void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //listener = getListener(ITimeListListener.class);
-
-        if (listener == null) {
+        if (getListener() == null) {
             ToastHelper.showError(getContext(), "Dialog listener is not set!");
             dismiss();
             return;
         }
 
-        model = new ViewModelProvider(this, new TimeViewModelFactory(getListener().getTimeListDialogModel().getParent())).get(TimeModel.class);
+        model = new ViewModelProvider(this,
+                new RepeatViewModelFactory(getListener()
+                        .getTimeListDialogModel())).get(RepeatModel.class);
     }
 
     @Override

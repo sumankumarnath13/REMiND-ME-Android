@@ -104,7 +104,7 @@
     <string name="caption_hint_reminder_name">Give a name …</string>
     <string name="caption_hint_reminder_note">Extra notes for alert …</string>
 
-    <string name="caption_repeat_option_off">Off</string>
+    <string name="caption_repeat_option_off">None</string>
     <string name="caption_repeat_option_hourly">Hourly</string>
     <string name="caption_repeat_option_daily">Daily</string>
     <string name="caption_repeat_option_days_of_week">Days of week</string>
@@ -123,11 +123,11 @@
     <string name="caption_saturday">Saturday</string>
     <string name="caption_sunday">Sunday</string>
 
-    <string name="caption_week1">On 1st %s of month</string>
-    <string name="caption_week2">On 2nd %s of month</string>
-    <string name="caption_week3">On 3rd %s of month</string>
-    <string name="caption_week4">On 4th %s of month</string>
-    <string name="caption_week5">On 5th %s of month</string>
+    <string name="caption_week1">On 1st %s</string>
+    <string name="caption_week2">On 2nd %s</string>
+    <string name="caption_week3">On 3rd %s</string>
+    <string name="caption_week4">On 4th %s</string>
+    <string name="caption_week5">On 5th %s (If exists)</string>
 
     <string name="caption_january">January</string>
     <string name="caption_february">February</string>

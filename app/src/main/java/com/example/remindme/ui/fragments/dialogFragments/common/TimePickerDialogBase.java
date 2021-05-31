@@ -29,10 +29,6 @@ public abstract class TimePickerDialogBase
         return listener;
     }
 
-//    public void setListener(ITimePickerListener listener) {
-//        this.listener = listener;
-//    }
-
     private Calendar calendar;
 
     protected Calendar getCalendar() {

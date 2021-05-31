@@ -338,56 +338,56 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <!-- EXTRA TIME -->
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border_bottom_with_ripple"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical"
-                    android:paddingVertical="@dimen/dp_8">
+                <!--                &lt;!&ndash; EXTRA TIME &ndash;&gt;-->
+                <!--                <androidx.appcompat.widget.LinearLayoutCompat-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:background="@drawable/border_bottom_with_ripple"-->
+                <!--                    android:gravity="center_vertical"-->
+                <!--                    android:orientation="vertical"-->
+                <!--                    android:paddingVertical="@dimen/dp_8">-->
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:orientation="horizontal">
+                <!--                    <androidx.appcompat.widget.LinearLayoutCompat-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_gravity="center_vertical"-->
+                <!--                        android:orientation="horizontal">-->
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:singleLine="true"
-                            android:text="@string/caption_time_list"
-                            android:textSize="@dimen/font_size_small" />
+                <!--                        <androidx.appcompat.widget.AppCompatTextView-->
+                <!--                            android:layout_width="0dp"-->
+                <!--                            android:layout_height="wrap_content"-->
+                <!--                            android:layout_weight="1"-->
+                <!--                            android:gravity="center_vertical"-->
+                <!--                            android:singleLine="true"-->
+                <!--                            android:text="@string/caption_time_list"-->
+                <!--                            android:textSize="@dimen/font_size_small" />-->
 
-                        <androidx.appcompat.widget.AppCompatCheckBox
-                            android:id="@+id/chk_time_list_hours"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Hours"
-                            app:buttonTint="?attr/themeSuccessColor" />
+                <!--                        <androidx.appcompat.widget.AppCompatCheckBox-->
+                <!--                            android:id="@+id/chk_time_list_hours"-->
+                <!--                            android:layout_width="wrap_content"-->
+                <!--                            android:layout_height="wrap_content"-->
+                <!--                            android:text="Hours"-->
+                <!--                            app:buttonTint="?attr/themeSuccessColor" />-->
 
-                        <androidx.appcompat.widget.AppCompatCheckBox
-                            android:id="@+id/chk_time_list_anytime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Any time"
-                            app:buttonTint="?attr/themeDangerColor" />
+                <!--                        <androidx.appcompat.widget.AppCompatCheckBox-->
+                <!--                            android:id="@+id/chk_time_list_anytime"-->
+                <!--                            android:layout_width="wrap_content"-->
+                <!--                            android:layout_height="wrap_content"-->
+                <!--                            android:text="Any time"-->
+                <!--                            app:buttonTint="?attr/themeDangerColor" />-->
 
-                    </androidx.appcompat.widget.LinearLayoutCompat>
+                <!--                    </androidx.appcompat.widget.LinearLayoutCompat>-->
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_reminder_time_list_summary"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:text="9:00 AM, 10:00 PM"
-                        android:textColor="?attr/themeDimText"
-                        android:textSize="@dimen/font_size_extra_small" />
+                <!--                    <androidx.appcompat.widget.AppCompatTextView-->
+                <!--                        android:id="@+id/tv_reminder_time_list_summary"-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:gravity="center_vertical"-->
+                <!--                        android:text="9:00 AM, 10:00 PM"-->
+                <!--                        android:textColor="?attr/themeDimText"-->
+                <!--                        android:textSize="@dimen/font_size_extra_small" />-->
 
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                <!--                </androidx.appcompat.widget.LinearLayoutCompat>-->
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/alarm_only_layout"

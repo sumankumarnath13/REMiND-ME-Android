@@ -8,55 +8,64 @@ import androidx.lifecycle.ViewModel;
 import com.example.remindme.helpers.ScheduleHelper;
 import com.example.remindme.helpers.StringHelper;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class RepeatModel extends ViewModel {
 
-    private static final int HOURLY = 0;
-    private static final int DAILY = 1;
-    private static final int DAILY_CUSTOM = 11;
-    private static final int WEEKLY = 2;
-    private static final int WEEKLY_CUSTOM = 21;
-    private static final int MONTHLY = 3;
-    private static final int MONTHLY_CUSTOM = 31;
-    private static final int YEARLY = 4;
-    private static final int OTHER = 9;
-
-    public enum ReminderRepeatOptions {
-        HOURLY,
-        DAILY,
-        DAILY_CUSTOM,
-        WEEKLY,
-        WEEKLY_CUSTOM,
-        MONTHLY,
-        MONTHLY_CUSTOM,
-        YEARLY,
-        OTHER
+    public boolean isEnabled() {
+        return !(getMultipleTimeRepeatModel().getTimeListMode() == MultipleTimeRepeatModel.TimeListModes.OFF &&
+                getPeriodicRepeatModel().getRepeatOption() == PeriodicRepeatModel.PeriodicRepeatOptions.OFF);
     }
 
-    public enum TimeUnits {
-        DAYS,
-        WEEKS,
-        MONTHS,
-        YEARS,
+    public void setEnable(boolean value) {
+        if (value) {
+            if (!isEnabled()) {
+                getPeriodicRepeatModel().setRepeatOption(PeriodicRepeatModel.PeriodicRepeatOptions.DAILY);
+            }
+        } else {
+            getMultipleTimeRepeatModel().setTimeListMode(MultipleTimeRepeatModel.TimeListModes.OFF);
+            getPeriodicRepeatModel().setRepeatOption(PeriodicRepeatModel.PeriodicRepeatOptions.OFF);
+        }
+    }
+
+    private MultipleTimeRepeatModel multipleTimeRepeatModel;
+
+    public MultipleTimeRepeatModel getMultipleTimeRepeatModel() {
+        return multipleTimeRepeatModel;
+    }
+
+    public void setMultipleTimeRepeatModel(MultipleTimeRepeatModel multipleTimeRepeatModel) {
+        this.multipleTimeRepeatModel = multipleTimeRepeatModel;
+    }
+
+    private PeriodicRepeatModel periodicRepeatModel;
+
+    public PeriodicRepeatModel getPeriodicRepeatModel() {
+        return periodicRepeatModel;
+    }
+
+    public void setPeriodicRepeatModel(PeriodicRepeatModel periodicRepeatModel) {
+        this.periodicRepeatModel = periodicRepeatModel;
     }
 
     public RepeatModel copy() {
 
         RepeatModel instance = new RepeatModel(parent);
 
-        instance.setEnable(isEnabled());
-        instance.setCustomDays(getCustomDays());
-        instance.setCustomWeeks(getCustomWeeks());
-        instance.setCustomMonths(getCustomMonths());
+        instance.getMultipleTimeRepeatModel().setTimeListMode(getMultipleTimeRepeatModel().getTimeListMode());
+        instance.getMultipleTimeRepeatModel().setTimeListHours(getMultipleTimeRepeatModel().getTimeListHours());
+        instance.getMultipleTimeRepeatModel().setTimeListTimes(getMultipleTimeRepeatModel().getTimeListTimes());
+
+
+        instance.getPeriodicRepeatModel().setCustomDays(getPeriodicRepeatModel().getCustomDays());
+        instance.getPeriodicRepeatModel().setCustomWeeks(getPeriodicRepeatModel().getCustomWeeks());
+        instance.getPeriodicRepeatModel().setCustomMonths(getPeriodicRepeatModel().getCustomMonths());
+        instance.getPeriodicRepeatModel().setRepeatCustom(getPeriodicRepeatModel().getCustomTimeUnit(), getPeriodicRepeatModel().getCustomTimeValue());
+        instance.getPeriodicRepeatModel().setRepeatOption(getPeriodicRepeatModel().getRepeatOption());
 
         instance.setHasRepeatEnd(isHasRepeatEnd());
-        instance.setRepeatCustom(getCustomTimeUnit(), getCustomTimeValue());
         instance.setRepeatEndDate(getRepeatEndDate());
-        instance.setRepeatOption(getRepeatOption());
 
         return instance;
 
@@ -68,104 +77,10 @@ public class RepeatModel extends ViewModel {
         return parent;
     }
 
-    public RepeatModel(final AlertModel alertModel) {
-        this.parent = alertModel;
-    }
-
-    private boolean isEnabled;
-
-    public boolean isEnabled() {
-        return isEnabled;
-    }
-
-    public void setEnable(boolean enabled) {
-        isEnabled = enabled;
-        if (!enabled) {
-            setHasRepeatEnd(false);
-        }
-    }
-
-    private ReminderRepeatOptions repeatOption = ReminderRepeatOptions.DAILY; // DEFAULT
-
-    public ReminderRepeatOptions getRepeatOption() {
-        return repeatOption;
-    }
-
-    public void setRepeatOption(ReminderRepeatOptions value) {
-        switch (value) {
-            case DAILY_CUSTOM:
-                if (getCustomDays().size() == 0) {
-                    value = ReminderRepeatOptions.DAILY;
-                }
-                break;
-            case WEEKLY_CUSTOM:
-                if (getCustomWeeks().size() == 0) {
-                    value = ReminderRepeatOptions.WEEKLY;
-                }
-                break;
-            case MONTHLY_CUSTOM:
-                if (getCustomMonths().size() == 0) {
-                    value = ReminderRepeatOptions.MONTHLY;
-                }
-                break;
-        }
-
-        repeatOption = value;
-    }
-
-    private final List<Integer> customDays = new ArrayList<>();
-
-    public List<Integer> getCustomDays() {
-        return customDays;
-    }
-
-    public void setCustomDays(final List<Integer> values) {
-        customDays.clear();
-        customDays.addAll(values);
-    }
-
-    private final List<Integer> customWeeks = new ArrayList<>();
-
-    public List<Integer> getCustomWeeks() {
-        return customWeeks;
-    }
-
-    public void setCustomWeeks(final List<Integer> values) {
-        customWeeks.clear();
-        customWeeks.addAll(values);
-    }
-
-    private final List<Integer> customMonths = new ArrayList<>();
-
-    public List<Integer> getCustomMonths() {
-        return customMonths;
-    }
-
-    public void setCustomMonths(final List<Integer> values) {
-        customMonths.clear();
-        customMonths.addAll(values);
-    }
-
-    private TimeUnits customTimeUnit = TimeUnits.DAYS;
-
-    private int customTimeValue = 3;
-
-    public void setRepeatCustom(final TimeUnits unit, final int value) {
-        customTimeUnit = unit;
-        customTimeValue = value;
-    }
-
-    public void setRepeatCustom(final int unit, final int value) {
-        customTimeUnit = getTimeUnitFromInteger(unit);
-        customTimeValue = value;
-    }
-
-    public TimeUnits getCustomTimeUnit() {
-        return customTimeUnit;
-    }
-
-    public int getCustomTimeValue() {
-        return customTimeValue;
+    public RepeatModel(final AlertModel parent) {
+        this.parent = parent;
+        this.periodicRepeatModel = new PeriodicRepeatModel(this);
+        this.multipleTimeRepeatModel = new MultipleTimeRepeatModel(this);
     }
 
     private boolean hasRepeatEnd;
@@ -185,9 +100,9 @@ public class RepeatModel extends ViewModel {
 
     private boolean isRepeatEndValid() {
 
-        if (!isEnabled()) {
-            return false;
-        }
+        //    if (!isEnabled()) {
+        //        return false;
+        //    }
 
         if (repeatEndDate == null) { // Cannot enable without repeat end date
             return false;
@@ -211,57 +126,80 @@ public class RepeatModel extends ViewModel {
     private Date validatedScheduledTime;
 
     public Date getValidatedScheduledTime() {
-        if (validatedScheduledTime == null) return null;
+        if (validatedScheduledTime == null)
+            return null;
 
         final Date result = validatedScheduledTime;
         validatedScheduledTime = null;
         return result;
     }
 
-    public boolean isValid(final TimeModel timeModel) {
+    public boolean isValid(final TimeModel timeModel, final RepeatModel repeatModel) {
         boolean isValid = false;
 
-        switch (repeatOption) {
-            default: //NONE: HOURLY, DAILY: WEEKLY: MONTHLY: YEARLY:
-                customDays.clear();
-                customWeeks.clear();
-                customMonths.clear();
-                // Calculate only if its not snoozed already. This calculations will occur when snooze get off or when it will be dismissed
+        switch (repeatModel.getMultipleTimeRepeatModel().getTimeListMode()) {
+            default:
+                repeatModel.getMultipleTimeRepeatModel().getTimeListTimes().clear();
+                repeatModel.getMultipleTimeRepeatModel().getTimeListHours().clear();
                 isValid = true;
                 break;
-            case DAILY_CUSTOM:
-                if (customDays.size() > 0) {
-                    //customDays.clear();
-                    customWeeks.clear();
-                    customMonths.clear();
+            case SELECTED_HOURS:
+                if (repeatModel.getMultipleTimeRepeatModel().getTimeListHours().size() > 0) {
+                    repeatModel.getMultipleTimeRepeatModel().getTimeListTimes().clear();
                     isValid = true;
                 }
                 break;
-            case WEEKLY_CUSTOM:
-                if (customWeeks.size() > 0) {
-                    customDays.clear();
-                    //customWeeks.clear();
-                    customMonths.clear();
+            case ANYTIME:
+                if (repeatModel.getMultipleTimeRepeatModel().getTimeListTimes().size() > 0) {
+                    repeatModel.getMultipleTimeRepeatModel().getTimeListHours().clear();
                     isValid = true;
                 }
                 break;
-            case MONTHLY_CUSTOM:
-                if (customMonths.size() > 0) {
-                    customDays.clear();
-                    customWeeks.clear();
-                    //customMonths.clear();
+        }
+
+        if (isValid) {
+            switch (repeatModel.getPeriodicRepeatModel().getRepeatOption()) {
+                default: //NONE: HOURLY, DAILY: WEEKLY: MONTHLY: YEARLY:
+                    repeatModel.getPeriodicRepeatModel().getCustomDays().clear();
+                    repeatModel.getPeriodicRepeatModel().getCustomWeeks().clear();
+                    repeatModel.getPeriodicRepeatModel().getCustomMonths().clear();
+                    // Calculate only if its not snoozed already. This calculations will occur when snooze get off or when it will be dismissed
                     isValid = true;
-                }
-                break;
-            case OTHER:
-                if (getCustomTimeValue() > 0 &&
-                        getCustomTimeValue() <= getMaxForTimeUnit(getCustomTimeUnit())) {
-                    customDays.clear();
-                    customWeeks.clear();
-                    customMonths.clear();
-                    isValid = true;
-                }
-                break;
+                    break;
+                case DAILY_CUSTOM:
+                    if (repeatModel.getPeriodicRepeatModel().getCustomDays().size() > 0) {
+                        //customDays.clear();
+                        repeatModel.getPeriodicRepeatModel().getCustomWeeks().clear();
+                        repeatModel.getPeriodicRepeatModel().getCustomMonths().clear();
+                        isValid = true;
+                    }
+                    break;
+                case WEEKLY_CUSTOM:
+                    if (repeatModel.getPeriodicRepeatModel().getCustomWeeks().size() > 0) {
+                        repeatModel.getPeriodicRepeatModel().getCustomDays().clear();
+                        //customWeeks.clear();
+                        repeatModel.getPeriodicRepeatModel().getCustomMonths().clear();
+                        isValid = true;
+                    }
+                    break;
+                case MONTHLY_CUSTOM:
+                    if (repeatModel.getPeriodicRepeatModel().getCustomMonths().size() > 0) {
+                        repeatModel.getPeriodicRepeatModel().getCustomDays().clear();
+                        repeatModel.getPeriodicRepeatModel().getCustomWeeks().clear();
+                        //customMonths.clear();
+                        isValid = true;
+                    }
+                    break;
+                case OTHER:
+                    if (repeatModel.getPeriodicRepeatModel().getCustomTimeValue() > 0 &&
+                            repeatModel.getPeriodicRepeatModel().getCustomTimeValue() <= PeriodicRepeatModel.getMaxForTimeUnit(repeatModel.getPeriodicRepeatModel().getCustomTimeUnit())) {
+                        repeatModel.getPeriodicRepeatModel().getCustomDays().clear();
+                        repeatModel.getPeriodicRepeatModel().getCustomWeeks().clear();
+                        repeatModel.getPeriodicRepeatModel().getCustomMonths().clear();
+                        isValid = true;
+                    }
+                    break;
+            }
         }
 
         if (isValid && hasRepeatEnd && repeatEndDate == null) {
@@ -270,7 +208,8 @@ public class RepeatModel extends ViewModel {
 
         if (isValid) {
             // Check if any schedule is possible with current settings
-            validatedScheduledTime = schedule(timeModel);
+            ScheduleHelper scheduleHelper = new ScheduleHelper(timeModel, repeatModel);
+            validatedScheduledTime = scheduleHelper.getNextSchedule();
             // nextTime is null means no schedule is possible
             isValid = validatedScheduledTime != null;
         }
@@ -278,68 +217,6 @@ public class RepeatModel extends ViewModel {
         return isValid;
     }
 
-    public Date schedule(final TimeModel timeModel) {
-        /*
-         * This method will look for next closest date and time to repeat from reminder set time.
-         * If the time is in past then it will bring the DAY of YEAR to present and then will look for next possible schedule based on repeat settings.
-         * This method will return a non null value only if there is a dat can reached in future.
-         * */
-
-        if (timeModel.getTime() == null)
-            return null;
-
-        if (!isEnabled()) { // If repeat is off then check if the time already passed the current time
-            return new ScheduleHelper(timeModel).getNextNoRepeat();
-        }
-
-        Date nextScheduleTime = null;
-
-        if (repeatOption == ReminderRepeatOptions.HOURLY) {
-
-            nextScheduleTime = new ScheduleHelper(timeModel).getNextHour();
-
-        } else if (repeatOption == ReminderRepeatOptions.DAILY) {
-
-            nextScheduleTime = new ScheduleHelper(timeModel).getNextDay();
-
-        } else if (repeatOption == ReminderRepeatOptions.WEEKLY) {
-
-            nextScheduleTime = new ScheduleHelper(timeModel).getNextDayOfWeek();
-
-        } else if (repeatOption == ReminderRepeatOptions.MONTHLY) {
-
-            nextScheduleTime = new ScheduleHelper(timeModel).getNextDayOfMonth();
-
-        } else if (repeatOption == ReminderRepeatOptions.YEARLY) {
-
-            nextScheduleTime = new ScheduleHelper(timeModel).getNextYear();
-
-        } else if (repeatOption == RepeatModel.ReminderRepeatOptions.DAILY_CUSTOM) {
-
-            nextScheduleTime = new ScheduleHelper(timeModel).getNextDay(getCustomDays());
-
-        } else if (repeatOption == RepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM) {
-
-            nextScheduleTime = new ScheduleHelper(timeModel).getNextDayOfWeek(getCustomWeeks());
-
-        } else if (repeatOption == RepeatModel.ReminderRepeatOptions.MONTHLY_CUSTOM) {
-
-            nextScheduleTime = new ScheduleHelper(timeModel).getNextDayOfMonth(getCustomMonths());
-
-        } else if (repeatOption == RepeatModel.ReminderRepeatOptions.OTHER) {
-
-            nextScheduleTime = new ScheduleHelper(timeModel).getNextDayCustom(getCustomTimeUnit(), getCustomTimeValue());
-
-        }
-
-        if (nextScheduleTime != null && getRepeatEndDate() != null) {
-
-            return nextScheduleTime.after(getRepeatEndDate()) ? null : nextScheduleTime;
-
-        }
-
-        return nextScheduleTime;
-    }
 
     @NonNull
     public String toString(Context context) {
@@ -348,37 +225,37 @@ public class RepeatModel extends ViewModel {
             return "OFF";
         }
 
-        StringBuilder builder = new StringBuilder();
-        switch (repeatOption) {
+        final StringBuilder builder = new StringBuilder();
+
+        switch (getMultipleTimeRepeatModel().getTimeListMode()) {
             default:
-            case HOURLY:
-                builder.append("Hourly");
+                builder.append("Once, ");
                 break;
-//            case HOURLY_CUSTOM:
-//                builder.append("On ");
-//                for (int i = 0; i < customHours.size(); i++) {
-//                    final int h = customHours.get(i);
-//                    final Calendar c = Calendar.getInstance();
-//                    if (getReminderTime() != null) {
-//                        c.setTime(getReminderTime());
-//                    }
-//                    final int min = c.get(Calendar.MINUTE);
-//
-//                    if (AppSettingsHelper.getInstance().isUse24hourTime()) {
-//                        builder.append(StringHelper.get24(h, min)).append(", ");
-//                    } else {
-//                        builder.append(StringHelper.get12(h, min)).append(", ");
-//                    }
-//                }
-//                builder.append("of every day");
-//                break;
+            case HOURLY:
+                builder.append("On every hour ");
+                break;
+            case SELECTED_HOURS:
+                builder.append("On selected hours ");
+                break;
+            case ANYTIME:
+                builder.append("On different times ");
+                break;
+            case CUSTOM_INTERVAL:
+                builder.append("On every interval ");
+                break;
+        }
+
+        switch (getPeriodicRepeatModel().getRepeatOption()) {
+            default:
+            case OFF:
+                return "for selected day ";
             case DAILY:
-                builder.append("Daily");
+                builder.append("of everyday ");
                 break;
             case DAILY_CUSTOM:
-                builder.append("On ");
-                for (int i = 0; i < customDays.size(); i++) {
-                    int value = customDays.get(i);
+                builder.append("of every ");
+                for (int i = 0; i < getPeriodicRepeatModel().getCustomDays().size(); i++) {
+                    int value = getPeriodicRepeatModel().getCustomDays().get(i);
                     switch (value) {
                         default:
                         case Calendar.SUNDAY:
@@ -404,15 +281,15 @@ public class RepeatModel extends ViewModel {
                             break;
                     }
                 }
-                builder.append(" of every week");
+                builder.append("of every week ");
                 break;
             case WEEKLY:
-                builder.append("Weekly");
+                builder.append("of every week ");
                 break;
             case WEEKLY_CUSTOM:
-                builder.append("On ");
-                for (int i = 0; i < customWeeks.size(); i++) {
-                    int value = customWeeks.get(i);
+                builder.append("of every ");
+                for (int i = 0; i < getPeriodicRepeatModel().getCustomWeeks().size(); i++) {
+                    int value = getPeriodicRepeatModel().getCustomWeeks().get(i);
                     switch (value) {
                         default:
                         case 0:
@@ -432,15 +309,15 @@ public class RepeatModel extends ViewModel {
                             break;
                     }
                 }
-                builder.append("week of every month");
+                builder.append("week of every month ");
                 break;
             case MONTHLY:
-                builder.append("Monthly");
+                builder.append("of every month ");
                 break;
             case MONTHLY_CUSTOM:
-                builder.append("On ");
-                for (int i = 0; i < customMonths.size(); i++) {
-                    int value = customMonths.get(i);
+                builder.append("of every ");
+                for (int i = 0; i < getPeriodicRepeatModel().getCustomMonths().size(); i++) {
+                    int value = getPeriodicRepeatModel().getCustomMonths().get(i);
                     switch (value) {
                         default:
                         case Calendar.JANUARY:
@@ -481,33 +358,33 @@ public class RepeatModel extends ViewModel {
                             break;
                     }
                 }
-                builder.append("of every year");
+                builder.append("of every year ");
                 break;
             case YEARLY:
-                builder.append("Yearly");
+                builder.append("of every year ");
                 break;
             case OTHER:
-                builder.append("On every ");
-                switch (customTimeUnit) {
+                builder.append("of every ");
+                switch (getPeriodicRepeatModel().getCustomTimeUnit()) {
                     case DAYS:
-                        if (customTimeValue == 1)
+                        if (getPeriodicRepeatModel().getCustomTimeValue() == 1)
                             builder.append("day");
                         else
-                            builder.append(customTimeValue);
+                            builder.append(getPeriodicRepeatModel().getCustomTimeValue());
                         builder.append(" days");
                         break;
                     case WEEKS:
-                        if (customTimeValue == 1)
+                        if (getPeriodicRepeatModel().getCustomTimeValue() == 1)
                             builder.append("week");
                         else
-                            builder.append(customTimeValue);
+                            builder.append(getPeriodicRepeatModel().getCustomTimeValue());
                         builder.append(" weeks");
                         break;
                     case MONTHS:
-                        if (customTimeValue == 1)
+                        if (getPeriodicRepeatModel().getCustomTimeValue() == 1)
                             builder.append("month");
                         else
-                            builder.append(customTimeValue);
+                            builder.append(getPeriodicRepeatModel().getCustomTimeValue());
                         builder.append(" months");
                         break;
                 }
@@ -527,14 +404,29 @@ public class RepeatModel extends ViewModel {
         }
 
         StringBuilder builder = new StringBuilder();
-        switch (repeatOption) {
+
+        switch (getMultipleTimeRepeatModel().getTimeListMode()) {
             default:
-            case HOURLY:
-                builder.append("Hourly");
+                builder.append("Once, ");
                 break;
-//            case HOURLY_CUSTOM:
-//                builder.append("Hourly custom");
-//                break;
+            case HOURLY:
+                builder.append("Hourly, ");
+                break;
+            case SELECTED_HOURS:
+                builder.append("Selected hours, ");
+                break;
+            case ANYTIME:
+                builder.append("Different times, ");
+                break;
+            case CUSTOM_INTERVAL:
+                builder.append("Interval, ");
+                break;
+        }
+
+        switch (getPeriodicRepeatModel().getRepeatOption()) {
+            default:
+            case OFF:
+                return "One day only";
             case DAILY:
                 builder.append("Daily");
                 break;
@@ -562,104 +454,6 @@ public class RepeatModel extends ViewModel {
         }
 
         return builder.toString();
-    }
-
-    public static int getIntegerFromTimeUnit(TimeUnits unit) {
-        switch (unit) {
-            default:
-            case DAYS:
-                return 0;
-            case WEEKS:
-                return 1;
-            case MONTHS:
-                return 2;
-            case YEARS:
-                return 3;
-        }
-    }
-
-    public static int getIntegerOfRepeatOption(ReminderRepeatOptions option) {
-        switch (option) {
-            default:
-            case HOURLY:
-                return HOURLY;
-            case DAILY:
-                return DAILY;
-            case DAILY_CUSTOM:
-                return DAILY_CUSTOM;
-            case WEEKLY:
-                return WEEKLY;
-            case WEEKLY_CUSTOM:
-                return WEEKLY_CUSTOM;
-            case MONTHLY:
-                return MONTHLY;
-            case MONTHLY_CUSTOM:
-                return MONTHLY_CUSTOM;
-            case YEARLY:
-                return YEARLY;
-            case OTHER:
-                return OTHER;
-        }
-    }
-
-    public static ReminderRepeatOptions getRepeatOptionFromInteger(int value) {
-        switch (value) {
-            default:
-            case HOURLY:
-                return ReminderRepeatOptions.HOURLY;
-
-            case DAILY:
-                return ReminderRepeatOptions.DAILY;
-
-            case DAILY_CUSTOM:
-                return ReminderRepeatOptions.DAILY_CUSTOM;
-
-            case WEEKLY:
-                return ReminderRepeatOptions.WEEKLY;
-
-            case WEEKLY_CUSTOM:
-                return ReminderRepeatOptions.WEEKLY_CUSTOM;
-
-            case MONTHLY:
-                return ReminderRepeatOptions.MONTHLY;
-
-            case MONTHLY_CUSTOM:
-                return ReminderRepeatOptions.MONTHLY_CUSTOM;
-
-            case YEARLY:
-                return ReminderRepeatOptions.YEARLY;
-
-            case OTHER:
-                return ReminderRepeatOptions.OTHER;
-        }
-    }
-
-    public static TimeUnits getTimeUnitFromInteger(int unit) {
-        switch (unit) {
-            default:
-            case 0:
-                return TimeUnits.DAYS;
-            case 1:
-                return TimeUnits.WEEKS;
-            case 2:
-                return TimeUnits.MONTHS;
-            case 3:
-                return TimeUnits.YEARS;
-        }
-    }
-
-    public static int getMaxForTimeUnit(TimeUnits unit) {
-        switch (unit) {
-            default:
-            case DAYS:
-                return 1095;
-            case WEEKS:
-                return 156;
-            case MONTHS:
-                return 36;
-            case YEARS:
-                return 3;
-        }
     }
 
 }

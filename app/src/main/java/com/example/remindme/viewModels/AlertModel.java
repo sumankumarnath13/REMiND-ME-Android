@@ -21,6 +21,7 @@ import com.example.remindme.dataModels.ReminderRepeat;
 import com.example.remindme.dataModels.ReminderSnooze;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
+import com.example.remindme.helpers.ScheduleHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 
@@ -292,7 +293,8 @@ public class AlertModel extends ViewModel {
 
         if (value && !AppSettingsHelper.getInstance().isDisableAllReminders()) {
 
-            final Date nextTime = getRepeatModel().schedule(getTimeModel());
+            final ScheduleHelper scheduleHelper = new ScheduleHelper(getTimeModel(), getRepeatModel());
+            final Date nextTime = scheduleHelper.getNextSchedule();
 
             if (nextTime == null) { // EOF situation. No next schedule possible
                 isEnabled = false;
@@ -430,7 +432,8 @@ public class AlertModel extends ViewModel {
             getReminderModel().setCompleted(true);
             save();
         } else {
-            final Date nextTime = getRepeatModel().schedule(getTimeModel());
+            final ScheduleHelper scheduleHelper = new ScheduleHelper(getTimeModel(), getRepeatModel());
+            final Date nextTime = scheduleHelper.getNextSchedule();
             if (nextTime == null) { // EOF situation
                 saveAsExpired();
             } else {
@@ -443,6 +446,9 @@ public class AlertModel extends ViewModel {
     }
 
     public void dismissByApp(final Context context) {
+
+        final ScheduleHelper scheduleHelper = new ScheduleHelper(getTimeModel(), getRepeatModel());
+
         if (isReminder()) {
 
             if (getReminderModel().getTime() != null) {
@@ -452,7 +458,7 @@ public class AlertModel extends ViewModel {
             getReminderModel().setCompleted(false);
             getReminderModel().setTime(getTimeModel().getTime());
 
-            final Date nextTime = getRepeatModel().schedule(getTimeModel());
+            final Date nextTime = scheduleHelper.getNextSchedule();
             if (nextTime == null) {
                 saveAsExpired();
             } else {
@@ -462,7 +468,7 @@ public class AlertModel extends ViewModel {
         } else {
             missedTimes.add(getTimeModel().getTime()); // Register as missed. Because its missed and expired altogether.
 
-            final Date nextTime = getRepeatModel().schedule(getTimeModel());
+            final Date nextTime = scheduleHelper.getNextSchedule();
             if (nextTime == null) { // EOF situation
                 saveAsExpired();
             } else {
@@ -518,7 +524,9 @@ public class AlertModel extends ViewModel {
 
             } else { // Check next snooze comes after next schedule or not.
 
-                final Date nextScheduledTime = getRepeatModel().schedule(getTimeModel());
+                final ScheduleHelper scheduleHelper = new ScheduleHelper(getTimeModel(), getRepeatModel());
+
+                final Date nextScheduledTime = scheduleHelper.getNextSchedule();
 
                 if (nextScheduledTime == null) {
                     // No next schedule found so proceed with snoozing only if its not passed current time
@@ -652,11 +660,11 @@ public class AlertModel extends ViewModel {
         entity.name = getName();
         entity.note = getNote();
         entity.time = getTimeModel().getAlertTime(false);
-        entity.timeListMode = TimeModel.getIntegerOfTimeListMode(getTimeModel().getTimeListMode());
-        if (getTimeModel().getTimeListMode() != TimeModel.TimeListModes.NONE) {
+        entity.timeListMode = MultipleTimeRepeatModel.getIntegerOfTimeListMode(getRepeatModel().getMultipleTimeRepeatModel().getTimeListMode());
+        if (getRepeatModel().getMultipleTimeRepeatModel().getTimeListMode() != MultipleTimeRepeatModel.TimeListModes.OFF) {
             entity.multipleTimeDetails = new MultipleTimeDetails();
-            entity.multipleTimeDetails.customTimes.addAll(getTimeModel().getTimeListTimes());
-            entity.multipleTimeDetails.hourlyTimes.addAll(getTimeModel().getTimeListHours());
+            entity.multipleTimeDetails.customTimes.addAll(getRepeatModel().getMultipleTimeRepeatModel().getTimeListTimes());
+            entity.multipleTimeDetails.hourlyTimes.addAll(getRepeatModel().getMultipleTimeRepeatModel().getTimeListHours());
         }
 
         entity.missedTimes.addAll(missedTimes);
@@ -664,12 +672,12 @@ public class AlertModel extends ViewModel {
         if (getRepeatModel().isEnabled()) {
             entity.repeat = new ReminderRepeat();
             entity.repeat.isRepeatEnabled = getRepeatModel().isEnabled();
-            entity.repeat.repeatOption = RepeatModel.getIntegerOfRepeatOption(getRepeatModel().getRepeatOption());
-            entity.repeat.repeatDays.addAll(getRepeatModel().getCustomDays());
-            entity.repeat.repeatWeeks.addAll(getRepeatModel().getCustomWeeks());
-            entity.repeat.repeatMonths.addAll(getRepeatModel().getCustomMonths());
-            entity.repeat.repeatCustomTimeUnit = RepeatModel.getIntegerFromTimeUnit(repeatModel.getCustomTimeUnit());
-            entity.repeat.repeatCustomTimeValue = getRepeatModel().getCustomTimeValue();
+            entity.repeat.repeatOption = PeriodicRepeatModel.getIntegerOfRepeatOption(getRepeatModel().getPeriodicRepeatModel().getRepeatOption());
+            entity.repeat.repeatDays.addAll(getRepeatModel().getPeriodicRepeatModel().getCustomDays());
+            entity.repeat.repeatWeeks.addAll(getRepeatModel().getPeriodicRepeatModel().getCustomWeeks());
+            entity.repeat.repeatMonths.addAll(getRepeatModel().getPeriodicRepeatModel().getCustomMonths());
+            entity.repeat.repeatCustomTimeUnit = PeriodicRepeatModel.getIntegerFromTimeUnit(getRepeatModel().getPeriodicRepeatModel().getCustomTimeUnit());
+            entity.repeat.repeatCustomTimeValue = getRepeatModel().getPeriodicRepeatModel().getCustomTimeValue();
             entity.repeat.isHasRepeatEnd = getRepeatModel().isHasRepeatEnd();
             entity.repeat.repeatEndDate = getRepeatModel().getRepeatEndDate();
         } else {
@@ -722,23 +730,21 @@ public class AlertModel extends ViewModel {
         setName(from.name);
         setNote(from.note);
         getTimeModel().setTime(from.time, true);
-        getTimeModel().setTimeListMode(TimeModel.getTimeListModeFromInteger(from.timeListMode));
-        if (getTimeModel().getTimeListMode() != TimeModel.TimeListModes.NONE) {
-            getTimeModel().setTimeListTimes(from.multipleTimeDetails.customTimes);
-            getTimeModel().setTimeListHours(from.multipleTimeDetails.hourlyTimes);
+        getRepeatModel().getMultipleTimeRepeatModel().setTimeListMode(MultipleTimeRepeatModel.getTimeListModeFromInteger(from.timeListMode));
+        if (getRepeatModel().getMultipleTimeRepeatModel().getTimeListMode() != MultipleTimeRepeatModel.TimeListModes.OFF) {
+            getRepeatModel().getMultipleTimeRepeatModel().setTimeListTimes(from.multipleTimeDetails.customTimes);
+            getRepeatModel().getMultipleTimeRepeatModel().setTimeListHours(from.multipleTimeDetails.hourlyTimes);
         }
 
         missedTimes.addAll(from.missedTimes);
 
-        if (from.repeat == null) {
-            getRepeatModel().setEnable(false);
-        } else {
-            getRepeatModel().setEnable(true);
-            getRepeatModel().setCustomDays(from.repeat.repeatDays);
-            getRepeatModel().setCustomWeeks(from.repeat.repeatWeeks);
-            getRepeatModel().setCustomMonths(from.repeat.repeatMonths);
-            getRepeatModel().setRepeatCustom(from.repeat.repeatCustomTimeUnit, from.repeat.repeatCustomTimeValue);
-            getRepeatModel().setRepeatOption(RepeatModel.getRepeatOptionFromInteger(from.repeat.repeatOption));
+        if (from.repeat != null) {
+            //getRepeatModel().setEnable(true);
+            getRepeatModel().getPeriodicRepeatModel().setCustomDays(from.repeat.repeatDays);
+            getRepeatModel().getPeriodicRepeatModel().setCustomWeeks(from.repeat.repeatWeeks);
+            getRepeatModel().getPeriodicRepeatModel().setCustomMonths(from.repeat.repeatMonths);
+            getRepeatModel().getPeriodicRepeatModel().setRepeatCustom(from.repeat.repeatCustomTimeUnit, from.repeat.repeatCustomTimeValue);
+            getRepeatModel().getPeriodicRepeatModel().setRepeatOption(PeriodicRepeatModel.getRepeatOptionFromInteger(from.repeat.repeatOption));
             getRepeatModel().setHasRepeatEnd(from.repeat.isHasRepeatEnd);
             getRepeatModel().setRepeatEndDate(from.repeat.repeatEndDate);
         }

@@ -14,7 +14,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.remindme.R;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.ui.fragments.dialogFragments.common.CustomRepeatDialogBase;
-import com.example.remindme.viewModels.RepeatModel;
+import com.example.remindme.viewModels.PeriodicRepeatModel;
 
 public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
 
@@ -37,7 +37,7 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
         final AppCompatCheckBox chk_weekly_4 = view.findViewById(R.id.chk_weekly_4);
         final AppCompatCheckBox chk_weekly_5 = view.findViewById(R.id.chk_weekly_5);
 
-        final String weekDayName = StringHelper.toWeekday(getModel().getParent().getTimeModel().getAlertTime(false));
+        final String weekDayName = StringHelper.toFullWeekday(getModel().getParent().getTimeModel().getAlertTime(false));
 
         chk_weekly_1.setText(getString(R.string.caption_week1, weekDayName));
         chk_weekly_2.setText(getString(R.string.caption_week2, weekDayName));
@@ -45,8 +45,8 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
         chk_weekly_4.setText(getString(R.string.caption_week4, weekDayName));
         chk_weekly_5.setText(getString(R.string.caption_week5, weekDayName));
 
-        for (int i = 0; i < getModel().getCustomWeeks().size(); i++) {
-            int value = getModel().getCustomWeeks().get(i);
+        for (int i = 0; i < getModel().getPeriodicRepeatModel().getCustomWeeks().size(); i++) {
+            int value = getModel().getPeriodicRepeatModel().getCustomWeeks().get(i);
             switch (value) {
                 default:
                 case 0:
@@ -69,19 +69,19 @@ public class WeeklyCustomRepeatDialog extends CustomRepeatDialogBase {
 
         builder.setView(view).setTitle("Select " + getString(R.string.caption_repeat_option_weeks_of_month))
                 .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
-                    getModel().getCustomWeeks().clear();
+                    getModel().getPeriodicRepeatModel().getCustomWeeks().clear();
                     if (chk_weekly_1.isChecked())
-                        getModel().getCustomWeeks().add(0);
+                        getModel().getPeriodicRepeatModel().getCustomWeeks().add(0);
                     if (chk_weekly_2.isChecked())
-                        getModel().getCustomWeeks().add(1);
+                        getModel().getPeriodicRepeatModel().getCustomWeeks().add(1);
                     if (chk_weekly_3.isChecked())
-                        getModel().getCustomWeeks().add(2);
+                        getModel().getPeriodicRepeatModel().getCustomWeeks().add(2);
                     if (chk_weekly_4.isChecked())
-                        getModel().getCustomWeeks().add(3);
+                        getModel().getPeriodicRepeatModel().getCustomWeeks().add(3);
                     if (chk_weekly_5.isChecked())
-                        getModel().getCustomWeeks().add(4);
+                        getModel().getPeriodicRepeatModel().getCustomWeeks().add(4);
                     getModel().setEnable(true);
-                    getModel().setRepeatOption(RepeatModel.ReminderRepeatOptions.WEEKLY_CUSTOM);
+                    getModel().getPeriodicRepeatModel().setRepeatOption(PeriodicRepeatModel.PeriodicRepeatOptions.WEEKLY_CUSTOM);
                     getListener().setCustomRepeatDialogModel(getModel());
                 }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
 

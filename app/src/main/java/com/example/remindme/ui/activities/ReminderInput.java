@@ -36,10 +36,7 @@ import com.example.remindme.ui.fragments.dialogFragments.NameDialog;
 import com.example.remindme.ui.fragments.dialogFragments.NoteDialog;
 import com.example.remindme.ui.fragments.dialogFragments.RepeatDialog;
 import com.example.remindme.ui.fragments.dialogFragments.SnoozeDialog;
-import com.example.remindme.ui.fragments.dialogFragments.TimeListAnyTimeDialog;
-import com.example.remindme.ui.fragments.dialogFragments.TimeListHourlyDialog;
 import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeDatePickerDialog;
-import com.example.remindme.ui.fragments.dialogFragments.common.TimeListDialogBase;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBase;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBlack;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogLight;
@@ -47,7 +44,6 @@ import com.example.remindme.viewModels.AlertModel;
 import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.RingingModel;
 import com.example.remindme.viewModels.SnoozeModel;
-import com.example.remindme.viewModels.TimeModel;
 import com.example.remindme.viewModels.factories.AlertViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -93,12 +89,15 @@ public class ReminderInput
 
     @Override
     public void setRepeatDialogModel(RepeatModel model) {
-        if (model.isValid(alertModel.getTimeModel())) {
-            alertModel.setRepeatModel(model);
-            alertModel.getTimeModel().setScheduledTime(model.getValidatedScheduledTime());
-        } else {
-            ToastHelper.showShort(ReminderInput.this, "Please check repeat settings");
+        if (model != null) {
+            if (model.isValid(alertModel.getTimeModel(), model)) {
+                alertModel.setRepeatModel(model);
+                alertModel.getTimeModel().setScheduledTime(model.getValidatedScheduledTime());
+            } else {
+                ToastHelper.showShort(ReminderInput.this, "Please check repeat settings");
+            }
         }
+        refresh();
     }
 
     @Override
@@ -158,9 +157,9 @@ public class ReminderInput
     private AppCompatButton btn_reminder_time;
     private AppCompatTextView tv_reminder_AmPm;
     private AppCompatButton btn_reminder_date;
-    private AppCompatCheckBox chk_time_list_hours;
-    private AppCompatCheckBox chk_time_list_anytime;
-    private AppCompatTextView tv_reminder_time_list_summary;
+//    private AppCompatCheckBox chk_time_list_hours;
+//    private AppCompatCheckBox chk_time_list_anytime;
+//    private AppCompatTextView tv_reminder_time_list_summary;
 
     private AppCompatTextView tv_reminder_tone_summary;
     private AppCompatTextView tv_reminder_name_summary;
@@ -249,51 +248,6 @@ public class ReminderInput
             }
         }
         return timePickerDialog;
-    }
-
-    private TimeListDialogBase.ITimeListListener timeListListener;
-
-    private TimeListDialogBase.ITimeListListener getTimeListListener() {
-        if (timeListListener == null) {
-            timeListListener = new TimeListDialogBase.ITimeListListener() {
-                @Override
-                public TimeModel getTimeListDialogModel() {
-                    alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
-                    return alertModel.getTimeModel();
-                }
-
-                @Override
-                public void setTimeListDialogModel(TimeModel model) {
-                    if (alertModel.getRepeatModel().isValid(model)) {
-                        alertModel.setTimeModel(model);
-                        alertModel.getTimeModel().setScheduledTime(alertModel.getRepeatModel().getValidatedScheduledTime());
-                    } else {
-                        ToastHelper.showShort(ReminderInput.this, "Please check repeat settings");
-                    }
-                }
-            };
-        }
-        return timeListListener;
-    }
-
-    private TimeListHourlyDialog timeListHourlyDialog;
-
-    private TimeListHourlyDialog getTimeListHourlyDialog() {
-        if (timeListHourlyDialog == null) {
-            timeListHourlyDialog = new TimeListHourlyDialog();
-            timeListHourlyDialog.setListener(getTimeListListener());
-        }
-        return timeListHourlyDialog;
-    }
-
-    private TimeListAnyTimeDialog timeListAnyTimeDialog;
-
-    private TimeListAnyTimeDialog getTimeListAnyTimeDialog() {
-        if (timeListAnyTimeDialog == null) {
-            timeListAnyTimeDialog = new TimeListAnyTimeDialog();
-            timeListAnyTimeDialog.setListener(getTimeListListener());
-        }
-        return timeListAnyTimeDialog;
     }
 
     @Override
@@ -392,40 +346,40 @@ public class ReminderInput
 
         btn_reminder_time.setOnClickListener(view -> getTimePickerDialog().show(getSupportFragmentManager(), TimePickerDialogBase.TAG));
 
-        tv_reminder_time_list_summary = findViewById(R.id.tv_reminder_time_list_summary);
+        //tv_reminder_time_list_summary = findViewById(R.id.tv_reminder_time_list_summary);
 
-        chk_time_list_hours = findViewById(R.id.chk_time_list_hours);
-        chk_time_list_hours.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (!isRefreshing() && isUserInteracted()) {
-
-                buttonView.setChecked(!buttonView.isChecked()); // Keep the check status as it is here. Real changes will occur once user return from dialog
-                setUserInteracted(false); // This is very important. Because its just making a dialog visible and is no real interaction.
-
-                if (alertModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
-                    ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
-                    return;
-                }
-
-                getTimeListHourlyDialog().show(getSupportFragmentManager(), TimeListHourlyDialog.TAG);
-            }
-        });
-
-        chk_time_list_anytime = findViewById(R.id.chk_time_list_anytime);
-        chk_time_list_anytime.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (!isRefreshing() && isUserInteracted()) {
-
-                buttonView.setChecked(!buttonView.isChecked()); // Keep the check status as it is here. Real changes will occur once user return from dialog
-                setUserInteracted(false); // This is very important. Because its just making a dialog visible and is no real interaction.
-
-                if (alertModel.getRepeatModel().getRepeatOption() == RepeatModel.ReminderRepeatOptions.HOURLY) {
-                    ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
-                    return;
-                }
-
-                //final TimeListAnyTimeDialog timeListInputHourlyDialog = new TimeListAnyTimeDialog();
-                getTimeListAnyTimeDialog().show(getSupportFragmentManager(), TimeListAnyTimeDialog.TAG);
-            }
-        });
+//        chk_time_list_hours = findViewById(R.id.chk_time_list_hours);
+//        chk_time_list_hours.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (!isRefreshing() && isUserInteracted()) {
+//
+//                buttonView.setChecked(!buttonView.isChecked()); // Keep the check status as it is here. Real changes will occur once user return from dialog
+//                setUserInteracted(false); // This is very important. Because its just making a dialog visible and is no real interaction.
+//
+//                if (alertModel.getRepeatModel().getRepeatOption() == RepeatModel.PeriodicRepeatOptions.HOURLY) {
+//                    ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
+//                    return;
+//                }
+//
+//                getTimeListHourlyDialog().show(getSupportFragmentManager(), TimeListHourlyDialog.TAG);
+//            }
+//        });
+//
+//        chk_time_list_anytime = findViewById(R.id.chk_time_list_anytime);
+//        chk_time_list_anytime.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (!isRefreshing() && isUserInteracted()) {
+//
+//                buttonView.setChecked(!buttonView.isChecked()); // Keep the check status as it is here. Real changes will occur once user return from dialog
+//                setUserInteracted(false); // This is very important. Because its just making a dialog visible and is no real interaction.
+//
+//                if (alertModel.getRepeatModel().getRepeatOption() == RepeatModel.PeriodicRepeatOptions.HOURLY) {
+//                    ToastHelper.showShort(ReminderInput.this, "Time lists aren't possible if repeat is set to hourly. Please change repeat option");
+//                    return;
+//                }
+//
+//                //final TimeListAnyTimeDialog timeListInputHourlyDialog = new TimeListAnyTimeDialog();
+//                getTimeListAnyTimeDialog().show(getSupportFragmentManager(), TimeListAnyTimeDialog.TAG);
+//            }
+//        });
 
         final LinearLayoutCompat mnu_reminder_name = findViewById(R.id.mnu_reminder_name);
         mnu_reminder_name.setOnClickListener(v -> getNameDialog().show(getSupportFragmentManager(), NameDialog.TAG));
@@ -579,16 +533,16 @@ public class ReminderInput
         tv_reminder_AmPm.setText(StringHelper.toAmPm(alertModel.getTimeModel().getTime()));
         btn_reminder_date.setText(StringHelper.toWeekdayDate(this, alertModel.getTimeModel().getTime()));
 
-        chk_time_list_hours.setChecked(false);
-        chk_time_list_anytime.setChecked(false);
-        tv_reminder_time_list_summary.setText(alertModel.getTimeModel().toSpannableString(
-                getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor))));
+//        chk_time_list_hours.setChecked(false);
+//        chk_time_list_anytime.setChecked(false);
+//        tv_reminder_time_list_summary.setText(alertModel.getTimeModel().toSpannableString(
+//                getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor))));
 
-        if (alertModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.HOURLY) {
-            chk_time_list_hours.setChecked(true);
-        } else if (alertModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.ANYTIME) {
-            chk_time_list_anytime.setChecked(true);
-        }
+//        if (alertModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.HOURLY) {
+//            chk_time_list_hours.setChecked(true);
+//        } else if (alertModel.getTimeModel().getTimeListMode() == TimeModel.TimeListModes.ANYTIME) {
+//            chk_time_list_anytime.setChecked(true);
+//        }
 
         if (alertModel.getTimeModel().isHasScheduledTime()) {
             lvc_diff_next_reminder_trigger.setVisibility(View.VISIBLE);
