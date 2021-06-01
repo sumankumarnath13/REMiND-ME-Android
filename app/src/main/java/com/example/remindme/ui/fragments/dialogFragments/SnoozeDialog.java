@@ -39,10 +39,6 @@ public class SnoozeDialog extends DialogFragmentBase {
         }
         return listener;
     }
-//
-//    public void setListener(ISnoozeInputDialogListener listener) {
-//        this.listener = listener;
-//    }
 
     private SnoozeModel model;
     private AppCompatRadioButton rdo_reminder_snooze_m5;
