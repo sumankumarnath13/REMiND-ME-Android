@@ -70,12 +70,9 @@ public final class RemindMeDatePickerDialog extends DialogFragmentBase implement
     private Calendar getCalendar() {
         if (calendar == null) {
             calendar = Calendar.getInstance();
+            currentDate = calendar.getTime();
         }
         return calendar;
-    }
-
-    private void setCalendar(Date date) {
-        getCalendar().setTime(date);
     }
 
     private Date currentDate;
@@ -106,14 +103,12 @@ public final class RemindMeDatePickerDialog extends DialogFragmentBase implement
             onDateChangeListener = (view, year, monthOfYear, dayOfMonth) -> {
                 if (getDialog() != null) {
                     final Button positiveButton = ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE);
-                    final Calendar calendar = Calendar.getInstance();
-                    final Date currentDate = calendar.getTime();
 
-                    calendar.set(Calendar.YEAR, year);
-                    calendar.set(Calendar.MONTH, monthOfYear);
-                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    getCalendar().set(Calendar.YEAR, year);
+                    getCalendar().set(Calendar.MONTH, monthOfYear);
+                    getCalendar().set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                    if (calendar.getTime().compareTo(currentDate) >= 0) {
+                    if (getCalendar().getTime().compareTo(currentDate) >= 0) {
                         positiveButton.setText(getResources().getString(R.string.acton_dialog_positive));
                         positiveButton.setEnabled(true);
                         positiveButton.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSoothingText)));
@@ -137,6 +132,14 @@ public final class RemindMeDatePickerDialog extends DialogFragmentBase implement
         return dateCalculatorDialog;
     }
 
+    private static final String MODEL_KEY = "MODEL_KEY";
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putLong(MODEL_KEY, getCalendar().getTimeInMillis());
+        super.onSaveInstanceState(outState);
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,7 +150,11 @@ public final class RemindMeDatePickerDialog extends DialogFragmentBase implement
             return;
         }
 
-        setCalendar(getListener().onGetListenerDate());
+        if (savedInstanceState == null) {
+            getCalendar().setTime(getListener().onGetListenerDate());
+        } else {
+            getCalendar().setTimeInMillis(savedInstanceState.getLong(MODEL_KEY, 0));
+        }
     }
 
     @NonNull
@@ -166,8 +173,8 @@ public final class RemindMeDatePickerDialog extends DialogFragmentBase implement
             datePicker.setFirstDayOfWeek(AppSettingsHelper.getInstance().getFirstDayOfWeek());
         }
 
-        AppCompatButton xxx = view.findViewById(R.id.xxx);
-        xxx.setOnClickListener(v -> getDateCalculatorDialog().show(getParentFragmentManager(), DateCalculatorDialog.TAG));
+        final AppCompatButton btnDateCalculatorDialog = view.findViewById(R.id.btn_date_calculator_dialog);
+        btnDateCalculatorDialog.setOnClickListener(v -> getDateCalculatorDialog().show(getParentFragmentManager(), DateCalculatorDialog.TAG));
 
         datePicker.init(getYear(), getMonthOfYear(), getDayOfMonth(), getOnDateChangeListener());
         // This calculator suppose to help user getting their target time by adding days/months from their recalled date.
@@ -180,13 +187,8 @@ public final class RemindMeDatePickerDialog extends DialogFragmentBase implement
         builder.setView(view)
                 .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
 
-                    final Calendar setterCalendar = Calendar.getInstance();
-                    setterCalendar.set(Calendar.YEAR, datePicker.getYear());
-                    setterCalendar.set(Calendar.MONTH, datePicker.getMonth());
-                    setterCalendar.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
-
-                    if (getCurrentDate().compareTo(setterCalendar.getTime()) <= 0) {
-                        getListener().onSetListenerDate(setterCalendar.getTime());
+                    if (getCurrentDate().compareTo(getCalendar().getTime()) <= 0) {
+                        getListener().onSetListenerDate(getCalendar().getTime());
                     } else {
                         ToastHelper.showError(this.getContext(), "Selected date is in past!");
                     }

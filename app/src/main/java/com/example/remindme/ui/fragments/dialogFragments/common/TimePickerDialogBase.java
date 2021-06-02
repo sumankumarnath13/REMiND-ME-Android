@@ -2,6 +2,7 @@ package com.example.remindme.ui.fragments.dialogFragments.common;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.remindme.helpers.ToastHelper;
@@ -38,10 +39,6 @@ public abstract class TimePickerDialogBase
         return calendar;
     }
 
-    protected void setCalendar(Date date) {
-        getCalendar().setTime(date);
-    }
-
     protected int getHourOfDay() {
         return getCalendar().get(Calendar.HOUR_OF_DAY);
     }
@@ -54,6 +51,14 @@ public abstract class TimePickerDialogBase
         return getCalendar().getTime();
     }
 
+    private static final String MODEL_KEY = "MODEL_KEY";
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putLong(MODEL_KEY, getCalendar().getTimeInMillis());
+        super.onSaveInstanceState(outState);
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +69,11 @@ public abstract class TimePickerDialogBase
             return;
         }
 
-        setCalendar(getListener().onGetListenerTime());
+        if (savedInstanceState == null) {
+            getCalendar().setTime(getListener().onGetListenerTime());
+        } else {
+            getCalendar().setTimeInMillis(savedInstanceState.getLong(MODEL_KEY, 0));
+        }
     }
 
     @Override

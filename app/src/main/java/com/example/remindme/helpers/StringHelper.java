@@ -132,11 +132,14 @@ public class StringHelper {
 
     public static String trimEnd(String value, String valueToTrim) {
         if (!isNullOrEmpty(value) && !isNullOrEmpty(valueToTrim)) {
-            StringBuilder stringBuilder = new StringBuilder(value);
+            final StringBuilder stringBuilder = new StringBuilder(value);
             int lastIndex = stringBuilder.lastIndexOf(valueToTrim);
             int length = stringBuilder.length();
+
             if (lastIndex >= 0 && length > 0) {
-                stringBuilder.replace(lastIndex, lastIndex + 1, "");
+                if (length - lastIndex == valueToTrim.length()) {
+                    stringBuilder.replace(lastIndex, lastIndex + 1, "");
+                }
             }
             return stringBuilder.toString();
         } else {

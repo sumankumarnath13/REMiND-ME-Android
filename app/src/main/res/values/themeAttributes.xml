@@ -16,5 +16,4 @@
     <attr name="themeDimText" format="reference" />
     <attr name="themeSoothingText" format="reference" />
 
-
 </resources>

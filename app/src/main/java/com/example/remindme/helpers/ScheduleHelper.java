@@ -94,8 +94,6 @@ public class ScheduleHelper {
                     calculator.add(Calendar.HOUR_OF_DAY, 1);
                 }
 
-                //calculator.add(Calendar.HOUR_OF_DAY, 1);
-
             } else if (getMultipleTimeRepeatModel().getTimeListMode() == MultipleTimeRepeatModel.TimeListModes.SELECTED_HOURS
                     && getMultipleTimeRepeatModel().getTimeListHours().size() > 0) {
 

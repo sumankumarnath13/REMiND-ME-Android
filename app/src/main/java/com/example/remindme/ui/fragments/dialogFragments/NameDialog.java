@@ -45,24 +45,38 @@ public final class NameDialog extends DialogFragmentBase {
         return listener;
     }
 
-//    public void setListener(INameInputDialogListener listener) {
-//        this.listener = listener;
-//    }
+    private String model;
+
+    protected String getModel() {
+        return model;
+    }
 
     private static final int SPEECH_REQUEST_CODE = 117;
     private AppCompatEditText txt_reminder_name;
     private AppCompatTextView tv_reminder_name_limit_msg;
     private static final int NAME_MAX_LENGTH = 50;
+    private static final String MODEL_KEY = "MODEL_KEY";
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(MODEL_KEY, getModel());
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //listener = getListener(INameInputDialogListener.class);
-
         if (getListener() == null) {
             ToastHelper.showError(getContext(), "Dialog listener is not set!");
             dismiss();
+            return;
+        }
+
+        if (savedInstanceState == null) {
+            model = getListener().getNameInputDialogModel();
+        } else {
+            model = savedInstanceState.getString(MODEL_KEY);
         }
     }
 
@@ -91,7 +105,7 @@ public final class NameDialog extends DialogFragmentBase {
         txt_reminder_name = view.findViewById(R.id.txt_reminder_name);
         tv_reminder_name_limit_msg = view.findViewById(R.id.tv_reminder_name_limit_msg);
 
-        txt_reminder_name.setText(getListener().getNameInputDialogModel());
+        txt_reminder_name.setText(getModel());
         txt_reminder_name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

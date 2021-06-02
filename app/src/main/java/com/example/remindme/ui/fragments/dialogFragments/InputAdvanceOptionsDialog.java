@@ -7,7 +7,6 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,10 +15,8 @@ import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -38,35 +35,12 @@ import com.example.remindme.viewModels.RingingModel;
 import com.example.remindme.viewModels.SnoozeModel;
 import com.example.remindme.viewModels.factories.AlertViewModelFactory;
 
-import java.util.List;
-
 public class InputAdvanceOptionsDialog extends DialogFragmentBase
         implements
-        NoteDialog.INoteInputDialogListener,
         SnoozeDialog.ISnoozeInputDialogListener,
         AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "InputAdvanceOptionsDialog";
-
-    @Override
-    public void setNoteDialogModel(String note) {
-        getModel().setNote(note);
-        refresh();
-    }
-
-    @Override
-    public String getNoteDialogModel() {
-        return getModel().getNote();
-    }
-
-    private NoteDialog noteDialog;
-
-    private NoteDialog getNoteDialog() {
-        if (noteDialog == null) {
-            noteDialog = new NoteDialog();
-        }
-        return noteDialog;
-    }
 
     private SnoozeDialog snoozeDialog;
 
@@ -85,11 +59,6 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
             if (uri != null) {
                 getModel().getRingingModel().setRingToneUri(uri);
             }
-            refresh();
-        } else if (requestCode == NOTE_SPEECH_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK && data != null) {
-            final List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            final String spokenText = results.get(0);
-            getModel().setNote(spokenText);
             refresh();
         }
     }
@@ -193,9 +162,7 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
                         .getInputAdvanceOptionsModel())).get(AlertModel.class);
     }
 
-    private static final int NOTE_SPEECH_REQUEST_CODE = 113;
     private static final int RINGTONE_DIALOG_REQ_CODE = 117;
-    private AppCompatTextView tv_reminder_note_summary;
     private AppCompatTextView tv_reminder_tone_summary;
     private SwitchCompat sw_reminder_snooze;
     private AppCompatTextView tv_reminder_snooze_summary;
@@ -229,19 +196,10 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
 
                 });
 
+        if (getContext() == null)
+            return builder.create();
+
         alarm_only_layout = view.findViewById(R.id.alarm_only_layout);
-
-        tv_reminder_note_summary = view.findViewById(R.id.tv_reminder_note_summary);
-        final LinearLayoutCompat mnu_reminder_note = view.findViewById(R.id.mnu_reminder_note);
-        mnu_reminder_note.setOnClickListener(v -> getNoteDialog().show(getParentFragmentManager(), NoteDialog.TAG));
-
-        final AppCompatImageView img_reminder_note_voice_input = view.findViewById(R.id.img_reminder_note_voice_input);
-        img_reminder_note_voice_input.setOnClickListener(v -> {
-            final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            // This starts the activity and populates the intent with the speech text.
-            startActivityForResult(intent, NOTE_SPEECH_REQUEST_CODE);
-        });
 
         tv_reminder_snooze_summary = view.findViewById(R.id.tv_reminder_snooze_summary);
         sw_reminder_snooze = view.findViewById(R.id.sw_reminder_snooze);
@@ -323,7 +281,6 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
 
             getModel().getRingingModel().setIncreaseVolumeGradually(sw_gradually_increase_volume.isChecked());
             refresh();
-
         });
 
         sw_reminder_vibrate = view.findViewById(R.id.sw_reminder_vibrate);
@@ -338,12 +295,12 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
         ring_duration_spinner = view.findViewById(R.id.ring_duration_spinner);
         final ArrayAdapter<CharSequence> ring_duration_adapter = ArrayAdapter.createFromResource(getContext(), R.array.values_ring_duration, R.layout.item_dropdown_fragment_simple_spinner);
         ring_duration_spinner.setAdapter(ring_duration_adapter);
-        ring_duration_spinner.setOnItemSelectedListener(this);
+        ring_duration_spinner.setOnItemSelectedListener(InputAdvanceOptionsDialog.this);
 
         vibrate_pattern_spinner = view.findViewById(R.id.vibrate_pattern_spinner);
         final ArrayAdapter<CharSequence> vibrate_pattern_adapter = ArrayAdapter.createFromResource(getContext(), R.array.values_vibration_pattern, R.layout.item_dropdown_fragment_simple_spinner);
         vibrate_pattern_spinner.setAdapter(vibrate_pattern_adapter);
-        vibrate_pattern_spinner.setOnItemSelectedListener(this);
+        vibrate_pattern_spinner.setOnItemSelectedListener(InputAdvanceOptionsDialog.this);
 
         refresh();
 
@@ -353,7 +310,6 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
     @Override
     protected void onUIRefresh() {
         // No radio group wont work for the given layout. So resetting programmatically is required.
-        tv_reminder_note_summary.setText(getModel().getNote());
         if (getModel().isReminder()) {
             alarm_only_layout.setVisibility(View.GONE);
         } else {

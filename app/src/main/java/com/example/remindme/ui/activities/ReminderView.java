@@ -148,10 +148,6 @@ public class ReminderView extends ActivityBase
                 tv_reminder_date.setText(StringHelper.toWeekdayDate(this, alertModel.getTimeModel().getTime()));
             }
 
-            final AppCompatTextView tv_reminder_time_list_summary = findViewById(R.id.tv_reminder_time_list_summary);
-            tv_reminder_time_list_summary.setText(alertModel.getTimeModel().toSpannableString(
-                    getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor))));
-
             if (!StringHelper.isNullOrEmpty(alertModel.getName())) {
                 tv_reminder_name.setVisibility(View.VISIBLE);
                 tv_reminder_name.setText(alertModel.getName());
@@ -218,7 +214,6 @@ public class ReminderView extends ActivityBase
 
                 if (alertModel.getReminderModel().getTime() != null) {
                     tv_expired.setVisibility(View.VISIBLE);
-                    //tv_expired.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeWarningColor)));
                     tv_expired.setText(
                             String.format(Locale.getDefault(), "Reminded for %s",
                                     StringHelper.toTimeWeekdayDate(this,
@@ -227,7 +222,6 @@ public class ReminderView extends ActivityBase
 
                 if (alertModel.getReminderModel().isCompleted()) {
                     tv_expired.setVisibility(View.VISIBLE);
-                    //tv_expired.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor)));
                     tv_expired.setText(
                             String.format(Locale.getDefault(), "Completed for %s",
                                     StringHelper.toTimeWeekdayDate(this,
@@ -237,8 +231,6 @@ public class ReminderView extends ActivityBase
                 } else if (alertModel.isExpired()) {
                     tv_expired.setVisibility(View.VISIBLE);
                     tv_expired.setText(getString(R.string.label_expired));
-                    //tv_expired.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor)));
-
                     switchEnabled.setVisibility(View.GONE);
                 }
             } else {
@@ -247,7 +239,6 @@ public class ReminderView extends ActivityBase
                 if (alertModel.isExpired()) {
                     switchEnabled.setVisibility(View.GONE);
                     tv_expired.setVisibility(View.VISIBLE);
-                    //tv_expired.setTextColor(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor)));
                     tv_expired.setText(getString(R.string.label_expired));
                 } else {
                     tv_expired.setVisibility(View.GONE);
@@ -260,7 +251,9 @@ public class ReminderView extends ActivityBase
             tv_reminder_snooze_summary.setText(alertModel.getSnoozeModel().toString());
 
             final AppCompatTextView tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
-            tv_reminder_repeat_summary.setText(alertModel.getRepeatModel().toString(this));
+            //tv_reminder_repeat_summary.setText(alertModel.getRepeatModel().toString(this));
+            tv_reminder_repeat_summary.setText(alertModel.getRepeatModel().toSpannableString(
+                    getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor)), this));
 
             final AppCompatTextView tv_reminder_tone_summary = findViewById(R.id.tv_reminder_tone_summary);
             final LinearLayoutCompat lv_alarm_tone_is_on = findViewById(R.id.lv_alarm_tone_is_on);

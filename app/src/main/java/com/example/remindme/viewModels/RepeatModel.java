@@ -1,10 +1,14 @@
 package com.example.remindme.viewModels;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
+import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.ScheduleHelper;
 import com.example.remindme.helpers.StringHelper;
 
@@ -217,7 +221,6 @@ public class RepeatModel extends ViewModel {
         return isValid;
     }
 
-
     @NonNull
     public String toString(Context context) {
 
@@ -225,35 +228,63 @@ public class RepeatModel extends ViewModel {
             return "OFF";
         }
 
+        final Calendar c = Calendar.getInstance();
+
         final StringBuilder builder = new StringBuilder();
 
         switch (getMultipleTimeRepeatModel().getTimeListMode()) {
             default:
-                builder.append("Once, ");
+                builder.append("At Once, ");
                 break;
             case HOURLY:
-                builder.append("On every hour ");
+                builder.append("Hourly, ");
                 break;
             case SELECTED_HOURS:
-                builder.append("On selected hours ");
+                c.setTime(getParent().getTimeModel().getTime());
+
+                final int min = c.get(Calendar.MINUTE);
+
+                if (AppSettingsHelper.getInstance().isUse24hourTime()) {
+                    for (int i = 0; i < getMultipleTimeRepeatModel().getTimeListHours().size(); i++) {
+                        builder.append(StringHelper.get24(getMultipleTimeRepeatModel().getTimeListHours().get(i), min)).append(", ");
+                    }
+                } else {
+                    for (int i = 0; i < getMultipleTimeRepeatModel().getTimeListHours().size(); i++) {
+                        builder.append(StringHelper.get12(getMultipleTimeRepeatModel().getTimeListHours().get(i), min)).append(", ");
+                    }
+                }
+
                 break;
             case ANYTIME:
-                builder.append("On different times ");
+                builder.append("At ");
+
+                if (AppSettingsHelper.getInstance().isUse24hourTime()) {
+                    for (int i = 0; i < getMultipleTimeRepeatModel().getTimeListTimes().size(); i++) {
+                        c.setTime(getMultipleTimeRepeatModel().getTimeListTimes().get(i));
+                        builder.append(StringHelper.get24(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE))).append(", ");
+                    }
+                } else {
+                    for (int i = 0; i < getMultipleTimeRepeatModel().getTimeListTimes().size(); i++) {
+                        c.setTime(getMultipleTimeRepeatModel().getTimeListTimes().get(i));
+                        builder.append(StringHelper.get12(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE))).append(", ");
+                    }
+                }
+
                 break;
             case CUSTOM_INTERVAL:
-                builder.append("On every interval ");
+                builder.append("At every interval, ");
                 break;
         }
 
         switch (getPeriodicRepeatModel().getRepeatOption()) {
             default:
             case OFF:
-                return "for selected day ";
+                builder.append("No repeat");
             case DAILY:
-                builder.append("of everyday ");
+                builder.append("Daily");
                 break;
             case DAILY_CUSTOM:
-                builder.append("of every ");
+                builder.append("On every ");
                 for (int i = 0; i < getPeriodicRepeatModel().getCustomDays().size(); i++) {
                     int value = getPeriodicRepeatModel().getCustomDays().get(i);
                     switch (value) {
@@ -281,13 +312,13 @@ public class RepeatModel extends ViewModel {
                             break;
                     }
                 }
-                builder.append("of every week ");
+                builder.append("on every week");
                 break;
             case WEEKLY:
-                builder.append("of every week ");
+                builder.append("Weekly");
                 break;
             case WEEKLY_CUSTOM:
-                builder.append("of every ");
+                builder.append("On every ");
                 for (int i = 0; i < getPeriodicRepeatModel().getCustomWeeks().size(); i++) {
                     int value = getPeriodicRepeatModel().getCustomWeeks().get(i);
                     switch (value) {
@@ -309,10 +340,10 @@ public class RepeatModel extends ViewModel {
                             break;
                     }
                 }
-                builder.append("week of every month ");
+                builder.append("week");
                 break;
             case MONTHLY:
-                builder.append("of every month ");
+                builder.append("Monthly");
                 break;
             case MONTHLY_CUSTOM:
                 builder.append("of every ");
@@ -358,13 +389,13 @@ public class RepeatModel extends ViewModel {
                             break;
                     }
                 }
-                builder.append("of every year ");
+                builder.append("on every year");
                 break;
             case YEARLY:
-                builder.append("of every year ");
+                builder.append("Yearly");
                 break;
             case OTHER:
-                builder.append("of every ");
+                builder.append("On every ");
                 switch (getPeriodicRepeatModel().getCustomTimeUnit()) {
                     case DAYS:
                         if (getPeriodicRepeatModel().getCustomTimeValue() == 1)
@@ -416,7 +447,7 @@ public class RepeatModel extends ViewModel {
                 builder.append("Selected hours, ");
                 break;
             case ANYTIME:
-                builder.append("Different times, ");
+                builder.append("Selected times, ");
                 break;
             case CUSTOM_INTERVAL:
                 builder.append("Interval, ");
@@ -454,6 +485,30 @@ public class RepeatModel extends ViewModel {
         }
 
         return builder.toString();
+    }
+
+    public Spannable toSpannableString(int highlightColor, Context context) {
+        final Calendar c = Calendar.getInstance();
+        c.setTime(getParent().getTimeModel().getTime());
+
+        String foFind;
+        if (AppSettingsHelper.getInstance().isUse24hourTime()) {
+            foFind = StringHelper.get24(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
+        } else {
+            foFind = StringHelper.get12(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
+        }
+
+        final String timeList = this.toString(context);
+        final Spannable spannable = new SpannableString(timeList);
+
+        final int startIndex = timeList.indexOf(foFind);
+        if (startIndex < 0) {
+            return spannable;
+        }
+
+        final int endIndex = startIndex + foFind.length();
+        spannable.setSpan(new ForegroundColorSpan(highlightColor), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
     }
 
 }

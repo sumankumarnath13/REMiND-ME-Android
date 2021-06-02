@@ -45,24 +45,38 @@ public class NoteDialog extends DialogFragmentBase {
         return listener;
     }
 
-//    public void setListener(INoteInputDialogListener listener) {
-//        this.listener = listener;
-//    }
+    private String model;
+
+    protected String getModel() {
+        return model;
+    }
 
     private static final int SPEECH_REQUEST_CODE = 117;
     private AppCompatEditText txt_reminder_note;
     private AppCompatTextView tv_reminder_note_limit_msg;
     private static final int NOTE_MAX_LENGTH = 500;
+    private static final String MODEL_KEY = "MODEL_KEY";
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(MODEL_KEY, getModel());
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //listener = getListener(INoteInputDialogListener.class);
-
         if (getListener() == null) {
             ToastHelper.showError(getContext(), "Listener incompatible!");
             dismiss();
+            return;
+        }
+
+        if (savedInstanceState == null) {
+            model = getListener().getNoteDialogModel();
+        } else {
+            model = savedInstanceState.getString(MODEL_KEY);
         }
     }
 
@@ -96,7 +110,7 @@ public class NoteDialog extends DialogFragmentBase {
         txt_reminder_note = view.findViewById(R.id.tv_reminder_note);
         tv_reminder_note_limit_msg = view.findViewById(R.id.tv_reminder_note_limit_msg);
 
-        txt_reminder_note.setText(getListener().getNoteDialogModel());
+        txt_reminder_note.setText(getModel());
         txt_reminder_note.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

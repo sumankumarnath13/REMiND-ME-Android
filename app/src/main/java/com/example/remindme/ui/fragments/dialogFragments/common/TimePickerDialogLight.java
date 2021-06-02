@@ -29,23 +29,22 @@ public class TimePickerDialogLight extends TimePickerDialogBase {
 
         final View view = inflater.inflate(R.layout.common_dialog_time_picker_light, null);
 
-
         final TimePicker timePicker = view.findViewById(R.id.time_picker_light);
+
+        timePicker.setOnTimeChangedListener((view1, hourOfDay, minute) -> {
+            getCalendar().set(Calendar.HOUR_OF_DAY, hourOfDay);
+            getCalendar().set(Calendar.MINUTE, minute);
+            getCalendar().set(Calendar.SECOND, 0);
+            getCalendar().set(Calendar.MILLISECOND, 0);
+        });
+
+        timePicker.setIs24HourView(AppSettingsHelper.getInstance().isUse24hourTime());
         timePicker.setCurrentHour(getHourOfDay());
         timePicker.setCurrentMinute(getMin());
-        timePicker.setIs24HourView(AppSettingsHelper.getInstance().isUse24hourTime());
 
         builder.setView(view).setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
 
-            final Calendar calendar = Calendar.getInstance();
-
-            calendar.setTime(getTime());
-            calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
-            calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-
-            getListener().onSetListenerTime(calendar.getTime());
+            getListener().onSetListenerTime(getCalendar().getTime());
 
         }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
         });

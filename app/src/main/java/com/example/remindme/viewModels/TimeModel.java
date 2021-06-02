@@ -1,37 +1,19 @@
 package com.example.remindme.viewModels;
 
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
-import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.ScheduleHelper;
-import com.example.remindme.helpers.StringHelper;
 
 import java.util.Calendar;
 import java.util.Date;
 
 public class TimeModel extends ViewModel {
 
-//    public enum TimeListModes {
-//        NONE,
-//        HOURLY,
-//        INTERVAL,
-//        ANYTIME,
-//    }
-
     public TimeModel copy() {
-        TimeModel instance = new TimeModel(parent);
-
+        final TimeModel instance = new TimeModel(parent);
         instance.time = time;
         instance.scheduledTime = scheduledTime;
-//        instance.timeListMode = timeListMode;
-//        instance.setTimeListTimes(getTimeListTimes());
-//        instance.setTimeListHours(getTimeListHours());
-
         return instance;
     }
 
@@ -51,7 +33,6 @@ public class TimeModel extends ViewModel {
         time = calendar.getTime();
 
     }
-
 
     private Date time;
 
@@ -243,30 +224,5 @@ public class TimeModel extends ViewModel {
 
         return "";
     }
-
-    public Spannable toSpannableString(int highlightColor) {
-        final Calendar c = Calendar.getInstance();
-        c.setTime(isHasScheduledTime() ? getScheduledTime() : getTime());
-
-        String foFind;
-        if (AppSettingsHelper.getInstance().isUse24hourTime()) {
-            foFind = StringHelper.get24(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
-        } else {
-            foFind = StringHelper.get12(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
-        }
-
-        final String timeList = toString();
-        final Spannable spannable = new SpannableString(timeList);
-
-        final int startIndex = timeList.indexOf(foFind);
-        if (startIndex < 0) {
-            return spannable;
-        }
-
-        final int endIndex = startIndex + foFind.length();
-        spannable.setSpan(new ForegroundColorSpan(highlightColor), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spannable;
-    }
-
 
 }

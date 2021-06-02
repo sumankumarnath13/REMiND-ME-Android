@@ -6,6 +6,7 @@ import android.speech.RecognizerIntent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -20,6 +21,7 @@ import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.helpers.ToastHelper;
 import com.example.remindme.ui.fragments.dialogFragments.InputAdvanceOptionsDialog;
 import com.example.remindme.ui.fragments.dialogFragments.NameDialog;
+import com.example.remindme.ui.fragments.dialogFragments.NoteDialog;
 import com.example.remindme.ui.fragments.dialogFragments.RepeatDialog;
 import com.example.remindme.ui.fragments.dialogFragments.common.RemindMeDatePickerDialog;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBase;
@@ -40,6 +42,7 @@ public class ReminderInput
         implements
         TimePickerDialogBase.ITimePickerListener,
         RemindMeDatePickerDialog.IDatePickerListener,
+        NoteDialog.INoteInputDialogListener,
         RepeatDialog.IRepeatInputDialogListener,
         NameDialog.INameInputDialogListener,
         InputAdvanceOptionsDialog.IInputAdvanceOptions {
@@ -70,8 +73,18 @@ public class ReminderInput
 
     @Override
     public String getNameInputDialogModel() {
-        alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
         return alertModel.getName();
+    }
+
+    @Override
+    public void setNoteDialogModel(String note) {
+        alertModel.setNote(note);
+        refresh();
+    }
+
+    @Override
+    public String getNoteDialogModel() {
+        return alertModel.getNote();
     }
 
     @Override
@@ -89,7 +102,6 @@ public class ReminderInput
 
     @Override
     public RepeatModel getRepeatDialogModel() {
-        alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
         return alertModel.getRepeatModel();
     }
 
@@ -101,7 +113,6 @@ public class ReminderInput
 
     @Override
     public Date onGetListenerDate() {
-        alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
         return alertModel.getTimeModel().getTime();
     }
 
@@ -113,15 +124,12 @@ public class ReminderInput
 
     @Override
     public Date onGetListenerTime() {
-        alertModel = new ViewModelProvider(ReminderInput.this).get(AlertModel.class);
         return alertModel.getTimeModel().getTime();
     }
 
     private static final int NAME_SPEECH_REQUEST_CODE = 119;
-    //    private static final String MORE_INPUT_UI_STATE = "MORE_INPUT";
-//    private boolean isExtraInputsVisible;
+    private static final int NOTE_SPEECH_REQUEST_CODE = 113;
     private AlertModel alertModel = null;
-
 
     private AppCompatTextView tv_reminder_trigger_time;
     private AppCompatTextView tv_reminder_trigger_date;
@@ -129,18 +137,13 @@ public class ReminderInput
     private AppCompatTextView tv_reminder_AmPm;
     private AppCompatButton btn_reminder_date;
     private AppCompatTextView tv_reminder_name_summary;
+    private AppCompatTextView tv_reminder_note_summary;
     private AppCompatCheckBox chk_reminder;
     private AppCompatCheckBox chk_alarm;
-
     private SwitchCompat sw_reminder_repeat;
     private AppCompatTextView tv_reminder_repeat_summary;
 
-    //    private LinearLayoutCompat advance_options_layout;
-//    private AppCompatTextView tv_advance_options_status;
-//    private AppCompatImageView advance_options_image_view;
-//    private NestedScrollView sv_container;
     private LinearLayoutCompat lvc_diff_next_reminder_trigger;
-
 
     private NameDialog nameDialog;
 
@@ -152,6 +155,15 @@ public class ReminderInput
     }
 
     private RepeatDialog repeatDialog;
+
+    private NoteDialog noteDialog;
+
+    private NoteDialog getNoteDialog() {
+        if (noteDialog == null) {
+            noteDialog = new NoteDialog();
+        }
+        return noteDialog;
+    }
 
     private RepeatDialog getRepeatDialog() {
         if (repeatDialog == null) {
@@ -200,6 +212,11 @@ public class ReminderInput
             final String spokenText = results.get(0);
             alertModel.setName(spokenText);
             refresh();
+        } else if (requestCode == NOTE_SPEECH_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK && data != null) {
+            final List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            final String spokenText = results.get(0);
+            alertModel.setNote(spokenText);
+            refresh();
         }
 
     }
@@ -220,6 +237,18 @@ public class ReminderInput
         }
 
         tv_reminder_name_summary = findViewById(R.id.tv_reminder_name_summary);
+        tv_reminder_note_summary = findViewById(R.id.tv_reminder_note_summary);
+        final LinearLayoutCompat mnu_reminder_note = findViewById(R.id.mnu_reminder_note);
+        mnu_reminder_note.setOnClickListener(v -> getNoteDialog().show(getSupportFragmentManager(), NoteDialog.TAG));
+
+        final AppCompatImageView img_reminder_note_voice_input = findViewById(R.id.img_reminder_note_voice_input);
+        img_reminder_note_voice_input.setOnClickListener(v -> {
+            final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            // This starts the activity and populates the intent with the speech text.
+            startActivityForResult(intent, NOTE_SPEECH_REQUEST_CODE);
+        });
+
         tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
 
         chk_reminder = findViewById(R.id.chk_reminder);
@@ -283,15 +312,10 @@ public class ReminderInput
             startActivityForResult(intent, NAME_SPEECH_REQUEST_CODE);
         });
 
-        //lv_reminder_extra_inputs = findViewById(R.id.lv_reminder_extra_inputs);
-//        tv_advance_options_status = findViewById(R.id.tv_advance_options_status);
-//        advance_options_image_view = findViewById(R.id.advance_options_image_view);
-        LinearLayoutCompat advance_options_layout = findViewById(R.id.advance_options_layout);
+        final LinearLayoutCompat advance_options_layout = findViewById(R.id.advance_options_layout);
         advance_options_layout.setOnClickListener(v -> {
             getInputAdvanceOptionsDialog().show(getSupportFragmentManager(), InputAdvanceOptionsDialog.TAG);
         });
-
-//        sv_container = findViewById(R.id.sv_container);
 
         refresh();
 
@@ -314,37 +338,15 @@ public class ReminderInput
         }
 
         tv_reminder_name_summary.setText(alertModel.getName());
-
+        tv_reminder_note_summary.setText(alertModel.getNote());
 
         chk_reminder.setChecked(alertModel.isReminder());
         chk_alarm.setChecked(!alertModel.isReminder());
 
-        tv_reminder_repeat_summary.setText(alertModel.getRepeatModel().toString(this));
+        tv_reminder_repeat_summary.setText(alertModel.getRepeatModel().toSpannableString(
+                getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor)), this));
+
         sw_reminder_repeat.setChecked(alertModel.getRepeatModel().isEnabled());
-
-        //setExtraInputs();
     }
-
-
-//    private void setExtraInputs() {
-//
-//        if (isExtraInputsVisible) {
-//
-//            advance_options_image_view.setImageResource(R.drawable.ic_expand_up);
-//            advance_options_image_view.setColorFilter(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeDangerColor)),
-//                    android.graphics.PorterDuff.Mode.SRC_IN);
-//            tv_advance_options_status.setText(R.string.hide_advance_options_label);
-//            lv_reminder_extra_inputs.setVisibility(View.VISIBLE);
-//
-//        } else {
-//
-//            advance_options_image_view.setImageResource(R.drawable.ic_expand_down);
-//            advance_options_image_view.setColorFilter(getResources().getColor(resolveRefAttributeResourceId(R.attr.themeSuccessColor)),
-//                    android.graphics.PorterDuff.Mode.SRC_IN);
-//            tv_advance_options_status.setText(R.string.show_advance_options_label);
-//            lv_reminder_extra_inputs.setVisibility(View.GONE);
-//
-//        }
-//    }
 
 }
