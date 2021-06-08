@@ -106,8 +106,14 @@ public class ReminderInput
     }
 
     @Override
-    public void onSetListenerDate(Date dateTime) {
-        alertModel.getTimeModel().setTime(dateTime);
+    public void onSetListenerDate(int year, int month, int dayOfMonth) {
+        final Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        alertModel.getTimeModel().setTime(calendar.getTime());
         refresh();
     }
 
@@ -117,8 +123,13 @@ public class ReminderInput
     }
 
     @Override
-    public void onSetListenerTime(Date dateTime) {
-        alertModel.getTimeModel().setTime(dateTime);
+    public void onSetListenerTime(int hourOfDay, int minute) {
+        final Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+
+        alertModel.getTimeModel().setTime(calendar.getTime());
         refresh();
     }
 
@@ -251,18 +262,25 @@ public class ReminderInput
 
         tv_reminder_repeat_summary = findViewById(R.id.tv_reminder_repeat_summary);
 
+        final LinearLayoutCompat advance_options_layout = findViewById(R.id.advance_options_layout);
+        advance_options_layout.setOnClickListener(v -> {
+            getInputAdvanceOptionsDialog().show(getSupportFragmentManager(), InputAdvanceOptionsDialog.TAG);
+        });
+
         chk_reminder = findViewById(R.id.chk_reminder);
         chk_reminder.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isUserInteracted()) {
-                alertModel.setReminder(isChecked);
+            if (isUserInteracted() && isChecked) {
+                advance_options_layout.setVisibility(View.GONE);
+                alertModel.setReminder(true);
                 refresh();
             }
         });
 
         chk_alarm = findViewById(R.id.chk_alarm);
         chk_alarm.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isUserInteracted()) {
-                alertModel.setReminder(!isChecked);
+            if (isUserInteracted() && isChecked) {
+                advance_options_layout.setVisibility(View.VISIBLE);
+                alertModel.setReminder(false);
                 refresh();
             }
         });
@@ -312,10 +330,6 @@ public class ReminderInput
             startActivityForResult(intent, NAME_SPEECH_REQUEST_CODE);
         });
 
-        final LinearLayoutCompat advance_options_layout = findViewById(R.id.advance_options_layout);
-        advance_options_layout.setOnClickListener(v -> {
-            getInputAdvanceOptionsDialog().show(getSupportFragmentManager(), InputAdvanceOptionsDialog.TAG);
-        });
 
         refresh();
 

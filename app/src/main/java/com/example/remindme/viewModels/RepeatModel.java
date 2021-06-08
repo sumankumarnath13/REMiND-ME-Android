@@ -18,7 +18,7 @@ import java.util.Date;
 public class RepeatModel extends ViewModel {
 
     public boolean isEnabled() {
-        return !(getMultipleTimeRepeatModel().getTimeListMode() == MultipleTimeRepeatModel.TimeListModes.OFF &&
+        return !(getTimelyRepeatModel().getTimeListMode() == TimelyRepeatModel.TimeListModes.OFF &&
                 getPeriodicRepeatModel().getRepeatOption() == PeriodicRepeatModel.PeriodicRepeatOptions.OFF);
     }
 
@@ -28,19 +28,19 @@ public class RepeatModel extends ViewModel {
                 getPeriodicRepeatModel().setRepeatOption(PeriodicRepeatModel.PeriodicRepeatOptions.DAILY);
             }
         } else {
-            getMultipleTimeRepeatModel().setTimeListMode(MultipleTimeRepeatModel.TimeListModes.OFF);
+            getTimelyRepeatModel().setTimeListMode(TimelyRepeatModel.TimeListModes.OFF);
             getPeriodicRepeatModel().setRepeatOption(PeriodicRepeatModel.PeriodicRepeatOptions.OFF);
         }
     }
 
-    private MultipleTimeRepeatModel multipleTimeRepeatModel;
+    private TimelyRepeatModel timelyRepeatModel;
 
-    public MultipleTimeRepeatModel getMultipleTimeRepeatModel() {
-        return multipleTimeRepeatModel;
+    public TimelyRepeatModel getTimelyRepeatModel() {
+        return timelyRepeatModel;
     }
 
-    public void setMultipleTimeRepeatModel(MultipleTimeRepeatModel multipleTimeRepeatModel) {
-        this.multipleTimeRepeatModel = multipleTimeRepeatModel;
+    public void setTimelyRepeatModel(TimelyRepeatModel timelyRepeatModel) {
+        this.timelyRepeatModel = timelyRepeatModel;
     }
 
     private PeriodicRepeatModel periodicRepeatModel;
@@ -57,10 +57,8 @@ public class RepeatModel extends ViewModel {
 
         RepeatModel instance = new RepeatModel(parent);
 
-        instance.getMultipleTimeRepeatModel().setTimeListMode(getMultipleTimeRepeatModel().getTimeListMode());
-        instance.getMultipleTimeRepeatModel().setTimeListHours(getMultipleTimeRepeatModel().getTimeListHours());
-        instance.getMultipleTimeRepeatModel().setTimeListTimes(getMultipleTimeRepeatModel().getTimeListTimes());
-
+        instance.getTimelyRepeatModel().setTimeListMode(getTimelyRepeatModel().getTimeListMode());
+        instance.getTimelyRepeatModel().setTimeListTimes(getTimelyRepeatModel().getTimeListTimes());
 
         instance.getPeriodicRepeatModel().setCustomDays(getPeriodicRepeatModel().getCustomDays());
         instance.getPeriodicRepeatModel().setCustomWeeks(getPeriodicRepeatModel().getCustomWeeks());
@@ -84,7 +82,7 @@ public class RepeatModel extends ViewModel {
     public RepeatModel(final AlertModel parent) {
         this.parent = parent;
         this.periodicRepeatModel = new PeriodicRepeatModel(this);
-        this.multipleTimeRepeatModel = new MultipleTimeRepeatModel(this);
+        this.timelyRepeatModel = new TimelyRepeatModel(this);
     }
 
     private boolean hasRepeatEnd;
@@ -141,21 +139,14 @@ public class RepeatModel extends ViewModel {
     public boolean isValid(final TimeModel timeModel, final RepeatModel repeatModel) {
         boolean isValid = false;
 
-        switch (repeatModel.getMultipleTimeRepeatModel().getTimeListMode()) {
+        switch (repeatModel.getTimelyRepeatModel().getTimeListMode()) {
             default:
-                repeatModel.getMultipleTimeRepeatModel().getTimeListTimes().clear();
-                repeatModel.getMultipleTimeRepeatModel().getTimeListHours().clear();
+                repeatModel.getTimelyRepeatModel().getTimeListTimes().clear();
                 isValid = true;
                 break;
             case SELECTED_HOURS:
-                if (repeatModel.getMultipleTimeRepeatModel().getTimeListHours().size() > 0) {
-                    repeatModel.getMultipleTimeRepeatModel().getTimeListTimes().clear();
-                    isValid = true;
-                }
-                break;
             case ANYTIME:
-                if (repeatModel.getMultipleTimeRepeatModel().getTimeListTimes().size() > 0) {
-                    repeatModel.getMultipleTimeRepeatModel().getTimeListHours().clear();
+                if (repeatModel.getTimelyRepeatModel().getTimeListTimes().size() > 0) {
                     isValid = true;
                 }
                 break;
@@ -228,11 +219,9 @@ public class RepeatModel extends ViewModel {
             return "OFF";
         }
 
-        final Calendar c = Calendar.getInstance();
-
         final StringBuilder builder = new StringBuilder();
 
-        switch (getMultipleTimeRepeatModel().getTimeListMode()) {
+        switch (getTimelyRepeatModel().getTimeListMode()) {
             default:
                 builder.append("At Once, ");
                 break;
@@ -240,33 +229,14 @@ public class RepeatModel extends ViewModel {
                 builder.append("Hourly, ");
                 break;
             case SELECTED_HOURS:
-                c.setTime(getParent().getTimeModel().getTime());
-
-                final int min = c.get(Calendar.MINUTE);
-
-                if (AppSettingsHelper.getInstance().isUse24hourTime()) {
-                    for (int i = 0; i < getMultipleTimeRepeatModel().getTimeListHours().size(); i++) {
-                        builder.append(StringHelper.get24(getMultipleTimeRepeatModel().getTimeListHours().get(i), min)).append(", ");
-                    }
-                } else {
-                    for (int i = 0; i < getMultipleTimeRepeatModel().getTimeListHours().size(); i++) {
-                        builder.append(StringHelper.get12(getMultipleTimeRepeatModel().getTimeListHours().get(i), min)).append(", ");
-                    }
-                }
-
-                break;
             case ANYTIME:
-                builder.append("At ");
-
                 if (AppSettingsHelper.getInstance().isUse24hourTime()) {
-                    for (int i = 0; i < getMultipleTimeRepeatModel().getTimeListTimes().size(); i++) {
-                        c.setTime(getMultipleTimeRepeatModel().getTimeListTimes().get(i));
-                        builder.append(StringHelper.get24(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE))).append(", ");
+                    for (int i = 0; i < getTimelyRepeatModel().getTimeListTimes().size(); i++) {
+                        builder.append(StringHelper.get24(getTimelyRepeatModel().getTimeListTimes().get(i).getHourOfDay(), getTimelyRepeatModel().getTimeListTimes().get(i).getMinute())).append(", ");
                     }
                 } else {
-                    for (int i = 0; i < getMultipleTimeRepeatModel().getTimeListTimes().size(); i++) {
-                        c.setTime(getMultipleTimeRepeatModel().getTimeListTimes().get(i));
-                        builder.append(StringHelper.get12(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE))).append(", ");
+                    for (int i = 0; i < getTimelyRepeatModel().getTimeListTimes().size(); i++) {
+                        builder.append(StringHelper.get12(getTimelyRepeatModel().getTimeListTimes().get(i).getHourOfDay(), getTimelyRepeatModel().getTimeListTimes().get(i).getMinute())).append(", ");
                     }
                 }
 
@@ -436,7 +406,7 @@ public class RepeatModel extends ViewModel {
 
         StringBuilder builder = new StringBuilder();
 
-        switch (getMultipleTimeRepeatModel().getTimeListMode()) {
+        switch (getTimelyRepeatModel().getTimeListMode()) {
             default:
                 builder.append("Once, ");
                 break;

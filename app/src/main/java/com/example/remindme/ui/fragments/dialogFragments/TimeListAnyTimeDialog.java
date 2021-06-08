@@ -23,8 +23,10 @@ import com.example.remindme.ui.fragments.dialogFragments.common.TimeListDialogBa
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBase;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBlack;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogLight;
-import com.example.remindme.viewModels.MultipleTimeRepeatModel;
+import com.example.remindme.viewModels.TimeOfDayModel;
+import com.example.remindme.viewModels.TimelyRepeatModel;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -33,8 +35,8 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements TimePic
     public static final String TAG = "TimeListAnyTimeDialog";
 
     @Override
-    public void onSetListenerTime(Date dateTime) {
-        getModel().getMultipleTimeRepeatModel().addTimeListTime(dateTime);
+    public void onSetListenerTime(int hourOfDay, int minute) {
+        getModel().getTimelyRepeatModel().addTimeListTime(hourOfDay, minute);
         refresh();
     }
 
@@ -45,10 +47,10 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements TimePic
 
     private class CustomTimeListAdapter extends RecyclerView.Adapter<CustomTimeListAdapter.ViewHolder> {
 
-        private final List<Date> times;
+        private final List<TimeOfDayModel> times;
 
         // Pass in the contact array into the constructor
-        public CustomTimeListAdapter(List<Date> values) {
+        public CustomTimeListAdapter(List<TimeOfDayModel> values) {
             times = values;
         }
 
@@ -67,12 +69,14 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements TimePic
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            final Date time = times.get(position);
-
+            final TimeOfDayModel time = times.get(position);
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, time.getHourOfDay());
+            calendar.set(Calendar.MINUTE, time.getMinute());
             // Set item views based on your views and data model
-            holder.tv_reminder_time.setText(StringHelper.toTimeAmPm(time));
+            holder.tv_reminder_time.setText(StringHelper.toTimeAmPm(calendar.getTime()));
             holder.imgBtnRemove.setOnClickListener(v -> {
-                getModel().getMultipleTimeRepeatModel().removeTimeListTime(time);
+                getModel().getTimelyRepeatModel().removeTimeListTime(time);
                 refresh();
             });
         }
@@ -132,8 +136,8 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements TimePic
         builder.setView(view)
                 .setTitle(getString(R.string.format_heading_time_list, "Select", "time"))
                 .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
-                    if (getModel().getMultipleTimeRepeatModel().getTimeListTimes().size() > 0) {
-                        getModel().getMultipleTimeRepeatModel().setTimeListMode(MultipleTimeRepeatModel.TimeListModes.ANYTIME);
+                    if (getModel().getTimelyRepeatModel().getTimeListTimes().size() > 0) {
+                        getModel().getTimelyRepeatModel().setTimeListMode(TimelyRepeatModel.TimeListModes.ANYTIME);
                         getListener().setTimeListDialogModel(getModel());
                     }
                 }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
@@ -148,7 +152,7 @@ public class TimeListAnyTimeDialog extends TimeListDialogBase implements TimePic
     @Override
     protected void onUIRefresh() {
         super.onUIRefresh();
-        final CustomTimeListAdapter timeListAdapter = new CustomTimeListAdapter(getModel().getMultipleTimeRepeatModel().getTimeListTimes());
+        final CustomTimeListAdapter timeListAdapter = new CustomTimeListAdapter(getModel().getTimelyRepeatModel().getTimeListTimes());
         timeListRecycler.setAdapter(timeListAdapter);
     }
 }

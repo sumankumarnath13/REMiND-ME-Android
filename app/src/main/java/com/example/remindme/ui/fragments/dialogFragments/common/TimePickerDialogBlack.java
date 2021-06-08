@@ -44,7 +44,7 @@ public class TimePickerDialogBlack extends TimePickerDialogBase {
 
         builder.setView(view).setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
 
-            getListener().onSetListenerTime(getCalendar().getTime());
+            getListener().onSetListenerTime(getHourOfDay(), getMin());
 
         }).setNegativeButton(getString(R.string.acton_dialog_negative), (dialog, which) -> {
         });

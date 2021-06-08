@@ -1,9 +1,10 @@
 package com.example.remindme.helpers;
 
-import com.example.remindme.viewModels.MultipleTimeRepeatModel;
 import com.example.remindme.viewModels.PeriodicRepeatModel;
 import com.example.remindme.viewModels.RepeatModel;
 import com.example.remindme.viewModels.TimeModel;
+import com.example.remindme.viewModels.TimeOfDayModel;
+import com.example.remindme.viewModels.TimelyRepeatModel;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -43,8 +44,8 @@ public class ScheduleHelper {
         return getRepeatModel().getPeriodicRepeatModel();
     }
 
-    private MultipleTimeRepeatModel getMultipleTimeRepeatModel() {
-        return getRepeatModel().getMultipleTimeRepeatModel();
+    private TimelyRepeatModel getMultipleTimeRepeatModel() {
+        return getRepeatModel().getTimelyRepeatModel();
     }
 
     public ScheduleHelper(final TimeModel timeModel, final RepeatModel repeatModel) {
@@ -82,11 +83,11 @@ public class ScheduleHelper {
 
     private void scheduleListTime() {
 
-        if (getMultipleTimeRepeatModel().getTimeListMode() != MultipleTimeRepeatModel.TimeListModes.OFF) {
+        if (getMultipleTimeRepeatModel().getTimeListMode() != TimelyRepeatModel.TimeListModes.OFF) {
 
             Date firstTimeListTime = null;
 
-            if (getMultipleTimeRepeatModel().getTimeListMode() == MultipleTimeRepeatModel.TimeListModes.HOURLY) {
+            if (getMultipleTimeRepeatModel().getTimeListMode() == TimelyRepeatModel.TimeListModes.HOURLY) {
 
                 calculator.set(Calendar.MINUTE, alertMinute);
 
@@ -94,47 +95,39 @@ public class ScheduleHelper {
                     calculator.add(Calendar.HOUR_OF_DAY, 1);
                 }
 
-            } else if (getMultipleTimeRepeatModel().getTimeListMode() == MultipleTimeRepeatModel.TimeListModes.SELECTED_HOURS
-                    && getMultipleTimeRepeatModel().getTimeListHours().size() > 0) {
+            } else if (
+                    (getMultipleTimeRepeatModel().getTimeListMode() == TimelyRepeatModel.TimeListModes.SELECTED_HOURS ||
+                            getMultipleTimeRepeatModel().getTimeListMode() == TimelyRepeatModel.TimeListModes.ANYTIME) &&
+                            getMultipleTimeRepeatModel().getTimeListTimes().size() > 0) {
 
-                calculator.set(Calendar.MINUTE, alertMinute);
+//                calculator.set(Calendar.MINUTE, alertMinute);
+//
+//                final List<Integer> timeListHours = getMultipleTimeRepeatModel().getTimeListHours();
+//
+//                Collections.sort(timeListHours);
+//
+//                for (int i = 0; i < timeListHours.size(); i++) {
+//
+//                    calculator.set(Calendar.HOUR_OF_DAY, timeListHours.get(i));
+//
+//                    if (i == 0) {
+//                        firstTimeListTime = calculator.getTime();
+//                    }
+//
+//                    if (calculator.getTime().compareTo(currentTime) > 0) {
+//                        firstTimeListTime = null;
+//                        break;
+//                    }
+//                }
 
-                final List<Integer> timeListHours = getMultipleTimeRepeatModel().getTimeListHours();
-
-                Collections.sort(timeListHours);
-
-                for (int i = 0; i < timeListHours.size(); i++) {
-
-                    calculator.set(Calendar.HOUR_OF_DAY, timeListHours.get(i));
-
-                    if (i == 0) {
-                        firstTimeListTime = calculator.getTime();
-                    }
-
-                    if (calculator.getTime().compareTo(currentTime) > 0) {
-                        firstTimeListTime = null;
-                        break;
-                    }
-                }
-
-            } else if (getMultipleTimeRepeatModel().getTimeListMode() == MultipleTimeRepeatModel.TimeListModes.ANYTIME
-                    && getMultipleTimeRepeatModel().getTimeListTimes().size() > 0) {
-
-                final List<Date> timeListTimes = getMultipleTimeRepeatModel().getTimeListTimes();
+                final List<TimeOfDayModel> timeListTimes = getMultipleTimeRepeatModel().getTimeListTimes();
 
                 Collections.sort(timeListTimes);
 
-                final Calendar time = Calendar.getInstance();
-
                 for (int i = 0; i < timeListTimes.size(); i++) {
 
-                    time.setTime(timeListTimes.get(i));
-
-                    final int HOUR = time.get(Calendar.HOUR_OF_DAY);
-                    final int MIN = time.get(Calendar.MINUTE);
-
-                    calculator.set(Calendar.HOUR_OF_DAY, HOUR);
-                    calculator.set(Calendar.MINUTE, MIN);
+                    calculator.set(Calendar.HOUR_OF_DAY, timeListTimes.get(i).getHourOfDay());
+                    calculator.set(Calendar.MINUTE, timeListTimes.get(i).getMinute());
 
                     if (i == 0) {
                         firstTimeListTime = calculator.getTime();
@@ -145,6 +138,7 @@ public class ScheduleHelper {
                         break;
                     }
                 }
+
             }
 
             // Else, It came this far means no future time found from Time List.

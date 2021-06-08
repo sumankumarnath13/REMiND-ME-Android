@@ -15,10 +15,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.remindme.dataModels.AlarmDetails;
 import com.example.remindme.dataModels.Alert;
-import com.example.remindme.dataModels.MultipleTimeDetails;
+import com.example.remindme.dataModels.PeriodicRepeat;
 import com.example.remindme.dataModels.ReminderDetails;
-import com.example.remindme.dataModels.ReminderRepeat;
 import com.example.remindme.dataModels.ReminderSnooze;
+import com.example.remindme.dataModels.TimeOfDay;
+import com.example.remindme.dataModels.TimelyRepeat;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.OsHelper;
 import com.example.remindme.helpers.ScheduleHelper;
@@ -660,28 +661,32 @@ public class AlertModel extends ViewModel {
         entity.name = getName();
         entity.note = getNote();
         entity.time = getTimeModel().getAlertTime(false);
-        entity.timeListMode = MultipleTimeRepeatModel.getIntegerOfTimeListMode(getRepeatModel().getMultipleTimeRepeatModel().getTimeListMode());
-        if (getRepeatModel().getMultipleTimeRepeatModel().getTimeListMode() != MultipleTimeRepeatModel.TimeListModes.OFF) {
-            entity.multipleTimeDetails = new MultipleTimeDetails();
-            entity.multipleTimeDetails.customTimes.addAll(getRepeatModel().getMultipleTimeRepeatModel().getTimeListTimes());
-            entity.multipleTimeDetails.hourlyTimes.addAll(getRepeatModel().getMultipleTimeRepeatModel().getTimeListHours());
+        entity.timeListMode = TimelyRepeatModel.getIntegerOfTimeListMode(getRepeatModel().getTimelyRepeatModel().getTimeListMode());
+        if (getRepeatModel().getTimelyRepeatModel().getTimeListMode() != TimelyRepeatModel.TimeListModes.OFF) {
+            entity.timelyRepeat = new TimelyRepeat();
+            for (int i = 0; i < getRepeatModel().getTimelyRepeatModel().getTimeListTimes().size(); i++) {
+                TimeOfDay timeOfDay = new TimeOfDay();
+                timeOfDay.hourOfDay = getRepeatModel().getTimelyRepeatModel().getTimeListTimes().get(i).getHourOfDay();
+                timeOfDay.minute = getRepeatModel().getTimelyRepeatModel().getTimeListTimes().get(i).getMinute();
+                entity.timelyRepeat.customTimes.add(timeOfDay);
+            }
         }
 
         entity.missedTimes.addAll(missedTimes);
 
         if (getRepeatModel().isEnabled()) {
-            entity.repeat = new ReminderRepeat();
-            entity.repeat.isRepeatEnabled = getRepeatModel().isEnabled();
-            entity.repeat.repeatOption = PeriodicRepeatModel.getIntegerOfRepeatOption(getRepeatModel().getPeriodicRepeatModel().getRepeatOption());
-            entity.repeat.repeatDays.addAll(getRepeatModel().getPeriodicRepeatModel().getCustomDays());
-            entity.repeat.repeatWeeks.addAll(getRepeatModel().getPeriodicRepeatModel().getCustomWeeks());
-            entity.repeat.repeatMonths.addAll(getRepeatModel().getPeriodicRepeatModel().getCustomMonths());
-            entity.repeat.repeatCustomTimeUnit = PeriodicRepeatModel.getIntegerFromTimeUnit(getRepeatModel().getPeriodicRepeatModel().getCustomTimeUnit());
-            entity.repeat.repeatCustomTimeValue = getRepeatModel().getPeriodicRepeatModel().getCustomTimeValue();
-            entity.repeat.isHasRepeatEnd = getRepeatModel().isHasRepeatEnd();
-            entity.repeat.repeatEndDate = getRepeatModel().getRepeatEndDate();
+            entity.periodicRepeat = new PeriodicRepeat();
+            entity.periodicRepeat.isRepeatEnabled = getRepeatModel().isEnabled();
+            entity.periodicRepeat.repeatOption = PeriodicRepeatModel.getIntegerOfRepeatOption(getRepeatModel().getPeriodicRepeatModel().getRepeatOption());
+            entity.periodicRepeat.repeatDays.addAll(getRepeatModel().getPeriodicRepeatModel().getCustomDays());
+            entity.periodicRepeat.repeatWeeks.addAll(getRepeatModel().getPeriodicRepeatModel().getCustomWeeks());
+            entity.periodicRepeat.repeatMonths.addAll(getRepeatModel().getPeriodicRepeatModel().getCustomMonths());
+            entity.periodicRepeat.repeatCustomTimeUnit = PeriodicRepeatModel.getIntegerFromTimeUnit(getRepeatModel().getPeriodicRepeatModel().getCustomTimeUnit());
+            entity.periodicRepeat.repeatCustomTimeValue = getRepeatModel().getPeriodicRepeatModel().getCustomTimeValue();
+            entity.periodicRepeat.isHasRepeatEnd = getRepeatModel().isHasRepeatEnd();
+            entity.periodicRepeat.repeatEndDate = getRepeatModel().getRepeatEndDate();
         } else {
-            entity.repeat = null;
+            entity.periodicRepeat = null;
         }
 
         if (isReminder()) {
@@ -730,23 +735,29 @@ public class AlertModel extends ViewModel {
         setName(from.name);
         setNote(from.note);
         getTimeModel().setTime(from.time, true);
-        getRepeatModel().getMultipleTimeRepeatModel().setTimeListMode(MultipleTimeRepeatModel.getTimeListModeFromInteger(from.timeListMode));
-        if (getRepeatModel().getMultipleTimeRepeatModel().getTimeListMode() != MultipleTimeRepeatModel.TimeListModes.OFF) {
-            getRepeatModel().getMultipleTimeRepeatModel().setTimeListTimes(from.multipleTimeDetails.customTimes);
-            getRepeatModel().getMultipleTimeRepeatModel().setTimeListHours(from.multipleTimeDetails.hourlyTimes);
+        getRepeatModel().getTimelyRepeatModel().setTimeListMode(TimelyRepeatModel.getTimeListModeFromInteger(from.timeListMode));
+        if (getRepeatModel().getTimelyRepeatModel().getTimeListMode() != TimelyRepeatModel.TimeListModes.OFF) {
+            for (int i = 0; i < from.timelyRepeat.customTimes.size(); i++) {
+                TimeOfDay timeOfDay = from.timelyRepeat.customTimes.get(i);
+                if (timeOfDay != null) {
+                    getRepeatModel().getTimelyRepeatModel().addTimeListTime(
+                            timeOfDay.hourOfDay,
+                            timeOfDay.minute);
+                }
+            }
         }
 
         missedTimes.addAll(from.missedTimes);
 
-        if (from.repeat != null) {
+        if (from.periodicRepeat != null) {
             //getRepeatModel().setEnable(true);
-            getRepeatModel().getPeriodicRepeatModel().setCustomDays(from.repeat.repeatDays);
-            getRepeatModel().getPeriodicRepeatModel().setCustomWeeks(from.repeat.repeatWeeks);
-            getRepeatModel().getPeriodicRepeatModel().setCustomMonths(from.repeat.repeatMonths);
-            getRepeatModel().getPeriodicRepeatModel().setRepeatCustom(from.repeat.repeatCustomTimeUnit, from.repeat.repeatCustomTimeValue);
-            getRepeatModel().getPeriodicRepeatModel().setRepeatOption(PeriodicRepeatModel.getRepeatOptionFromInteger(from.repeat.repeatOption));
-            getRepeatModel().setHasRepeatEnd(from.repeat.isHasRepeatEnd);
-            getRepeatModel().setRepeatEndDate(from.repeat.repeatEndDate);
+            getRepeatModel().getPeriodicRepeatModel().setCustomDays(from.periodicRepeat.repeatDays);
+            getRepeatModel().getPeriodicRepeatModel().setCustomWeeks(from.periodicRepeat.repeatWeeks);
+            getRepeatModel().getPeriodicRepeatModel().setCustomMonths(from.periodicRepeat.repeatMonths);
+            getRepeatModel().getPeriodicRepeatModel().setRepeatCustom(from.periodicRepeat.repeatCustomTimeUnit, from.periodicRepeat.repeatCustomTimeValue);
+            getRepeatModel().getPeriodicRepeatModel().setRepeatOption(PeriodicRepeatModel.getRepeatOptionFromInteger(from.periodicRepeat.repeatOption));
+            getRepeatModel().setHasRepeatEnd(from.periodicRepeat.isHasRepeatEnd);
+            getRepeatModel().setRepeatEndDate(from.periodicRepeat.repeatEndDate);
         }
 
         if (from.alarmDetails == null) {

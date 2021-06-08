@@ -311,7 +311,6 @@ public class ReminderView extends ActivityBase
 
             final LinearLayoutCompat lv_last_missed_alert = findViewById(R.id.lv_last_missed_alert);
 
-            //btn_expand_missed_alerts.setVisibility(View.GONE);
             if (alertModel.getLastMissedTime() != null) {
                 lv_last_missed_alert.setVisibility(View.VISIBLE);
                 final AppCompatTextView tv_reminder_last_missed_time = findViewById(R.id.tv_reminder_last_missed_time);

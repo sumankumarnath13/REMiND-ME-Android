@@ -176,7 +176,6 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
     private AppCompatButton btnSetDefaultTone;
     private boolean isPlayingTone;
     private int deviceAlarmVolume;
-    private LinearLayoutCompat alarm_only_layout;
     private RingingController ringingController;
     private boolean isAwaitingVibrationSelection;
 
@@ -198,8 +197,6 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
 
         if (getContext() == null)
             return builder.create();
-
-        alarm_only_layout = view.findViewById(R.id.alarm_only_layout);
 
         tv_reminder_snooze_summary = view.findViewById(R.id.tv_reminder_snooze_summary);
         sw_reminder_snooze = view.findViewById(R.id.sw_reminder_snooze);
@@ -310,11 +307,7 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
     @Override
     protected void onUIRefresh() {
         // No radio group wont work for the given layout. So resetting programmatically is required.
-        if (getModel().isReminder()) {
-            alarm_only_layout.setVisibility(View.GONE);
-        } else {
-            alarm_only_layout.setVisibility(View.VISIBLE);
-        }
+
         tv_reminder_snooze_summary.setText(getModel().getSnoozeModel().toString());
         sw_reminder_snooze.setChecked(getModel().getSnoozeModel().isEnable());
         sw_reminder_tone.setChecked(getModel().getRingingModel().isToneEnabled());
@@ -322,7 +315,7 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
             final Uri alarmToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             final Ringtone alarmTone = RingtoneManager.getRingtone(getContext(), alarmToneUri);
             tv_reminder_tone_summary.setText(alarmTone.getTitle(getContext()));
-            btnSetDefaultTone.setVisibility(View.INVISIBLE);
+            btnSetDefaultTone.setVisibility(View.GONE);
         } else {
             final Ringtone ringtone = RingtoneManager.getRingtone(getContext(), getModel().getRingingModel().getRingToneUri());
             tv_reminder_tone_summary.setText(ringtone.getTitle(getContext()));

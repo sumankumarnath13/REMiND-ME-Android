@@ -27,9 +27,9 @@ import com.example.remindme.ui.fragments.dialogFragments.common.TimeListDialogBa
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBase;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogBlack;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimePickerDialogLight;
-import com.example.remindme.viewModels.MultipleTimeRepeatModel;
 import com.example.remindme.viewModels.PeriodicRepeatModel;
 import com.example.remindme.viewModels.RepeatModel;
+import com.example.remindme.viewModels.TimelyRepeatModel;
 import com.example.remindme.viewModels.factories.RepeatViewModelFactory;
 
 import java.util.Calendar;
@@ -45,8 +45,18 @@ public class RepeatDialog extends DialogFragmentBase
     public static final String TAG = "RepeatDialog";
 
     @Override
-    public void onSetListenerDate(Date dateTime) {
-        this.model.setRepeatEndDate(dateTime);
+    public void onSetListenerDate(int year, int month, int dayOfMonth) {
+        final Calendar calendar = Calendar.getInstance();
+
+        if (!model.isHasRepeatEnd()) {
+            calendar.setTime(model.getRepeatEndDate());
+        }
+
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        model.setRepeatEndDate(calendar.getTime());
+
         refresh();
     }
 
@@ -56,8 +66,21 @@ public class RepeatDialog extends DialogFragmentBase
     }
 
     @Override
-    public void onSetListenerTime(Date dateTime) {
-        this.model.setRepeatEndDate(dateTime);
+    public void onSetListenerTime(int hourOfDay, int minute) {
+
+        final Calendar calendar = Calendar.getInstance();
+
+        if (!model.isHasRepeatEnd()) {
+            calendar.setTime(model.getRepeatEndDate());
+        }
+
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        model.setRepeatEndDate(calendar.getTime());
+
+        refresh();
+
+        this.model.setRepeatEndDate(calendar.getTime());
         refresh();
     }
 
@@ -91,7 +114,7 @@ public class RepeatDialog extends DialogFragmentBase
     public void setTimeListDialogModel(RepeatModel model) {
         if (model != null) {
             if (model.isValid(model.getParent().getTimeModel(), model)) {
-                this.model.setMultipleTimeRepeatModel(model.getMultipleTimeRepeatModel());
+                this.model.setTimelyRepeatModel(model.getTimelyRepeatModel());
                 this.model.getParent().getTimeModel().setScheduledTime(model.getValidatedScheduledTime());
             } else {
                 ToastHelper.showShort(getContext(), "Please check repeat settings");
@@ -255,7 +278,7 @@ public class RepeatDialog extends DialogFragmentBase
         rdo_time_repeat_off = view.findViewById(R.id.rdo_time_repeat_off);
         rdo_time_repeat_off.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (!isRefreshing() && isChecked) {
-                model.getMultipleTimeRepeatModel().setTimeListMode(MultipleTimeRepeatModel.TimeListModes.OFF);
+                model.getTimelyRepeatModel().setTimeListMode(TimelyRepeatModel.TimeListModes.OFF);
                 isRefreshMultipleTimeSection = true;
                 refresh();
             }
@@ -264,7 +287,7 @@ public class RepeatDialog extends DialogFragmentBase
         rdo_time_repeat_hourly = view.findViewById(R.id.rdo_time_repeat_hourly);
         rdo_time_repeat_hourly.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (!isRefreshing() && isChecked) {
-                model.getMultipleTimeRepeatModel().setTimeListMode(MultipleTimeRepeatModel.TimeListModes.HOURLY);
+                model.getTimelyRepeatModel().setTimeListMode(TimelyRepeatModel.TimeListModes.HOURLY);
                 isRefreshMultipleTimeSection = true;
                 refresh();
             }
@@ -432,7 +455,7 @@ public class RepeatDialog extends DialogFragmentBase
             rdo_time_repeat_any_time.setChecked(false);
             rdo_time_repeat_selected_hours.setChecked(false);
 
-            switch (model.getMultipleTimeRepeatModel().getTimeListMode()) {
+            switch (model.getTimelyRepeatModel().getTimeListMode()) {
                 default:
                 case OFF:
                     rdo_time_repeat_off.setChecked(true);

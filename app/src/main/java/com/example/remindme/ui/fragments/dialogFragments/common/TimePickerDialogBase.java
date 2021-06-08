@@ -16,7 +16,7 @@ public abstract class TimePickerDialogBase
     public static final String TAG = "RemindMeTimePickerDialog";
 
     public interface ITimePickerListener {
-        void onSetListenerTime(Date dateTime);
+        void onSetListenerTime(int hourOfDay, int minute);
 
         Date onGetListenerTime();
     }

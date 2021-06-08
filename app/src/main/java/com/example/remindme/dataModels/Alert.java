@@ -19,12 +19,9 @@ public class Alert extends RealmObject implements RealmModel {
     public String note;
     public Date time;
     public int timeListMode;
-    public MultipleTimeDetails multipleTimeDetails;
-    //    public RealmList<Date> customTimes = new RealmList<>();
-//    public RealmList<Integer> hourlyTimes = new RealmList<>();
-    public ReminderRepeat repeat;
+    public TimelyRepeat timelyRepeat;
+    public PeriodicRepeat periodicRepeat;
     public RealmList<Date> missedTimes = new RealmList<>();
-
     public AlarmDetails alarmDetails;
     public ReminderDetails reminderDetails;
 }

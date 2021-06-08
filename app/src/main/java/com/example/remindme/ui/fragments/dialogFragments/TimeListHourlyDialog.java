@@ -15,7 +15,7 @@ import com.example.remindme.R;
 import com.example.remindme.helpers.AppSettingsHelper;
 import com.example.remindme.helpers.StringHelper;
 import com.example.remindme.ui.fragments.dialogFragments.common.TimeListDialogBase;
-import com.example.remindme.viewModels.MultipleTimeRepeatModel;
+import com.example.remindme.viewModels.TimelyRepeatModel;
 
 import java.util.Calendar;
 
@@ -126,8 +126,8 @@ public class TimeListHourlyDialog extends TimeListDialogBase {
 
         }
 
-        for (int i = 0; i < getModel().getMultipleTimeRepeatModel().getTimeListHours().size(); i++) {
-            int value = getModel().getMultipleTimeRepeatModel().getTimeListHours().get(i);
+        for (int i = 0; i < getModel().getTimelyRepeatModel().getTimeListTimes().size(); i++) {
+            int value = getModel().getTimelyRepeatModel().getTimeListTimes().get(i).getHourOfDay();
             switch (value) {
                 default:
                 case 0:
@@ -210,59 +210,59 @@ public class TimeListHourlyDialog extends TimeListDialogBase {
         builder.setView(view)
                 .setTitle(getString(R.string.format_heading_time_list, "Select", "hours"))
                 .setPositiveButton(getString(R.string.acton_dialog_positive), (dialog, which) -> {
-                    getModel().getMultipleTimeRepeatModel().getTimeListHours().clear();
+                    getModel().getTimelyRepeatModel().getTimeListTimes().clear();
                     //int day = 0;
                     if (chk_daily_0.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(0);
+                        getModel().getTimelyRepeatModel().addTimeListTime(0, 0);
                     if (chk_daily_1.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(1);
+                        getModel().getTimelyRepeatModel().addTimeListTime(1, 0);
                     if (chk_daily_2.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(2);
+                        getModel().getTimelyRepeatModel().addTimeListTime(2, 0);
                     if (chk_daily_3.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(3);
+                        getModel().getTimelyRepeatModel().addTimeListTime(3, 0);
                     if (chk_daily_4.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(4);
+                        getModel().getTimelyRepeatModel().addTimeListTime(4, 0);
                     if (chk_daily_5.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(5);
+                        getModel().getTimelyRepeatModel().addTimeListTime(5, 0);
                     if (chk_daily_6.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(6);
+                        getModel().getTimelyRepeatModel().addTimeListTime(6, 0);
                     if (chk_daily_7.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(7);
+                        getModel().getTimelyRepeatModel().addTimeListTime(7, 0);
                     if (chk_daily_8.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(8);
+                        getModel().getTimelyRepeatModel().addTimeListTime(8, 0);
                     if (chk_daily_9.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(9);
+                        getModel().getTimelyRepeatModel().addTimeListTime(9, 0);
                     if (chk_daily_10.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(10);
+                        getModel().getTimelyRepeatModel().addTimeListTime(10, 0);
                     if (chk_daily_11.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(11);
+                        getModel().getTimelyRepeatModel().addTimeListTime(11, 0);
                     if (chk_daily_12.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(12);
+                        getModel().getTimelyRepeatModel().addTimeListTime(12, 0);
                     if (chk_daily_13.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(13);
+                        getModel().getTimelyRepeatModel().addTimeListTime(13, 0);
                     if (chk_daily_14.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(14);
+                        getModel().getTimelyRepeatModel().addTimeListTime(14, 0);
                     if (chk_daily_15.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(15);
+                        getModel().getTimelyRepeatModel().addTimeListTime(15, 0);
                     if (chk_daily_16.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(16);
+                        getModel().getTimelyRepeatModel().addTimeListTime(16, 0);
                     if (chk_daily_17.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(17);
+                        getModel().getTimelyRepeatModel().addTimeListTime(17, 0);
                     if (chk_daily_18.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(18);
+                        getModel().getTimelyRepeatModel().addTimeListTime(18, 0);
                     if (chk_daily_19.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(19);
+                        getModel().getTimelyRepeatModel().addTimeListTime(19, 0);
                     if (chk_daily_20.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(20);
+                        getModel().getTimelyRepeatModel().addTimeListTime(20, 0);
                     if (chk_daily_21.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(21);
+                        getModel().getTimelyRepeatModel().addTimeListTime(21, 0);
                     if (chk_daily_22.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(22);
+                        getModel().getTimelyRepeatModel().addTimeListTime(22, 0);
                     if (chk_daily_23.isChecked())
-                        getModel().getMultipleTimeRepeatModel().addTimeListHour(23);
+                        getModel().getTimelyRepeatModel().addTimeListTime(23, 0);
 
-                    if (getModel().getMultipleTimeRepeatModel().getTimeListHours().size() > 0) { // At least one is selected
-                        getModel().getMultipleTimeRepeatModel().setTimeListMode(MultipleTimeRepeatModel.TimeListModes.SELECTED_HOURS);
+                    if (getModel().getTimelyRepeatModel().getTimeListTimes().size() > 0) { // At least one is selected
+                        getModel().getTimelyRepeatModel().setTimeListMode(TimelyRepeatModel.TimeListModes.SELECTED_HOURS);
                         getListener().setTimeListDialogModel(getModel());
                     }
 
