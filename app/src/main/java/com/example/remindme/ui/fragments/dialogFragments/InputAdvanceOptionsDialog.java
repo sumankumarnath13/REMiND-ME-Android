@@ -109,7 +109,9 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
     }
 
     private void startTone() {
-        getRingingController().startTone(getModel().getRingingModel().isIncreaseVolumeGradually(), getModel().getRingingModel().getAlarmVolumePercentage());
+        getRingingController().startTone(
+                getModel().getRingingModel().isIncreaseVolumeGradually(),
+                getModel().getRingingModel().getAlarmVolumePercentage());
         isPlayingTone = true;
     }
 
@@ -179,6 +181,8 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
     private RingingController ringingController;
     private boolean isAwaitingVibrationSelection;
 
+    private boolean seekbarByUser = false;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -213,6 +217,7 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
 
         final LinearLayoutCompat mnu_reminder_tone = view.findViewById(R.id.tone_input_layout);
         mnu_reminder_tone.setOnClickListener(v -> {
+            stopTone();
             final Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select alarm tone:");
@@ -228,6 +233,7 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
             if (isRefreshing())
                 return;
 
+            stopTone();
             getModel().getRingingModel().setToneEnabled(isChecked);
             refresh();
         });
@@ -236,10 +242,17 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
         imgBtnPlayStop.setOnClickListener(v -> {
             if (isPlayingTone) {
                 stopTone();
+                refresh();
+                // refresh will enable all.
             } else {
                 startTone();
+                refresh();
+                // Disable volume control. It not allowed if playing in gradually increase mode.
+                if (getModel().getRingingModel().isIncreaseVolumeGradually()) {
+                    this.seeker_alarm_volume.setEnabled(false);
+                    this.sw_gradually_increase_volume.setEnabled(false);
+                }
             }
-            refresh();
         });
 
         btnSetDefaultTone = view.findViewById(R.id.btnSetDefaultTone);
@@ -254,6 +267,7 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
+                    seekbarByUser = true;
                     if (progress < RingingModel.MINIMUM_INPUT_VOLUME_PERCENTAGE)
                         seekBar.setProgress(RingingModel.MINIMUM_INPUT_VOLUME_PERCENTAGE);
                 }
@@ -266,8 +280,12 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                getModel().getRingingModel().setAlarmVolumePercentage(seekBar.getProgress());
-                ToastHelper.showShort(getContext(), "Alarm will ring at " + getModel().getRingingModel().getAlarmVolumePercentage() + "% volume");
+                if (seekbarByUser) {
+                    getRingingController().setVolume(seekBar.getProgress());
+                    getModel().getRingingModel().setAlarmVolumePercentage(seekBar.getProgress());
+                    ToastHelper.showShort(getContext(), "Alarm will ring at " + getModel().getRingingModel().getAlarmVolumePercentage() + "% volume");
+                    seekbarByUser = false;
+                }
             }
         });
 
@@ -277,7 +295,7 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
                 return;
 
             getModel().getRingingModel().setIncreaseVolumeGradually(sw_gradually_increase_volume.isChecked());
-            refresh();
+            //refresh();
         });
 
         sw_reminder_vibrate = view.findViewById(R.id.sw_reminder_vibrate);
@@ -286,7 +304,7 @@ public class InputAdvanceOptionsDialog extends DialogFragmentBase
                 return;
 
             getModel().getRingingModel().setVibrationEnabled(isChecked);
-            refresh();
+            //refresh();
         });
 
         ring_duration_spinner = view.findViewById(R.id.ring_duration_spinner);

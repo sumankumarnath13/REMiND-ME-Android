@@ -34,7 +34,6 @@ public abstract class TimeListDialogBase extends DialogFragmentBase {
         super.onDismiss(dialog);
     }
 
-
     private RepeatModel model;
 
     public interface ITimeListListener {
