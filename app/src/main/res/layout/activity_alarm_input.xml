@@ -73,7 +73,6 @@
                     android:id="@+id/lvc_diff_next_reminder_trigger"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:background="@drawable/border_vertical"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
@@ -112,6 +111,46 @@
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Is notification -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingVertical="@dimen/dp_8">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/dp_5"
+                    android:text="... Remind Me As :" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chk_reminder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/dp_5"
+                    android:text="@string/alert_type_reminder"
+                    app:buttonTint="?attr/themeWarningColor" />
+
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chk_alarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/dp_5"
+                    android:text="@string/alert_type_alarm"
+                    app:buttonTint="?attr/themeAccentColor" />
+
+
+                <!--                    <androidx.appcompat.widget.SwitchCompat-->
+                <!--                        android:id="@+id/sw_notification"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content" />-->
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -186,44 +225,6 @@
                         android:contentDescription="@string/missing_image_desc"
                         app:srcCompat="@drawable/ic_mic"
                         app:tint="?attr/themeWarningColor" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <!-- Is notification -->
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border_bottom"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingVertical="@dimen/dp_8">
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Remind me as " />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/chk_reminder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/alert_type_reminder"
-                        app:buttonTint="?attr/themeWarningColor" />
-
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/chk_alarm"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/alert_type_alarm"
-                        app:buttonTint="?attr/themeAccentColor" />
-
-
-                    <!--                    <androidx.appcompat.widget.SwitchCompat-->
-                    <!--                        android:id="@+id/sw_notification"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content" />-->
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 

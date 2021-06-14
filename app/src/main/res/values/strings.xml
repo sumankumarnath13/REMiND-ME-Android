@@ -166,6 +166,6 @@
     <string name="missing_image_desc">oops</string>
     <string name="hide_advance_options_label">Hide advance options</string>
     <string name="show_advance_options_label">Show advance options</string>
-    <string name="alert_type_reminder">Reminder</string>
+    <string name="alert_type_reminder">Notification</string>
     <string name="alert_type_alarm">Alarm</string>
 </resources>

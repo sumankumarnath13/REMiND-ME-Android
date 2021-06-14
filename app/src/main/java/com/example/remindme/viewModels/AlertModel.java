@@ -180,7 +180,7 @@ public class AlertModel extends ViewModel {
         return isReminder;
     }
 
-    public void setReminder(final boolean value) {
+    public void setAsReminder(final boolean value) {
         isReminder = value;
     }
 
@@ -761,11 +761,11 @@ public class AlertModel extends ViewModel {
         }
 
         if (from.alarmDetails == null) {
-            setReminder(true);
+            setAsReminder(true);
             getReminderModel().setTime(from.reminderDetails.time);
             getReminderModel().setCompleted(from.reminderDetails.isCompleted);
         } else {
-            setReminder(false);
+            setAsReminder(false);
             getRingingModel().setToneEnabled(from.alarmDetails.isToneEnabled);
             getRingingModel().setRingToneUri(from.alarmDetails.selectedAlarmTone);
             getRingingModel().setAlarmVolumePercentage(from.alarmDetails.alarmVolume);

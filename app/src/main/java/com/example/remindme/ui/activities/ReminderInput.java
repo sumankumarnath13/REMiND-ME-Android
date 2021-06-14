@@ -269,19 +269,27 @@ public class ReminderInput
 
         chk_reminder = findViewById(R.id.chk_reminder);
         chk_reminder.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isUserInteracted() && isChecked) {
-                advance_options_layout.setVisibility(View.GONE);
-                alertModel.setReminder(true);
-                refresh();
+            if (isUserInteracted()) {
+                if (isChecked) {
+                    advance_options_layout.setVisibility(View.INVISIBLE);
+                    alertModel.setAsReminder(true);
+                    refresh();
+                } else {
+                    buttonView.setChecked(alertModel.isReminder()); // return to original status
+                }
             }
         });
 
         chk_alarm = findViewById(R.id.chk_alarm);
         chk_alarm.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isUserInteracted() && isChecked) {
-                advance_options_layout.setVisibility(View.VISIBLE);
-                alertModel.setReminder(false);
-                refresh();
+            if (isUserInteracted()) {
+                if (isChecked) {
+                    advance_options_layout.setVisibility(View.VISIBLE);
+                    alertModel.setAsReminder(false);
+                    refresh();
+                } else {
+                    buttonView.setChecked(!alertModel.isReminder()); // return to original status
+                }
             }
         });
 
